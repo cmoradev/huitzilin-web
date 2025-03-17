@@ -1,5 +1,31 @@
-<mat-card>
-  <mat-card-content>
-    asd
-  </mat-card-content>
-</mat-card>
+<div class="flex items-center h-screen">
+  <div class="w-full max-w-lg mx-auto">
+    <mat-card>
+      <mat-card-content>
+        <h1 class="text-3xl font-bold text-tertiary text-center">
+          Inicio de sesión
+        </h1>
+        <h1 class="text-3xl font-bold text-primary text-center">
+          Inicio de sesión
+        </h1>
+
+        <form>
+          <mat-form-field class="w-full">
+            <input
+              matInput
+              placeholder="Correo electrónico"
+              type="email"
+              required
+            />
+          </mat-form-field>
+
+          <mat-form-field class="w-full">
+            <input matInput placeholder="Contraseña" type="password" required />
+          </mat-form-field>
+        </form>
+
+        <button mat-flat-button>Entrar</button>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
