@@ -1,0 +1,9 @@
+.mat-drawer.sidebar {
+  width: 270px;
+  flex-shrink: 0;
+  transition: swift-ease-out(width);
+  position: absolute;
+  overflow-x: hidden;
+  border-right: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 0px !important;
+}

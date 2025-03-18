@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { BlankComponent } from '@components/blank/blank.component';
+import { FullComponent } from '@components/full/full.component';
 
 export const routes: Routes = [
   {
@@ -9,7 +10,7 @@ export const routes: Routes = [
   },
   {
     path: '',
-    component: BlankComponent,
+    component: FullComponent,
     loadChildren: () => import('./pages/dashboard/dashboard.routes').then((m) => m.DashboardRoutes),
   },
   {

@@ -1,0 +1,17 @@
+<mat-sidenav-container class="h-screen w-screen" autosize autofocus dir="ltr">
+
+    <mat-sidenav #leftsidenav [mode]="isOver ? 'over' : 'side'" [opened]="!isOver" class="sidebar">
+         <div class="flex flex-col h-full">
+            
+         </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        
+        <main>
+            <router-outlet></router-outlet>
+        </main>
+    </mat-sidenav-content>
+
+</mat-sidenav-container>
+
