@@ -31,10 +31,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles/_material.scss",
-              "src/styles/_tailwind.scss"
-            ],
+            "styles": ["src/styles/material.scss", "src/styles/tailwind.scss"],
             "scripts": []
           },
           "configurations": {
