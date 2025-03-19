@@ -9,12 +9,28 @@ html {
     color: (
       theme-type: light,
       primary: vars.$primary-palette,
-      tertiary: mat.$orange-palette,
+      tertiary: vars.$tertiary-palette,
     ),
     typography: Roboto,
     density: 0,
   ));
-}/* You can add global styles to this file, and also import other style files */
+
+  @include mat.badge-overrides((
+    background-color: var(--mat-sys-primary),
+  ));
+
+  @include mat.fab-overrides(
+  (
+    container-elevation-shadow: none,
+    small-container-elevation-shadow: none,
+    extended-container-elevation-shadow: none,
+    hover-container-elevation-shadow: var(--mat-sys-level2),
+    small-hover-container-elevation-shadow: var(--mat-sys-level2),
+    extended-hover-container-elevation-shadow: var(--mat-sys-level2),
+  )
+);
+
+}
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
