@@ -21,6 +21,7 @@
     "@angular/router": "^19.2.0",
     "@mdi/angular-material": "^7.2.96",
     "@tailwindcss/postcss": "^4.0.14",
+    "ngx-scrollbar": "^18.0.0",
     "postcss": "^8.5.3",
     "rxjs": "~7.8.0",
     "tailwindcss": "^4.0.14",
