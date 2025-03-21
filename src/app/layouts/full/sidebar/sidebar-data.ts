@@ -39,12 +39,6 @@ export const navItems: RouteItem[] = [
     iconName: 'account-group-outline',
     route: '/settings/users',
     section: NavigationEnum.ADMINISTRATION,
-  },
-  {
-    displayName: 'Usuarios',
-    iconName: 'account-group-outline',
-    route: '/settings/users',
-    section: NavigationEnum.ADMINISTRATION,
     children: [
       {
         displayName: 'Usuarios',
@@ -79,6 +73,12 @@ export const navItems: RouteItem[] = [
         section: NavigationEnum.ADMINISTRATION,
       },
     ],
+  },
+  {
+    displayName: 'Negocios',
+    iconName: 'storefront-outline',
+    route: '/business',
+    section: NavigationEnum.ADMINISTRATION,
   },
 ];
 

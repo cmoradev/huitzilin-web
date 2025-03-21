@@ -19,4 +19,8 @@ export class NavItemComponent {
   @Input({ required: true }) route!: RouteItem;
 
   public readonly router = inject(Router);
+
+  public navigateTo(route: string): void {
+    this.router.navigate([route]);
+  }
 }

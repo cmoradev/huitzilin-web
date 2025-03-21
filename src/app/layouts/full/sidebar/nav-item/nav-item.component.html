@@ -1,6 +1,7 @@
 <a
   mat-list-item
   class="menu-list-item"
+  (click)="navigateTo(route.route)"
   [ngClass]="{
     activeMenu: router.isActive(route.route, true),
 }"
