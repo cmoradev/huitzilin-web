@@ -1,0 +1,55 @@
+fragment CompanyParts on Company {
+  id,
+  name,
+  picture,
+  address,
+  created_at,
+  updated_at
+}
+
+mutation createOneCompany ($company: CreateCompany!) {
+  createOneCompany (
+    input: {
+      company: $company
+    }
+  ) {
+    ...CompanyParts
+  }
+}
+
+query getCompaniesPage ($offset: Int = 0, $limit: Int = 10, $filter: CompanyFilter = {})  {
+  companies (
+    paging: { limit: $limit, offset: $offset },
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...CompanyParts
+    }
+  }
+}
+
+mutation updateOneCompany ($id: Int!, $update: UpdateCompany!) {
+  updateOneCompany (
+    input: {
+      id: $id,
+      update: $update
+    }
+  ) {
+    ...CompanyParts
+  }
+}
+
+mutation deleteOneCompany ($id: Int!) {
+	deleteOneCompany (
+    input: {
+      id: $id
+    }
+  ) {
+    id
+  }
+}
