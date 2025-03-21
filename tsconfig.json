@@ -18,6 +18,7 @@
     "target": "ES2022",
     "module": "ES2022",
     "rootDir": ".",
+    "lib": ["ES2022", "DOM"],
     "paths": {
       "@components/*": ["./src/app/components/*", "./src/app/layouts/*"],
     }
