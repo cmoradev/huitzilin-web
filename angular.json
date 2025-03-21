@@ -34,7 +34,7 @@
                 "output": "./assets"
               }
             ],
-            "styles": ["src/styles/material.scss", "src/styles/tailwind.scss"],
+            "styles": ["src/styles/material.scss", "src/styles/tailwind.css"],
             "scripts": []
           },
           "configurations": {

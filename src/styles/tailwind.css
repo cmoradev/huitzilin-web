@@ -1,4 +1,4 @@
-@use "tailwindcss";
+@import "tailwindcss";
 
 @theme {
   --color-primary: var(--mat-sys-primary);

@@ -1,0 +1,19 @@
+<div
+  class="mx-auto cursor-pointer"
+  [ngStyle]="{ height: height, width: width }"
+  (click)="fileInput.click()"
+>
+  <img
+    [src]="imageSource"
+    alt="Picker Image"
+    class="w-full h-full object-cover rounded-[var(--mat-sys-corner-medium)]"
+  />
+  <input
+    #fileInput
+    hidden
+    type="file"
+    accept="image/*"
+    [multiple]="false"
+    (change)="onFileSelected($event)"
+  />
+</div>

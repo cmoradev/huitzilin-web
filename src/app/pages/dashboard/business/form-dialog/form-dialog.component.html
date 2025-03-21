@@ -1,0 +1,34 @@
+<h2 mat-dialog-title>Crear negocio</h2>
+<mat-dialog-content>
+  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
+    <div class="flex flex-col gap-3">
+      <app-image-picker formControlName="picture"></app-image-picker>
+
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Ej: Munyaal" formControlName="name" />
+        <mat-hint>Ingrese el nombre comercial del negocio</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("name")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Dirección</mat-label>
+        <textarea
+          matInput
+          placeholder="Ej: Blvd. de Las Americas 28, Mundo Hábitat, 77714 Playa del Carmen, Q.R."
+          formControlName="address"
+        ></textarea>
+        <mat-hint>Ingrese la dirección completa del negocio</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("address")) }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button cdkFocusInitial form="dataForm">Guardar</button>
+</mat-dialog-actions>
