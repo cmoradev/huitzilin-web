@@ -24,6 +24,7 @@
       "@utils/*": ["./src/app/utils/*"],
       "@services": ["./src/app/services"],
       "@graphql": ["./src/app/graphql/generated.ts"],
+      "@environment": ["./src/environments/environment.ts"],
     }
   },
   "angularCompilerOptions": {
