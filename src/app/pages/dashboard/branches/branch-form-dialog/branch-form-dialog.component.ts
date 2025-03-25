@@ -1,4 +1,3 @@
-import { ContentObserver } from '@angular/cdk/observers';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
@@ -42,10 +41,10 @@ import { map, switchMap } from 'rxjs';
     ImagePickerComponent,
     ReactiveFormsModule,
   ],
-  templateUrl: './company-form-dialog.component.html',
+  templateUrl: './branch-form-dialog.component.html',
   styles: ``,
 })
-export class CompanyFormDialogComponent implements OnInit {
+export class BranchFormDialogComponent implements OnInit {
   public readonly formTools = inject(FormToolsService);
 
   public loading = signal(false);
@@ -56,7 +55,7 @@ export class CompanyFormDialogComponent implements OnInit {
   private readonly _updateOneCompany = inject(UpdateOneCompanyGQL);
 
   private readonly _dialogRef = inject(
-    MatDialogRef<CompanyFormDialogComponent>
+    MatDialogRef<BranchFormDialogComponent>
   );
 
   private previusPicture = '';

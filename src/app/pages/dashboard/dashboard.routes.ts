@@ -7,8 +7,8 @@ export const DashboardRoutes: Routes = [
       import('./home/home.component').then((m) => m.HomeComponent),
   },
   {
-    path: 'business',
+    path: 'branches',
     loadComponent: () =>
-      import('./business/business.component').then((m) => m.BusinessComponent),
+      import('./branches/branches.component').then((m) => m.BranchsComponent),
   },
 ];

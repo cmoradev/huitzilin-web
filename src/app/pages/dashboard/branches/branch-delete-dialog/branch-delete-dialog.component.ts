@@ -22,17 +22,17 @@ import { CompanyPartsFragment, DeleteOneCompanyGQL } from '@graphql';
     MatButton,
     AvatarComponent,
   ],
-  templateUrl: './company-delete-dialog.component.html',
+  templateUrl: './branch-delete-dialog.component.html',
   styles: ``,
 })
-export class CompanyDeleteDialogComponent {
+export class BranchDeleteDialogComponent {
   public loading = signal(false);
 
   public data: CompanyPartsFragment = inject(MAT_DIALOG_DATA);
 
   private readonly _deleteOneCompany = inject(DeleteOneCompanyGQL);
   private readonly _dialogRef = inject(
-    MatDialogRef<CompanyDeleteDialogComponent>
+    MatDialogRef<BranchDeleteDialogComponent>
   );
 
   public delete() {

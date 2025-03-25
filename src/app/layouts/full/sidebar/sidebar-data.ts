@@ -76,8 +76,8 @@ export const navItems: RouteItem[] = [
   },
   {
     displayName: 'Negocios',
-    iconName: 'storefront-outline',
-    route: '/business',
+    iconName: 'town-hall',
+    route: '/branches',
     section: NavigationEnum.ADMINISTRATION,
   },
 ];

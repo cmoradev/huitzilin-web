@@ -2,7 +2,6 @@ import {
   AfterViewInit,
   Component,
   inject,
-  OnInit,
   signal,
   ViewChild,
 } from '@angular/core';
@@ -22,7 +21,7 @@ import {
 } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -33,8 +32,8 @@ import {
   GetCompaniesPageGQL,
 } from '@graphql';
 import { debounceTime, merge, startWith } from 'rxjs';
-import { CompanyDeleteDialogComponent } from './company-delete-dialog/company-delete-dialog.component';
-import { CompanyFormDialogComponent } from './company-form-dialog/company-form-dialog.component';
+import { BranchDeleteDialogComponent } from './branch-delete-dialog/branch-delete-dialog.component';
+import { BranchFormDialogComponent } from './branch-form-dialog/branch-form-dialog.component';
 
 @Component({
   selector: 'app-business',
@@ -56,10 +55,10 @@ import { CompanyFormDialogComponent } from './company-form-dialog/company-form-d
     ReactiveFormsModule,
     MatProgressBar,
   ],
-  templateUrl: './business.component.html',
+  templateUrl: './branches.component.html',
   styles: ``,
 })
-export class BusinessComponent implements AfterViewInit {
+export class BranchsComponent implements AfterViewInit {
   @ViewChild('paginator') public paginator!: MatPaginator;
   public searchControl = new FormControl('');
 
@@ -83,7 +82,7 @@ export class BusinessComponent implements AfterViewInit {
   }
 
   public openCreateDialog(): void {
-    const $dialog = this.dialog.open(CompanyFormDialogComponent, {
+    const $dialog = this.dialog.open(BranchFormDialogComponent, {
       width: '35rem',
     });
 
@@ -97,7 +96,7 @@ export class BusinessComponent implements AfterViewInit {
   }
 
   public openUpdateDialog(company: CompanyPartsFragment): void {
-    const $dialog = this.dialog.open(CompanyFormDialogComponent, {
+    const $dialog = this.dialog.open(BranchFormDialogComponent, {
       width: '35rem',
       data: company,
     });
@@ -112,7 +111,7 @@ export class BusinessComponent implements AfterViewInit {
   }
 
   public openDeleteDialog(company: CompanyPartsFragment): void {
-    const $dialog = this.dialog.open(CompanyDeleteDialogComponent, {
+    const $dialog = this.dialog.open(BranchDeleteDialogComponent, {
       data: company,
     });
 
