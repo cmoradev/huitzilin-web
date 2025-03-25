@@ -71,10 +71,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "syscorp-web:build:production"
+              "buildTarget": "huitzilin-web:build:production"
             },
             "development": {
-              "buildTarget": "syscorp-web:build:development"
+              "buildTarget": "huitzilin-web:build:development"
             }
           },
           "defaultConfiguration": "development"
