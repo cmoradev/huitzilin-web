@@ -1,36 +1,59 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-@use '@angular/material' as mat;
+@use "@angular/material" as mat;
 
-@use 'variables.scss' as vars;
+@use "variables.scss" as vars;
 
 html {
-  @include mat.theme((
-    color: (
-      theme-type: light,
-      primary: vars.$primary-palette,
-      tertiary: vars.$tertiary-palette,
-    ),
-    typography: Roboto,
-    density: 0,
-  ));
+  @include mat.theme(
+    (
+      color: (
+        theme-type: light,
+        primary: vars.$primary-palette,
+        tertiary: vars.$tertiary-palette,
+      ),
+      typography: Roboto,
+      density: 0,
+    )
+  );
 
-  @include mat.badge-overrides((
-    background-color: var(--mat-sys-primary),
-  ));
+  @include mat.badge-overrides(
+    (
+      background-color: var(--mat-sys-primary),
+    )
+  );
 
   @include mat.fab-overrides(
-  (
-    container-elevation-shadow: none,
-    small-container-elevation-shadow: none,
-    extended-container-elevation-shadow: none,
-    hover-container-elevation-shadow: var(--mat-sys-level2),
-    small-hover-container-elevation-shadow: var(--mat-sys-level2),
-    extended-hover-container-elevation-shadow: var(--mat-sys-level2),
-  )
-);
+    (
+      container-elevation-shadow: none,
+      small-container-elevation-shadow: none,
+      extended-container-elevation-shadow: none,
+      hover-container-elevation-shadow: var(--mat-sys-level2),
+      small-hover-container-elevation-shadow: var(--mat-sys-level2),
+      extended-hover-container-elevation-shadow: var(--mat-sys-level2),
+    )
+  );
 
+  @include mat.table-overrides(
+    (
+      background-color:
+        var(--mdc-elevated-card-container-color, var(--mat-sys-surface-container-low)),
+    )
+  );
+
+  @include mat.paginator-overrides(
+    (
+      container-background-color:
+        var(--mdc-elevated-card-container-color, var(--mat-sys-surface-container-low)),
+    )
+  );
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
