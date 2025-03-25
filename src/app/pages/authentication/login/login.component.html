@@ -1,30 +1,49 @@
-<div class="flex items-center h-screen">
-  <div class="w-full max-w-lg mx-auto">
+<div class="flex items-center h-screen w-screen">
+  <div class="w-full max-w-md mx-auto">
     <mat-card>
       <mat-card-content>
-        <h1 class="text-3xl font-bold text-tertiary text-center">
-          Inicio de sesión
-        </h1>
-        <h1 class="text-3xl font-bold text-primary text-center">
-          Inicio de sesión
-        </h1>
+        <div class="text-center mb-6">
+          <h1 class="text-primary text-xl font-bold">Inicio de sesión</h1>
+        </div>
 
         <form>
-          <mat-form-field class="w-full">
-            <input
-              matInput
-              placeholder="Correo electrónico"
-              type="email"
-              required
-            />
-          </mat-form-field>
+          <div class="flex flex-col gap-3">
+            <mat-form-field>
+              <mat-label>Usuario</mat-label>
+              <input matInput placeholder="Ej: usuario123" />
+              <mat-hint>Ingrese su nombre de usuario</mat-hint>
+            </mat-form-field>
 
-          <mat-form-field class="w-full">
-            <input matInput placeholder="Contraseña" type="password" required />
-          </mat-form-field>
+            <mat-form-field>
+              <mat-label>Contraseña</mat-label>
+              <input matInput placeholder="Ej: usuario123" />
+              <mat-hint>Ingrese su contraseña</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="flex space-between gap-1 my-2">
+            <mat-checkbox color="primary">
+              Recordar en este dispositivo
+            </mat-checkbox>
+
+            <button
+              type="button"
+              mat-button
+              routerLink="/authentication/forgot"
+            >
+              ¿Recuperar contraseña?
+            </button>
+          </div>
+
+          <button
+            type="button"
+            mat-flat-button
+            (click)="submit()"
+            class="w-full mt-2"
+          >
+            Entrar
+          </button>
         </form>
-
-        <button mat-flat-button>Entrar</button>
       </mat-card-content>
     </mat-card>
   </div>

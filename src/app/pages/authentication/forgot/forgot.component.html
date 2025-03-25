@@ -1,1 +1,41 @@
-<p>forgot works!</p>
+<div class="flex items-center h-screen w-screen">
+  <div class="w-full max-w-md mx-auto">
+    <mat-card>
+      <mat-card-content>
+        <div class="text-center mb-6">
+          <h1 class="text-primary text-xl font-bold">Recuperar cuenta</h1>
+
+          <p>
+            Ingrese su nombre de usuario para recuperar su cuenta, recibirá un
+            correo con las instrucciones necesarias.
+          </p>
+        </div>
+
+        <form>
+          <div class="flex flex-col gap-3">
+            <mat-form-field>
+              <mat-label>Usuario</mat-label>
+              <input matInput placeholder="Ej: usuario123" />
+              <mat-hint>Ingrese su nombre de usuario</mat-hint>
+            </mat-form-field>
+          </div>
+
+          <div class="flex space-between gap-1 my-2">
+            <button type="button" mat-button routerLink="/authentication/login">
+              ¿Iniciar sesión?
+            </button>
+          </div>
+
+          <button
+            type="button"
+            mat-flat-button
+            (click)="submit()"
+            class="w-full mt-2"
+          >
+            Enviar instrucciones
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,35 @@
+<mat-toolbar>
+  @if (isMobileScreen) {
+  <button
+    mat-icon-button
+    (click)="toggleSidenav.emit()"
+    class="block sm:hidden"
+  >
+    <mat-icon svgIcon="menu" />
+  </button>
+  }
+
+  <button mat-icon-button>
+    <mat-icon svgIcon="bell-outline" matBadge="4" matBadgeOverlap="true" />
+  </button>
+
+  <span class="flex flex-1"></span>
+
+  <button mat-mini-fab [matMenuTriggerFor]="profilemenu">
+    <img
+      src="/images/user-1.jpg"
+      class="rounded-[var(--mat-sys-corner-medium)]"
+    />
+  </button>
+
+  <mat-menu #profilemenu="matMenu" class="w-[220px]">
+    <button mat-menu-item>
+      <mat-icon svgIcon="account-outline" />
+      Mi perfil
+    </button>
+    <button mat-menu-item routerLink="/authentication/login">
+      <mat-icon svgIcon="logout" />
+      Cerrar sesión
+    </button>
+  </mat-menu>
+</mat-toolbar>

@@ -1,13 +1,12 @@
 import { Component, inject } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatCard, MatCardContent } from '@angular/material/card';
 import { MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
-import { MatCheckbox } from '@angular/material/checkbox';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-reset-password',
   imports: [
     MatCard,
     MatCardContent,
@@ -15,17 +14,15 @@ import { Router, RouterLink } from '@angular/router';
     MatInput,
     MatLabel,
     MatHint,
-    MatButton,
-    MatCheckbox,
-    RouterLink
+    MatButton
   ],
-  templateUrl: './login.component.html',
-  styles: ``,
+  templateUrl: './reset-password.component.html',
+  styles: ``
 })
-export class LoginComponent {
+export class ResetPasswordComponent {
   private readonly router = inject(Router)
   
   public submit() {
-    this.router.navigate(['/'])
+    this.router.navigate(['authentication/login'])
   }
 }
