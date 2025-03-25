@@ -19,242 +19,669 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
-export type AuthResponse = {
-  __typename?: 'AuthResponse';
-  access_token: Scalars['String']['output'];
-  user: User;
+export type Action = {
+  __typename?: 'Action';
+  action: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  effect: ActionEffect;
+  id: Scalars['ID']['output'];
+  policyId: Scalars['String']['output'];
+  route: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
 };
 
-export type BaseInput = {
-  id: Scalars['Int']['input'];
-};
-
-export type Company = {
-  __typename?: 'Company';
-  address: Scalars['String']['output'];
-  created_at: Scalars['DateTime']['output'];
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  departments: Array<Department>;
-  hierarchies: Array<Hierarchy>;
-  id: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
-  picture: Scalars['String']['output'];
-  updated_at: Scalars['DateTime']['output'];
-  version: Scalars['Float']['output'];
-  workstations: Array<Workstation>;
-};
-
-
-export type CompanyDepartmentsArgs = {
-  filter?: DepartmentFilter;
-  sorting?: Array<DepartmentSort>;
-};
-
-
-export type CompanyHierarchiesArgs = {
-  filter?: HierarchyFilter;
-  sorting?: Array<HierarchySort>;
-};
-
-
-export type CompanyWorkstationsArgs = {
-  filter?: WorkstationFilter;
-  sorting?: Array<WorkstationSort>;
-};
-
-export type CompanyConnection = {
-  __typename?: 'CompanyConnection';
+export type ActionConnection = {
+  __typename?: 'ActionConnection';
   /** Array of nodes. */
-  nodes: Array<Company>;
+  nodes: Array<Action>;
   /** Paging information */
   pageInfo: OffsetPageInfo;
   /** Fetch total count of records */
   totalCount: Scalars['Int']['output'];
 };
 
-export type CompanyDeleteFilter = {
-  and?: InputMaybe<Array<CompanyDeleteFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<CompanyDeleteFilter>>;
+export type ActionDeleteFilter = {
+  action?: InputMaybe<StringFieldComparison>;
+  and?: InputMaybe<Array<ActionDeleteFilter>>;
+  or?: InputMaybe<Array<ActionDeleteFilter>>;
+  policyId?: InputMaybe<StringFieldComparison>;
+  route?: InputMaybe<StringFieldComparison>;
 };
 
-export type CompanyDeleteResponse = {
-  __typename?: 'CompanyDeleteResponse';
-  address?: Maybe<Scalars['String']['output']>;
-  created_at?: Maybe<Scalars['DateTime']['output']>;
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  picture?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
-  version?: Maybe<Scalars['Float']['output']>;
+export type ActionDeleteResponse = {
+  __typename?: 'ActionDeleteResponse';
+  action?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  effect?: Maybe<ActionEffect>;
+  id?: Maybe<Scalars['ID']['output']>;
+  policyId?: Maybe<Scalars['String']['output']>;
+  route?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
 };
 
-export type CompanyFilter = {
-  and?: InputMaybe<Array<CompanyFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<CompanyFilter>>;
+export enum ActionEffect {
+  Allow = 'ALLOW',
+  Deny = 'DENY'
+}
+
+export type ActionFilter = {
+  action?: InputMaybe<StringFieldComparison>;
+  and?: InputMaybe<Array<ActionFilter>>;
+  or?: InputMaybe<Array<ActionFilter>>;
+  policyId?: InputMaybe<StringFieldComparison>;
+  route?: InputMaybe<StringFieldComparison>;
 };
 
-export type CompanySort = {
+export type ActionSort = {
   direction: SortDirection;
-  field: CompanySortFields;
+  field: ActionSortFields;
   nulls?: InputMaybe<SortNulls>;
 };
 
-export enum CompanySortFields {
-  Id = 'id',
+export enum ActionSortFields {
+  Action = 'action',
+  PolicyId = 'policyId',
+  Route = 'route'
+}
+
+export type ActionUpdateFilter = {
+  action?: InputMaybe<StringFieldComparison>;
+  and?: InputMaybe<Array<ActionUpdateFilter>>;
+  or?: InputMaybe<Array<ActionUpdateFilter>>;
+  policyId?: InputMaybe<StringFieldComparison>;
+  route?: InputMaybe<StringFieldComparison>;
+};
+
+export type Branch = {
+  __typename?: 'Branch';
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  picture: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
+};
+
+export type BranchConnection = {
+  __typename?: 'BranchConnection';
+  /** Array of nodes. */
+  nodes: Array<Branch>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type BranchDeleteFilter = {
+  and?: InputMaybe<Array<BranchDeleteFilter>>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<BranchDeleteFilter>>;
+};
+
+export type BranchDeleteResponse = {
+  __typename?: 'BranchDeleteResponse';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  picture?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type BranchFilter = {
+  and?: InputMaybe<Array<BranchFilter>>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<BranchFilter>>;
+};
+
+export type BranchSort = {
+  direction: SortDirection;
+  field: BranchSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum BranchSortFields {
   Name = 'name'
 }
 
-export type CompanyUpdateFilter = {
-  and?: InputMaybe<Array<CompanyUpdateFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
+export type BranchUpdateFilter = {
+  and?: InputMaybe<Array<BranchUpdateFilter>>;
   name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<CompanyUpdateFilter>>;
+  or?: InputMaybe<Array<BranchUpdateFilter>>;
 };
 
-export type CreateCompany = {
-  address: Scalars['String']['input'];
+export type Classroom = {
+  __typename?: 'Classroom';
+  branchId: Scalars['String']['output'];
+  color: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
+};
+
+export type ClassroomConnection = {
+  __typename?: 'ClassroomConnection';
+  /** Array of nodes. */
+  nodes: Array<Classroom>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ClassroomDeleteFilter = {
+  and?: InputMaybe<Array<ClassroomDeleteFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<ClassroomDeleteFilter>>;
+};
+
+export type ClassroomDeleteResponse = {
+  __typename?: 'ClassroomDeleteResponse';
+  branchId?: Maybe<Scalars['String']['output']>;
+  color?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type ClassroomFilter = {
+  and?: InputMaybe<Array<ClassroomFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<ClassroomFilter>>;
+};
+
+export type ClassroomSort = {
+  direction: SortDirection;
+  field: ClassroomSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum ClassroomSortFields {
+  BranchId = 'branchId',
+  Name = 'name'
+}
+
+export type ClassroomUpdateFilter = {
+  and?: InputMaybe<Array<ClassroomUpdateFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<ClassroomUpdateFilter>>;
+};
+
+export type Course = {
+  __typename?: 'Course';
+  branchId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
+};
+
+export type CourseConnection = {
+  __typename?: 'CourseConnection';
+  /** Array of nodes. */
+  nodes: Array<Course>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type CourseDeleteFilter = {
+  and?: InputMaybe<Array<CourseDeleteFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<CourseDeleteFilter>>;
+};
+
+export type CourseDeleteResponse = {
+  __typename?: 'CourseDeleteResponse';
+  branchId?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type CourseFilter = {
+  and?: InputMaybe<Array<CourseFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<CourseFilter>>;
+};
+
+export type CourseSort = {
+  direction: SortDirection;
+  field: CourseSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum CourseSortFields {
+  BranchId = 'branchId',
+  Name = 'name'
+}
+
+export type CourseUpdateFilter = {
+  and?: InputMaybe<Array<CourseUpdateFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<CourseUpdateFilter>>;
+};
+
+export type CreateAction = {
+  action: Scalars['String']['input'];
+  effect: ActionEffect;
+  policyId: Scalars['String']['input'];
+  route: Scalars['String']['input'];
+};
+
+export type CreateBranch = {
   name: Scalars['String']['input'];
   picture: Scalars['String']['input'];
 };
 
-export type CreateManyCompaniesInput = {
+export type CreateClassroom = {
+  branchId: Scalars['String']['input'];
+  color: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
+export type CreateCourse = {
+  branchId: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
+export type CreateCycle = {
+  branchId: Scalars['String']['input'];
+  end: Scalars['DateTime']['input'];
+  name: Scalars['String']['input'];
+  start: Scalars['DateTime']['input'];
+};
+
+export type CreateDebit = {
+  description: Scalars['String']['input'];
+  dueDate: Scalars['DateTime']['input'];
+  enrollmentId: Scalars['String']['input'];
+  frequency: Frequency;
+  paymentDate?: InputMaybe<Scalars['DateTime']['input']>;
+  state: DebitState;
+  value: Scalars['Float']['input'];
+};
+
+export type CreateEnrollment = {
+  branchId: Scalars['String']['input'];
+  classroomId: Scalars['String']['input'];
+  courseId: Scalars['String']['input'];
+  cycleId: Scalars['String']['input'];
+  details: Scalars['String']['input'];
+  state: EnrollmentState;
+  studentId: Scalars['String']['input'];
+};
+
+export type CreateFee = {
+  courseId: Scalars['String']['input'];
+  frequency: Frequency;
+  name: Scalars['String']['input'];
+  price: Scalars['Float']['input'];
+};
+
+export type CreateManyActionsInput = {
   /** Array of records to create */
-  companies: Array<CreateCompany>;
+  actions: Array<CreateAction>;
 };
 
-export type CreateManyDepartmentsInput = {
+export type CreateManyBranchesInput = {
   /** Array of records to create */
-  departments: Array<DepartmentCreate>;
+  branches: Array<CreateBranch>;
 };
 
-export type CreateManyDetailOrdersInput = {
+export type CreateManyClassroomsInput = {
   /** Array of records to create */
-  detailOrders: Array<DetailOrderCreate>;
+  classrooms: Array<CreateClassroom>;
 };
 
-export type CreateManyDocumentsInput = {
+export type CreateManyCoursesInput = {
   /** Array of records to create */
-  documents: Array<DocumentCreate>;
+  courses: Array<CreateCourse>;
 };
 
-export type CreateManyHierarchiesInput = {
+export type CreateManyCyclesInput = {
   /** Array of records to create */
-  hierarchies: Array<HierarchyCreate>;
+  cycles: Array<CreateCycle>;
 };
 
-export type CreateManyInteractionOrdersInput = {
+export type CreateManyDebitsInput = {
   /** Array of records to create */
-  interactionOrders: Array<InteractionOrderCreate>;
+  debits: Array<CreateDebit>;
 };
 
-export type CreateManyPurchaseOrderLogsInput = {
+export type CreateManyEnrollmentsInput = {
   /** Array of records to create */
-  purchaseOrderLogs: Array<PurchaseOrderLogCreate>;
+  enrollments: Array<CreateEnrollment>;
 };
 
-export type CreateManySuppliersInput = {
+export type CreateManyFeesInput = {
   /** Array of records to create */
-  suppliers: Array<SupplierCreate>;
+  fees: Array<CreateFee>;
 };
 
-export type CreateManyUsersInput = {
+export type CreateManyPoliciesInput = {
   /** Array of records to create */
-  users: Array<UserCreate>;
+  policies: Array<CreatePolicy>;
 };
 
-export type CreateManyWorkstationsInput = {
+export type CreateManyStudentsInput = {
   /** Array of records to create */
-  workstations: Array<WorkstationCreate>;
+  students: Array<CreateStudent>;
 };
 
-export type CreateOneCompanyInput = {
+export type CreateManyTeachersInput = {
+  /** Array of records to create */
+  teachers: Array<CreateTeacher>;
+};
+
+export type CreateManyTutorsInput = {
+  /** Array of records to create */
+  tutors: Array<CreateTutor>;
+};
+
+export type CreateOneActionInput = {
   /** The record to create */
-  company: CreateCompany;
+  action: CreateAction;
 };
 
-export type CreateOneDepartmentInput = {
+export type CreateOneBranchInput = {
   /** The record to create */
-  department: DepartmentCreate;
+  branch: CreateBranch;
 };
 
-export type CreateOneDetailOrderInput = {
+export type CreateOneClassroomInput = {
   /** The record to create */
-  detailOrder: DetailOrderCreate;
+  classroom: CreateClassroom;
 };
 
-export type CreateOneDocumentInput = {
+export type CreateOneCourseInput = {
   /** The record to create */
-  document: DocumentCreate;
+  course: CreateCourse;
 };
 
-export type CreateOneHierarchyInput = {
+export type CreateOneCycleInput = {
   /** The record to create */
-  hierarchy: HierarchyCreate;
+  cycle: CreateCycle;
 };
 
-export type CreateOneInteractionOrderInput = {
+export type CreateOneDebitInput = {
   /** The record to create */
-  interactionOrder: InteractionOrderCreate;
+  debit: CreateDebit;
 };
 
-export type CreateOnePurchaseOrderLogInput = {
+export type CreateOneEnrollmentInput = {
   /** The record to create */
-  purchaseOrderLog: PurchaseOrderLogCreate;
+  enrollment: CreateEnrollment;
 };
 
-export type CreateOneSupplierInput = {
+export type CreateOneFeeInput = {
   /** The record to create */
-  supplier: SupplierCreate;
+  fee: CreateFee;
 };
 
-export type CreateOneUserInput = {
+export type CreateOnePolicyInput = {
   /** The record to create */
-  user: UserCreate;
+  policy: CreatePolicy;
 };
 
-export type CreateOneWorkstationInput = {
+export type CreateOneStudentInput = {
   /** The record to create */
-  workstation: WorkstationCreate;
+  student: CreateStudent;
 };
 
-export type DeleteManyCompaniesInput = {
+export type CreateOneTeacherInput = {
+  /** The record to create */
+  teacher: CreateTeacher;
+};
+
+export type CreateOneTutorInput = {
+  /** The record to create */
+  tutor: CreateTutor;
+};
+
+export type CreatePolicy = {
+  branchId: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
+export type CreateStudent = {
+  firstname: Scalars['String']['input'];
+  lastname: Scalars['String']['input'];
+  picture: Scalars['String']['input'];
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateTeacher = {
+  firstname: Scalars['String']['input'];
+  lastname: Scalars['String']['input'];
+  picture: Scalars['String']['input'];
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type CreateTutor = {
+  firstname: Scalars['String']['input'];
+  lastname: Scalars['String']['input'];
+  picture: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+};
+
+export type Cycle = {
+  __typename?: 'Cycle';
+  branchId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  end: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  start: Scalars['DateTime']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
+};
+
+export type CycleConnection = {
+  __typename?: 'CycleConnection';
+  /** Array of nodes. */
+  nodes: Array<Cycle>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type CycleDeleteFilter = {
+  and?: InputMaybe<Array<CycleDeleteFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<CycleDeleteFilter>>;
+};
+
+export type CycleDeleteResponse = {
+  __typename?: 'CycleDeleteResponse';
+  branchId?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  end?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  start?: Maybe<Scalars['DateTime']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type CycleFilter = {
+  and?: InputMaybe<Array<CycleFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<CycleFilter>>;
+};
+
+export type CycleSort = {
+  direction: SortDirection;
+  field: CycleSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum CycleSortFields {
+  BranchId = 'branchId',
+  Name = 'name'
+}
+
+export type CycleUpdateFilter = {
+  and?: InputMaybe<Array<CycleUpdateFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<CycleUpdateFilter>>;
+};
+
+export type Debit = {
+  __typename?: 'Debit';
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  description: Scalars['String']['output'];
+  dueDate: Scalars['DateTime']['output'];
+  enrollmentId: Scalars['String']['output'];
+  frequency: Frequency;
+  id: Scalars['ID']['output'];
+  paymentDate?: Maybe<Scalars['DateTime']['output']>;
+  state: DebitState;
+  updatedAt: Scalars['DateTime']['output'];
+  value: Scalars['Float']['output'];
+  version: Scalars['Int']['output'];
+};
+
+export type DebitConnection = {
+  __typename?: 'DebitConnection';
+  /** Array of nodes. */
+  nodes: Array<Debit>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type DebitDeleteFilter = {
+  and?: InputMaybe<Array<DebitDeleteFilter>>;
+  description?: InputMaybe<StringFieldComparison>;
+  enrollmentId?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<DebitDeleteFilter>>;
+};
+
+export type DebitDeleteResponse = {
+  __typename?: 'DebitDeleteResponse';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  dueDate?: Maybe<Scalars['DateTime']['output']>;
+  enrollmentId?: Maybe<Scalars['String']['output']>;
+  frequency?: Maybe<Frequency>;
+  id?: Maybe<Scalars['ID']['output']>;
+  paymentDate?: Maybe<Scalars['DateTime']['output']>;
+  state?: Maybe<DebitState>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  value?: Maybe<Scalars['Float']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type DebitFilter = {
+  and?: InputMaybe<Array<DebitFilter>>;
+  description?: InputMaybe<StringFieldComparison>;
+  enrollmentId?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<DebitFilter>>;
+};
+
+export type DebitSort = {
+  direction: SortDirection;
+  field: DebitSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum DebitSortFields {
+  Description = 'description',
+  EnrollmentId = 'enrollmentId'
+}
+
+export enum DebitState {
+  Canceled = 'CANCELED',
+  Condoned = 'CONDONED',
+  Debt = 'DEBT',
+  Paid = 'PAID',
+  PartiallyPaid = 'PARTIALLY_PAID'
+}
+
+export type DebitUpdateFilter = {
+  and?: InputMaybe<Array<DebitUpdateFilter>>;
+  description?: InputMaybe<StringFieldComparison>;
+  enrollmentId?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<DebitUpdateFilter>>;
+};
+
+export type DeleteManyActionsInput = {
   /** Filter to find records to delete */
-  filter: CompanyDeleteFilter;
+  filter: ActionDeleteFilter;
 };
 
-export type DeleteManyDepartmentsInput = {
+export type DeleteManyBranchesInput = {
   /** Filter to find records to delete */
-  filter: DepartmentDeleteFilter;
+  filter: BranchDeleteFilter;
 };
 
-export type DeleteManyDetailOrdersInput = {
+export type DeleteManyClassroomsInput = {
   /** Filter to find records to delete */
-  filter: DetailOrderDeleteFilter;
+  filter: ClassroomDeleteFilter;
 };
 
-export type DeleteManyDocumentsInput = {
+export type DeleteManyCoursesInput = {
   /** Filter to find records to delete */
-  filter: DocumentDeleteFilter;
+  filter: CourseDeleteFilter;
 };
 
-export type DeleteManyHierarchiesInput = {
+export type DeleteManyCyclesInput = {
   /** Filter to find records to delete */
-  filter: HierarchyDeleteFilter;
+  filter: CycleDeleteFilter;
 };
 
-export type DeleteManyInteractionOrdersInput = {
+export type DeleteManyDebitsInput = {
   /** Filter to find records to delete */
-  filter: InteractionOrderDeleteFilter;
+  filter: DebitDeleteFilter;
 };
 
-export type DeleteManyPurchaseOrderLogsInput = {
+export type DeleteManyEnrollmentsInput = {
   /** Filter to find records to delete */
-  filter: PurchaseOrderLogDeleteFilter;
+  filter: EnrollmentDeleteFilter;
+};
+
+export type DeleteManyFeesInput = {
+  /** Filter to find records to delete */
+  filter: FeeDeleteFilter;
+};
+
+export type DeleteManyPoliciesInput = {
+  /** Filter to find records to delete */
+  filter: PolicyDeleteFilter;
 };
 
 export type DeleteManyResponse = {
@@ -263,870 +690,719 @@ export type DeleteManyResponse = {
   deletedCount: Scalars['Int']['output'];
 };
 
-export type DeleteManySuppliersInput = {
+export type DeleteManyStudentsInput = {
   /** Filter to find records to delete */
-  filter: SupplierDeleteFilter;
+  filter: StudentDeleteFilter;
 };
 
-export type DeleteManyUsersInput = {
+export type DeleteManyTeachersInput = {
   /** Filter to find records to delete */
-  filter: UserDeleteFilter;
+  filter: TeacherDeleteFilter;
 };
 
-export type DeleteManyWorkstationsInput = {
+export type DeleteManyTutorsInput = {
   /** Filter to find records to delete */
-  filter: WorkstationDeleteFilter;
+  filter: TutorDeleteFilter;
 };
 
-export type DeleteOneCompanyInput = {
+export type DeleteOneActionInput = {
   /** The id of the record to delete. */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
 };
 
-export type DeleteOneDepartmentInput = {
+export type DeleteOneBranchInput = {
   /** The id of the record to delete. */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
 };
 
-export type DeleteOneDetailOrderInput = {
+export type DeleteOneClassroomInput = {
   /** The id of the record to delete. */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
 };
 
-export type DeleteOneDocumentInput = {
+export type DeleteOneCourseInput = {
   /** The id of the record to delete. */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
 };
 
-export type DeleteOneHierarchyInput = {
+export type DeleteOneCycleInput = {
   /** The id of the record to delete. */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
 };
 
-export type DeleteOneInteractionOrderInput = {
+export type DeleteOneDebitInput = {
   /** The id of the record to delete. */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
 };
 
-export type DeleteOnePurchaseOrderLogInput = {
+export type DeleteOneEnrollmentInput = {
   /** The id of the record to delete. */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
 };
 
-export type DeleteOneSupplierInput = {
+export type DeleteOneFeeInput = {
   /** The id of the record to delete. */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
 };
 
-export type DeleteOneUserInput = {
+export type DeleteOnePolicyInput = {
   /** The id of the record to delete. */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
 };
 
-export type DeleteOneWorkstationInput = {
+export type DeleteOneStudentInput = {
   /** The id of the record to delete. */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
 };
 
-export type Department = {
-  __typename?: 'Department';
-  company: Company;
-  companyId: Scalars['Int']['output'];
-  created_at: Scalars['DateTime']['output'];
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  id: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
-  parentId: Scalars['Int']['output'];
-  updated_at: Scalars['DateTime']['output'];
-  version: Scalars['Float']['output'];
-  workstations: Array<Workstation>;
+export type DeleteOneTeacherInput = {
+  /** The id of the record to delete. */
+  id: Scalars['ID']['input'];
 };
 
-
-export type DepartmentWorkstationsArgs = {
-  filter?: WorkstationFilter;
-  sorting?: Array<WorkstationSort>;
+export type DeleteOneTutorInput = {
+  /** The id of the record to delete. */
+  id: Scalars['ID']['input'];
 };
 
-export type DepartmentConnection = {
-  __typename?: 'DepartmentConnection';
+export type Enrollment = {
+  __typename?: 'Enrollment';
+  branchId: Scalars['String']['output'];
+  classroomId: Scalars['String']['output'];
+  courseId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  cycleId: Scalars['String']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  details: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  state: EnrollmentState;
+  studentId: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
+};
+
+export type EnrollmentConnection = {
+  __typename?: 'EnrollmentConnection';
   /** Array of nodes. */
-  nodes: Array<Department>;
+  nodes: Array<Enrollment>;
   /** Paging information */
   pageInfo: OffsetPageInfo;
   /** Fetch total count of records */
   totalCount: Scalars['Int']['output'];
 };
 
-export type DepartmentCreate = {
-  companyId: Scalars['Int']['input'];
-  name: Scalars['String']['input'];
-  parentId: Scalars['Int']['input'];
+export type EnrollmentDeleteFilter = {
+  and?: InputMaybe<Array<EnrollmentDeleteFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  classroomId?: InputMaybe<StringFieldComparison>;
+  courseId?: InputMaybe<StringFieldComparison>;
+  cycleId?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<EnrollmentDeleteFilter>>;
+  studentId?: InputMaybe<StringFieldComparison>;
 };
 
-export type DepartmentDeleteFilter = {
-  and?: InputMaybe<Array<DepartmentDeleteFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<DepartmentDeleteFilter>>;
+export type EnrollmentDeleteResponse = {
+  __typename?: 'EnrollmentDeleteResponse';
+  branchId?: Maybe<Scalars['String']['output']>;
+  classroomId?: Maybe<Scalars['String']['output']>;
+  courseId?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  cycleId?: Maybe<Scalars['String']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  details?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  state?: Maybe<EnrollmentState>;
+  studentId?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
 };
 
-export type DepartmentDeleteResponse = {
-  __typename?: 'DepartmentDeleteResponse';
-  companyId?: Maybe<Scalars['Int']['output']>;
-  created_at?: Maybe<Scalars['DateTime']['output']>;
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  parentId?: Maybe<Scalars['Int']['output']>;
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
-  version?: Maybe<Scalars['Float']['output']>;
+export type EnrollmentFilter = {
+  and?: InputMaybe<Array<EnrollmentFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  classroomId?: InputMaybe<StringFieldComparison>;
+  courseId?: InputMaybe<StringFieldComparison>;
+  cycleId?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<EnrollmentFilter>>;
+  studentId?: InputMaybe<StringFieldComparison>;
 };
 
-export type DepartmentFilter = {
-  and?: InputMaybe<Array<DepartmentFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<DepartmentFilter>>;
-};
-
-export type DepartmentSort = {
+export type EnrollmentSort = {
   direction: SortDirection;
-  field: DepartmentSortFields;
+  field: EnrollmentSortFields;
   nulls?: InputMaybe<SortNulls>;
 };
 
-export enum DepartmentSortFields {
-  Id = 'id'
+export enum EnrollmentSortFields {
+  BranchId = 'branchId',
+  ClassroomId = 'classroomId',
+  CourseId = 'courseId',
+  CycleId = 'cycleId',
+  StudentId = 'studentId'
 }
 
-export type DepartmentUpdate = {
-  companyId?: InputMaybe<Scalars['Int']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  parentId?: InputMaybe<Scalars['Int']['input']>;
-  workstations?: InputMaybe<Array<BaseInput>>;
+export enum EnrollmentState {
+  Active = 'ACTIVE',
+  Inactive = 'INACTIVE',
+  Paused = 'PAUSED'
+}
+
+export type EnrollmentUpdateFilter = {
+  and?: InputMaybe<Array<EnrollmentUpdateFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  classroomId?: InputMaybe<StringFieldComparison>;
+  courseId?: InputMaybe<StringFieldComparison>;
+  cycleId?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<EnrollmentUpdateFilter>>;
+  studentId?: InputMaybe<StringFieldComparison>;
 };
 
-export type DepartmentUpdateFilter = {
-  and?: InputMaybe<Array<DepartmentUpdateFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<DepartmentUpdateFilter>>;
-};
-
-export type DetailOrder = {
-  __typename?: 'DetailOrder';
-  created_at: Scalars['DateTime']['output'];
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  description: Scalars['String']['output'];
-  id: Scalars['Int']['output'];
+export type Fee = {
+  __typename?: 'Fee';
+  courseId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  frequency: Frequency;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
   price: Scalars['Float']['output'];
-  product: Scalars['String']['output'];
-  purchaseOrder: PurchaseOrder;
-  purchaseOrderId: Scalars['Int']['output'];
-  quantity: Scalars['Int']['output'];
-  total: Scalars['Float']['output'];
-  updated_at: Scalars['DateTime']['output'];
-  version: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
 };
 
-export type DetailOrderConnection = {
-  __typename?: 'DetailOrderConnection';
+export type FeeConnection = {
+  __typename?: 'FeeConnection';
   /** Array of nodes. */
-  nodes: Array<DetailOrder>;
+  nodes: Array<Fee>;
   /** Paging information */
   pageInfo: OffsetPageInfo;
   /** Fetch total count of records */
   totalCount: Scalars['Int']['output'];
 };
 
-export type DetailOrderCreate = {
-  description: Scalars['String']['input'];
-  price: Scalars['Float']['input'];
-  product: Scalars['String']['input'];
-  purchaseOrderId: Scalars['Int']['input'];
-  quantity: Scalars['Int']['input'];
-  total: Scalars['Float']['input'];
+export type FeeDeleteFilter = {
+  and?: InputMaybe<Array<FeeDeleteFilter>>;
+  courseId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<FeeDeleteFilter>>;
 };
 
-export type DetailOrderDeleteFilter = {
-  and?: InputMaybe<Array<DetailOrderDeleteFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<DetailOrderDeleteFilter>>;
-};
-
-export type DetailOrderDeleteResponse = {
-  __typename?: 'DetailOrderDeleteResponse';
-  created_at?: Maybe<Scalars['DateTime']['output']>;
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
-  price?: Maybe<Scalars['Float']['output']>;
-  product?: Maybe<Scalars['String']['output']>;
-  purchaseOrderId?: Maybe<Scalars['Int']['output']>;
-  quantity?: Maybe<Scalars['Int']['output']>;
-  total?: Maybe<Scalars['Float']['output']>;
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
-  version?: Maybe<Scalars['Float']['output']>;
-};
-
-export type DetailOrderFilter = {
-  and?: InputMaybe<Array<DetailOrderFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<DetailOrderFilter>>;
-};
-
-export type DetailOrderSort = {
-  direction: SortDirection;
-  field: DetailOrderSortFields;
-  nulls?: InputMaybe<SortNulls>;
-};
-
-export enum DetailOrderSortFields {
-  Id = 'id'
-}
-
-export type DetailOrderUpdate = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  price?: InputMaybe<Scalars['Float']['input']>;
-  product?: InputMaybe<Scalars['String']['input']>;
-  purchaseOrderId?: InputMaybe<Scalars['Int']['input']>;
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-  total?: InputMaybe<Scalars['Float']['input']>;
-};
-
-export type DetailOrderUpdateFilter = {
-  and?: InputMaybe<Array<DetailOrderUpdateFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<DetailOrderUpdateFilter>>;
-};
-
-export type Document = {
-  __typename?: 'Document';
-  DocumentType: Scalars['Int']['output'];
-  created_at: Scalars['DateTime']['output'];
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  id: Scalars['Int']['output'];
-  partner?: Maybe<Partner>;
-  partnerId: Scalars['Int']['output'];
-  updated_at: Scalars['DateTime']['output'];
-  url: Scalars['String']['output'];
-  version: Scalars['Float']['output'];
-};
-
-export type DocumentConnection = {
-  __typename?: 'DocumentConnection';
-  /** Array of nodes. */
-  nodes: Array<Document>;
-  /** Paging information */
-  pageInfo: OffsetPageInfo;
-  /** Fetch total count of records */
-  totalCount: Scalars['Int']['output'];
-};
-
-export type DocumentCreate = {
-  DocumentType: Scalars['Int']['input'];
-  partnerId: Scalars['Int']['input'];
-  url: Scalars['String']['input'];
-};
-
-export type DocumentDeleteFilter = {
-  and?: InputMaybe<Array<DocumentDeleteFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<DocumentDeleteFilter>>;
-};
-
-export type DocumentDeleteResponse = {
-  __typename?: 'DocumentDeleteResponse';
-  DocumentType?: Maybe<Scalars['Int']['output']>;
-  created_at?: Maybe<Scalars['DateTime']['output']>;
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
-  partnerId?: Maybe<Scalars['Int']['output']>;
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
-  url?: Maybe<Scalars['String']['output']>;
-  version?: Maybe<Scalars['Float']['output']>;
-};
-
-export type DocumentFilter = {
-  and?: InputMaybe<Array<DocumentFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<DocumentFilter>>;
-};
-
-export type DocumentSort = {
-  direction: SortDirection;
-  field: DocumentSortFields;
-  nulls?: InputMaybe<SortNulls>;
-};
-
-export enum DocumentSortFields {
-  Id = 'id'
-}
-
-export type DocumentUpdate = {
-  DocumentType?: InputMaybe<Scalars['Int']['input']>;
-  partnerId?: InputMaybe<Scalars['Int']['input']>;
-  url?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type DocumentUpdateFilter = {
-  and?: InputMaybe<Array<DocumentUpdateFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<DocumentUpdateFilter>>;
-};
-
-export type Hierarchy = {
-  __typename?: 'Hierarchy';
-  company: Company;
-  companyId: Scalars['Int']['output'];
-  created_at: Scalars['DateTime']['output'];
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  id: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
-  parentId: Scalars['Int']['output'];
-  updated_at: Scalars['DateTime']['output'];
-  version: Scalars['Float']['output'];
-  workstations: Array<Workstation>;
-};
-
-
-export type HierarchyWorkstationsArgs = {
-  filter?: WorkstationFilter;
-  sorting?: Array<WorkstationSort>;
-};
-
-export type HierarchyConnection = {
-  __typename?: 'HierarchyConnection';
-  /** Array of nodes. */
-  nodes: Array<Hierarchy>;
-  /** Paging information */
-  pageInfo: OffsetPageInfo;
-  /** Fetch total count of records */
-  totalCount: Scalars['Int']['output'];
-};
-
-export type HierarchyCreate = {
-  companyId: Scalars['Int']['input'];
-  departmentId: Scalars['Int']['input'];
-  name: Scalars['String']['input'];
-  parentId: Scalars['Int']['input'];
-};
-
-export type HierarchyDeleteFilter = {
-  and?: InputMaybe<Array<HierarchyDeleteFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<HierarchyDeleteFilter>>;
-};
-
-export type HierarchyDeleteResponse = {
-  __typename?: 'HierarchyDeleteResponse';
-  companyId?: Maybe<Scalars['Int']['output']>;
-  created_at?: Maybe<Scalars['DateTime']['output']>;
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
+export type FeeDeleteResponse = {
+  __typename?: 'FeeDeleteResponse';
+  courseId?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  frequency?: Maybe<Frequency>;
+  id?: Maybe<Scalars['ID']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  parentId?: Maybe<Scalars['Int']['output']>;
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
-  version?: Maybe<Scalars['Float']['output']>;
+  price?: Maybe<Scalars['Float']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
 };
 
-export type HierarchyFilter = {
-  and?: InputMaybe<Array<HierarchyFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<HierarchyFilter>>;
+export type FeeFilter = {
+  and?: InputMaybe<Array<FeeFilter>>;
+  courseId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<FeeFilter>>;
 };
 
-export type HierarchySort = {
+export type FeeSort = {
   direction: SortDirection;
-  field: HierarchySortFields;
+  field: FeeSortFields;
   nulls?: InputMaybe<SortNulls>;
 };
 
-export enum HierarchySortFields {
-  Id = 'id'
+export enum FeeSortFields {
+  CourseId = 'courseId',
+  Name = 'name'
 }
 
-export type HierarchyUpdate = {
-  name?: InputMaybe<Scalars['String']['input']>;
-  parentId?: InputMaybe<Scalars['Int']['input']>;
-  workstations?: InputMaybe<Array<BaseInput>>;
+export type FeeUpdateFilter = {
+  and?: InputMaybe<Array<FeeUpdateFilter>>;
+  courseId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<FeeUpdateFilter>>;
 };
 
-export type HierarchyUpdateFilter = {
-  and?: InputMaybe<Array<HierarchyUpdateFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<HierarchyUpdateFilter>>;
-};
-
-export type IntFieldComparison = {
-  between?: InputMaybe<IntFieldComparisonBetween>;
-  eq?: InputMaybe<Scalars['Int']['input']>;
-  gt?: InputMaybe<Scalars['Int']['input']>;
-  gte?: InputMaybe<Scalars['Int']['input']>;
-  in?: InputMaybe<Array<Scalars['Int']['input']>>;
-  is?: InputMaybe<Scalars['Boolean']['input']>;
-  isNot?: InputMaybe<Scalars['Boolean']['input']>;
-  lt?: InputMaybe<Scalars['Int']['input']>;
-  lte?: InputMaybe<Scalars['Int']['input']>;
-  neq?: InputMaybe<Scalars['Int']['input']>;
-  notBetween?: InputMaybe<IntFieldComparisonBetween>;
-  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
-};
-
-export type IntFieldComparisonBetween = {
-  lower: Scalars['Int']['input'];
-  upper: Scalars['Int']['input'];
-};
-
-export type InteractionOrder = {
-  __typename?: 'InteractionOrder';
-  PurchaseOrderId: Scalars['Int']['output'];
-  created_at: Scalars['DateTime']['output'];
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  id: Scalars['Int']['output'];
-  interactionOrder: Scalars['Int']['output'];
-  purchaseOrder?: Maybe<PurchaseOrder>;
-  updated_at: Scalars['DateTime']['output'];
-  user?: Maybe<User>;
-  userId: Scalars['Int']['output'];
-  version: Scalars['Float']['output'];
-};
-
-export type InteractionOrderConnection = {
-  __typename?: 'InteractionOrderConnection';
-  /** Array of nodes. */
-  nodes: Array<InteractionOrder>;
-  /** Paging information */
-  pageInfo: OffsetPageInfo;
-  /** Fetch total count of records */
-  totalCount: Scalars['Int']['output'];
-};
-
-export type InteractionOrderCreate = {
-  interactionOrder: Scalars['Int']['input'];
-  purchaseOrderId: Scalars['Int']['input'];
-  userId: Scalars['Int']['input'];
-};
-
-export type InteractionOrderDeleteFilter = {
-  and?: InputMaybe<Array<InteractionOrderDeleteFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<InteractionOrderDeleteFilter>>;
-};
-
-export type InteractionOrderDeleteResponse = {
-  __typename?: 'InteractionOrderDeleteResponse';
-  PurchaseOrderId?: Maybe<Scalars['Int']['output']>;
-  created_at?: Maybe<Scalars['DateTime']['output']>;
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
-  interactionOrder?: Maybe<Scalars['Int']['output']>;
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
-  userId?: Maybe<Scalars['Int']['output']>;
-  version?: Maybe<Scalars['Float']['output']>;
-};
-
-export type InteractionOrderFilter = {
-  and?: InputMaybe<Array<InteractionOrderFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<InteractionOrderFilter>>;
-};
-
-export type InteractionOrderSort = {
-  direction: SortDirection;
-  field: InteractionOrderSortFields;
-  nulls?: InputMaybe<SortNulls>;
-};
-
-export enum InteractionOrderSortFields {
-  Id = 'id'
+export enum Frequency {
+  Daily = 'DAILY',
+  Hourly = 'HOURLY',
+  Monthly = 'MONTHLY',
+  Single = 'SINGLE',
+  Weekly = 'WEEKLY'
 }
-
-export type InteractionOrderUpdate = {
-  interactionOrder?: InputMaybe<Scalars['Int']['input']>;
-  purchaseOrderId?: InputMaybe<Scalars['Int']['input']>;
-  userId?: InputMaybe<Scalars['Int']['input']>;
-};
-
-export type InteractionOrderUpdateFilter = {
-  and?: InputMaybe<Array<InteractionOrderUpdateFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<InteractionOrderUpdateFilter>>;
-};
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createManyCompanies: Array<Company>;
-  createManyDepartments: Array<Department>;
-  createManyDetailOrders: Array<DetailOrder>;
-  createManyDocuments: Array<Document>;
-  createManyHierarchies: Array<Hierarchy>;
-  createManyInteractionOrders: Array<InteractionOrder>;
-  createManyPurchaseOrderLogs: Array<PurchaseOrderLog>;
-  createManySuppliers: Array<Supplier>;
-  createManyUsers: Array<User>;
-  createManyWorkstations: Array<Workstation>;
-  createOneCompany: Company;
-  createOneDepartment: Department;
-  createOneDetailOrder: DetailOrder;
-  createOneDocument: Document;
-  createOneHierarchy: Hierarchy;
-  createOneInteractionOrder: InteractionOrder;
-  createOnePurchaseOrderLog: PurchaseOrderLog;
-  createOneSupplier: Supplier;
-  createOneUser: User;
-  createOneWorkstation: Workstation;
-  deleteManyCompanies: DeleteManyResponse;
-  deleteManyDepartments: DeleteManyResponse;
-  deleteManyDetailOrders: DeleteManyResponse;
-  deleteManyDocuments: DeleteManyResponse;
-  deleteManyHierarchies: DeleteManyResponse;
-  deleteManyInteractionOrders: DeleteManyResponse;
-  deleteManyPurchaseOrderLogs: DeleteManyResponse;
-  deleteManySuppliers: DeleteManyResponse;
-  deleteManyUsers: DeleteManyResponse;
-  deleteManyWorkstations: DeleteManyResponse;
-  deleteOneCompany: CompanyDeleteResponse;
-  deleteOneDepartment: DepartmentDeleteResponse;
-  deleteOneDetailOrder: DetailOrderDeleteResponse;
-  deleteOneDocument: DocumentDeleteResponse;
-  deleteOneHierarchy: HierarchyDeleteResponse;
-  deleteOneInteractionOrder: InteractionOrderDeleteResponse;
-  deleteOnePurchaseOrderLog: PurchaseOrderLogDeleteResponse;
-  deleteOneSupplier: SupplierDeleteResponse;
-  deleteOneUser: UserDeleteResponse;
-  deleteOneWorkstation: WorkstationDeleteResponse;
-  login: AuthResponse;
-  register: AuthResponse;
-  updateManyCompanies: UpdateManyResponse;
-  updateManyDepartments: UpdateManyResponse;
-  updateManyDetailOrders: UpdateManyResponse;
-  updateManyDocuments: UpdateManyResponse;
-  updateManyHierarchies: UpdateManyResponse;
-  updateManyInteractionOrders: UpdateManyResponse;
-  updateManyPurchaseOrderLogs: UpdateManyResponse;
-  updateManySuppliers: UpdateManyResponse;
-  updateManyUsers: UpdateManyResponse;
-  updateManyWorkstations: UpdateManyResponse;
-  updateOneCompany: Company;
-  updateOneDepartment: Department;
-  updateOneDetailOrder: DetailOrder;
-  updateOneDocument: Document;
-  updateOneHierarchy: Hierarchy;
-  updateOneInteractionOrder: InteractionOrder;
-  updateOnePurchaseOrderLog: PurchaseOrderLog;
-  updateOneSupplier: Supplier;
-  updateOneUser: User;
-  updateOneWorkstation: Workstation;
+  createManyActions: Array<Action>;
+  createManyBranches: Array<Branch>;
+  createManyClassrooms: Array<Classroom>;
+  createManyCourses: Array<Course>;
+  createManyCycles: Array<Cycle>;
+  createManyDebits: Array<Debit>;
+  createManyEnrollments: Array<Enrollment>;
+  createManyFees: Array<Fee>;
+  createManyPolicies: Array<Policy>;
+  createManyStudents: Array<Student>;
+  createManyTeachers: Array<Teacher>;
+  createManyTutors: Array<Tutor>;
+  createOneAction: Action;
+  createOneBranch: Branch;
+  createOneClassroom: Classroom;
+  createOneCourse: Course;
+  createOneCycle: Cycle;
+  createOneDebit: Debit;
+  createOneEnrollment: Enrollment;
+  createOneFee: Fee;
+  createOnePolicy: Policy;
+  createOneStudent: Student;
+  createOneTeacher: Teacher;
+  createOneTutor: Tutor;
+  deleteManyActions: DeleteManyResponse;
+  deleteManyBranches: DeleteManyResponse;
+  deleteManyClassrooms: DeleteManyResponse;
+  deleteManyCourses: DeleteManyResponse;
+  deleteManyCycles: DeleteManyResponse;
+  deleteManyDebits: DeleteManyResponse;
+  deleteManyEnrollments: DeleteManyResponse;
+  deleteManyFees: DeleteManyResponse;
+  deleteManyPolicies: DeleteManyResponse;
+  deleteManyStudents: DeleteManyResponse;
+  deleteManyTeachers: DeleteManyResponse;
+  deleteManyTutors: DeleteManyResponse;
+  deleteOneAction: ActionDeleteResponse;
+  deleteOneBranch: BranchDeleteResponse;
+  deleteOneClassroom: ClassroomDeleteResponse;
+  deleteOneCourse: CourseDeleteResponse;
+  deleteOneCycle: CycleDeleteResponse;
+  deleteOneDebit: DebitDeleteResponse;
+  deleteOneEnrollment: EnrollmentDeleteResponse;
+  deleteOneFee: FeeDeleteResponse;
+  deleteOnePolicy: PolicyDeleteResponse;
+  deleteOneStudent: StudentDeleteResponse;
+  deleteOneTeacher: TeacherDeleteResponse;
+  deleteOneTutor: TutorDeleteResponse;
+  removeUser: User;
+  restoreManyVideos: UpdateManyResponse;
+  restoreOneVideo: Tutor;
+  signIn: Session;
+  signUp: Session;
+  updateManyActions: UpdateManyResponse;
+  updateManyBranches: UpdateManyResponse;
+  updateManyClassrooms: UpdateManyResponse;
+  updateManyCourses: UpdateManyResponse;
+  updateManyCycles: UpdateManyResponse;
+  updateManyDebits: UpdateManyResponse;
+  updateManyEnrollments: UpdateManyResponse;
+  updateManyFees: UpdateManyResponse;
+  updateManyPolicies: UpdateManyResponse;
+  updateManyStudents: UpdateManyResponse;
+  updateManyTeachers: UpdateManyResponse;
+  updateManyTutors: UpdateManyResponse;
+  updateOneAction: Action;
+  updateOneBranch: Branch;
+  updateOneClassroom: Classroom;
+  updateOneCourse: Course;
+  updateOneCycle: Cycle;
+  updateOneDebit: Debit;
+  updateOneEnrollment: Enrollment;
+  updateOneFee: Fee;
+  updateOnePolicy: Policy;
+  updateOneStudent: Student;
+  updateOneTeacher: Teacher;
+  updateOneTutor: Tutor;
+  updateUser: User;
 };
 
 
-export type MutationCreateManyCompaniesArgs = {
-  input: CreateManyCompaniesInput;
+export type MutationCreateManyActionsArgs = {
+  input: CreateManyActionsInput;
 };
 
 
-export type MutationCreateManyDepartmentsArgs = {
-  input: CreateManyDepartmentsInput;
+export type MutationCreateManyBranchesArgs = {
+  input: CreateManyBranchesInput;
 };
 
 
-export type MutationCreateManyDetailOrdersArgs = {
-  input: CreateManyDetailOrdersInput;
+export type MutationCreateManyClassroomsArgs = {
+  input: CreateManyClassroomsInput;
 };
 
 
-export type MutationCreateManyDocumentsArgs = {
-  input: CreateManyDocumentsInput;
+export type MutationCreateManyCoursesArgs = {
+  input: CreateManyCoursesInput;
 };
 
 
-export type MutationCreateManyHierarchiesArgs = {
-  input: CreateManyHierarchiesInput;
+export type MutationCreateManyCyclesArgs = {
+  input: CreateManyCyclesInput;
 };
 
 
-export type MutationCreateManyInteractionOrdersArgs = {
-  input: CreateManyInteractionOrdersInput;
+export type MutationCreateManyDebitsArgs = {
+  input: CreateManyDebitsInput;
 };
 
 
-export type MutationCreateManyPurchaseOrderLogsArgs = {
-  input: CreateManyPurchaseOrderLogsInput;
+export type MutationCreateManyEnrollmentsArgs = {
+  input: CreateManyEnrollmentsInput;
 };
 
 
-export type MutationCreateManySuppliersArgs = {
-  input: CreateManySuppliersInput;
+export type MutationCreateManyFeesArgs = {
+  input: CreateManyFeesInput;
 };
 
 
-export type MutationCreateManyUsersArgs = {
-  input: CreateManyUsersInput;
+export type MutationCreateManyPoliciesArgs = {
+  input: CreateManyPoliciesInput;
 };
 
 
-export type MutationCreateManyWorkstationsArgs = {
-  input: CreateManyWorkstationsInput;
+export type MutationCreateManyStudentsArgs = {
+  input: CreateManyStudentsInput;
 };
 
 
-export type MutationCreateOneCompanyArgs = {
-  input: CreateOneCompanyInput;
+export type MutationCreateManyTeachersArgs = {
+  input: CreateManyTeachersInput;
 };
 
 
-export type MutationCreateOneDepartmentArgs = {
-  input: CreateOneDepartmentInput;
+export type MutationCreateManyTutorsArgs = {
+  input: CreateManyTutorsInput;
 };
 
 
-export type MutationCreateOneDetailOrderArgs = {
-  input: CreateOneDetailOrderInput;
+export type MutationCreateOneActionArgs = {
+  input: CreateOneActionInput;
 };
 
 
-export type MutationCreateOneDocumentArgs = {
-  input: CreateOneDocumentInput;
+export type MutationCreateOneBranchArgs = {
+  input: CreateOneBranchInput;
 };
 
 
-export type MutationCreateOneHierarchyArgs = {
-  input: CreateOneHierarchyInput;
+export type MutationCreateOneClassroomArgs = {
+  input: CreateOneClassroomInput;
 };
 
 
-export type MutationCreateOneInteractionOrderArgs = {
-  input: CreateOneInteractionOrderInput;
+export type MutationCreateOneCourseArgs = {
+  input: CreateOneCourseInput;
 };
 
 
-export type MutationCreateOnePurchaseOrderLogArgs = {
-  input: CreateOnePurchaseOrderLogInput;
+export type MutationCreateOneCycleArgs = {
+  input: CreateOneCycleInput;
 };
 
 
-export type MutationCreateOneSupplierArgs = {
-  input: CreateOneSupplierInput;
+export type MutationCreateOneDebitArgs = {
+  input: CreateOneDebitInput;
 };
 
 
-export type MutationCreateOneUserArgs = {
-  input: CreateOneUserInput;
+export type MutationCreateOneEnrollmentArgs = {
+  input: CreateOneEnrollmentInput;
 };
 
 
-export type MutationCreateOneWorkstationArgs = {
-  input: CreateOneWorkstationInput;
+export type MutationCreateOneFeeArgs = {
+  input: CreateOneFeeInput;
 };
 
 
-export type MutationDeleteManyCompaniesArgs = {
-  input: DeleteManyCompaniesInput;
+export type MutationCreateOnePolicyArgs = {
+  input: CreateOnePolicyInput;
 };
 
 
-export type MutationDeleteManyDepartmentsArgs = {
-  input: DeleteManyDepartmentsInput;
+export type MutationCreateOneStudentArgs = {
+  input: CreateOneStudentInput;
 };
 
 
-export type MutationDeleteManyDetailOrdersArgs = {
-  input: DeleteManyDetailOrdersInput;
+export type MutationCreateOneTeacherArgs = {
+  input: CreateOneTeacherInput;
 };
 
 
-export type MutationDeleteManyDocumentsArgs = {
-  input: DeleteManyDocumentsInput;
+export type MutationCreateOneTutorArgs = {
+  input: CreateOneTutorInput;
 };
 
 
-export type MutationDeleteManyHierarchiesArgs = {
-  input: DeleteManyHierarchiesInput;
+export type MutationDeleteManyActionsArgs = {
+  input: DeleteManyActionsInput;
 };
 
 
-export type MutationDeleteManyInteractionOrdersArgs = {
-  input: DeleteManyInteractionOrdersInput;
+export type MutationDeleteManyBranchesArgs = {
+  input: DeleteManyBranchesInput;
 };
 
 
-export type MutationDeleteManyPurchaseOrderLogsArgs = {
-  input: DeleteManyPurchaseOrderLogsInput;
+export type MutationDeleteManyClassroomsArgs = {
+  input: DeleteManyClassroomsInput;
 };
 
 
-export type MutationDeleteManySuppliersArgs = {
-  input: DeleteManySuppliersInput;
+export type MutationDeleteManyCoursesArgs = {
+  input: DeleteManyCoursesInput;
 };
 
 
-export type MutationDeleteManyUsersArgs = {
-  input: DeleteManyUsersInput;
+export type MutationDeleteManyCyclesArgs = {
+  input: DeleteManyCyclesInput;
 };
 
 
-export type MutationDeleteManyWorkstationsArgs = {
-  input: DeleteManyWorkstationsInput;
+export type MutationDeleteManyDebitsArgs = {
+  input: DeleteManyDebitsInput;
 };
 
 
-export type MutationDeleteOneCompanyArgs = {
-  input: DeleteOneCompanyInput;
+export type MutationDeleteManyEnrollmentsArgs = {
+  input: DeleteManyEnrollmentsInput;
 };
 
 
-export type MutationDeleteOneDepartmentArgs = {
-  input: DeleteOneDepartmentInput;
+export type MutationDeleteManyFeesArgs = {
+  input: DeleteManyFeesInput;
 };
 
 
-export type MutationDeleteOneDetailOrderArgs = {
-  input: DeleteOneDetailOrderInput;
+export type MutationDeleteManyPoliciesArgs = {
+  input: DeleteManyPoliciesInput;
 };
 
 
-export type MutationDeleteOneDocumentArgs = {
-  input: DeleteOneDocumentInput;
+export type MutationDeleteManyStudentsArgs = {
+  input: DeleteManyStudentsInput;
 };
 
 
-export type MutationDeleteOneHierarchyArgs = {
-  input: DeleteOneHierarchyInput;
+export type MutationDeleteManyTeachersArgs = {
+  input: DeleteManyTeachersInput;
 };
 
 
-export type MutationDeleteOneInteractionOrderArgs = {
-  input: DeleteOneInteractionOrderInput;
+export type MutationDeleteManyTutorsArgs = {
+  input: DeleteManyTutorsInput;
 };
 
 
-export type MutationDeleteOnePurchaseOrderLogArgs = {
-  input: DeleteOnePurchaseOrderLogInput;
+export type MutationDeleteOneActionArgs = {
+  input: DeleteOneActionInput;
 };
 
 
-export type MutationDeleteOneSupplierArgs = {
-  input: DeleteOneSupplierInput;
+export type MutationDeleteOneBranchArgs = {
+  input: DeleteOneBranchInput;
 };
 
 
-export type MutationDeleteOneUserArgs = {
-  input: DeleteOneUserInput;
+export type MutationDeleteOneClassroomArgs = {
+  input: DeleteOneClassroomInput;
 };
 
 
-export type MutationDeleteOneWorkstationArgs = {
-  input: DeleteOneWorkstationInput;
+export type MutationDeleteOneCourseArgs = {
+  input: DeleteOneCourseInput;
 };
 
 
-export type MutationLoginArgs = {
-  password: Scalars['String']['input'];
-  username: Scalars['String']['input'];
+export type MutationDeleteOneCycleArgs = {
+  input: DeleteOneCycleInput;
 };
 
 
-export type MutationRegisterArgs = {
-  userData: UserCreate;
+export type MutationDeleteOneDebitArgs = {
+  input: DeleteOneDebitInput;
 };
 
 
-export type MutationUpdateManyCompaniesArgs = {
-  input: UpdateManyCompaniesInput;
+export type MutationDeleteOneEnrollmentArgs = {
+  input: DeleteOneEnrollmentInput;
 };
 
 
-export type MutationUpdateManyDepartmentsArgs = {
-  input: UpdateManyDepartmentsInput;
+export type MutationDeleteOneFeeArgs = {
+  input: DeleteOneFeeInput;
 };
 
 
-export type MutationUpdateManyDetailOrdersArgs = {
-  input: UpdateManyDetailOrdersInput;
+export type MutationDeleteOnePolicyArgs = {
+  input: DeleteOnePolicyInput;
 };
 
 
-export type MutationUpdateManyDocumentsArgs = {
-  input: UpdateManyDocumentsInput;
+export type MutationDeleteOneStudentArgs = {
+  input: DeleteOneStudentInput;
 };
 
 
-export type MutationUpdateManyHierarchiesArgs = {
-  input: UpdateManyHierarchiesInput;
+export type MutationDeleteOneTeacherArgs = {
+  input: DeleteOneTeacherInput;
 };
 
 
-export type MutationUpdateManyInteractionOrdersArgs = {
-  input: UpdateManyInteractionOrdersInput;
+export type MutationDeleteOneTutorArgs = {
+  input: DeleteOneTutorInput;
 };
 
 
-export type MutationUpdateManyPurchaseOrderLogsArgs = {
-  input: UpdateManyPurchaseOrderLogsInput;
+export type MutationRemoveUserArgs = {
+  id: Scalars['Int']['input'];
 };
 
 
-export type MutationUpdateManySuppliersArgs = {
-  input: UpdateManySuppliersInput;
+export type MutationRestoreManyVideosArgs = {
+  input: TutorFilter;
 };
 
 
-export type MutationUpdateManyUsersArgs = {
-  input: UpdateManyUsersInput;
+export type MutationRestoreOneVideoArgs = {
+  input: Scalars['ID']['input'];
 };
 
 
-export type MutationUpdateManyWorkstationsArgs = {
-  input: UpdateManyWorkstationsInput;
+export type MutationSignInArgs = {
+  input: SignInInput;
 };
 
 
-export type MutationUpdateOneCompanyArgs = {
-  input: UpdateOneCompanyInput;
+export type MutationSignUpArgs = {
+  input: SignUpInput;
 };
 
 
-export type MutationUpdateOneDepartmentArgs = {
-  input: UpdateOneDepartmentInput;
+export type MutationUpdateManyActionsArgs = {
+  input: UpdateManyActionsInput;
 };
 
 
-export type MutationUpdateOneDetailOrderArgs = {
-  input: UpdateOneDetailOrderInput;
+export type MutationUpdateManyBranchesArgs = {
+  input: UpdateManyBranchesInput;
 };
 
 
-export type MutationUpdateOneDocumentArgs = {
-  input: UpdateOneDocumentInput;
+export type MutationUpdateManyClassroomsArgs = {
+  input: UpdateManyClassroomsInput;
 };
 
 
-export type MutationUpdateOneHierarchyArgs = {
-  input: UpdateOneHierarchyInput;
+export type MutationUpdateManyCoursesArgs = {
+  input: UpdateManyCoursesInput;
 };
 
 
-export type MutationUpdateOneInteractionOrderArgs = {
-  input: UpdateOneInteractionOrderInput;
+export type MutationUpdateManyCyclesArgs = {
+  input: UpdateManyCyclesInput;
 };
 
 
-export type MutationUpdateOnePurchaseOrderLogArgs = {
-  input: UpdateOnePurchaseOrderLogInput;
+export type MutationUpdateManyDebitsArgs = {
+  input: UpdateManyDebitsInput;
 };
 
 
-export type MutationUpdateOneSupplierArgs = {
-  input: UpdateOneSupplierInput;
+export type MutationUpdateManyEnrollmentsArgs = {
+  input: UpdateManyEnrollmentsInput;
 };
 
 
-export type MutationUpdateOneUserArgs = {
-  input: UpdateOneUserInput;
+export type MutationUpdateManyFeesArgs = {
+  input: UpdateManyFeesInput;
 };
 
 
-export type MutationUpdateOneWorkstationArgs = {
-  input: UpdateOneWorkstationInput;
+export type MutationUpdateManyPoliciesArgs = {
+  input: UpdateManyPoliciesInput;
+};
+
+
+export type MutationUpdateManyStudentsArgs = {
+  input: UpdateManyStudentsInput;
+};
+
+
+export type MutationUpdateManyTeachersArgs = {
+  input: UpdateManyTeachersInput;
+};
+
+
+export type MutationUpdateManyTutorsArgs = {
+  input: UpdateManyTutorsInput;
+};
+
+
+export type MutationUpdateOneActionArgs = {
+  input: UpdateOneActionInput;
+};
+
+
+export type MutationUpdateOneBranchArgs = {
+  input: UpdateOneBranchInput;
+};
+
+
+export type MutationUpdateOneClassroomArgs = {
+  input: UpdateOneClassroomInput;
+};
+
+
+export type MutationUpdateOneCourseArgs = {
+  input: UpdateOneCourseInput;
+};
+
+
+export type MutationUpdateOneCycleArgs = {
+  input: UpdateOneCycleInput;
+};
+
+
+export type MutationUpdateOneDebitArgs = {
+  input: UpdateOneDebitInput;
+};
+
+
+export type MutationUpdateOneEnrollmentArgs = {
+  input: UpdateOneEnrollmentInput;
+};
+
+
+export type MutationUpdateOneFeeArgs = {
+  input: UpdateOneFeeInput;
+};
+
+
+export type MutationUpdateOnePolicyArgs = {
+  input: UpdateOnePolicyInput;
+};
+
+
+export type MutationUpdateOneStudentArgs = {
+  input: UpdateOneStudentInput;
+};
+
+
+export type MutationUpdateOneTeacherArgs = {
+  input: UpdateOneTeacherInput;
+};
+
+
+export type MutationUpdateOneTutorArgs = {
+  input: UpdateOneTutorInput;
+};
+
+
+export type MutationUpdateUserArgs = {
+  updateUserInput: UpdateUser;
 };
 
 export type OffsetPageInfo = {
@@ -1144,276 +1420,260 @@ export type OffsetPaging = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
-export type Partner = {
-  __typename?: 'Partner';
-  birthDate: Scalars['DateTime']['output'];
-  created_at: Scalars['DateTime']['output'];
-  dailyWave: Scalars['Float']['output'];
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  fatherLastName: Scalars['String']['output'];
-  id: Scalars['Int']['output'];
-  monthlyWave: Scalars['Float']['output'];
-  motherLastName: Scalars['String']['output'];
+export type Policy = {
+  __typename?: 'Policy';
+  branchId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
-  nss: Scalars['String']['output'];
-  picture: Scalars['String']['output'];
-  rfc: Scalars['String']['output'];
-  searchName: Scalars['String']['output'];
-  updated_at: Scalars['DateTime']['output'];
-  version: Scalars['Float']['output'];
-  weeklyWave: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
 };
 
-export type PurchaseOrder = {
-  __typename?: 'PurchaseOrder';
-  created_at: Scalars['DateTime']['output'];
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  folio: Scalars['Int']['output'];
-  id: Scalars['Int']['output'];
-  stateOrder: Scalars['Int']['output'];
-  supplierId: Scalars['Int']['output'];
-  updated_at: Scalars['DateTime']['output'];
-  version: Scalars['Float']['output'];
-};
-
-export type PurchaseOrderFilter = {
-  and?: InputMaybe<Array<PurchaseOrderFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<PurchaseOrderFilter>>;
-};
-
-export type PurchaseOrderLog = {
-  __typename?: 'PurchaseOrderLog';
-  created_at: Scalars['DateTime']['output'];
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  description: Scalars['String']['output'];
-  id: Scalars['Int']['output'];
-  purchaseOrder: PurchaseOrder;
-  purchaseOrderId: Scalars['Int']['output'];
-  registered: Scalars['DateTime']['output'];
-  updated_at: Scalars['DateTime']['output'];
-  user: User;
-  userId: Scalars['Int']['output'];
-  version: Scalars['Float']['output'];
-};
-
-export type PurchaseOrderLogConnection = {
-  __typename?: 'PurchaseOrderLogConnection';
+export type PolicyConnection = {
+  __typename?: 'PolicyConnection';
   /** Array of nodes. */
-  nodes: Array<PurchaseOrderLog>;
+  nodes: Array<Policy>;
   /** Paging information */
   pageInfo: OffsetPageInfo;
   /** Fetch total count of records */
   totalCount: Scalars['Int']['output'];
 };
 
-export type PurchaseOrderLogCreate = {
-  description: Scalars['String']['input'];
-  purchaseOrderId: Scalars['Int']['input'];
-  registered: Scalars['DateTime']['input'];
-  userId: Scalars['Int']['input'];
+export type PolicyDeleteFilter = {
+  and?: InputMaybe<Array<PolicyDeleteFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<PolicyDeleteFilter>>;
 };
 
-export type PurchaseOrderLogDeleteFilter = {
-  and?: InputMaybe<Array<PurchaseOrderLogDeleteFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<PurchaseOrderLogDeleteFilter>>;
+export type PolicyDeleteResponse = {
+  __typename?: 'PolicyDeleteResponse';
+  branchId?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
 };
 
-export type PurchaseOrderLogDeleteResponse = {
-  __typename?: 'PurchaseOrderLogDeleteResponse';
-  created_at?: Maybe<Scalars['DateTime']['output']>;
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
-  purchaseOrderId?: Maybe<Scalars['Int']['output']>;
-  registered?: Maybe<Scalars['DateTime']['output']>;
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
-  userId?: Maybe<Scalars['Int']['output']>;
-  version?: Maybe<Scalars['Float']['output']>;
+export type PolicyFilter = {
+  and?: InputMaybe<Array<PolicyFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<PolicyFilter>>;
 };
 
-export type PurchaseOrderLogFilter = {
-  and?: InputMaybe<Array<PurchaseOrderLogFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<PurchaseOrderLogFilter>>;
-};
-
-export type PurchaseOrderLogSort = {
+export type PolicySort = {
   direction: SortDirection;
-  field: PurchaseOrderLogSortFields;
+  field: PolicySortFields;
   nulls?: InputMaybe<SortNulls>;
 };
 
-export enum PurchaseOrderLogSortFields {
-  Id = 'id'
+export enum PolicySortFields {
+  BranchId = 'branchId',
+  Name = 'name'
 }
 
-export type PurchaseOrderLogUpdate = {
-  description?: InputMaybe<Scalars['String']['input']>;
-  purchaseOrderId?: InputMaybe<Scalars['Int']['input']>;
-  registered?: InputMaybe<Scalars['DateTime']['input']>;
-  userId?: InputMaybe<Scalars['Int']['input']>;
+export type PolicyUpdateFilter = {
+  and?: InputMaybe<Array<PolicyUpdateFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<PolicyUpdateFilter>>;
 };
-
-export type PurchaseOrderLogUpdateFilter = {
-  and?: InputMaybe<Array<PurchaseOrderLogUpdateFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<PurchaseOrderLogUpdateFilter>>;
-};
-
-export type PurchaseOrderSort = {
-  direction: SortDirection;
-  field: PurchaseOrderSortFields;
-  nulls?: InputMaybe<SortNulls>;
-};
-
-export enum PurchaseOrderSortFields {
-  Id = 'id'
-}
 
 export type Query = {
   __typename?: 'Query';
-  companies: CompanyConnection;
-  company: Company;
-  department: Department;
-  departments: DepartmentConnection;
-  detailOrder: DetailOrder;
-  detailOrders: DetailOrderConnection;
-  document: Document;
-  documents: DocumentConnection;
-  hierarchies: HierarchyConnection;
-  hierarchy: Hierarchy;
-  interactionOrder: InteractionOrder;
-  interactionOrders: InteractionOrderConnection;
-  purchaseOrderLog: PurchaseOrderLog;
-  purchaseOrderLogs: PurchaseOrderLogConnection;
-  supplier: Supplier;
-  suppliers: SupplierConnection;
-  user: User;
-  users: UserConnection;
-  workstation: Workstation;
-  workstations: WorkstationConnection;
+  action: Action;
+  actions: ActionConnection;
+  branch: Branch;
+  branches: BranchConnection;
+  classroom: Classroom;
+  classrooms: ClassroomConnection;
+  course: Course;
+  courses: CourseConnection;
+  cycle: Cycle;
+  cycles: CycleConnection;
+  debit: Debit;
+  debits: DebitConnection;
+  enrollment: Enrollment;
+  enrollments: EnrollmentConnection;
+  fee: Fee;
+  fees: FeeConnection;
+  policies: PolicyConnection;
+  policy: Policy;
+  student: Student;
+  students: StudentConnection;
+  teacher: Teacher;
+  teachers: TeacherConnection;
+  tutor: Tutor;
+  tutors: TutorConnection;
 };
 
 
-export type QueryCompaniesArgs = {
-  filter?: CompanyFilter;
+export type QueryActionArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryActionsArgs = {
+  filter?: ActionFilter;
   paging?: OffsetPaging;
-  sorting?: Array<CompanySort>;
+  sorting?: Array<ActionSort>;
 };
 
 
-export type QueryCompanyArgs = {
-  id: Scalars['Int']['input'];
+export type QueryBranchArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
-export type QueryDepartmentArgs = {
-  id: Scalars['Int']['input'];
-};
-
-
-export type QueryDepartmentsArgs = {
-  filter?: DepartmentFilter;
+export type QueryBranchesArgs = {
+  filter?: BranchFilter;
   paging?: OffsetPaging;
-  sorting?: Array<DepartmentSort>;
+  sorting?: Array<BranchSort>;
 };
 
 
-export type QueryDetailOrderArgs = {
-  id: Scalars['Int']['input'];
+export type QueryClassroomArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
-export type QueryDetailOrdersArgs = {
-  filter?: DetailOrderFilter;
+export type QueryClassroomsArgs = {
+  filter?: ClassroomFilter;
   paging?: OffsetPaging;
-  sorting?: Array<DetailOrderSort>;
+  sorting?: Array<ClassroomSort>;
 };
 
 
-export type QueryDocumentArgs = {
-  id: Scalars['Int']['input'];
+export type QueryCourseArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
-export type QueryDocumentsArgs = {
-  filter?: DocumentFilter;
+export type QueryCoursesArgs = {
+  filter?: CourseFilter;
   paging?: OffsetPaging;
-  sorting?: Array<DocumentSort>;
+  sorting?: Array<CourseSort>;
 };
 
 
-export type QueryHierarchiesArgs = {
-  filter?: HierarchyFilter;
+export type QueryCycleArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryCyclesArgs = {
+  filter?: CycleFilter;
   paging?: OffsetPaging;
-  sorting?: Array<HierarchySort>;
+  sorting?: Array<CycleSort>;
 };
 
 
-export type QueryHierarchyArgs = {
-  id: Scalars['Int']['input'];
+export type QueryDebitArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
-export type QueryInteractionOrderArgs = {
-  id: Scalars['Int']['input'];
-};
-
-
-export type QueryInteractionOrdersArgs = {
-  filter?: InteractionOrderFilter;
+export type QueryDebitsArgs = {
+  filter?: DebitFilter;
   paging?: OffsetPaging;
-  sorting?: Array<InteractionOrderSort>;
+  sorting?: Array<DebitSort>;
 };
 
 
-export type QueryPurchaseOrderLogArgs = {
-  id: Scalars['Int']['input'];
+export type QueryEnrollmentArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
-export type QueryPurchaseOrderLogsArgs = {
-  filter?: PurchaseOrderLogFilter;
+export type QueryEnrollmentsArgs = {
+  filter?: EnrollmentFilter;
   paging?: OffsetPaging;
-  sorting?: Array<PurchaseOrderLogSort>;
+  sorting?: Array<EnrollmentSort>;
 };
 
 
-export type QuerySupplierArgs = {
-  id: Scalars['Int']['input'];
+export type QueryFeeArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
-export type QuerySuppliersArgs = {
-  filter?: SupplierFilter;
+export type QueryFeesArgs = {
+  filter?: FeeFilter;
   paging?: OffsetPaging;
-  sorting?: Array<SupplierSort>;
+  sorting?: Array<FeeSort>;
 };
 
 
-export type QueryUserArgs = {
-  id: Scalars['Int']['input'];
-};
-
-
-export type QueryUsersArgs = {
-  filter?: UserFilter;
+export type QueryPoliciesArgs = {
+  filter?: PolicyFilter;
   paging?: OffsetPaging;
-  sorting?: Array<UserSort>;
+  sorting?: Array<PolicySort>;
 };
 
 
-export type QueryWorkstationArgs = {
-  id: Scalars['Int']['input'];
+export type QueryPolicyArgs = {
+  id: Scalars['ID']['input'];
 };
 
 
-export type QueryWorkstationsArgs = {
-  filter?: WorkstationFilter;
+export type QueryStudentArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryStudentsArgs = {
+  filter?: StudentFilter;
   paging?: OffsetPaging;
-  sorting?: Array<WorkstationSort>;
+  sorting?: Array<StudentSort>;
+};
+
+
+export type QueryTeacherArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryTeachersArgs = {
+  filter?: TeacherFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<TeacherSort>;
+};
+
+
+export type QueryTutorArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryTutorsArgs = {
+  filter?: TutorFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<TutorSort>;
+};
+
+export type Session = {
+  __typename?: 'Session';
+  exp: Scalars['DateTime']['output'];
+  iat: Scalars['DateTime']['output'];
+  token: Scalars['String']['output'];
+  username: Scalars['String']['output'];
+};
+
+export type SignInInput = {
+  branchId?: InputMaybe<Scalars['String']['input']>;
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
+};
+
+export type SignUpInput = {
+  branchId?: InputMaybe<Scalars['String']['input']>;
+  password: Scalars['String']['input'];
+  username: Scalars['String']['input'];
 };
 
 /** Sort Directions */
@@ -1445,142 +1705,328 @@ export type StringFieldComparison = {
   notLike?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type Supplier = {
-  __typename?: 'Supplier';
-  created_at: Scalars['DateTime']['output'];
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  email: Scalars['String']['output'];
-  id: Scalars['Int']['output'];
-  name: Scalars['String']['output'];
-  purchaseOrders: Array<PurchaseOrder>;
-  updated_at: Scalars['DateTime']['output'];
-  url: Scalars['String']['output'];
-  version: Scalars['Float']['output'];
+export type Student = {
+  __typename?: 'Student';
+  code: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  firstname: Scalars['String']['output'];
+  fullname: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  lastname: Scalars['String']['output'];
+  picture: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  userId: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
 };
 
-
-export type SupplierPurchaseOrdersArgs = {
-  filter?: PurchaseOrderFilter;
-  sorting?: Array<PurchaseOrderSort>;
-};
-
-export type SupplierConnection = {
-  __typename?: 'SupplierConnection';
+export type StudentConnection = {
+  __typename?: 'StudentConnection';
   /** Array of nodes. */
-  nodes: Array<Supplier>;
+  nodes: Array<Student>;
   /** Paging information */
   pageInfo: OffsetPageInfo;
   /** Fetch total count of records */
   totalCount: Scalars['Int']['output'];
 };
 
-export type SupplierCreate = {
-  email: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  url: Scalars['String']['input'];
+export type StudentDeleteFilter = {
+  and?: InputMaybe<Array<StudentDeleteFilter>>;
+  code?: InputMaybe<StringFieldComparison>;
+  fullname?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<StudentDeleteFilter>>;
 };
 
-export type SupplierDeleteFilter = {
-  and?: InputMaybe<Array<SupplierDeleteFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<SupplierDeleteFilter>>;
+export type StudentDeleteResponse = {
+  __typename?: 'StudentDeleteResponse';
+  code?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  firstname?: Maybe<Scalars['String']['output']>;
+  fullname?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  lastname?: Maybe<Scalars['String']['output']>;
+  picture?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
 };
 
-export type SupplierDeleteResponse = {
-  __typename?: 'SupplierDeleteResponse';
-  created_at?: Maybe<Scalars['DateTime']['output']>;
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  email?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
-  url?: Maybe<Scalars['String']['output']>;
-  version?: Maybe<Scalars['Float']['output']>;
+export type StudentFilter = {
+  and?: InputMaybe<Array<StudentFilter>>;
+  code?: InputMaybe<StringFieldComparison>;
+  fullname?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<StudentFilter>>;
 };
 
-export type SupplierFilter = {
-  and?: InputMaybe<Array<SupplierFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<SupplierFilter>>;
-};
-
-export type SupplierSort = {
+export type StudentSort = {
   direction: SortDirection;
-  field: SupplierSortFields;
+  field: StudentSortFields;
   nulls?: InputMaybe<SortNulls>;
 };
 
-export enum SupplierSortFields {
-  Id = 'id'
+export enum StudentSortFields {
+  Code = 'code',
+  Fullname = 'fullname'
 }
 
-export type SupplierUpdate = {
-  email?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  purchaseOrders?: InputMaybe<Array<BaseInput>>;
-  url?: InputMaybe<Scalars['String']['input']>;
+export type StudentUpdateFilter = {
+  and?: InputMaybe<Array<StudentUpdateFilter>>;
+  code?: InputMaybe<StringFieldComparison>;
+  fullname?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<StudentUpdateFilter>>;
 };
 
-export type SupplierUpdateFilter = {
-  and?: InputMaybe<Array<SupplierUpdateFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<SupplierUpdateFilter>>;
+export type Teacher = {
+  __typename?: 'Teacher';
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  firstname: Scalars['String']['output'];
+  fullname: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  lastname: Scalars['String']['output'];
+  picture: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  userId?: Maybe<Scalars['String']['output']>;
+  version: Scalars['Int']['output'];
 };
 
-export type UpdateCompany = {
-  address?: InputMaybe<Scalars['String']['input']>;
+export type TeacherConnection = {
+  __typename?: 'TeacherConnection';
+  /** Array of nodes. */
+  nodes: Array<Teacher>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type TeacherDeleteFilter = {
+  and?: InputMaybe<Array<TeacherDeleteFilter>>;
+  fullname?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<TeacherDeleteFilter>>;
+};
+
+export type TeacherDeleteResponse = {
+  __typename?: 'TeacherDeleteResponse';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  firstname?: Maybe<Scalars['String']['output']>;
+  fullname?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  lastname?: Maybe<Scalars['String']['output']>;
+  picture?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type TeacherFilter = {
+  and?: InputMaybe<Array<TeacherFilter>>;
+  fullname?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<TeacherFilter>>;
+};
+
+export type TeacherSort = {
+  direction: SortDirection;
+  field: TeacherSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum TeacherSortFields {
+  Fullname = 'fullname'
+}
+
+export type TeacherUpdateFilter = {
+  and?: InputMaybe<Array<TeacherUpdateFilter>>;
+  fullname?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<TeacherUpdateFilter>>;
+};
+
+export type Tutor = {
+  __typename?: 'Tutor';
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  firstname: Scalars['String']['output'];
+  fullname: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  lastname: Scalars['String']['output'];
+  picture: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  userId: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
+};
+
+export type TutorConnection = {
+  __typename?: 'TutorConnection';
+  /** Array of nodes. */
+  nodes: Array<Tutor>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type TutorDeleteFilter = {
+  and?: InputMaybe<Array<TutorDeleteFilter>>;
+  fullname?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<TutorDeleteFilter>>;
+};
+
+export type TutorDeleteResponse = {
+  __typename?: 'TutorDeleteResponse';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  firstname?: Maybe<Scalars['String']['output']>;
+  fullname?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  lastname?: Maybe<Scalars['String']['output']>;
+  picture?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  userId?: Maybe<Scalars['String']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type TutorFilter = {
+  and?: InputMaybe<Array<TutorFilter>>;
+  fullname?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<TutorFilter>>;
+};
+
+export type TutorSort = {
+  direction: SortDirection;
+  field: TutorSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum TutorSortFields {
+  Fullname = 'fullname'
+}
+
+export type TutorUpdateFilter = {
+  and?: InputMaybe<Array<TutorUpdateFilter>>;
+  fullname?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<TutorUpdateFilter>>;
+};
+
+export type UpdateAction = {
+  action?: InputMaybe<Scalars['String']['input']>;
+  effect?: InputMaybe<ActionEffect>;
+  policyId?: InputMaybe<Scalars['String']['input']>;
+  route?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateBranch = {
   name?: InputMaybe<Scalars['String']['input']>;
   picture?: InputMaybe<Scalars['String']['input']>;
-  workstations?: InputMaybe<Array<BaseInput>>;
 };
 
-export type UpdateManyCompaniesInput = {
-  /** Filter used to find fields to update */
-  filter: CompanyUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: UpdateCompany;
+export type UpdateClassroom = {
+  branchId?: InputMaybe<Scalars['String']['input']>;
+  color?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateManyDepartmentsInput = {
-  /** Filter used to find fields to update */
-  filter: DepartmentUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: DepartmentUpdate;
+export type UpdateCourse = {
+  branchId?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateManyDetailOrdersInput = {
-  /** Filter used to find fields to update */
-  filter: DetailOrderUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: DetailOrderUpdate;
+export type UpdateCycle = {
+  branchId?: InputMaybe<Scalars['String']['input']>;
+  end?: InputMaybe<Scalars['DateTime']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  start?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
-export type UpdateManyDocumentsInput = {
-  /** Filter used to find fields to update */
-  filter: DocumentUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: DocumentUpdate;
+export type UpdateDebit = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  dueDate?: InputMaybe<Scalars['DateTime']['input']>;
+  enrollmentId?: InputMaybe<Scalars['String']['input']>;
+  frequency?: InputMaybe<Frequency>;
+  paymentDate?: InputMaybe<Scalars['DateTime']['input']>;
+  state?: InputMaybe<DebitState>;
+  value?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type UpdateManyHierarchiesInput = {
-  /** Filter used to find fields to update */
-  filter: HierarchyUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: HierarchyUpdate;
+export type UpdateEnrollment = {
+  branchId?: InputMaybe<Scalars['String']['input']>;
+  classroomId?: InputMaybe<Scalars['String']['input']>;
+  courseId?: InputMaybe<Scalars['String']['input']>;
+  cycleId?: InputMaybe<Scalars['String']['input']>;
+  details?: InputMaybe<Scalars['String']['input']>;
+  state?: InputMaybe<EnrollmentState>;
+  studentId?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateManyInteractionOrdersInput = {
-  /** Filter used to find fields to update */
-  filter: InteractionOrderUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: InteractionOrderUpdate;
+export type UpdateFee = {
+  courseId?: InputMaybe<Scalars['String']['input']>;
+  frequency?: InputMaybe<Frequency>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  price?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type UpdateManyPurchaseOrderLogsInput = {
+export type UpdateManyActionsInput = {
   /** Filter used to find fields to update */
-  filter: PurchaseOrderLogUpdateFilter;
+  filter: ActionUpdateFilter;
   /** The update to apply to all records found using the filter */
-  update: PurchaseOrderLogUpdate;
+  update: UpdateAction;
+};
+
+export type UpdateManyBranchesInput = {
+  /** Filter used to find fields to update */
+  filter: BranchUpdateFilter;
+  /** The update to apply to all records found using the filter */
+  update: UpdateBranch;
+};
+
+export type UpdateManyClassroomsInput = {
+  /** Filter used to find fields to update */
+  filter: ClassroomUpdateFilter;
+  /** The update to apply to all records found using the filter */
+  update: UpdateClassroom;
+};
+
+export type UpdateManyCoursesInput = {
+  /** Filter used to find fields to update */
+  filter: CourseUpdateFilter;
+  /** The update to apply to all records found using the filter */
+  update: UpdateCourse;
+};
+
+export type UpdateManyCyclesInput = {
+  /** Filter used to find fields to update */
+  filter: CycleUpdateFilter;
+  /** The update to apply to all records found using the filter */
+  update: UpdateCycle;
+};
+
+export type UpdateManyDebitsInput = {
+  /** Filter used to find fields to update */
+  filter: DebitUpdateFilter;
+  /** The update to apply to all records found using the filter */
+  update: UpdateDebit;
+};
+
+export type UpdateManyEnrollmentsInput = {
+  /** Filter used to find fields to update */
+  filter: EnrollmentUpdateFilter;
+  /** The update to apply to all records found using the filter */
+  update: UpdateEnrollment;
+};
+
+export type UpdateManyFeesInput = {
+  /** Filter used to find fields to update */
+  filter: FeeUpdateFilter;
+  /** The update to apply to all records found using the filter */
+  update: UpdateFee;
+};
+
+export type UpdateManyPoliciesInput = {
+  /** Filter used to find fields to update */
+  filter: PolicyUpdateFilter;
+  /** The update to apply to all records found using the filter */
+  update: UpdatePolicy;
 };
 
 export type UpdateManyResponse = {
@@ -1589,355 +2035,229 @@ export type UpdateManyResponse = {
   updatedCount: Scalars['Int']['output'];
 };
 
-export type UpdateManySuppliersInput = {
+export type UpdateManyStudentsInput = {
   /** Filter used to find fields to update */
-  filter: SupplierUpdateFilter;
+  filter: StudentUpdateFilter;
   /** The update to apply to all records found using the filter */
-  update: SupplierUpdate;
+  update: UpdateStudent;
 };
 
-export type UpdateManyUsersInput = {
+export type UpdateManyTeachersInput = {
   /** Filter used to find fields to update */
-  filter: UserUpdateFilter;
+  filter: TeacherUpdateFilter;
   /** The update to apply to all records found using the filter */
-  update: UserUpdate;
+  update: UpdateTeacher;
 };
 
-export type UpdateManyWorkstationsInput = {
+export type UpdateManyTutorsInput = {
   /** Filter used to find fields to update */
-  filter: WorkstationUpdateFilter;
+  filter: TutorUpdateFilter;
   /** The update to apply to all records found using the filter */
-  update: WorkstationUpdate;
+  update: UpdateTutor;
 };
 
-export type UpdateOneCompanyInput = {
+export type UpdateOneActionInput = {
   /** The id of the record to update */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
   /** The update to apply. */
-  update: UpdateCompany;
+  update: UpdateAction;
 };
 
-export type UpdateOneDepartmentInput = {
+export type UpdateOneBranchInput = {
   /** The id of the record to update */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
   /** The update to apply. */
-  update: DepartmentUpdate;
+  update: UpdateBranch;
 };
 
-export type UpdateOneDetailOrderInput = {
+export type UpdateOneClassroomInput = {
   /** The id of the record to update */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
   /** The update to apply. */
-  update: DetailOrderUpdate;
+  update: UpdateClassroom;
 };
 
-export type UpdateOneDocumentInput = {
+export type UpdateOneCourseInput = {
   /** The id of the record to update */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
   /** The update to apply. */
-  update: DocumentUpdate;
+  update: UpdateCourse;
 };
 
-export type UpdateOneHierarchyInput = {
+export type UpdateOneCycleInput = {
   /** The id of the record to update */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
   /** The update to apply. */
-  update: HierarchyUpdate;
+  update: UpdateCycle;
 };
 
-export type UpdateOneInteractionOrderInput = {
+export type UpdateOneDebitInput = {
   /** The id of the record to update */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
   /** The update to apply. */
-  update: InteractionOrderUpdate;
+  update: UpdateDebit;
 };
 
-export type UpdateOnePurchaseOrderLogInput = {
+export type UpdateOneEnrollmentInput = {
   /** The id of the record to update */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
   /** The update to apply. */
-  update: PurchaseOrderLogUpdate;
+  update: UpdateEnrollment;
 };
 
-export type UpdateOneSupplierInput = {
+export type UpdateOneFeeInput = {
   /** The id of the record to update */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
   /** The update to apply. */
-  update: SupplierUpdate;
+  update: UpdateFee;
 };
 
-export type UpdateOneUserInput = {
+export type UpdateOnePolicyInput = {
   /** The id of the record to update */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
   /** The update to apply. */
-  update: UserUpdate;
+  update: UpdatePolicy;
 };
 
-export type UpdateOneWorkstationInput = {
+export type UpdateOneStudentInput = {
   /** The id of the record to update */
-  id: Scalars['Int']['input'];
+  id: Scalars['ID']['input'];
   /** The update to apply. */
-  update: WorkstationUpdate;
+  update: UpdateStudent;
+};
+
+export type UpdateOneTeacherInput = {
+  /** The id of the record to update */
+  id: Scalars['ID']['input'];
+  /** The update to apply. */
+  update: UpdateTeacher;
+};
+
+export type UpdateOneTutorInput = {
+  /** The id of the record to update */
+  id: Scalars['ID']['input'];
+  /** The update to apply. */
+  update: UpdateTutor;
+};
+
+export type UpdatePolicy = {
+  branchId?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateStudent = {
+  firstname?: InputMaybe<Scalars['String']['input']>;
+  lastname?: InputMaybe<Scalars['String']['input']>;
+  picture?: InputMaybe<Scalars['String']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateTeacher = {
+  firstname?: InputMaybe<Scalars['String']['input']>;
+  lastname?: InputMaybe<Scalars['String']['input']>;
+  picture?: InputMaybe<Scalars['String']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateTutor = {
+  firstname?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  lastname?: InputMaybe<Scalars['String']['input']>;
+  picture?: InputMaybe<Scalars['String']['input']>;
+  userId?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateUser = {
+  branchId?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  username?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type User = {
   __typename?: 'User';
-  created_at: Scalars['DateTime']['output'];
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  email: Scalars['String']['output'];
-  id: Scalars['Int']['output'];
-  interactionOrders: Array<InteractionOrder>;
-  partner: Partner;
-  partnerId: Scalars['Int']['output'];
-  purchaseOrderLogs: Array<PurchaseOrderLog>;
-  updated_at: Scalars['DateTime']['output'];
+  branchId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  updatedAt: Scalars['DateTime']['output'];
   username: Scalars['String']['output'];
-  version: Scalars['Float']['output'];
+  version: Scalars['Int']['output'];
 };
 
+export type BranchPartsFragment = { __typename?: 'Branch', id: string, name: string, picture: string, createdAt: any, updatedAt: any };
 
-export type UserInteractionOrdersArgs = {
-  filter?: InteractionOrderFilter;
-  sorting?: Array<InteractionOrderSort>;
-};
-
-
-export type UserPurchaseOrderLogsArgs = {
-  filter?: PurchaseOrderLogFilter;
-  sorting?: Array<PurchaseOrderLogSort>;
-};
-
-export type UserConnection = {
-  __typename?: 'UserConnection';
-  /** Array of nodes. */
-  nodes: Array<User>;
-  /** Paging information */
-  pageInfo: OffsetPageInfo;
-  /** Fetch total count of records */
-  totalCount: Scalars['Int']['output'];
-};
-
-export type UserCreate = {
-  email: Scalars['String']['input'];
-  partnerId?: InputMaybe<Scalars['Int']['input']>;
-  password: Scalars['String']['input'];
-  username: Scalars['String']['input'];
-};
-
-export type UserDeleteFilter = {
-  and?: InputMaybe<Array<UserDeleteFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<UserDeleteFilter>>;
-};
-
-export type UserDeleteResponse = {
-  __typename?: 'UserDeleteResponse';
-  created_at?: Maybe<Scalars['DateTime']['output']>;
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  email?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
-  partnerId?: Maybe<Scalars['Int']['output']>;
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
-  username?: Maybe<Scalars['String']['output']>;
-  version?: Maybe<Scalars['Float']['output']>;
-};
-
-export type UserFilter = {
-  and?: InputMaybe<Array<UserFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<UserFilter>>;
-};
-
-export type UserSort = {
-  direction: SortDirection;
-  field: UserSortFields;
-  nulls?: InputMaybe<SortNulls>;
-};
-
-export enum UserSortFields {
-  Id = 'id'
-}
-
-export type UserUpdate = {
-  email?: InputMaybe<Scalars['String']['input']>;
-  interactionOrders: Array<BaseInput>;
-  partnerId?: InputMaybe<Scalars['Int']['input']>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  purchaseOrderLogs: Array<BaseInput>;
-  username?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type UserUpdateFilter = {
-  and?: InputMaybe<Array<UserUpdateFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<UserUpdateFilter>>;
-};
-
-export type Workstation = {
-  __typename?: 'Workstation';
-  company: Company;
-  companyId: Scalars['Int']['output'];
-  created_at: Scalars['DateTime']['output'];
-  dailyWave: Scalars['Float']['output'];
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  department: Department;
-  departmentId: Scalars['Int']['output'];
-  hierarchy: Hierarchy;
-  hierarchyId: Scalars['Int']['output'];
-  id: Scalars['Int']['output'];
-  monthlyWave: Scalars['Float']['output'];
-  partner: Partner;
-  partnerId: Scalars['Int']['output'];
-  updated_at: Scalars['DateTime']['output'];
-  version: Scalars['Float']['output'];
-};
-
-export type WorkstationConnection = {
-  __typename?: 'WorkstationConnection';
-  /** Array of nodes. */
-  nodes: Array<Workstation>;
-  /** Paging information */
-  pageInfo: OffsetPageInfo;
-  /** Fetch total count of records */
-  totalCount: Scalars['Int']['output'];
-};
-
-export type WorkstationCreate = {
-  compayId: Scalars['Int']['input'];
-  dailyWave: Scalars['Float']['input'];
-  departmentId: Scalars['Int']['input'];
-  hierarchyId: Scalars['Int']['input'];
-  monthlyWave: Scalars['Float']['input'];
-  partnerId: Scalars['Int']['input'];
-};
-
-export type WorkstationDeleteFilter = {
-  and?: InputMaybe<Array<WorkstationDeleteFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<WorkstationDeleteFilter>>;
-};
-
-export type WorkstationDeleteResponse = {
-  __typename?: 'WorkstationDeleteResponse';
-  companyId?: Maybe<Scalars['Int']['output']>;
-  created_at?: Maybe<Scalars['DateTime']['output']>;
-  dailyWave?: Maybe<Scalars['Float']['output']>;
-  deleted_at?: Maybe<Scalars['DateTime']['output']>;
-  departmentId?: Maybe<Scalars['Int']['output']>;
-  hierarchyId?: Maybe<Scalars['Int']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
-  monthlyWave?: Maybe<Scalars['Float']['output']>;
-  partnerId?: Maybe<Scalars['Int']['output']>;
-  updated_at?: Maybe<Scalars['DateTime']['output']>;
-  version?: Maybe<Scalars['Float']['output']>;
-};
-
-export type WorkstationFilter = {
-  and?: InputMaybe<Array<WorkstationFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<WorkstationFilter>>;
-};
-
-export type WorkstationSort = {
-  direction: SortDirection;
-  field: WorkstationSortFields;
-  nulls?: InputMaybe<SortNulls>;
-};
-
-export enum WorkstationSortFields {
-  Id = 'id'
-}
-
-export type WorkstationUpdate = {
-  companyId?: InputMaybe<Array<BaseInput>>;
-  dailyWave?: InputMaybe<Scalars['Float']['input']>;
-  departmentId?: InputMaybe<Array<BaseInput>>;
-  hierarchyId?: InputMaybe<Array<BaseInput>>;
-  monthlyWave?: InputMaybe<Scalars['Float']['input']>;
-  partnerId?: InputMaybe<Array<BaseInput>>;
-};
-
-export type WorkstationUpdateFilter = {
-  and?: InputMaybe<Array<WorkstationUpdateFilter>>;
-  id?: InputMaybe<IntFieldComparison>;
-  or?: InputMaybe<Array<WorkstationUpdateFilter>>;
-};
-
-export type CompanyPartsFragment = { __typename?: 'Company', id: number, name: string, picture: string, address: string, created_at: any, updated_at: any };
-
-export type CreateOneCompanyMutationVariables = Exact<{
-  company: CreateCompany;
+export type CreateOneBranchMutationVariables = Exact<{
+  branch: CreateBranch;
 }>;
 
 
-export type CreateOneCompanyMutation = { __typename?: 'Mutation', createOneCompany: { __typename?: 'Company', id: number, name: string, picture: string, address: string, created_at: any, updated_at: any } };
+export type CreateOneBranchMutation = { __typename?: 'Mutation', createOneBranch: { __typename?: 'Branch', id: string, name: string, picture: string, createdAt: any, updatedAt: any } };
 
 export type GetCompaniesPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
-  filter?: InputMaybe<CompanyFilter>;
+  filter?: InputMaybe<BranchFilter>;
 }>;
 
 
-export type GetCompaniesPageQuery = { __typename?: 'Query', companies: { __typename?: 'CompanyConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Company', id: number, name: string, picture: string, address: string, created_at: any, updated_at: any }> } };
+export type GetCompaniesPageQuery = { __typename?: 'Query', branches: { __typename?: 'BranchConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Branch', id: string, name: string, picture: string, createdAt: any, updatedAt: any }> } };
 
-export type UpdateOneCompanyMutationVariables = Exact<{
-  id: Scalars['Int']['input'];
-  update: UpdateCompany;
+export type UpdateOneBranchMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateBranch;
 }>;
 
 
-export type UpdateOneCompanyMutation = { __typename?: 'Mutation', updateOneCompany: { __typename?: 'Company', id: number, name: string, picture: string, address: string, created_at: any, updated_at: any } };
+export type UpdateOneBranchMutation = { __typename?: 'Mutation', updateOneBranch: { __typename?: 'Branch', id: string, name: string, picture: string, createdAt: any, updatedAt: any } };
 
-export type DeleteOneCompanyMutationVariables = Exact<{
-  id: Scalars['Int']['input'];
+export type DeleteOneBranchMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
 }>;
 
 
-export type DeleteOneCompanyMutation = { __typename?: 'Mutation', deleteOneCompany: { __typename?: 'CompanyDeleteResponse', id?: number | null } };
+export type DeleteOneBranchMutation = { __typename?: 'Mutation', deleteOneBranch: { __typename?: 'BranchDeleteResponse', id?: string | null } };
 
-export const CompanyPartsFragmentDoc = gql`
-    fragment CompanyParts on Company {
+export const BranchPartsFragmentDoc = gql`
+    fragment BranchParts on Branch {
   id
   name
   picture
-  address
-  created_at
-  updated_at
+  createdAt
+  updatedAt
 }
     `;
-export const CreateOneCompanyDocument = gql`
-    mutation createOneCompany($company: CreateCompany!) {
-  createOneCompany(input: {company: $company}) {
-    ...CompanyParts
+export const CreateOneBranchDocument = gql`
+    mutation createOneBranch($branch: CreateBranch!) {
+  createOneBranch(input: {branch: $branch}) {
+    ...BranchParts
   }
 }
-    ${CompanyPartsFragmentDoc}`;
+    ${BranchPartsFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'
   })
-  export class CreateOneCompanyGQL extends Apollo.Mutation<CreateOneCompanyMutation, CreateOneCompanyMutationVariables> {
-    document = CreateOneCompanyDocument;
+  export class CreateOneBranchGQL extends Apollo.Mutation<CreateOneBranchMutation, CreateOneBranchMutationVariables> {
+    document = CreateOneBranchDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
   }
 export const GetCompaniesPageDocument = gql`
-    query getCompaniesPage($offset: Int = 0, $limit: Int = 10, $filter: CompanyFilter = {}) {
-  companies(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    query getCompaniesPage($offset: Int = 0, $limit: Int = 10, $filter: BranchFilter = {}) {
+  branches(paging: {limit: $limit, offset: $offset}, filter: $filter) {
     totalCount
     pageInfo {
       hasNextPage
       hasPreviousPage
     }
     nodes {
-      ...CompanyParts
+      ...BranchParts
     }
   }
 }
-    ${CompanyPartsFragmentDoc}`;
+    ${BranchPartsFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'
@@ -1949,27 +2269,27 @@ export const GetCompaniesPageDocument = gql`
       super(apollo);
     }
   }
-export const UpdateOneCompanyDocument = gql`
-    mutation updateOneCompany($id: Int!, $update: UpdateCompany!) {
-  updateOneCompany(input: {id: $id, update: $update}) {
-    ...CompanyParts
+export const UpdateOneBranchDocument = gql`
+    mutation updateOneBranch($id: ID!, $update: UpdateBranch!) {
+  updateOneBranch(input: {id: $id, update: $update}) {
+    ...BranchParts
   }
 }
-    ${CompanyPartsFragmentDoc}`;
+    ${BranchPartsFragmentDoc}`;
 
   @Injectable({
     providedIn: 'root'
   })
-  export class UpdateOneCompanyGQL extends Apollo.Mutation<UpdateOneCompanyMutation, UpdateOneCompanyMutationVariables> {
-    document = UpdateOneCompanyDocument;
+  export class UpdateOneBranchGQL extends Apollo.Mutation<UpdateOneBranchMutation, UpdateOneBranchMutationVariables> {
+    document = UpdateOneBranchDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
     }
   }
-export const DeleteOneCompanyDocument = gql`
-    mutation deleteOneCompany($id: Int!) {
-  deleteOneCompany(input: {id: $id}) {
+export const DeleteOneBranchDocument = gql`
+    mutation deleteOneBranch($id: ID!) {
+  deleteOneBranch(input: {id: $id}) {
     id
   }
 }
@@ -1978,8 +2298,8 @@ export const DeleteOneCompanyDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class DeleteOneCompanyGQL extends Apollo.Mutation<DeleteOneCompanyMutation, DeleteOneCompanyMutationVariables> {
-    document = DeleteOneCompanyDocument;
+  export class DeleteOneBranchGQL extends Apollo.Mutation<DeleteOneBranchMutation, DeleteOneBranchMutationVariables> {
+    document = DeleteOneBranchDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

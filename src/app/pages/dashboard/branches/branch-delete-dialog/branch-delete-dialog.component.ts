@@ -10,10 +10,10 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { AvatarComponent } from '@components/avatar/avatar.component';
-import { CompanyPartsFragment, DeleteOneCompanyGQL } from '@graphql';
+import { BranchPartsFragment, DeleteOneBranchGQL } from '@graphql';
 
 @Component({
-  selector: 'app-company-delete-dialog',
+  selector: 'app-branch-delete-dialog',
   imports: [
     MatDialogTitle,
     MatDialogContent,
@@ -28,9 +28,9 @@ import { CompanyPartsFragment, DeleteOneCompanyGQL } from '@graphql';
 export class BranchDeleteDialogComponent {
   public loading = signal(false);
 
-  public data: CompanyPartsFragment = inject(MAT_DIALOG_DATA);
+  public data: BranchPartsFragment = inject(MAT_DIALOG_DATA);
 
-  private readonly _deleteOneCompany = inject(DeleteOneCompanyGQL);
+  private readonly _deleteOneBranch = inject(DeleteOneBranchGQL);
   private readonly _dialogRef = inject(
     MatDialogRef<BranchDeleteDialogComponent>
   );
@@ -39,12 +39,12 @@ export class BranchDeleteDialogComponent {
     if (!!this.data.id) {
       this.loading.set(true);
 
-      this._deleteOneCompany.mutate({ id: this.data.id }).subscribe({
-        next: (company) => {
-          this._dialogRef.close(company.data?.deleteOneCompany);
+      this._deleteOneBranch.mutate({ id: this.data.id }).subscribe({
+        next: (branch) => {
+          this._dialogRef.close(branch.data?.deleteOneBranch);
         },
         error: (err) => {
-          console.error('DELETE COMPANY ERROR: ', err);
+          console.error('DELETE BRANCH ERROR: ', err);
         },
         complete: () => {
           this.loading.set(false);

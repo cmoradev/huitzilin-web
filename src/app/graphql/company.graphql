@@ -1,24 +1,23 @@
-fragment CompanyParts on Company {
+fragment BranchParts on Branch {
   id,
   name,
   picture,
-  address,
-  created_at,
-  updated_at
+  createdAt
+  updatedAt
 }
 
-mutation createOneCompany ($company: CreateCompany!) {
-  createOneCompany (
+mutation createOneBranch ($branch: CreateBranch!) {
+  createOneBranch (
     input: {
-      company: $company
+      branch: $branch
     }
   ) {
-    ...CompanyParts
+    ...BranchParts
   }
 }
 
-query getCompaniesPage ($offset: Int = 0, $limit: Int = 10, $filter: CompanyFilter = {})  {
-  companies (
+query getCompaniesPage ($offset: Int = 0, $limit: Int = 10, $filter: BranchFilter = {})  {
+  branches (
     paging: { limit: $limit, offset: $offset },
     filter: $filter
   ) {
@@ -28,24 +27,24 @@ query getCompaniesPage ($offset: Int = 0, $limit: Int = 10, $filter: CompanyFilt
       hasPreviousPage
     },
     nodes {
-			...CompanyParts
+			...BranchParts
     }
   }
 }
 
-mutation updateOneCompany ($id: Int!, $update: UpdateCompany!) {
-  updateOneCompany (
+mutation updateOneBranch ($id: ID!, $update: UpdateBranch!) {
+  updateOneBranch (
     input: {
       id: $id,
       update: $update
     }
   ) {
-    ...CompanyParts
+    ...BranchParts
   }
 }
 
-mutation deleteOneCompany ($id: Int!) {
-	deleteOneCompany (
+mutation deleteOneBranch ($id: ID!) {
+	deleteOneBranch (
     input: {
       id: $id
     }

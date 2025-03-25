@@ -27,8 +27,8 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltip } from '@angular/material/tooltip';
 import { AvatarComponent } from '@components/avatar/avatar.component';
 import {
-  CompanyFilter,
-  CompanyPartsFragment,
+  BranchFilter,
+  BranchPartsFragment,
   GetCompaniesPageGQL,
 } from '@graphql';
 import { debounceTime, merge, startWith } from 'rxjs';
@@ -62,8 +62,8 @@ export class BranchsComponent implements AfterViewInit {
   @ViewChild('paginator') public paginator!: MatPaginator;
   public searchControl = new FormControl('');
 
-  public displayedColumns: string[] = ['name', 'address', 'actions'];
-  public dataSource = new MatTableDataSource<CompanyPartsFragment>([]);
+  public displayedColumns: string[] = ['name', 'actions'];
+  public dataSource = new MatTableDataSource<BranchPartsFragment>([]);
 
   public loading = signal(false);
   public totalCount = signal(0);
@@ -87,37 +87,37 @@ export class BranchsComponent implements AfterViewInit {
     });
 
     $dialog.afterClosed().subscribe({
-      next: (company) => {
-        if (company) {
+      next: (branch) => {
+        if (branch) {
           this.refresh();
         }
       },
     });
   }
 
-  public openUpdateDialog(company: CompanyPartsFragment): void {
+  public openUpdateDialog(branch: BranchPartsFragment): void {
     const $dialog = this.dialog.open(BranchFormDialogComponent, {
       width: '35rem',
-      data: company,
+      data: branch,
     });
 
     $dialog.afterClosed().subscribe({
-      next: (company) => {
-        if (company) {
+      next: (branch) => {
+        if (branch) {
           this.refresh();
         }
       },
     });
   }
 
-  public openDeleteDialog(company: CompanyPartsFragment): void {
+  public openDeleteDialog(branch: BranchPartsFragment): void {
     const $dialog = this.dialog.open(BranchDeleteDialogComponent, {
-      data: company,
+      data: branch,
     });
 
     $dialog.afterClosed().subscribe({
-      next: (company) => {
-        if (company) {
+      next: (branch) => {
+        if (branch) {
           this.refresh();
         }
       },
@@ -128,7 +128,7 @@ export class BranchsComponent implements AfterViewInit {
     const limit: number = this.paginator.pageSize;
     const offset: number = this.paginator.pageIndex * limit;
 
-    const filter: CompanyFilter = {
+    const filter: BranchFilter = {
       name: { iLike: `%${this.searchControl.value}%` },
     };
 
@@ -142,7 +142,7 @@ export class BranchsComponent implements AfterViewInit {
       )
       .valueChanges.subscribe({
         next: ({ data, loading }) => {
-          const { nodes, pageInfo, totalCount } = data.companies;
+          const { nodes, pageInfo, totalCount } = data.branches;
 
           this.dataSource.data = nodes;
 

@@ -14,19 +14,6 @@
           {{ formTools.checkForErrorsIn(formGroup.get("name")) }}
         </mat-error>
       </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Dirección</mat-label>
-        <textarea
-          matInput
-          placeholder="Ej: Blvd. de Las Americas 28, Mundo Hábitat, 77714 Playa del Carmen, Q.R."
-          formControlName="address"
-        ></textarea>
-        <mat-hint>Ingrese la dirección completa del negocio</mat-hint>
-        <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("address")) }}
-        </mat-error>
-      </mat-form-field>
     </div>
   </form>
 </mat-dialog-content>

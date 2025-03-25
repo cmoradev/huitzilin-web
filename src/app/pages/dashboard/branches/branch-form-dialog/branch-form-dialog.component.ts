@@ -18,9 +18,9 @@ import {
 import { MatInput } from '@angular/material/input';
 import { ImagePickerComponent } from '@components/image-picker/image-picker.component';
 import {
-  CompanyPartsFragment,
-  CreateOneCompanyGQL,
-  UpdateOneCompanyGQL,
+  BranchPartsFragment,
+  CreateOneBranchGQL,
+  UpdateOneBranchGQL,
 } from '@graphql';
 import { FormToolsService, StorageService } from '@services';
 import { map, switchMap } from 'rxjs';
@@ -48,11 +48,11 @@ export class BranchFormDialogComponent implements OnInit {
   public readonly formTools = inject(FormToolsService);
 
   public loading = signal(false);
-  public data: CompanyPartsFragment | null = inject(MAT_DIALOG_DATA);
+  public data: BranchPartsFragment | null = inject(MAT_DIALOG_DATA);
   public readonly _storage = inject(StorageService);
 
-  private readonly _createOneCompany = inject(CreateOneCompanyGQL);
-  private readonly _updateOneCompany = inject(UpdateOneCompanyGQL);
+  private readonly _createOneBranch = inject(CreateOneBranchGQL);
+  private readonly _updateOneBranch = inject(UpdateOneBranchGQL);
 
   private readonly _dialogRef = inject(
     MatDialogRef<BranchFormDialogComponent>
@@ -63,7 +63,6 @@ export class BranchFormDialogComponent implements OnInit {
   public formGroup = this.formTools.builder.group({
     picture: ['', [Validators.required]],
     name: ['', [Validators.required, Validators.minLength(3)]],
-    address: ['', [Validators.required, Validators.minLength(10)]],
   });
 
   ngOnInit(): void {
@@ -71,7 +70,6 @@ export class BranchFormDialogComponent implements OnInit {
       this.formGroup.get('picture')?.clearValidators();
       this.formGroup.patchValue({
         name: this.data.name,
-        address: this.data.address,
         picture: this.data.picture,
       });
       this.previusPicture = this.data.picture;
@@ -87,11 +85,11 @@ export class BranchFormDialogComponent implements OnInit {
 
       if (!!this.data?.id) {
         this._update(values).subscribe({
-          next: (company) => {
-            this._dialogRef.close(company);
+          next: (branch) => {
+            this._dialogRef.close(branch);
           },
           error: (err) => {
-            console.error('UPDATE COMPANY ERROR: ', err);
+            console.error('UPDATE BRANCH ERROR: ', err);
           },
           complete: () => {
             this.loading.set(false);
@@ -99,11 +97,11 @@ export class BranchFormDialogComponent implements OnInit {
         });
       } else {
         this._save(values).subscribe({
-          next: (company) => {
-            this._dialogRef.close(company);
+          next: (branch) => {
+            this._dialogRef.close(branch);
           },
           error: (err) => {
-            console.error('CREATE COMPANY ERROR: ', err);
+            console.error('CREATE BRANCH ERROR: ', err);
           },
           complete: () => {
             this.loading.set(false);
@@ -118,29 +116,29 @@ export class BranchFormDialogComponent implements OnInit {
       return this._storage.delete(this.previusPicture).pipe(
         switchMap(() => this._storage.upload(values.picture)),
         switchMap((picture) =>
-          this._updateOneCompany.mutate({
+          this._updateOneBranch.mutate({
             id: this.data!.id,
             update: { ...values, picture },
           })
         ),
-        map((value) => value.data?.updateOneCompany)
+        map((value) => value.data?.updateOneBranch)
       );
     }
 
-    return this._updateOneCompany
+    return this._updateOneBranch
       .mutate({
         id: this.data!.id,
         update: { ...values } as any,
       })
-      .pipe(map((value) => value.data?.updateOneCompany));
+      .pipe(map((value) => value.data?.updateOneBranch));
   }
 
   private _save(values: FormValues) {
     return this._storage.upload(values.picture).pipe(
       switchMap((picture) =>
-        this._createOneCompany.mutate({ company: { ...values, picture } })
+        this._createOneBranch.mutate({ branch: { ...values, picture } })
       ),
-      map((value) => value.data?.createOneCompany)
+      map((value) => value.data?.createOneBranch)
     );
   }
 }
