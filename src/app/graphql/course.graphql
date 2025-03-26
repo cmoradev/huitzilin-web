@@ -1,0 +1,53 @@
+fragment CourseParts on Course {
+  id,
+  name,
+  createdAt
+  updatedAt
+}
+
+mutation createOneCourse ($course: CreateCourse!) {
+  createOneCourse (
+    input: {
+      course: $course
+    }
+  ) {
+    ...CourseParts
+  }
+}
+
+query getCoursePage ($offset: Int = 0, $limit: Int = 10, $filter: CourseFilter = {})  {
+  courses (
+    paging: { limit: $limit, offset: $offset },
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...CourseParts
+    }
+  }
+}
+
+mutation updateOneCourse ($id: ID!, $update: UpdateCourse!) {
+  updateOneCourse (
+    input: {
+      id: $id,
+      update: $update
+    }
+  ) {
+    ...CourseParts
+  }
+}
+
+mutation deleteOneCourse ($id: ID!) {
+	deleteOneCourse (
+    input: {
+      id: $id
+    }
+  ) {
+    id
+  }
+}

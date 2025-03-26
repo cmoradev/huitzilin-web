@@ -142,7 +142,7 @@ export class BranchsComponent implements AfterViewInit {
       )
       .valueChanges.subscribe({
         next: ({ data, loading }) => {
-          const { nodes, pageInfo, totalCount } = data.branches;
+          const { nodes, totalCount } = data.branches;
 
           this.dataSource.data = nodes;
 

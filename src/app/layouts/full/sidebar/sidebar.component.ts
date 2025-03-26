@@ -55,9 +55,10 @@ export class SidebarComponent implements AfterViewInit, OnInit {
   private _fetchBranch(): void {
     this.loading.set(true);
 
+    // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
     this._companiesPageGQL
       .watch({
-        limit: 10,
+        limit: 100,
         offset: 0,
         filter: { name: { iLike: `%${this.searchControl.value}%` } },
       })

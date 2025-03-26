@@ -2297,6 +2297,39 @@ export type DeleteOneBranchMutationVariables = Exact<{
 
 export type DeleteOneBranchMutation = { __typename?: 'Mutation', deleteOneBranch: { __typename?: 'BranchDeleteResponse', id?: string | null } };
 
+export type CoursePartsFragment = { __typename?: 'Course', id: string, name: string, createdAt: any, updatedAt: any };
+
+export type CreateOneCourseMutationVariables = Exact<{
+  course: CreateCourse;
+}>;
+
+
+export type CreateOneCourseMutation = { __typename?: 'Mutation', createOneCourse: { __typename?: 'Course', id: string, name: string, createdAt: any, updatedAt: any } };
+
+export type GetCoursePageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<CourseFilter>;
+}>;
+
+
+export type GetCoursePageQuery = { __typename?: 'Query', courses: { __typename?: 'CourseConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Course', id: string, name: string, createdAt: any, updatedAt: any }> } };
+
+export type UpdateOneCourseMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateCourse;
+}>;
+
+
+export type UpdateOneCourseMutation = { __typename?: 'Mutation', updateOneCourse: { __typename?: 'Course', id: string, name: string, createdAt: any, updatedAt: any } };
+
+export type DeleteOneCourseMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneCourseMutation = { __typename?: 'Mutation', deleteOneCourse: { __typename?: 'CourseDeleteResponse', id?: string | null } };
+
 export const SessionPartsFragmentDoc = gql`
     fragment SessionParts on Session {
   token
@@ -2310,6 +2343,14 @@ export const BranchPartsFragmentDoc = gql`
   id
   name
   picture
+  createdAt
+  updatedAt
+}
+    `;
+export const CoursePartsFragmentDoc = gql`
+    fragment CourseParts on Course {
+  id
+  name
   createdAt
   updatedAt
 }
@@ -2424,6 +2465,85 @@ export const DeleteOneBranchDocument = gql`
   })
   export class DeleteOneBranchGQL extends Apollo.Mutation<DeleteOneBranchMutation, DeleteOneBranchMutationVariables> {
     document = DeleteOneBranchDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneCourseDocument = gql`
+    mutation createOneCourse($course: CreateCourse!) {
+  createOneCourse(input: {course: $course}) {
+    ...CourseParts
+  }
+}
+    ${CoursePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneCourseGQL extends Apollo.Mutation<CreateOneCourseMutation, CreateOneCourseMutationVariables> {
+    document = CreateOneCourseDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetCoursePageDocument = gql`
+    query getCoursePage($offset: Int = 0, $limit: Int = 10, $filter: CourseFilter = {}) {
+  courses(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...CourseParts
+    }
+  }
+}
+    ${CoursePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetCoursePageGQL extends Apollo.Query<GetCoursePageQuery, GetCoursePageQueryVariables> {
+    document = GetCoursePageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneCourseDocument = gql`
+    mutation updateOneCourse($id: ID!, $update: UpdateCourse!) {
+  updateOneCourse(input: {id: $id, update: $update}) {
+    ...CourseParts
+  }
+}
+    ${CoursePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneCourseGQL extends Apollo.Mutation<UpdateOneCourseMutation, UpdateOneCourseMutationVariables> {
+    document = UpdateOneCourseDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneCourseDocument = gql`
+    mutation deleteOneCourse($id: ID!) {
+  deleteOneCourse(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneCourseGQL extends Apollo.Mutation<DeleteOneCourseMutation, DeleteOneCourseMutationVariables> {
+    document = DeleteOneCourseDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

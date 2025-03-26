@@ -1,0 +1,17 @@
+.menu-list-item {
+  &:before,
+  &:focus {
+    z-index: -1;
+  }
+
+  &.activeMenu {
+    background-color: var(--mat-sys-primary);
+
+    .mdc-list-item__primary-text {
+      color: var(--mat-sys-on-primary);
+    }
+    .mat-mdc-list-item-icon {
+      color: var(--mat-sys-on-primary);
+    }
+  }
+}

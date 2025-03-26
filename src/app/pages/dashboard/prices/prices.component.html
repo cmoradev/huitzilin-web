@@ -5,7 +5,7 @@
   <mat-card-content>
     <div class="flex h-full">
       <!-- Sidebar (Chats List) -->
-      <div class="w-1/3 bg-gray-100 border-r border-gray-300 overflow-y-auto">
+      <div class="w-1/3 overflow-y-auto">
         <div class="p-4 border-b border-gray-300">
           <input
             type="text"
@@ -13,20 +13,21 @@
             class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
           />
         </div>
-        <ul>
-          <li class="p-4 border-b border-gray-300 hover:bg-gray-200 cursor-pointer">
-            <div class="font-bold">Chat 1</div>
-            <div class="text-sm text-gray-500">Último mensaje...</div>
-          </li>
-          <li class="p-4 border-b border-gray-300 hover:bg-gray-200 cursor-pointer">
-            <div class="font-bold">Chat 2</div>
-            <div class="text-sm text-gray-500">Último mensaje...</div>
-          </li>
-          <li class="p-4 border-b border-gray-300 hover:bg-gray-200 cursor-pointer">
-            <div class="font-bold">Chat 3</div>
-            <div class="text-sm text-gray-500">Último mensaje...</div>
-          </li>
-        </ul>
+        @if (loading()) {
+        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        }
+        <mat-list role="list">
+          @for (course of courses(); track $index) {
+          <mat-list-item role="listitem">
+            <div class="flex justify-between items-center">
+              <span>{{ course.name }}</span>
+              <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon svgIcon="dots-vertical"></mat-icon>
+              </button>
+            </div>
+          </mat-list-item>
+          }
+        </mat-list>
       </div>
 
       <!-- Chat Area -->
@@ -56,7 +57,9 @@
               placeholder="Escribe un mensaje..."
               class="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
             />
-            <button class="ml-2 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            <button
+              class="ml-2 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+            >
               Enviar
             </button>
           </div>
@@ -65,3 +68,14 @@
     </div>
   </mat-card-content>
 </mat-card>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item>
+    <mat-icon svgIcon="pencil" />
+    <span>Editar</span>
+  </button>
+  <button mat-menu-item>
+    <mat-icon svgIcon="delete" class="!text-red-500" />
+    <span>Eliminar</span>
+  </button>
+</mat-menu>

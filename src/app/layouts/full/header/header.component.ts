@@ -25,7 +25,6 @@ import { AuthService } from '@services';
     MatMenuTrigger,
     MatMenuItem,
     RouterLink,
-    MatMiniFabButton,
   ],
   templateUrl: './header.component.html',
 })

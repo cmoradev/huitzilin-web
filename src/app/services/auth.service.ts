@@ -1,4 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import {
   BranchPartsFragment,
   SessionPartsFragment,
@@ -18,6 +19,9 @@ export class AuthService {
   private readonly _session = signal<SessionPartsFragment | null>(null);
   private readonly _branch = signal<BranchPartsFragment | null>(null);
   private readonly _signInGQL = inject(SignInGQL);
+
+  public session$ = toObservable(this._session);
+  public branch$ = toObservable(this._branch);
 
   /**
    * Inicia sesión en la aplicación utilizando las credenciales proporcionadas.
@@ -65,6 +69,7 @@ export class AuthService {
    * Si encuentra una sesión válida, la deserializa y la establece en el estado interno del servicio.
    */
   public restoreSession() {
+    console.log()
     const session = sessionStorage.getItem(SESSION_KEY);
     const branch = sessionStorage.getItem(BRANCH_KEY);
 
@@ -106,6 +111,6 @@ export class AuthService {
    */
   public set branch(branch: BranchPartsFragment) {
     this._branch.set(branch);
-    sessionStorage.setItem(SESSION_KEY, JSON.stringify(branch));
+    sessionStorage.setItem(BRANCH_KEY, JSON.stringify(branch));
   }
 }
