@@ -1,0 +1,18 @@
+fragment SessionParts on Session {
+  token,
+  username,
+  exp,
+  iat
+}
+
+mutation signIn ($input: SignInInput!) {
+  signIn (input: $input) {
+    ...SessionParts
+  }
+}
+
+mutation signUp($input: SignUpInput!) {
+  signUp (input: $input) {
+    ...SessionParts
+  }
+}

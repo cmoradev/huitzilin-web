@@ -45,6 +45,7 @@ export type ActionConnection = {
 export type ActionDeleteFilter = {
   action?: InputMaybe<StringFieldComparison>;
   and?: InputMaybe<Array<ActionDeleteFilter>>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<ActionDeleteFilter>>;
   policyId?: InputMaybe<StringFieldComparison>;
   route?: InputMaybe<StringFieldComparison>;
@@ -71,6 +72,7 @@ export enum ActionEffect {
 export type ActionFilter = {
   action?: InputMaybe<StringFieldComparison>;
   and?: InputMaybe<Array<ActionFilter>>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<ActionFilter>>;
   policyId?: InputMaybe<StringFieldComparison>;
   route?: InputMaybe<StringFieldComparison>;
@@ -84,6 +86,7 @@ export type ActionSort = {
 
 export enum ActionSortFields {
   Action = 'action',
+  Id = 'id',
   PolicyId = 'policyId',
   Route = 'route'
 }
@@ -91,6 +94,7 @@ export enum ActionSortFields {
 export type ActionUpdateFilter = {
   action?: InputMaybe<StringFieldComparison>;
   and?: InputMaybe<Array<ActionUpdateFilter>>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<ActionUpdateFilter>>;
   policyId?: InputMaybe<StringFieldComparison>;
   route?: InputMaybe<StringFieldComparison>;
@@ -119,6 +123,7 @@ export type BranchConnection = {
 
 export type BranchDeleteFilter = {
   and?: InputMaybe<Array<BranchDeleteFilter>>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<BranchDeleteFilter>>;
 };
@@ -136,6 +141,7 @@ export type BranchDeleteResponse = {
 
 export type BranchFilter = {
   and?: InputMaybe<Array<BranchFilter>>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<BranchFilter>>;
 };
@@ -147,11 +153,13 @@ export type BranchSort = {
 };
 
 export enum BranchSortFields {
+  Id = 'id',
   Name = 'name'
 }
 
 export type BranchUpdateFilter = {
   and?: InputMaybe<Array<BranchUpdateFilter>>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<BranchUpdateFilter>>;
 };
@@ -181,6 +189,7 @@ export type ClassroomConnection = {
 export type ClassroomDeleteFilter = {
   and?: InputMaybe<Array<ClassroomDeleteFilter>>;
   branchId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<ClassroomDeleteFilter>>;
 };
@@ -200,6 +209,7 @@ export type ClassroomDeleteResponse = {
 export type ClassroomFilter = {
   and?: InputMaybe<Array<ClassroomFilter>>;
   branchId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<ClassroomFilter>>;
 };
@@ -212,12 +222,14 @@ export type ClassroomSort = {
 
 export enum ClassroomSortFields {
   BranchId = 'branchId',
+  Id = 'id',
   Name = 'name'
 }
 
 export type ClassroomUpdateFilter = {
   and?: InputMaybe<Array<ClassroomUpdateFilter>>;
   branchId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<ClassroomUpdateFilter>>;
 };
@@ -246,6 +258,7 @@ export type CourseConnection = {
 export type CourseDeleteFilter = {
   and?: InputMaybe<Array<CourseDeleteFilter>>;
   branchId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<CourseDeleteFilter>>;
 };
@@ -264,6 +277,7 @@ export type CourseDeleteResponse = {
 export type CourseFilter = {
   and?: InputMaybe<Array<CourseFilter>>;
   branchId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<CourseFilter>>;
 };
@@ -276,12 +290,14 @@ export type CourseSort = {
 
 export enum CourseSortFields {
   BranchId = 'branchId',
+  Id = 'id',
   Name = 'name'
 }
 
 export type CourseUpdateFilter = {
   and?: InputMaybe<Array<CourseUpdateFilter>>;
   branchId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<CourseUpdateFilter>>;
 };
@@ -515,6 +531,7 @@ export type CycleConnection = {
 export type CycleDeleteFilter = {
   and?: InputMaybe<Array<CycleDeleteFilter>>;
   branchId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<CycleDeleteFilter>>;
 };
@@ -535,6 +552,7 @@ export type CycleDeleteResponse = {
 export type CycleFilter = {
   and?: InputMaybe<Array<CycleFilter>>;
   branchId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<CycleFilter>>;
 };
@@ -547,12 +565,14 @@ export type CycleSort = {
 
 export enum CycleSortFields {
   BranchId = 'branchId',
+  Id = 'id',
   Name = 'name'
 }
 
 export type CycleUpdateFilter = {
   and?: InputMaybe<Array<CycleUpdateFilter>>;
   branchId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<CycleUpdateFilter>>;
 };
@@ -587,6 +607,7 @@ export type DebitDeleteFilter = {
   and?: InputMaybe<Array<DebitDeleteFilter>>;
   description?: InputMaybe<StringFieldComparison>;
   enrollmentId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<DebitDeleteFilter>>;
 };
 
@@ -610,6 +631,7 @@ export type DebitFilter = {
   and?: InputMaybe<Array<DebitFilter>>;
   description?: InputMaybe<StringFieldComparison>;
   enrollmentId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<DebitFilter>>;
 };
 
@@ -621,7 +643,8 @@ export type DebitSort = {
 
 export enum DebitSortFields {
   Description = 'description',
-  EnrollmentId = 'enrollmentId'
+  EnrollmentId = 'enrollmentId',
+  Id = 'id'
 }
 
 export enum DebitState {
@@ -636,6 +659,7 @@ export type DebitUpdateFilter = {
   and?: InputMaybe<Array<DebitUpdateFilter>>;
   description?: InputMaybe<StringFieldComparison>;
   enrollmentId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<DebitUpdateFilter>>;
 };
 
@@ -797,6 +821,7 @@ export type EnrollmentDeleteFilter = {
   classroomId?: InputMaybe<StringFieldComparison>;
   courseId?: InputMaybe<StringFieldComparison>;
   cycleId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<EnrollmentDeleteFilter>>;
   studentId?: InputMaybe<StringFieldComparison>;
 };
@@ -823,6 +848,7 @@ export type EnrollmentFilter = {
   classroomId?: InputMaybe<StringFieldComparison>;
   courseId?: InputMaybe<StringFieldComparison>;
   cycleId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<EnrollmentFilter>>;
   studentId?: InputMaybe<StringFieldComparison>;
 };
@@ -838,6 +864,7 @@ export enum EnrollmentSortFields {
   ClassroomId = 'classroomId',
   CourseId = 'courseId',
   CycleId = 'cycleId',
+  Id = 'id',
   StudentId = 'studentId'
 }
 
@@ -853,6 +880,7 @@ export type EnrollmentUpdateFilter = {
   classroomId?: InputMaybe<StringFieldComparison>;
   courseId?: InputMaybe<StringFieldComparison>;
   cycleId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<EnrollmentUpdateFilter>>;
   studentId?: InputMaybe<StringFieldComparison>;
 };
@@ -883,6 +911,7 @@ export type FeeConnection = {
 export type FeeDeleteFilter = {
   and?: InputMaybe<Array<FeeDeleteFilter>>;
   courseId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<FeeDeleteFilter>>;
 };
@@ -903,6 +932,7 @@ export type FeeDeleteResponse = {
 export type FeeFilter = {
   and?: InputMaybe<Array<FeeFilter>>;
   courseId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<FeeFilter>>;
 };
@@ -915,12 +945,14 @@ export type FeeSort = {
 
 export enum FeeSortFields {
   CourseId = 'courseId',
+  Id = 'id',
   Name = 'name'
 }
 
 export type FeeUpdateFilter = {
   and?: InputMaybe<Array<FeeUpdateFilter>>;
   courseId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<FeeUpdateFilter>>;
 };
@@ -932,6 +964,23 @@ export enum Frequency {
   Single = 'SINGLE',
   Weekly = 'WEEKLY'
 }
+
+export type IdFilterComparison = {
+  eq?: InputMaybe<Scalars['ID']['input']>;
+  gt?: InputMaybe<Scalars['ID']['input']>;
+  gte?: InputMaybe<Scalars['ID']['input']>;
+  iLike?: InputMaybe<Scalars['ID']['input']>;
+  in?: InputMaybe<Array<Scalars['ID']['input']>>;
+  is?: InputMaybe<Scalars['Boolean']['input']>;
+  isNot?: InputMaybe<Scalars['Boolean']['input']>;
+  like?: InputMaybe<Scalars['ID']['input']>;
+  lt?: InputMaybe<Scalars['ID']['input']>;
+  lte?: InputMaybe<Scalars['ID']['input']>;
+  neq?: InputMaybe<Scalars['ID']['input']>;
+  notILike?: InputMaybe<Scalars['ID']['input']>;
+  notIn?: InputMaybe<Array<Scalars['ID']['input']>>;
+  notLike?: InputMaybe<Scalars['ID']['input']>;
+};
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -1444,6 +1493,7 @@ export type PolicyConnection = {
 export type PolicyDeleteFilter = {
   and?: InputMaybe<Array<PolicyDeleteFilter>>;
   branchId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<PolicyDeleteFilter>>;
 };
@@ -1462,6 +1512,7 @@ export type PolicyDeleteResponse = {
 export type PolicyFilter = {
   and?: InputMaybe<Array<PolicyFilter>>;
   branchId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<PolicyFilter>>;
 };
@@ -1474,12 +1525,14 @@ export type PolicySort = {
 
 export enum PolicySortFields {
   BranchId = 'branchId',
+  Id = 'id',
   Name = 'name'
 }
 
 export type PolicyUpdateFilter = {
   and?: InputMaybe<Array<PolicyUpdateFilter>>;
   branchId?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<PolicyUpdateFilter>>;
 };
@@ -1665,7 +1718,6 @@ export type Session = {
 };
 
 export type SignInInput = {
-  branchId?: InputMaybe<Scalars['String']['input']>;
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
 };
@@ -1734,6 +1786,7 @@ export type StudentDeleteFilter = {
   and?: InputMaybe<Array<StudentDeleteFilter>>;
   code?: InputMaybe<StringFieldComparison>;
   fullname?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<StudentDeleteFilter>>;
 };
 
@@ -1756,6 +1809,7 @@ export type StudentFilter = {
   and?: InputMaybe<Array<StudentFilter>>;
   code?: InputMaybe<StringFieldComparison>;
   fullname?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<StudentFilter>>;
 };
 
@@ -1767,13 +1821,15 @@ export type StudentSort = {
 
 export enum StudentSortFields {
   Code = 'code',
-  Fullname = 'fullname'
+  Fullname = 'fullname',
+  Id = 'id'
 }
 
 export type StudentUpdateFilter = {
   and?: InputMaybe<Array<StudentUpdateFilter>>;
   code?: InputMaybe<StringFieldComparison>;
   fullname?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<StudentUpdateFilter>>;
 };
 
@@ -1804,6 +1860,7 @@ export type TeacherConnection = {
 export type TeacherDeleteFilter = {
   and?: InputMaybe<Array<TeacherDeleteFilter>>;
   fullname?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<TeacherDeleteFilter>>;
 };
 
@@ -1824,6 +1881,7 @@ export type TeacherDeleteResponse = {
 export type TeacherFilter = {
   and?: InputMaybe<Array<TeacherFilter>>;
   fullname?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<TeacherFilter>>;
 };
 
@@ -1834,12 +1892,14 @@ export type TeacherSort = {
 };
 
 export enum TeacherSortFields {
-  Fullname = 'fullname'
+  Fullname = 'fullname',
+  Id = 'id'
 }
 
 export type TeacherUpdateFilter = {
   and?: InputMaybe<Array<TeacherUpdateFilter>>;
   fullname?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<TeacherUpdateFilter>>;
 };
 
@@ -1870,6 +1930,7 @@ export type TutorConnection = {
 export type TutorDeleteFilter = {
   and?: InputMaybe<Array<TutorDeleteFilter>>;
   fullname?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<TutorDeleteFilter>>;
 };
 
@@ -1890,6 +1951,7 @@ export type TutorDeleteResponse = {
 export type TutorFilter = {
   and?: InputMaybe<Array<TutorFilter>>;
   fullname?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<TutorFilter>>;
 };
 
@@ -1900,12 +1962,14 @@ export type TutorSort = {
 };
 
 export enum TutorSortFields {
-  Fullname = 'fullname'
+  Fullname = 'fullname',
+  Id = 'id'
 }
 
 export type TutorUpdateFilter = {
   and?: InputMaybe<Array<TutorUpdateFilter>>;
   fullname?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<TutorUpdateFilter>>;
 };
 
@@ -2184,6 +2248,22 @@ export type User = {
   version: Scalars['Int']['output'];
 };
 
+export type SessionPartsFragment = { __typename?: 'Session', token: string, username: string, exp: any, iat: any };
+
+export type SignInMutationVariables = Exact<{
+  input: SignInInput;
+}>;
+
+
+export type SignInMutation = { __typename?: 'Mutation', signIn: { __typename?: 'Session', token: string, username: string, exp: any, iat: any } };
+
+export type SignUpMutationVariables = Exact<{
+  input: SignUpInput;
+}>;
+
+
+export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Session', token: string, username: string, exp: any, iat: any } };
+
 export type BranchPartsFragment = { __typename?: 'Branch', id: string, name: string, picture: string, createdAt: any, updatedAt: any };
 
 export type CreateOneBranchMutationVariables = Exact<{
@@ -2217,6 +2297,14 @@ export type DeleteOneBranchMutationVariables = Exact<{
 
 export type DeleteOneBranchMutation = { __typename?: 'Mutation', deleteOneBranch: { __typename?: 'BranchDeleteResponse', id?: string | null } };
 
+export const SessionPartsFragmentDoc = gql`
+    fragment SessionParts on Session {
+  token
+  username
+  exp
+  iat
+}
+    `;
 export const BranchPartsFragmentDoc = gql`
     fragment BranchParts on Branch {
   id
@@ -2226,6 +2314,42 @@ export const BranchPartsFragmentDoc = gql`
   updatedAt
 }
     `;
+export const SignInDocument = gql`
+    mutation signIn($input: SignInInput!) {
+  signIn(input: $input) {
+    ...SessionParts
+  }
+}
+    ${SessionPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class SignInGQL extends Apollo.Mutation<SignInMutation, SignInMutationVariables> {
+    document = SignInDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const SignUpDocument = gql`
+    mutation signUp($input: SignUpInput!) {
+  signUp(input: $input) {
+    ...SessionParts
+  }
+}
+    ${SessionPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class SignUpGQL extends Apollo.Mutation<SignUpMutation, SignUpMutationVariables> {
+    document = SignUpDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
 export const CreateOneBranchDocument = gql`
     mutation createOneBranch($branch: CreateBranch!) {
   createOneBranch(input: {branch: $branch}) {

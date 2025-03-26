@@ -6,23 +6,29 @@
           <h1 class="text-primary text-xl font-bold">Inicio de sesión</h1>
         </div>
 
-        <form>
+        <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
           <div class="flex flex-col gap-3">
             <mat-form-field>
               <mat-label>Usuario</mat-label>
-              <input matInput placeholder="Ej: usuario123" />
+              <input matInput placeholder="Ej: usuario123" formControlName="username" />
               <mat-hint>Ingrese su nombre de usuario</mat-hint>
+              <mat-error>
+                {{ formTools.checkForErrorsIn(formGroup.get("username")) }}
+              </mat-error>
             </mat-form-field>
 
             <mat-form-field>
               <mat-label>Contraseña</mat-label>
-              <input matInput placeholder="Ej: usuario123" />
+              <input matInput placeholder="Ej: usuario123" formControlName="password" />
               <mat-hint>Ingrese su contraseña</mat-hint>
+              <mat-error>
+                {{ formTools.checkForErrorsIn(formGroup.get("password")) }}
+              </mat-error>
             </mat-form-field>
           </div>
 
           <div class="flex space-between gap-1 my-2">
-            <mat-checkbox color="primary">
+            <mat-checkbox color="primary" formControlName="rememberMe">
               Recordar en este dispositivo
             </mat-checkbox>
 
@@ -41,8 +47,8 @@
             (click)="submit()"
             class="w-full mt-2"
           >
-            Entrar
-          </button>
+          {{ loading() ? "Entrando..." : "Entrar" }}
+        </button>
         </form>
       </mat-card-content>
     </mat-card>
