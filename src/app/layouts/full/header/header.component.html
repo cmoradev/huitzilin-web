@@ -15,11 +15,8 @@
 
   <span class="flex flex-1"></span>
 
-  <button mat-mini-fab [matMenuTriggerFor]="profilemenu">
-    <img
-      src="/images/user-1.jpg"
-      class="rounded-[var(--mat-sys-corner-medium)]"
-    />
+  <button mat-icon-button [matMenuTriggerFor]="profilemenu">
+    <mat-icon svgIcon="account-outline" />
   </button>
 
   <mat-menu #profilemenu="matMenu" class="w-[220px]">

@@ -1,9 +1,38 @@
+@if (finding()) {
+<div class="py-1 px-4">
+  <mat-form-field class="w-full" subscriptSizing="dynamic">
+    <mat-label>Buscador</mat-label>
+    <input
+      type="text"
+      placeholder="Ej. Step Ups"
+      matInput
+      [formControl]="searchControl"
+      [matAutocomplete]="auto"
+    />
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+      @for (branch of branchs(); track branch.id) {
+      <mat-option [value]="branch">
+        <div class="flex items-center gap-2">
+          <img [alt]="branch.name" class="h-6 w-6" [src]="branch.picture" />
+          <span> {{ branch.name }} </span>
+        </div>
+      </mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
+} @else if (!!currentBranch()) {
 <mat-toolbar>
-  <div class="flex items-center gap-2 py-1 px-2 cursor-pointer w-full rounded-[var(--mat-sys-corner-medium)]" mat-ripple>
+  <div
+    class="flex items-center gap-2 py-1 px-2 cursor-pointer w-full rounded-[var(--mat-sys-corner-medium)]"
+    mat-ripple
+    (click)="toggleFinding()"
+  >
     <img
-      src="/images/munyaal.png"
+      [src]="currentBranch()?.picture"
       class="rounded-[var(--mat-sys-corner-medium)] w-10 h-10"
     />
-    <span class="w-full text-lg"> Munyaal </span>
+    <span class="w-full text-lg"> {{ currentBranch()?.name }} </span>
   </div>
 </mat-toolbar>
+}
