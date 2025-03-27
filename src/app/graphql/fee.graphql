@@ -1,0 +1,55 @@
+fragment FeeParts on Fee {
+  id,
+  name,
+  price
+  frequency
+  createdAt
+  updatedAt
+}
+
+mutation createOneFee ($fee: CreateFee!) {
+  createOneFee (
+    input: {
+      fee: $fee
+    }
+  ) {
+    ...FeeParts
+  }
+}
+
+query getFeePage ($offset: Int = 0, $limit: Int = 10, $filter: FeeFilter = {})  {
+  fees (
+    paging: { limit: $limit, offset: $offset },
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...FeeParts
+    }
+  }
+}
+
+mutation updateOneFee ($id: ID!, $update: UpdateFee!) {
+  updateOneFee (
+    input: {
+      id: $id,
+      update: $update
+    }
+  ) {
+    ...FeeParts
+  }
+}
+
+mutation deleteOneFee ($id: ID!) {
+	deleteOneFee (
+    input: {
+      id: $id
+    }
+  ) {
+    id
+  }
+}
