@@ -15,6 +15,7 @@
         color="primary"
         matTooltip="Refrescar"
         (click)="refresh()"
+        [ngClass]="{ 'animate-spin': loading() }"
       >
         <mat-icon svgIcon="refresh" />
       </button>
@@ -29,9 +30,6 @@
     </div>
   </mat-card-content>
   <mat-card-content>
-    @if (loading()) {
-      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-    }
     <table mat-table [dataSource]="dataSource">
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Nombre</th>

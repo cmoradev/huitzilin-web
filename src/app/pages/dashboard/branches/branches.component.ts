@@ -34,10 +34,12 @@ import {
 import { debounceTime, merge, startWith } from 'rxjs';
 import { BranchDeleteDialogComponent } from './branch-delete-dialog/branch-delete-dialog.component';
 import { BranchFormDialogComponent } from './branch-form-dialog/branch-form-dialog.component';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-business',
   imports: [
+    NgClass,
     MatCard,
     MatCardContent,
     MatCardHeader,
@@ -53,7 +55,6 @@ import { BranchFormDialogComponent } from './branch-form-dialog/branch-form-dial
     MatPaginator,
     AvatarComponent,
     ReactiveFormsModule,
-    MatProgressBar,
   ],
   templateUrl: './branches.component.html',
   styles: ``,
@@ -120,6 +121,7 @@ export class BranchsComponent implements AfterViewInit {
         {
           fetchPolicy: 'cache-and-network',
           nextFetchPolicy: 'cache-and-network',
+          notifyOnNetworkStatusChange: true,
         }
       )
       .valueChanges.subscribe({

@@ -5,7 +5,7 @@
   <mat-card-content>
     <div class="flex gap-2 h-full">
       <!-- Sidebar (Chats List) -->
-      <div class="w-1/3 overflow-y-auto">
+      <div class="w-1/3">
         <div class="flex items-center gap-2 p-2">
           <mat-form-field
             appearance="outline"
@@ -19,59 +19,60 @@
               [formControl]="searchControl"
             />
           </mat-form-field>
-          <button mat-icon-button (click)="openFormDialog()">
+          <button
+            mat-icon-button
+            color="primary"
+            matTooltip="Refrescar"
+            (click)="refreshCourses()"
+          >
+            <mat-icon
+              svgIcon="refresh"
+              [ngClass]="{ 'animate-spin': coursesLoading() }"
+            />
+          </button>
+          <button mat-icon-button (click)="openCourseFormDialog()">
             <mat-icon svgIcon="plus" />
           </button>
         </div>
         <mat-divider />
-        @if (loading()) {
-        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-        }
         <mat-nav-list>
           @for (course of courses(); track $index) {
           <app-course-item
             [course]="course"
-            (update)="openFormDialog($event)"
-            (delete)="openDeleteDialog($event)"
+            (update)="openCourseFormDialog($event)"
+            (delete)="openCourseDeleteDialog($event)"
           ></app-course-item>
           }
         </mat-nav-list>
       </div>
 
-      <!-- Chat Area -->
-      <div class="w-2/3 flex flex-col h-full">
-        <div class="p-4 bg-gray-200 border-b border-gray-300">
-          <div class="font-bold">Nombre del Chat</div>
-          <div class="text-sm text-gray-500">Última conexión...</div>
+      <!-- Fees Area -->
+      <div class="w-2/3">
+        <div class="flex items-center gap-2 p-2">
+          <span class="flex-1 h-[52px]"></span>
+          <button
+            mat-icon-button
+            color="primary"
+            matTooltip="Refrescar"
+            (click)="refreshCourses()"
+            [ngClass]="{ 'animate-spin': coursesLoading() }"
+          >
+            <mat-icon svgIcon="refresh" />
+          </button>
+          <button mat-icon-button (click)="openCourseFormDialog()">
+            <mat-icon svgIcon="plus" />
+          </button>
         </div>
-        <div class="flex-1 p-4 overflow-y-auto bg-white">
-          <div class="mb-4">
-            <div class="bg-blue-100 p-2 rounded-md max-w-xs">
-              Hola, ¿cómo estás?
-            </div>
-            <div class="text-xs text-gray-500 mt-1">10:00 AM</div>
-          </div>
-          <div class="mb-4 text-right">
-            <div class="bg-green-100 p-2 rounded-md max-w-xs ml-auto">
-              ¡Todo bien! ¿Y tú?
-            </div>
-            <div class="text-xs text-gray-500 mt-1">10:01 AM</div>
-          </div>
-        </div>
-        <div class="p-4 bg-gray-200 border-t border-gray-300">
-          <div class="flex items-center">
-            <input
-              type="text"
-              placeholder="Escribe un mensaje..."
-              class="flex-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-            />
-            <button
-              class="ml-2 p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-            >
-              Enviar
-            </button>
-          </div>
-        </div>
+        <mat-divider />
+        <mat-nav-list>
+          @for (course of courses(); track $index) {
+          <app-course-item
+            [course]="course"
+            (update)="openCourseFormDialog($event)"
+            (delete)="openCourseDeleteDialog($event)"
+          ></app-course-item>
+          }
+        </mat-nav-list>
       </div>
     </div>
   </mat-card-content>

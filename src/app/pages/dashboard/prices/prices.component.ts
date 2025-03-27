@@ -19,16 +19,17 @@ import { debounceTime, merge } from 'rxjs';
 import { CourseFormDialogComponent } from './course-form-dialog/course-form-dialog.component';
 import { CourseItemComponent } from './course-item/course-item.component';
 import { CourseDeleteDialogComponent } from './course-delete-dialog/course-delete-dialog.component';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-prices',
   imports: [
+    NgClass,
     MatCard,
     MatIcon,
     MatCardContent,
     MatCardHeader,
     MatCardTitle,
-    MatProgressBar,
     MatNavList,
     MatDivider,
     MatLabel,
@@ -46,8 +47,8 @@ export class PricesComponent implements OnInit {
   private readonly _globalStateService = inject(GlobalStateService);
   private readonly _coursesPageGQL = inject(GetCoursePageGQL);
   public courses = signal<CoursePartsFragment[]>([]);
-  public loading = signal<boolean>(false);
-  public totalCount = signal<number>(0);
+  public coursesLoading = signal<boolean>(false);
+  public coursesTotalCount = signal<number>(0);
 
   public searchControl = new FormControl('');
 
@@ -56,12 +57,12 @@ export class PricesComponent implements OnInit {
       .pipe(debounceTime(300))
       .subscribe({
         next: () => {
-          this.refresh();
+          this.refreshCourses();
         },
       });
   }
 
-  public openFormDialog(
+  public openCourseFormDialog(
     branch: CoursePartsFragment | undefined = undefined
   ): void {
     const $dialog = this._dialog.open(CourseFormDialogComponent, {
@@ -71,12 +72,12 @@ export class PricesComponent implements OnInit {
 
     $dialog.afterClosed().subscribe({
       next: (course) => {
-        if (course) this.refresh();
+        if (course) this.refreshCourses();
       },
     });
   }
 
-  public openDeleteDialog(branch: CoursePartsFragment): void {
+  public openCourseDeleteDialog(branch: CoursePartsFragment): void {
     const $dialog = this._dialog.open(CourseDeleteDialogComponent, {
       width: '35rem',
       data: branch,
@@ -84,14 +85,14 @@ export class PricesComponent implements OnInit {
 
     $dialog.afterClosed().subscribe({
       next: (course) => {
-        if (course) this.refresh();
+        if (course) this.refreshCourses();
       },
     });
   }
 
-  public refresh(): void {
+  public refreshCourses(): void {
     if (!!this._globalStateService.branch?.id) {
-      this.loading.set(true);
+      this.coursesLoading.set(true);
 
       // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
       this._coursesPageGQL
@@ -107,6 +108,7 @@ export class PricesComponent implements OnInit {
           {
             fetchPolicy: 'cache-and-network',
             nextFetchPolicy: 'cache-and-network',
+            notifyOnNetworkStatusChange: true,
           }
         )
         .valueChanges.subscribe({
@@ -114,8 +116,8 @@ export class PricesComponent implements OnInit {
             const { nodes, pageInfo, totalCount } = data.courses;
 
             this.courses.set(nodes);
-            this.loading.set(loading);
-            this.totalCount.set(totalCount);
+            this.coursesLoading.set(loading);
+            this.coursesTotalCount.set(totalCount);
           },
         });
     }
