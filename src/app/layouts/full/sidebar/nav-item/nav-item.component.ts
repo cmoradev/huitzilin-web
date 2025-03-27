@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import {
@@ -11,7 +10,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav-item',
-  imports: [MatListItem, MatListItemTitle, MatListItemIcon, MatIcon, NgClass],
+  imports: [MatListItem, MatListItemTitle, MatListItemIcon, MatIcon],
   templateUrl: './nav-item.component.html',
   styleUrl: './nav-item.component.scss',
 })

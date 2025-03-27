@@ -81,21 +81,7 @@ export class BranchsComponent implements AfterViewInit {
       });
   }
 
-  public openCreateDialog(): void {
-    const $dialog = this.dialog.open(BranchFormDialogComponent, {
-      width: '35rem',
-    });
-
-    $dialog.afterClosed().subscribe({
-      next: (branch) => {
-        if (branch) {
-          this.refresh();
-        }
-      },
-    });
-  }
-
-  public openUpdateDialog(branch: BranchPartsFragment): void {
+  public openFormDialog(branch: BranchPartsFragment | undefined = undefined): void {
     const $dialog = this.dialog.open(BranchFormDialogComponent, {
       width: '35rem',
       data: branch,
@@ -103,9 +89,7 @@ export class BranchsComponent implements AfterViewInit {
 
     $dialog.afterClosed().subscribe({
       next: (branch) => {
-        if (branch) {
-          this.refresh();
-        }
+        if (branch) this.refresh();
       },
     });
   }
@@ -117,9 +101,7 @@ export class BranchsComponent implements AfterViewInit {
 
     $dialog.afterClosed().subscribe({
       next: (branch) => {
-        if (branch) {
-          this.refresh();
-        }
+        if (branch) this.refresh();
       },
     });
   }

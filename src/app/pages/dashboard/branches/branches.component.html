@@ -3,8 +3,8 @@
     <mat-card-title>Sucursales</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <div class="flex gap-2 mt-2 w-full">
-      <mat-form-field class="w-full">
+    <div class="flex gap-2 mt-2 items-center">
+      <mat-form-field class="w-full" subscriptSizing="dynamic">
         <mat-label>Buscador</mat-label>
         <mat-icon svgIcon="magnify" matPrefix />
         <input type="search"  [formControl]="searchControl" matInput placeholder="Ej: Munyaal" />
@@ -13,7 +13,6 @@
       <button
         mat-icon-button
         color="primary"
-        class="mt-1"
         matTooltip="Refrescar"
         (click)="refresh()"
       >
@@ -22,9 +21,8 @@
       <button
         mat-icon-button
         color="primary"
-        class="mt-1"
         matTooltip="Crear nuevo"
-        (click)="openCreateDialog()"
+        (click)="openFormDialog()"
       >
         <mat-icon svgIcon="plus" />
       </button>
@@ -53,7 +51,7 @@
             mat-icon-button
             color="primary"
             matTooltip="Editar"
-            (click)="openUpdateDialog(element)"
+            (click)="openFormDialog(element)"
           >
             <mat-icon svgIcon="pencil" />
           </button>

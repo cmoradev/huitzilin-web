@@ -146,5 +146,4 @@ export class BranchFormDialogComponent implements OnInit {
 type FormValues = {
   picture: File;
   name: string;
-  address: string;
 };

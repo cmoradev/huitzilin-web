@@ -6,7 +6,7 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatToolbar } from '@angular/material/toolbar';
 import { BranchPartsFragment, GetCompaniesPageGQL } from '@graphql';
-import { AuthService } from '@services';
+import { GlobalStateService } from '@services';
 import { debounceTime, startWith } from 'rxjs';
 
 @Component({
@@ -17,13 +17,13 @@ import { debounceTime, startWith } from 'rxjs';
 })
 export class SidebarComponent implements AfterViewInit, OnInit {
   private readonly _companiesPageGQL = inject(GetCompaniesPageGQL);
-  private readonly authService = inject(AuthService);
+  private readonly _globalStateService = inject(GlobalStateService);
 
   public searchControl = new FormControl<BranchPartsFragment | string>('');
   public loading = signal<boolean>(false);
   public finding = signal<boolean>(false);
   public branchs = signal<BranchPartsFragment[]>([]);
-  public currentBranch = computed(() => this.authService.branch);
+  public currentBranch = computed(() => this._globalStateService.branch);
 
   ngOnInit(): void {
     this.finding.set(!this.currentBranch());
@@ -36,7 +36,7 @@ export class SidebarComponent implements AfterViewInit, OnInit {
         next: (value) => {
           if (value && typeof value === 'object') {
             this.toggleFinding();
-            this.authService.branch = value;
+            this._globalStateService.branch = value;
           } else if (typeof value === 'string') {
             this._fetchBranch();
           }
