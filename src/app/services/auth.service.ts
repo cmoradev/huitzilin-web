@@ -1,27 +1,21 @@
-import { inject, Injectable, signal } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
-import {
-  BranchPartsFragment,
-  SessionPartsFragment,
-  SignInGQL,
-  SignInInput,
-} from '@graphql';
+import { inject, Injectable } from '@angular/core';
+import { SignInGQL, SignInInput } from '@graphql';
 import { map, tap } from 'rxjs';
+import {
+  BRANCH_KEY,
+  COURSE_KEY,
+  GlobalStateService,
+  SESSION_KEY,
+} from './global-state.service';
 
-const SESSION_KEY = 'session';
-const BRANCH_KEY = 'branch';
-const USERNAME_KEY = 'username';
+export const USERNAME_KEY = 'username';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly _session = signal<SessionPartsFragment | null>(null);
-  private readonly _branch = signal<BranchPartsFragment | null>(null);
+  private readonly _globalStateService = inject(GlobalStateService);
   private readonly _signInGQL = inject(SignInGQL);
-
-  public session$ = toObservable(this._session);
-  public branch$ = toObservable(this._branch);
 
   /**
    * Inicia sesión en la aplicación utilizando las credenciales proporcionadas.
@@ -37,8 +31,7 @@ export class AuthService {
       map(({ data }) => data?.signIn),
       tap((session) => {
         if (session) {
-          this._session.set(session);
-          sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+          this._globalStateService.session = session;
         }
       })
     );
@@ -55,10 +48,8 @@ export class AuthService {
    * @returns {void} No retorna ningún valor.
    */
   public signOut() {
-    sessionStorage.removeItem(SESSION_KEY);
-    this._session.set(null);
-    sessionStorage.removeItem(BRANCH_KEY);
-    this._branch.set(null);
+    this._globalStateService.session = null;
+    this._globalStateService.branch = null;
   }
 
   /**
@@ -69,12 +60,13 @@ export class AuthService {
    * Si encuentra una sesión válida, la deserializa y la establece en el estado interno del servicio.
    */
   public restoreSession() {
-    console.log()
     const session = sessionStorage.getItem(SESSION_KEY);
     const branch = sessionStorage.getItem(BRANCH_KEY);
+    const course = sessionStorage.getItem(COURSE_KEY);
 
-    if (session) this._session.set(JSON.parse(session));
-    if (branch) this._branch.set(JSON.parse(branch));
+    if (session) this._globalStateService.session = JSON.parse(session);
+    if (branch) this._globalStateService.branch = JSON.parse(branch);
+    if (course) this._globalStateService.course = JSON.parse(course);
   }
 
   /**
@@ -93,24 +85,5 @@ export class AuthService {
    */
   public set username(username: string) {
     localStorage.setItem(USERNAME_KEY, username);
-  }
-
-  /**
-   * Obtiene el nombre de usuario almacenado en el almacenamiento local.
-   *
-   * @returns El nombre de usuario como una cadena de texto, o una cadena vacía si no se encuentra almacenado.
-   */
-  public get branch(): BranchPartsFragment | null {
-    return this._branch();
-  }
-
-  /**
-   * Establece el nombre de usuario en el almacenamiento local.
-   *
-   * @param email - El nombre de usuario que se desea almacenar.
-   */
-  public set branch(branch: BranchPartsFragment) {
-    this._branch.set(branch);
-    sessionStorage.setItem(BRANCH_KEY, JSON.stringify(branch));
   }
 }

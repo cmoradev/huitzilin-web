@@ -1,1 +1,22 @@
-<p>course-item works!</p>
+<mat-list-item (click)="selectCourse()" [activated]="isActive()">
+  <span matListItemTitle>{{ course.name }}</span>
+  <button
+    mat-icon-button
+    matListItemMeta
+    [matMenuTriggerFor]="menu"
+    (click)="openMenu($event)"
+  >
+    <mat-icon svgIcon="dots-vertical"></mat-icon>
+  </button>
+</mat-list-item>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="update.emit(course)">
+    <mat-icon svgIcon="pencil" />
+    <span>Editar</span>
+  </button>
+  <button mat-menu-item (click)="delete.emit(course)">
+    <mat-icon svgIcon="delete" class="!text-red-500" />
+    <span>Eliminar</span>
+  </button>
+</mat-menu>
