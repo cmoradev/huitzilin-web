@@ -62,7 +62,7 @@ export class FeeFormDialogComponent implements OnInit {
 
   public formGroup = this.formTools.builder.group({
     name: ['', [Validators.required]],
-    price: [0, [Validators.required, Validators.min(1)]],
+    price: [0, [Validators.required, Validators.min(3), Validators.max(64)]],
     frequency: ['', [Validators.required]],
   });
 

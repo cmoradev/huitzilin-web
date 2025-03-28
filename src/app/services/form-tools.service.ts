@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { AbstractControl, FormBuilder } from '@angular/forms';
+import { AbstractControl, FormBuilder, ValidatorFn } from '@angular/forms';
 import { ERROR_MESSAGES } from '@utils/messages';
 
 @Injectable({
@@ -54,8 +54,24 @@ export class FormToolsService {
       if (control.hasError('unauthenticated')) {
         return ERROR_MESSAGES['unauthenticated']();
       }
+      if (control.hasError('endDateInvalid')) {
+        return ERROR_MESSAGES['endDateInvalid']();
+      }
     }
 
     return '';
+  }
+
+  public get isEndDateAfterStartDate(): ValidatorFn {
+    return (group) => {
+      const start = group.get('start')?.value;
+      const end = group.get('end')?.value;
+
+      if (start && end && new Date(start) >= new Date(end)) {
+        group.get('end')?.setErrors({ endDateInvalid: true });
+      }
+
+      return null;
+    };
   }
 }
