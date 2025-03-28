@@ -2380,6 +2380,39 @@ export type SignUpMutationVariables = Exact<{
 
 export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Session', token: string, username: string, exp: any, iat: any } };
 
+export type ClassroomPartsFragment = { __typename?: 'Classroom', id: string, name: string, color: string, createdAt: any, updatedAt: any };
+
+export type CreateOneClassroomMutationVariables = Exact<{
+  classroom: CreateClassroom;
+}>;
+
+
+export type CreateOneClassroomMutation = { __typename?: 'Mutation', createOneClassroom: { __typename?: 'Classroom', id: string, name: string, color: string, createdAt: any, updatedAt: any } };
+
+export type GetClassroomPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<ClassroomFilter>;
+}>;
+
+
+export type GetClassroomPageQuery = { __typename?: 'Query', classrooms: { __typename?: 'ClassroomConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Classroom', id: string, name: string, color: string, createdAt: any, updatedAt: any }> } };
+
+export type UpdateOneClassroomMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateClassroom;
+}>;
+
+
+export type UpdateOneClassroomMutation = { __typename?: 'Mutation', updateOneClassroom: { __typename?: 'Classroom', id: string, name: string, color: string, createdAt: any, updatedAt: any } };
+
+export type DeleteOneClassroomMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneClassroomMutation = { __typename?: 'Mutation', deleteOneClassroom: { __typename?: 'ClassroomDeleteResponse', id?: string | null } };
+
 export type BranchPartsFragment = { __typename?: 'Branch', id: string, name: string, picture: string, createdAt: any, updatedAt: any };
 
 export type CreateOneBranchMutationVariables = Exact<{
@@ -2520,6 +2553,15 @@ export const SessionPartsFragmentDoc = gql`
   iat
 }
     `;
+export const ClassroomPartsFragmentDoc = gql`
+    fragment ClassroomParts on Classroom {
+  id
+  name
+  color
+  createdAt
+  updatedAt
+}
+    `;
 export const BranchPartsFragmentDoc = gql`
     fragment BranchParts on Branch {
   id
@@ -2588,6 +2630,85 @@ export const SignUpDocument = gql`
   })
   export class SignUpGQL extends Apollo.Mutation<SignUpMutation, SignUpMutationVariables> {
     document = SignUpDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneClassroomDocument = gql`
+    mutation createOneClassroom($classroom: CreateClassroom!) {
+  createOneClassroom(input: {classroom: $classroom}) {
+    ...ClassroomParts
+  }
+}
+    ${ClassroomPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneClassroomGQL extends Apollo.Mutation<CreateOneClassroomMutation, CreateOneClassroomMutationVariables> {
+    document = CreateOneClassroomDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetClassroomPageDocument = gql`
+    query getClassroomPage($offset: Int = 0, $limit: Int = 10, $filter: ClassroomFilter = {}) {
+  classrooms(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...ClassroomParts
+    }
+  }
+}
+    ${ClassroomPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetClassroomPageGQL extends Apollo.Query<GetClassroomPageQuery, GetClassroomPageQueryVariables> {
+    document = GetClassroomPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneClassroomDocument = gql`
+    mutation updateOneClassroom($id: ID!, $update: UpdateClassroom!) {
+  updateOneClassroom(input: {id: $id, update: $update}) {
+    ...ClassroomParts
+  }
+}
+    ${ClassroomPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneClassroomGQL extends Apollo.Mutation<UpdateOneClassroomMutation, UpdateOneClassroomMutationVariables> {
+    document = UpdateOneClassroomDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneClassroomDocument = gql`
+    mutation deleteOneClassroom($id: ID!) {
+  deleteOneClassroom(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneClassroomGQL extends Apollo.Mutation<DeleteOneClassroomMutation, DeleteOneClassroomMutationVariables> {
+    document = DeleteOneClassroomDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
