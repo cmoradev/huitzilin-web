@@ -49,7 +49,10 @@ export class CourseFormDialogComponent implements OnInit {
   public data: CoursePartsFragment | null = inject(MAT_DIALOG_DATA);
 
   public formGroup = this.formTools.builder.group({
-    name: ['', [Validators.required, Validators.minLength(3)]],
+    name: [
+      '',
+      [Validators.required, Validators.minLength(3), Validators.maxLength(32)],
+    ],
   });
 
   private readonly _globalStateService = inject(GlobalStateService);
