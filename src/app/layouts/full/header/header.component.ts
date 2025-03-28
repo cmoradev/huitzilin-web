@@ -1,24 +1,26 @@
 import {
   booleanAttribute,
   Component,
+  computed,
   EventEmitter,
   inject,
   Input,
   Output,
 } from '@angular/core';
 import { MatToolbar } from '@angular/material/toolbar';
-import { MatIconButton, MatMiniFabButton } from '@angular/material/button';
+import { MatButton, MatIconButton, MatMiniFabButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatBadge } from '@angular/material/badge';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '@services';
+import { AuthService, GlobalStateService } from '@services';
 
 @Component({
   selector: 'app-header',
   imports: [
     MatToolbar,
     MatIconButton,
+    MatButton,
     MatIcon,
     MatBadge,
     MatMenu,
@@ -35,7 +37,10 @@ export class HeaderComponent {
     false;
 
   private readonly _authService = inject(AuthService);
+  private readonly _globalStateService = inject(GlobalStateService);
   private readonly _router = inject(Router); 
+
+  public username = computed(() => this._globalStateService.session?.username ?? `root`);
 
   public signOut() {
     this._authService.signOut();

@@ -20,6 +20,7 @@ export class GlobalStateService {
 
   public session$ = toObservable(this._session);
   public branch$ = toObservable(this._branch);
+  public course$ = toObservable(this._course);
 
   get session(): SessionPartsFragment | null {
     return this._session();

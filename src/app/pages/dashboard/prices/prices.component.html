@@ -12,7 +12,6 @@
             subscriptSizing="dynamic"
             class="w-full"
           >
-            <mat-label>Buscador</mat-label>
             <input
               matInput
               placeholder="Ej. Taekwondo"
@@ -49,28 +48,37 @@
       <!-- Fees Area -->
       <div class="w-2/3">
         <div class="flex items-center gap-2 p-2">
+          @if (!!course()?.id) {
+          <h4 class="font-medium text-lg">{{ course()!.name }}</h4>
+          }
           <span class="flex-1 h-[52px]"></span>
+
           <button
             mat-icon-button
             color="primary"
             matTooltip="Refrescar"
-            (click)="refreshCourses()"
-            [ngClass]="{ 'animate-spin': coursesLoading() }"
+            (click)="refreshFees()"
+            [ngClass]="{ 'animate-spin': feesLoading() }"
+            [disabled]="!course()?.id"
           >
             <mat-icon svgIcon="refresh" />
           </button>
-          <button mat-icon-button (click)="openCourseFormDialog()">
+          <button
+            mat-icon-button
+            (click)="openFeeFormDialog()"
+            [disabled]="!course()?.id"
+          >
             <mat-icon svgIcon="plus" />
           </button>
         </div>
         <mat-divider />
         <mat-nav-list>
-          @for (course of courses(); track $index) {
-          <app-course-item
-            [course]="course"
-            (update)="openCourseFormDialog($event)"
-            (delete)="openCourseDeleteDialog($event)"
-          ></app-course-item>
+          @for (fee of fees(); track $index) {
+          <app-fee-item
+            [fee]="fee"
+            (update)="openFeeFormDialog($event)"
+            (delete)="openFeeDeleteDialog($event)"
+          />
           }
         </mat-nav-list>
       </div>

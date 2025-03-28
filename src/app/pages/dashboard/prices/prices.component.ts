@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import {
@@ -13,13 +13,22 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatDivider, MatNavList } from '@angular/material/list';
 import { MatProgressBar } from '@angular/material/progress-bar';
-import { CoursePartsFragment, GetCoursePageGQL } from '@graphql';
+import {
+  CoursePartsFragment,
+  FeePartsFragment,
+  GetCoursePageGQL,
+  GetFeePageGQL,
+} from '@graphql';
 import { GlobalStateService } from '@services';
 import { debounceTime, merge } from 'rxjs';
 import { CourseFormDialogComponent } from './course-form-dialog/course-form-dialog.component';
 import { CourseItemComponent } from './course-item/course-item.component';
 import { CourseDeleteDialogComponent } from './course-delete-dialog/course-delete-dialog.component';
 import { NgClass } from '@angular/common';
+import { FeeItemComponent } from './fee-item/fee-item.component';
+import { FeeDeleteDialogComponent } from './fee-delete-dialog/fee-delete-dialog.component';
+import { FeeFormDialogComponent } from './fee-form-dialog/fee-form-dialog.component';
+import { Branch } from '../../../graphql/generated';
 
 @Component({
   selector: 'app-prices',
@@ -36,8 +45,9 @@ import { NgClass } from '@angular/common';
     MatFormField,
     MatIconButton,
     MatInput,
-    CourseItemComponent,
     ReactiveFormsModule,
+    CourseItemComponent,
+    FeeItemComponent,
   ],
   templateUrl: './prices.component.html',
   styles: ``,
@@ -45,10 +55,19 @@ import { NgClass } from '@angular/common';
 export class PricesComponent implements OnInit {
   private readonly _dialog = inject(MatDialog);
   private readonly _globalStateService = inject(GlobalStateService);
+
+  public course = computed(() => this._globalStateService.course);
+
   private readonly _coursesPageGQL = inject(GetCoursePageGQL);
+  private readonly _feesPageGQL = inject(GetFeePageGQL);
+
   public courses = signal<CoursePartsFragment[]>([]);
   public coursesLoading = signal<boolean>(false);
   public coursesTotalCount = signal<number>(0);
+
+  public fees = signal<FeePartsFragment[]>([]);
+  public feesLoading = signal<boolean>(false);
+  public feesTotalCount = signal<number>(0);
 
   public searchControl = new FormControl('');
 
@@ -60,14 +79,20 @@ export class PricesComponent implements OnInit {
           this.refreshCourses();
         },
       });
+
+    this._globalStateService.course$.subscribe({
+      next: () => {
+        this.refreshFees();
+      },
+    });
   }
 
   public openCourseFormDialog(
-    branch: CoursePartsFragment | undefined = undefined
+    value: CoursePartsFragment | undefined = undefined
   ): void {
     const $dialog = this._dialog.open(CourseFormDialogComponent, {
-      width: '35rem',
-      data: branch,
+      width: '30rem',
+      data: value,
     });
 
     $dialog.afterClosed().subscribe({
@@ -77,15 +102,43 @@ export class PricesComponent implements OnInit {
     });
   }
 
-  public openCourseDeleteDialog(branch: CoursePartsFragment): void {
+  public openCourseDeleteDialog(value: CoursePartsFragment): void {
     const $dialog = this._dialog.open(CourseDeleteDialogComponent, {
-      width: '35rem',
-      data: branch,
+      width: '30rem',
+      data: value,
     });
 
     $dialog.afterClosed().subscribe({
       next: (course) => {
         if (course) this.refreshCourses();
+      },
+    });
+  }
+
+  public openFeeFormDialog(
+    value: FeePartsFragment | undefined = undefined
+  ): void {
+    const $dialog = this._dialog.open(FeeFormDialogComponent, {
+      width: '30rem',
+      data: value,
+    });
+
+    $dialog.afterClosed().subscribe({
+      next: (fee) => {
+        if (fee) this.refreshFees();
+      },
+    });
+  }
+
+  public openFeeDeleteDialog(value: FeePartsFragment): void {
+    const $dialog = this._dialog.open(FeeDeleteDialogComponent, {
+      width: '30rem',
+      data: value,
+    });
+
+    $dialog.afterClosed().subscribe({
+      next: (fee) => {
+        if (fee) this.refreshFees();
       },
     });
   }
@@ -99,7 +152,7 @@ export class PricesComponent implements OnInit {
         .watch(
           {
             filter: {
-              branchId: { eq: this._globalStateService.branch?.id },
+              branchId: { eq: this._globalStateService.branch!.id },
               name: { iLike: `%${this.searchControl.value}%` },
             },
             limit: 100,
@@ -113,11 +166,43 @@ export class PricesComponent implements OnInit {
         )
         .valueChanges.subscribe({
           next: ({ data, loading }) => {
-            const { nodes, pageInfo, totalCount } = data.courses;
+            const { nodes, totalCount } = data.courses;
 
             this.courses.set(nodes);
             this.coursesLoading.set(loading);
             this.coursesTotalCount.set(totalCount);
+          },
+        });
+    }
+  }
+
+  public refreshFees(): void {
+    if (!!this._globalStateService.course?.id) {
+      this.feesLoading.set(true);
+
+      // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
+      this._feesPageGQL
+        .watch(
+          {
+            filter: {
+              courseId: { eq: this._globalStateService.course!.id },
+            },
+            limit: 100,
+            offset: 0,
+          },
+          {
+            fetchPolicy: 'cache-and-network',
+            nextFetchPolicy: 'cache-and-network',
+            notifyOnNetworkStatusChange: true,
+          }
+        )
+        .valueChanges.subscribe({
+          next: ({ data, loading }) => {
+            const { nodes, totalCount } = data.fees;
+
+            this.fees.set(nodes);
+            this.feesLoading.set(loading);
+            this.feesTotalCount.set(totalCount);
           },
         });
     }

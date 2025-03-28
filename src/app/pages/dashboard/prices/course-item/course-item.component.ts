@@ -45,7 +45,6 @@ export class CourseItemComponent {
   public openMenu(event: MouseEvent) {
     event.stopPropagation();
     if (this.menuTrigger) {
-      console.log('openMenu', event);
       this.menuTrigger.openMenu();
     }
   }

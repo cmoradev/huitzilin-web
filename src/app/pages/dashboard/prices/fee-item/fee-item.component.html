@@ -1,0 +1,27 @@
+<mat-list-item>
+  <div matListItemTitle>{{ fee.name }}</div>
+  <div matListItemLine>
+    {{ fee.frequency | frequency }} | {{ fee.price | currency }}
+  </div>
+  <div matListItemMeta>
+    <button
+      class="mt-3"
+      mat-icon-button
+      (click)="openMenu($event)"
+      [matMenuTriggerFor]="menu"
+    >
+      <mat-icon svgIcon="dots-vertical"></mat-icon>
+    </button>
+  </div>
+</mat-list-item>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="update.emit(fee)">
+    <mat-icon svgIcon="pencil" />
+    <span>Editar</span>
+  </button>
+  <button mat-menu-item (click)="delete.emit(fee)">
+    <mat-icon svgIcon="delete" class="!text-red-400" />
+    <span>Eliminar</span>
+  </button>
+</mat-menu>

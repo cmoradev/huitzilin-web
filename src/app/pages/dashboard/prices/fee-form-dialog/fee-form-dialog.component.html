@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>{{ !!data?.id ? "Actualizar" : "Crear" }} tarifa</h2>
+<mat-dialog-content>
+  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
+    <div class="flex flex-col gap-3">
+      <mat-form-field>
+        <mat-label>Frecuencia de pago</mat-label>
+        <mat-select formControlName="frequency">
+          @for (frequency of frequencies; track $index) {
+          <mat-option [value]="frequency.value">{{
+            frequency.label
+          }}</mat-option>
+          }
+        </mat-select>
+        <mat-hint
+          >Seleccione la frecuencia con la que se realizará el pago</mat-hint
+        >
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("name")) }}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Nombre de la tarifa</mat-label>
+        <input
+          matInput
+          placeholder="Ej: Taekwondo - Mensualidad"
+          formControlName="name"
+        />
+        <mat-hint>Ingrese un nombre que describa claramente la tarifa</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("name")) }}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Precio de la tarifa</mat-label>
+        <input
+          matInput
+          placeholder="Ej: 4500"
+          formControlName="price"
+          type="number"
+        />
+        <span matTextPrefix>$&nbsp;</span>
+        <span matTextSuffix>.00</span>
+        <mat-hint>Ingrese el precio correspondiente a la tarifa</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("price")) }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
+  <button mat-button cdkFocusInitial form="dataForm" [disabled]="loading()">
+    {{ loading() ? "Guardando..." : "Guardar" }}
+  </button>
+</mat-dialog-actions>
