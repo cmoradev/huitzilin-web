@@ -2389,14 +2389,14 @@ export type CreateOneClassroomMutationVariables = Exact<{
 
 export type CreateOneClassroomMutation = { __typename?: 'Mutation', createOneClassroom: { __typename?: 'Classroom', id: string, name: string, color: string, createdAt: any, updatedAt: any } };
 
-export type GetClassroomPageQueryVariables = Exact<{
+export type GetClassroomsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   filter?: InputMaybe<ClassroomFilter>;
 }>;
 
 
-export type GetClassroomPageQuery = { __typename?: 'Query', classrooms: { __typename?: 'ClassroomConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Classroom', id: string, name: string, color: string, createdAt: any, updatedAt: any }> } };
+export type GetClassroomsPageQuery = { __typename?: 'Query', classrooms: { __typename?: 'ClassroomConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Classroom', id: string, name: string, color: string, createdAt: any, updatedAt: any }> } };
 
 export type UpdateOneClassroomMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2488,14 +2488,14 @@ export type CreateOneCycleMutationVariables = Exact<{
 
 export type CreateOneCycleMutation = { __typename?: 'Mutation', createOneCycle: { __typename?: 'Cycle', id: string, name: string, start: any, end: any, createdAt: any, updatedAt: any } };
 
-export type GetCyclePageQueryVariables = Exact<{
+export type GetCyclesPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   filter?: InputMaybe<CycleFilter>;
 }>;
 
 
-export type GetCyclePageQuery = { __typename?: 'Query', cycles: { __typename?: 'CycleConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Cycle', id: string, name: string, start: any, end: any, createdAt: any, updatedAt: any }> } };
+export type GetCyclesPageQuery = { __typename?: 'Query', cycles: { __typename?: 'CycleConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Cycle', id: string, name: string, start: any, end: any, createdAt: any, updatedAt: any }> } };
 
 export type UpdateOneCycleMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2653,8 +2653,8 @@ export const CreateOneClassroomDocument = gql`
       super(apollo);
     }
   }
-export const GetClassroomPageDocument = gql`
-    query getClassroomPage($offset: Int = 0, $limit: Int = 10, $filter: ClassroomFilter = {}) {
+export const GetClassroomsPageDocument = gql`
+    query getClassroomsPage($offset: Int = 0, $limit: Int = 10, $filter: ClassroomFilter = {}) {
   classrooms(paging: {limit: $limit, offset: $offset}, filter: $filter) {
     totalCount
     pageInfo {
@@ -2671,8 +2671,8 @@ export const GetClassroomPageDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class GetClassroomPageGQL extends Apollo.Query<GetClassroomPageQuery, GetClassroomPageQueryVariables> {
-    document = GetClassroomPageDocument;
+  export class GetClassroomsPageGQL extends Apollo.Query<GetClassroomsPageQuery, GetClassroomsPageQueryVariables> {
+    document = GetClassroomsPageDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -2890,8 +2890,8 @@ export const CreateOneCycleDocument = gql`
       super(apollo);
     }
   }
-export const GetCyclePageDocument = gql`
-    query getCyclePage($offset: Int = 0, $limit: Int = 10, $filter: CycleFilter = {}) {
+export const GetCyclesPageDocument = gql`
+    query getCyclesPage($offset: Int = 0, $limit: Int = 10, $filter: CycleFilter = {}) {
   cycles(paging: {limit: $limit, offset: $offset}, filter: $filter) {
     totalCount
     pageInfo {
@@ -2908,8 +2908,8 @@ export const GetCyclePageDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class GetCyclePageGQL extends Apollo.Query<GetCyclePageQuery, GetCyclePageQueryVariables> {
-    document = GetCyclePageDocument;
+  export class GetCyclesPageGQL extends Apollo.Query<GetCyclesPageQuery, GetCyclesPageQueryVariables> {
+    document = GetCyclesPageDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

@@ -16,7 +16,7 @@ mutation createOneClassroom ($classroom: CreateClassroom!) {
   }
 }
 
-query getClassroomPage ($offset: Int = 0, $limit: Int = 10, $filter: ClassroomFilter = {})  {
+query getClassroomsPage ($offset: Int = 0, $limit: Int = 10, $filter: ClassroomFilter = {})  {
   classrooms (
     paging: { limit: $limit, offset: $offset },
     filter: $filter

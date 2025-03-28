@@ -3,6 +3,7 @@ import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideGraphqlConfig } from './graphql/config-client';
+import { provideNativeDateAdapter } from '@angular/material/core';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -10,5 +11,6 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withFetch()),
     provideGraphqlConfig(),
     provideRouter(routes),
+    provideNativeDateAdapter()
   ],
 };

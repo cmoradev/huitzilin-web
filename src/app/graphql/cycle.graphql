@@ -17,7 +17,7 @@ mutation createOneCycle ($cycle: CreateCycle!) {
   }
 }
 
-query getCyclePage ($offset: Int = 0, $limit: Int = 10, $filter: CycleFilter = {})  {
+query getCyclesPage ($offset: Int = 0, $limit: Int = 10, $filter: CycleFilter = {})  {
   cycles (
     paging: { limit: $limit, offset: $offset },
     filter: $filter
