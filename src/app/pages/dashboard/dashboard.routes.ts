@@ -27,6 +27,11 @@ export const DashboardRoutes: Routes = [
       import('./cycles/cycles.component').then((m) => m.CyclesComponent),
   },
   {
+    path: 'classrooms',
+    loadComponent: () =>
+      import('./classrooms/classrooms.component').then((m) => m.ClassroomsComponent),
+  },
+  {
     path: 'branches',
     loadComponent: () =>
       import('./branches/branches.component').then((m) => m.BranchsComponent),

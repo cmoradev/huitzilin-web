@@ -1,6 +1,16 @@
-import { AfterViewInit, Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import {
+  MatAutocomplete,
+  MatAutocompleteTrigger,
+} from '@angular/material/autocomplete';
 import { MatOption, MatRipple } from '@angular/material/core';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -11,7 +21,17 @@ import { debounceTime, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [MatToolbar, MatRipple, MatFormField, MatLabel, MatInput, MatOption, MatAutocompleteTrigger, MatAutocomplete, ReactiveFormsModule],
+  imports: [
+    MatToolbar,
+    MatRipple,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatOption,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    ReactiveFormsModule,
+  ],
   templateUrl: './sidebar.component.html',
   styles: ``,
 })
@@ -49,7 +69,7 @@ export class SidebarComponent implements AfterViewInit, OnInit {
   }
 
   public toggleFinding() {
-    this.finding.update(prev => !prev);
+    this.finding.update((prev) => !prev);
   }
 
   private _fetchBranch(): void {
@@ -57,11 +77,18 @@ export class SidebarComponent implements AfterViewInit, OnInit {
 
     // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
     this._companiesPageGQL
-      .watch({
-        limit: 100,
-        offset: 0,
-        filter: { name: { iLike: `%${this.searchControl.value}%` } },
-      })
+      .watch(
+        {
+          limit: 100,
+          offset: 0,
+          filter: { name: { iLike: `%${this.searchControl.value}%` } },
+        },
+        {
+          fetchPolicy: 'cache-and-network',
+          nextFetchPolicy: 'cache-and-network',
+          notifyOnNetworkStatusChange: true,
+        }
+      )
       .valueChanges.subscribe({
         next: ({ loading, data }) => {
           this.loading.set(loading);
