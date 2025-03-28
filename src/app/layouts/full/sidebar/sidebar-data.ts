@@ -1,6 +1,7 @@
 export enum NavigationEnum {
   OPERATIONS = 'Menú',
   ADMINISTRATION = 'Administración',
+  DEVELOPER = 'Opciones de desarrollador',
 }
 
 export const navItems: RouteItem[] = [
@@ -17,16 +18,34 @@ export const navItems: RouteItem[] = [
     section: NavigationEnum.OPERATIONS,
   },
   {
+    displayName: 'Inscripciones',
+    iconName: 'tag-text-outline',
+    route: '/enrollments',
+    section: NavigationEnum.OPERATIONS,
+  },
+  {
     displayName: 'Precios',
     iconName: 'cash',
     route: '/prices',
-    section: NavigationEnum.OPERATIONS,
+    section: NavigationEnum.ADMINISTRATION,
+  },
+  {
+    displayName: 'Ciclos',
+    iconName: 'timeline-text',
+    route: '/cycles',
+    section: NavigationEnum.ADMINISTRATION,
+  },
+  {
+    displayName: 'Aulas',
+    iconName: 'billboard',
+    route: '/classrooms',
+    section: NavigationEnum.ADMINISTRATION,
   },
   {
     displayName: 'Negocios',
     iconName: 'town-hall',
     route: '/branches',
-    section: NavigationEnum.ADMINISTRATION,
+    section: NavigationEnum.DEVELOPER,
   },
 ];
 

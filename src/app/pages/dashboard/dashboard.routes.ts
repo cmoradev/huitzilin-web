@@ -7,11 +7,6 @@ export const DashboardRoutes: Routes = [
       import('./home/home.component').then((m) => m.HomeComponent),
   },
   {
-    path: 'prices',
-    loadComponent: () =>
-      import('./prices/prices.component').then((m) => m.PricesComponent),
-  },
-  {
     path: 'students',
     loadComponent: () =>
       import('./students/students.component').then((m) => m.StudentsComponent),
@@ -20,6 +15,16 @@ export const DashboardRoutes: Routes = [
     path: 'enrollments',
     loadComponent: () =>
       import('./enrollments/enrollments.component').then((m) => m.EnrollmentsComponent),
+  },
+  {
+    path: 'prices',
+    loadComponent: () =>
+      import('./prices/prices.component').then((m) => m.PricesComponent),
+  },
+  {
+    path: 'cycles',
+    loadComponent: () =>
+      import('./cycles/cycles.component').then((m) => m.CyclesComponent),
   },
   {
     path: 'branches',

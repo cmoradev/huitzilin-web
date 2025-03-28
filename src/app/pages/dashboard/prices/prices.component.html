@@ -2,13 +2,12 @@
   <mat-card-header>
     <mat-card-title>Precios</mat-card-title>
   </mat-card-header>
-  <mat-card-content>
+  <mat-card-content class="h-[calc(100vh-10rem)]">
     <div class="flex gap-2 h-full">
       <!-- Sidebar (Chats List) -->
-      <div class="w-1/3">
+      <div class="w-1/3 flex flex-col">
         <div class="flex items-center gap-2 p-2">
           <mat-form-field
-            appearance="outline"
             subscriptSizing="dynamic"
             class="w-full"
           >
@@ -34,19 +33,21 @@
           </button>
         </div>
         <mat-divider />
-        <mat-nav-list>
-          @for (course of courses(); track $index) {
-          <app-course-item
-            [course]="course"
-            (update)="openCourseFormDialog($event)"
-            (delete)="openCourseDeleteDialog($event)"
-          ></app-course-item>
-          }
-        </mat-nav-list>
-      </div>
 
+        <ng-scrollbar class="relative flex-1">
+          <mat-nav-list>
+            @for (course of courses(); track $index) {
+            <app-course-item
+              [course]="course"
+              (update)="openCourseFormDialog($event)"
+              (delete)="openCourseDeleteDialog($event)"
+            ></app-course-item>
+            }
+          </mat-nav-list>
+        </ng-scrollbar>
+      </div>
       <!-- Fees Area -->
-      <div class="w-2/3">
+      <div class="w-2/3 flex flex-col">
         <div class="flex items-center gap-2 p-2">
           @if (!!course()?.id) {
           <h4 class="font-medium text-lg">{{ course()!.name }}</h4>
@@ -72,15 +73,18 @@
           </button>
         </div>
         <mat-divider />
-        <mat-nav-list>
-          @for (fee of fees(); track $index) {
-          <app-fee-item
-            [fee]="fee"
-            (update)="openFeeFormDialog($event)"
-            (delete)="openFeeDeleteDialog($event)"
-          />
-          }
-        </mat-nav-list>
+
+        <ng-scrollbar class="relative flex-1">
+          <mat-nav-list>
+            @for (fee of fees(); track $index) {
+            <app-fee-item
+              [fee]="fee"
+              (update)="openFeeFormDialog($event)"
+              (delete)="openFeeDeleteDialog($event)"
+            />
+            }
+          </mat-nav-list>
+        </ng-scrollbar>
       </div>
     </div>
   </mat-card-content>

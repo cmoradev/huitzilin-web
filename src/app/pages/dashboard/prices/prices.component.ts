@@ -29,6 +29,7 @@ import { FeeItemComponent } from './fee-item/fee-item.component';
 import { FeeDeleteDialogComponent } from './fee-delete-dialog/fee-delete-dialog.component';
 import { FeeFormDialogComponent } from './fee-form-dialog/fee-form-dialog.component';
 import { Branch } from '../../../graphql/generated';
+import { NgScrollbar } from 'ngx-scrollbar';
 
 @Component({
   selector: 'app-prices',
@@ -41,7 +42,7 @@ import { Branch } from '../../../graphql/generated';
     MatCardTitle,
     MatNavList,
     MatDivider,
-    MatLabel,
+    NgScrollbar,
     MatFormField,
     MatIconButton,
     MatInput,
