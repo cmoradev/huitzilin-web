@@ -2446,6 +2446,39 @@ export type DeleteOneCourseMutationVariables = Exact<{
 
 export type DeleteOneCourseMutation = { __typename?: 'Mutation', deleteOneCourse: { __typename?: 'CourseDeleteResponse', id?: string | null } };
 
+export type CyclePartsFragment = { __typename?: 'Cycle', id: string, name: string, start: any, end: any, createdAt: any, updatedAt: any };
+
+export type CreateOneCycleMutationVariables = Exact<{
+  cycle: CreateCycle;
+}>;
+
+
+export type CreateOneCycleMutation = { __typename?: 'Mutation', createOneCycle: { __typename?: 'Cycle', id: string, name: string, start: any, end: any, createdAt: any, updatedAt: any } };
+
+export type GetCyclePageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<CycleFilter>;
+}>;
+
+
+export type GetCyclePageQuery = { __typename?: 'Query', cycles: { __typename?: 'CycleConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Cycle', id: string, name: string, start: any, end: any, createdAt: any, updatedAt: any }> } };
+
+export type UpdateOneCycleMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateCycle;
+}>;
+
+
+export type UpdateOneCycleMutation = { __typename?: 'Mutation', updateOneCycle: { __typename?: 'Cycle', id: string, name: string, start: any, end: any, createdAt: any, updatedAt: any } };
+
+export type DeleteOneCycleMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneCycleMutation = { __typename?: 'Mutation', deleteOneCycle: { __typename?: 'CycleDeleteResponse', id?: string | null } };
+
 export type FeePartsFragment = { __typename?: 'Fee', id: string, name: string, price: number, frequency: Frequency, createdAt: any, updatedAt: any };
 
 export type CreateOneFeeMutationVariables = Exact<{
@@ -2500,6 +2533,16 @@ export const CoursePartsFragmentDoc = gql`
     fragment CourseParts on Course {
   id
   name
+  createdAt
+  updatedAt
+}
+    `;
+export const CyclePartsFragmentDoc = gql`
+    fragment CycleParts on Cycle {
+  id
+  name
+  start
+  end
   createdAt
   updatedAt
 }
@@ -2703,6 +2746,85 @@ export const DeleteOneCourseDocument = gql`
   })
   export class DeleteOneCourseGQL extends Apollo.Mutation<DeleteOneCourseMutation, DeleteOneCourseMutationVariables> {
     document = DeleteOneCourseDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneCycleDocument = gql`
+    mutation createOneCycle($cycle: CreateCycle!) {
+  createOneCycle(input: {cycle: $cycle}) {
+    ...CycleParts
+  }
+}
+    ${CyclePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneCycleGQL extends Apollo.Mutation<CreateOneCycleMutation, CreateOneCycleMutationVariables> {
+    document = CreateOneCycleDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetCyclePageDocument = gql`
+    query getCyclePage($offset: Int = 0, $limit: Int = 10, $filter: CycleFilter = {}) {
+  cycles(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...CycleParts
+    }
+  }
+}
+    ${CyclePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetCyclePageGQL extends Apollo.Query<GetCyclePageQuery, GetCyclePageQueryVariables> {
+    document = GetCyclePageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneCycleDocument = gql`
+    mutation updateOneCycle($id: ID!, $update: UpdateCycle!) {
+  updateOneCycle(input: {id: $id, update: $update}) {
+    ...CycleParts
+  }
+}
+    ${CyclePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneCycleGQL extends Apollo.Mutation<UpdateOneCycleMutation, UpdateOneCycleMutationVariables> {
+    document = UpdateOneCycleDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneCycleDocument = gql`
+    mutation deleteOneCycle($id: ID!) {
+  deleteOneCycle(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneCycleGQL extends Apollo.Mutation<DeleteOneCycleMutation, DeleteOneCycleMutationVariables> {
+    document = DeleteOneCycleDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

@@ -1,0 +1,55 @@
+fragment CycleParts on Cycle {
+  id,
+  name,
+  start
+  end
+  createdAt
+  updatedAt
+}
+
+mutation createOneCycle ($cycle: CreateCycle!) {
+  createOneCycle (
+    input: {
+      cycle: $cycle
+    }
+  ) {
+    ...CycleParts
+  }
+}
+
+query getCyclePage ($offset: Int = 0, $limit: Int = 10, $filter: CycleFilter = {})  {
+  cycles (
+    paging: { limit: $limit, offset: $offset },
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...CycleParts
+    }
+  }
+}
+
+mutation updateOneCycle ($id: ID!, $update: UpdateCycle!) {
+  updateOneCycle (
+    input: {
+      id: $id,
+      update: $update
+    }
+  ) {
+    ...CycleParts
+  }
+}
+
+mutation deleteOneCycle ($id: ID!) {
+	deleteOneCycle (
+    input: {
+      id: $id
+    }
+  ) {
+    id
+  }
+}
