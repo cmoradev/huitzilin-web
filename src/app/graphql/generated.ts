@@ -620,15 +620,20 @@ export type DeleteOneTutorInput = {
 
 export type Enrollment = {
   __typename?: 'Enrollment';
+  branch: Branch;
   branchId: Scalars['String']['output'];
+  classroom: Classroom;
   classroomId: Scalars['String']['output'];
+  course: Course;
   courseId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
+  cycle: Cycle;
   cycleId: Scalars['String']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   details: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   state: EnrollmentState;
+  student: Student;
   studentId: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
@@ -1903,6 +1908,72 @@ export type DeleteOneCycleMutationVariables = Exact<{
 
 export type DeleteOneCycleMutation = { __typename?: 'Mutation', deleteOneCycle: { __typename?: 'CycleDeleteResponse', id?: string | null } };
 
+export type DebitPartsFragment = { __typename?: 'Debit', id: string, description: string, value: number, state: DebitState, frequency: Frequency, dueDate: any, paymentDate?: any | null, createdAt: any, updatedAt: any };
+
+export type CreateOneDebitMutationVariables = Exact<{
+  debit: CreateDebit;
+}>;
+
+
+export type CreateOneDebitMutation = { __typename?: 'Mutation', createOneDebit: { __typename?: 'Debit', id: string, description: string, value: number, state: DebitState, frequency: Frequency, dueDate: any, paymentDate?: any | null, createdAt: any, updatedAt: any } };
+
+export type GetDebitsPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<DebitFilter>;
+}>;
+
+
+export type GetDebitsPageQuery = { __typename?: 'Query', debits: { __typename?: 'DebitConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Debit', id: string, description: string, value: number, state: DebitState, frequency: Frequency, dueDate: any, paymentDate?: any | null, createdAt: any, updatedAt: any }> } };
+
+export type UpdateOneDebitMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateDebit;
+}>;
+
+
+export type UpdateOneDebitMutation = { __typename?: 'Mutation', updateOneDebit: { __typename?: 'Debit', id: string, description: string, value: number, state: DebitState, frequency: Frequency, dueDate: any, paymentDate?: any | null, createdAt: any, updatedAt: any } };
+
+export type DeleteOneDebitMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneDebitMutation = { __typename?: 'Mutation', deleteOneDebit: { __typename?: 'DebitDeleteResponse', id?: string | null } };
+
+export type EnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, createdAt: any, updatedAt: any, course: { __typename?: 'Course', id: string, name: string }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, classroom: { __typename?: 'Classroom', id: string, name: string, color: string } };
+
+export type CreateOneEnrollmentMutationVariables = Exact<{
+  enrollment: CreateEnrollment;
+}>;
+
+
+export type CreateOneEnrollmentMutation = { __typename?: 'Mutation', createOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, createdAt: any, updatedAt: any, course: { __typename?: 'Course', id: string, name: string }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, classroom: { __typename?: 'Classroom', id: string, name: string, color: string } } };
+
+export type GetEnrollmentsPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<EnrollmentFilter>;
+}>;
+
+
+export type GetEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, createdAt: any, updatedAt: any, course: { __typename?: 'Course', id: string, name: string }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, classroom: { __typename?: 'Classroom', id: string, name: string, color: string } }> } };
+
+export type UpdateOneEnrollmentMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateEnrollment;
+}>;
+
+
+export type UpdateOneEnrollmentMutation = { __typename?: 'Mutation', updateOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, createdAt: any, updatedAt: any, course: { __typename?: 'Course', id: string, name: string }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, classroom: { __typename?: 'Classroom', id: string, name: string, color: string } } };
+
+export type DeleteOneEnrollmentMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneEnrollmentMutation = { __typename?: 'Mutation', deleteOneEnrollment: { __typename?: 'EnrollmentDeleteResponse', id?: string | null } };
+
 export type FeePartsFragment = { __typename?: 'Fee', id: string, name: string, price: number, frequency: Frequency, createdAt: any, updatedAt: any };
 
 export type CreateOneFeeMutationVariables = Exact<{
@@ -2025,6 +2096,47 @@ export const CyclePartsFragmentDoc = gql`
   name
   start
   end
+  createdAt
+  updatedAt
+}
+    `;
+export const DebitPartsFragmentDoc = gql`
+    fragment DebitParts on Debit {
+  id
+  description
+  value
+  state
+  frequency
+  dueDate
+  paymentDate
+  createdAt
+  updatedAt
+}
+    `;
+export const EnrollmentPartsFragmentDoc = gql`
+    fragment EnrollmentParts on Enrollment {
+  id
+  details
+  state
+  course {
+    id
+    name
+  }
+  cycle {
+    id
+    name
+  }
+  student {
+    id
+    picture
+    fullname
+    code
+  }
+  classroom {
+    id
+    name
+    color
+  }
   createdAt
   updatedAt
 }
@@ -2398,6 +2510,164 @@ export const DeleteOneCycleDocument = gql`
   })
   export class DeleteOneCycleGQL extends Apollo.Mutation<DeleteOneCycleMutation, DeleteOneCycleMutationVariables> {
     document = DeleteOneCycleDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneDebitDocument = gql`
+    mutation createOneDebit($debit: CreateDebit!) {
+  createOneDebit(input: {debit: $debit}) {
+    ...DebitParts
+  }
+}
+    ${DebitPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneDebitGQL extends Apollo.Mutation<CreateOneDebitMutation, CreateOneDebitMutationVariables> {
+    document = CreateOneDebitDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetDebitsPageDocument = gql`
+    query getDebitsPage($offset: Int = 0, $limit: Int = 10, $filter: DebitFilter = {}) {
+  debits(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...DebitParts
+    }
+  }
+}
+    ${DebitPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetDebitsPageGQL extends Apollo.Query<GetDebitsPageQuery, GetDebitsPageQueryVariables> {
+    document = GetDebitsPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneDebitDocument = gql`
+    mutation updateOneDebit($id: ID!, $update: UpdateDebit!) {
+  updateOneDebit(input: {id: $id, update: $update}) {
+    ...DebitParts
+  }
+}
+    ${DebitPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneDebitGQL extends Apollo.Mutation<UpdateOneDebitMutation, UpdateOneDebitMutationVariables> {
+    document = UpdateOneDebitDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneDebitDocument = gql`
+    mutation deleteOneDebit($id: ID!) {
+  deleteOneDebit(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneDebitGQL extends Apollo.Mutation<DeleteOneDebitMutation, DeleteOneDebitMutationVariables> {
+    document = DeleteOneDebitDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneEnrollmentDocument = gql`
+    mutation createOneEnrollment($enrollment: CreateEnrollment!) {
+  createOneEnrollment(input: {enrollment: $enrollment}) {
+    ...EnrollmentParts
+  }
+}
+    ${EnrollmentPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneEnrollmentGQL extends Apollo.Mutation<CreateOneEnrollmentMutation, CreateOneEnrollmentMutationVariables> {
+    document = CreateOneEnrollmentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetEnrollmentsPageDocument = gql`
+    query getEnrollmentsPage($offset: Int = 0, $limit: Int = 10, $filter: EnrollmentFilter = {}) {
+  enrollments(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...EnrollmentParts
+    }
+  }
+}
+    ${EnrollmentPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetEnrollmentsPageGQL extends Apollo.Query<GetEnrollmentsPageQuery, GetEnrollmentsPageQueryVariables> {
+    document = GetEnrollmentsPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneEnrollmentDocument = gql`
+    mutation updateOneEnrollment($id: ID!, $update: UpdateEnrollment!) {
+  updateOneEnrollment(input: {id: $id, update: $update}) {
+    ...EnrollmentParts
+  }
+}
+    ${EnrollmentPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneEnrollmentGQL extends Apollo.Mutation<UpdateOneEnrollmentMutation, UpdateOneEnrollmentMutationVariables> {
+    document = UpdateOneEnrollmentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneEnrollmentDocument = gql`
+    mutation deleteOneEnrollment($id: ID!) {
+  deleteOneEnrollment(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneEnrollmentGQL extends Apollo.Mutation<DeleteOneEnrollmentMutation, DeleteOneEnrollmentMutationVariables> {
+    document = DeleteOneEnrollmentDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

@@ -211,6 +211,5 @@ export class PricesComponent implements OnInit {
       this.feesLoading.set(false);
       this.feesTotalCount.set(0);
     }
-
   }
 }

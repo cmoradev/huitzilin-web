@@ -1,0 +1,61 @@
+fragment EnrollmentParts on Enrollment {
+  id
+  details
+  state
+  course {
+    id
+    name
+  }
+  cycle {
+    id
+    name
+  }
+  student {
+    id
+    picture
+    fullname
+    code
+  }
+  classroom {
+    id
+    name
+    color
+  }
+  createdAt
+  updatedAt
+}
+
+mutation createOneEnrollment($enrollment: CreateEnrollment!) {
+  createOneEnrollment(input: { enrollment: $enrollment }) {
+    ...EnrollmentParts
+  }
+}
+
+query getEnrollmentsPage(
+  $offset: Int = 0
+  $limit: Int = 10
+  $filter: EnrollmentFilter = {}
+) {
+  enrollments(paging: { limit: $limit, offset: $offset }, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...EnrollmentParts
+    }
+  }
+}
+
+mutation updateOneEnrollment($id: ID!, $update: UpdateEnrollment!) {
+  updateOneEnrollment(input: { id: $id, update: $update }) {
+    ...EnrollmentParts
+  }
+}
+
+mutation deleteOneEnrollment($id: ID!) {
+  deleteOneEnrollment(input: { id: $id }) {
+    id
+  }
+}

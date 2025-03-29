@@ -1,0 +1,46 @@
+fragment DebitParts on Debit {
+  id
+  description
+  value
+  state
+  frequency
+  dueDate
+  paymentDate
+  createdAt
+  updatedAt
+}
+
+mutation createOneDebit($debit: CreateDebit!) {
+  createOneDebit(input: { debit: $debit }) {
+    ...DebitParts
+  }
+}
+
+query getDebitsPage(
+  $offset: Int = 0
+  $limit: Int = 10
+  $filter: DebitFilter = {}
+) {
+  debits(paging: { limit: $limit, offset: $offset }, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...DebitParts
+    }
+  }
+}
+
+mutation updateOneDebit($id: ID!, $update: UpdateDebit!) {
+  updateOneDebit(input: { id: $id, update: $update }) {
+    ...DebitParts
+  }
+}
+
+mutation deleteOneDebit($id: ID!) {
+  deleteOneDebit(input: { id: $id }) {
+    id
+  }
+}
