@@ -2,7 +2,7 @@
   @if (isMobileScreen) {
   <button
     mat-icon-button
-    (click)="toggleSidenav.emit()"
+    (click)="toggleSidenavLeft.emit()"
     class="block sm:hidden"
   >
     <mat-icon svgIcon="menu" />
@@ -21,11 +21,11 @@
   </button>
 
   <mat-menu #profilemenu="matMenu" class="w-[220px]">
-    <button mat-menu-item>
-      <mat-icon svgIcon="account-outline" />
-      Mi perfil
+    <button mat-menu-item (click)="toggleSidenavRight.emit()">
+      <mat-icon svgIcon="cog-outline" />
+      Ajustes
     </button>
-    <button mat-menu-item routerLink="/authentication/login">
+    <button mat-menu-item (click)="signOut()">
       <mat-icon svgIcon="logout" />
       Cerrar sesión
     </button>

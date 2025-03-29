@@ -16,6 +16,7 @@ import { HeaderComponent } from './header/header.component';
 import { NavItemComponent } from './sidebar/nav-item/nav-item.component';
 import { NavItem, navItems } from './sidebar/sidebar-data';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { GlobalStateSettingsComponent } from './global-state-settings/global-state-settings.component';
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
@@ -33,6 +34,7 @@ const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
     NavItemComponent,
     NgScrollbar,
     MatListSubheaderCssMatStyler,
+    GlobalStateSettingsComponent,
   ],
   templateUrl: './full.component.html',
   styleUrls: ['./full.component.scss'],

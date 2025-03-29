@@ -4,8 +4,10 @@ import { map, tap } from 'rxjs';
 import {
   BRANCH_KEY,
   COURSE_KEY,
-  GlobalStateService,
   SESSION_KEY,
+  CYCLE_KEY,
+  ENROLLMENT_KEY,
+  GlobalStateService,
 } from './global-state.service';
 
 export const USERNAME_KEY = 'username';
@@ -50,6 +52,7 @@ export class AuthService {
   public signOut() {
     this._globalStateService.session = null;
     this._globalStateService.branch = null;
+    this._globalStateService.cycle = null;
   }
 
   /**
@@ -62,11 +65,17 @@ export class AuthService {
   public restoreSession() {
     const session = sessionStorage.getItem(SESSION_KEY);
     const branch = sessionStorage.getItem(BRANCH_KEY);
-    const course = sessionStorage.getItem(COURSE_KEY);
+    const cycle = sessionStorage.getItem(CYCLE_KEY);
+
+    const enrollment = localStorage.getItem(ENROLLMENT_KEY);
+    const course = localStorage.getItem(COURSE_KEY);
 
     if (session) this._globalStateService.session = JSON.parse(session);
     if (branch) this._globalStateService.branch = JSON.parse(branch);
+    if (enrollment)
+      this._globalStateService.enrollment = JSON.parse(enrollment);
     if (course) this._globalStateService.course = JSON.parse(course);
+    if (cycle) this._globalStateService.cycle = JSON.parse(cycle);
   }
 
   /**

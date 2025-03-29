@@ -8,7 +8,11 @@ import {
   Output,
 } from '@angular/core';
 import { MatToolbar } from '@angular/material/toolbar';
-import { MatButton, MatIconButton, MatMiniFabButton } from '@angular/material/button';
+import {
+  MatButton,
+  MatIconButton,
+  MatMiniFabButton,
+} from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatBadge } from '@angular/material/badge';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
@@ -26,21 +30,23 @@ import { AuthService, GlobalStateService } from '@services';
     MatMenu,
     MatMenuTrigger,
     MatMenuItem,
-    RouterLink,
   ],
   templateUrl: './header.component.html',
 })
 export class HeaderComponent {
-  @Output() toggleSidenav = new EventEmitter<void>();
+  @Output() toggleSidenavLeft = new EventEmitter<void>();
+  @Output() toggleSidenavRight = new EventEmitter<void>();
 
   @Input({ required: false, transform: booleanAttribute }) isMobileScreen =
     false;
 
   private readonly _authService = inject(AuthService);
   private readonly _globalStateService = inject(GlobalStateService);
-  private readonly _router = inject(Router); 
+  private readonly _router = inject(Router);
 
-  public username = computed(() => this._globalStateService.session?.username ?? `root`);
+  public username = computed(
+    () => this._globalStateService.session?.username ?? `root`
+  );
 
   public signOut() {
     this._authService.signOut();

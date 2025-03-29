@@ -1,0 +1,64 @@
+<mat-toolbar>
+  <h4>Ajustes</h4>
+  <span class="flex-1"></span>
+  <button mat-icon-button matSuffix (click)="closeSidenavLeft.emit()">
+    <mat-icon svgIcon="close" />
+  </button>
+</mat-toolbar>
+<div class="px-4">
+  <p class="mb-2">
+    Selecciona la sucursal que deseas gestionar. Puedes cambiar entre las
+    sucursales en cualquier momento.
+  </p>
+  <mat-form-field class="w-full">
+    <mat-label>Buscador</mat-label>
+    <input
+      type="text"
+      placeholder="Ej. Step Ups"
+      matInput
+      [formControl]="branchControl"
+      [matAutocomplete]="autoBranches"
+    />
+    @if (branchControl.value) {
+    <button mat-icon-button matSuffix (click)="branchControl.setValue('')">
+      <mat-icon svgIcon="close" />
+    </button>
+    }
+    <mat-autocomplete #autoBranches="matAutocomplete" [displayWith]="displayFn">
+      @for (branch of branches(); track branch.id) {
+      <mat-option [value]="branch">
+        <div class="flex items-center gap-2">
+          <img [alt]="branch.name" class="h-6 w-6" [src]="branch.picture" />
+          <span> {{ branch.name }} </span>
+        </div>
+      </mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+  <p class="mb-2">
+    Selecciona el ciclo escolar que deseas gestionar. Puedes cambiar entre los
+    ciclos en cualquier momento.
+  </p>
+  <mat-form-field class="w-full">
+    <mat-label>Buscador</mat-label>
+    <input
+      type="text"
+      placeholder="Ej. 2025-2026"
+      matInput
+      [formControl]="cycleControl"
+      [matAutocomplete]="autoCycles"
+    />
+    @if (cycleControl.value) {
+    <button mat-icon-button matSuffix (click)="cycleControl.setValue('')">
+      <mat-icon svgIcon="close" />
+    </button>
+    }
+    <mat-autocomplete #autoCycles="matAutocomplete" [displayWith]="displayFn">
+      @for (cycle of cycles(); track cycle.id) {
+      <mat-option [value]="cycle">
+        {{ cycle.name }}
+      </mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
