@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>{{ !!data?.id ? "Actualizar" : "Crear" }} estudiante</h2>
+<mat-dialog-content>
+  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
+    <div class="flex flex-col gap-3">
+      <mat-checkbox color="primary" formControlName="withCode">
+        ¿Tiene código?
+      </mat-checkbox>
+
+      @if (formGroup.get('withCode')?.value) {
+      <mat-form-field>
+        <mat-label>Código del estudiante</mat-label>
+        <input matInput placeholder="Ej: 6a7db00d" formControlName="code" />
+        <mat-hint>
+          Ingrese el código para vincular al estudiante existente
+        </mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("code")) }}
+        </mat-error>
+      </mat-form-field>
+      } @else {
+      <app-image-picker formControlName="picture"></app-image-picker>
+
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Ej: Juan" formControlName="firstname" />
+        <mat-hint>Ingrese el nombre del estudiante</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("firstname")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Apellido</mat-label>
+        <input matInput placeholder="Ej: Pérez" formControlName="lastname" />
+        <mat-hint>Ingrese el apellido del estudiante</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("lastname")) }}
+        </mat-error>
+      </mat-form-field>
+      }
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
+  <button mat-button cdkFocusInitial form="dataForm" [disabled]="loading()">
+    {{ loading() ? "Guardando..." : "Guardar" }}
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,20 @@
+<h2 mat-dialog-title>¿Deseas eliminar este registro?</h2>
+<mat-dialog-content>
+  <div class="flex items-center gap-2">
+    <app-avatar [imageSource]="data.picture"></app-avatar>
+    <div>
+      <p>
+        {{ data.fullname }}
+      </p>
+      <p>
+        {{ data.code }}
+      </p>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancel</button>
+  <button mat-button cdkFocusInitial (click)="delete()" [disabled]="loading()">
+    {{ loading() ? "Eliminando..." : "Eliminar" }}
+  </button>
+</mat-dialog-actions>

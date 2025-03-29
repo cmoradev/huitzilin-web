@@ -42,17 +42,6 @@ export type ActionConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-export type ActionDeleteFilter = {
-  action?: InputMaybe<StringFieldComparison>;
-  and?: InputMaybe<Array<ActionDeleteFilter>>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  or?: InputMaybe<Array<ActionDeleteFilter>>;
-  policyId?: InputMaybe<StringFieldComparison>;
-  route?: InputMaybe<StringFieldComparison>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
 export type ActionDeleteResponse = {
   __typename?: 'ActionDeleteResponse';
   action?: Maybe<Scalars['String']['output']>;
@@ -97,15 +86,11 @@ export enum ActionSortFields {
   UpdatedAt = 'updatedAt'
 }
 
-export type ActionUpdateFilter = {
-  action?: InputMaybe<StringFieldComparison>;
-  and?: InputMaybe<Array<ActionUpdateFilter>>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  or?: InputMaybe<Array<ActionUpdateFilter>>;
-  policyId?: InputMaybe<StringFieldComparison>;
-  route?: InputMaybe<StringFieldComparison>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
+export type AddBranchsToStudentInput = {
+  /** The id of the record. */
+  id: Scalars['ID']['input'];
+  /** The ids of the relations. */
+  relationIds: Array<Scalars['ID']['input']>;
 };
 
 export type Branch = {
@@ -127,15 +112,6 @@ export type BranchConnection = {
   pageInfo: OffsetPageInfo;
   /** Fetch total count of records */
   totalCount: Scalars['Int']['output'];
-};
-
-export type BranchDeleteFilter = {
-  and?: InputMaybe<Array<BranchDeleteFilter>>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<BranchDeleteFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
 export type BranchDeleteResponse = {
@@ -171,15 +147,6 @@ export enum BranchSortFields {
   UpdatedAt = 'updatedAt'
 }
 
-export type BranchUpdateFilter = {
-  and?: InputMaybe<Array<BranchUpdateFilter>>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<BranchUpdateFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
 export type Classroom = {
   __typename?: 'Classroom';
   branchId: Scalars['String']['output'];
@@ -200,16 +167,6 @@ export type ClassroomConnection = {
   pageInfo: OffsetPageInfo;
   /** Fetch total count of records */
   totalCount: Scalars['Int']['output'];
-};
-
-export type ClassroomDeleteFilter = {
-  and?: InputMaybe<Array<ClassroomDeleteFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<ClassroomDeleteFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
 export type ClassroomDeleteResponse = {
@@ -248,16 +205,6 @@ export enum ClassroomSortFields {
   UpdatedAt = 'updatedAt'
 }
 
-export type ClassroomUpdateFilter = {
-  and?: InputMaybe<Array<ClassroomUpdateFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<ClassroomUpdateFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
 export type Course = {
   __typename?: 'Course';
   branchId: Scalars['String']['output'];
@@ -277,16 +224,6 @@ export type CourseConnection = {
   pageInfo: OffsetPageInfo;
   /** Fetch total count of records */
   totalCount: Scalars['Int']['output'];
-};
-
-export type CourseDeleteFilter = {
-  and?: InputMaybe<Array<CourseDeleteFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<CourseDeleteFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
 export type CourseDeleteResponse = {
@@ -324,16 +261,6 @@ export enum CourseSortFields {
   UpdatedAt = 'updatedAt'
 }
 
-export type CourseUpdateFilter = {
-  and?: InputMaybe<Array<CourseUpdateFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<CourseUpdateFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
 export type CreateAction = {
   action: Scalars['String']['input'];
   effect: ActionEffect;
@@ -359,9 +286,9 @@ export type CreateCourse = {
 
 export type CreateCycle = {
   branchId: Scalars['String']['input'];
-  end: Scalars['DateTime']['input'];
+  end: Scalars['String']['input'];
   name: Scalars['String']['input'];
-  start: Scalars['DateTime']['input'];
+  start: Scalars['String']['input'];
 };
 
 export type CreateDebit = {
@@ -389,66 +316,6 @@ export type CreateFee = {
   frequency: Frequency;
   name: Scalars['String']['input'];
   price: Scalars['Float']['input'];
-};
-
-export type CreateManyActionsInput = {
-  /** Array of records to create */
-  actions: Array<CreateAction>;
-};
-
-export type CreateManyBranchesInput = {
-  /** Array of records to create */
-  branches: Array<CreateBranch>;
-};
-
-export type CreateManyClassroomsInput = {
-  /** Array of records to create */
-  classrooms: Array<CreateClassroom>;
-};
-
-export type CreateManyCoursesInput = {
-  /** Array of records to create */
-  courses: Array<CreateCourse>;
-};
-
-export type CreateManyCyclesInput = {
-  /** Array of records to create */
-  cycles: Array<CreateCycle>;
-};
-
-export type CreateManyDebitsInput = {
-  /** Array of records to create */
-  debits: Array<CreateDebit>;
-};
-
-export type CreateManyEnrollmentsInput = {
-  /** Array of records to create */
-  enrollments: Array<CreateEnrollment>;
-};
-
-export type CreateManyFeesInput = {
-  /** Array of records to create */
-  fees: Array<CreateFee>;
-};
-
-export type CreateManyPoliciesInput = {
-  /** Array of records to create */
-  policies: Array<CreatePolicy>;
-};
-
-export type CreateManyStudentsInput = {
-  /** Array of records to create */
-  students: Array<CreateStudent>;
-};
-
-export type CreateManyTeachersInput = {
-  /** Array of records to create */
-  teachers: Array<CreateTeacher>;
-};
-
-export type CreateManyTutorsInput = {
-  /** Array of records to create */
-  tutors: Array<CreateTutor>;
 };
 
 export type CreateOneActionInput = {
@@ -542,10 +409,10 @@ export type Cycle = {
   branchId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
-  end: Scalars['DateTime']['output'];
+  end: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
-  start: Scalars['DateTime']['output'];
+  start: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
 };
@@ -560,25 +427,15 @@ export type CycleConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-export type CycleDeleteFilter = {
-  and?: InputMaybe<Array<CycleDeleteFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<CycleDeleteFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
 export type CycleDeleteResponse = {
   __typename?: 'CycleDeleteResponse';
   branchId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
-  end?: Maybe<Scalars['DateTime']['output']>;
+  end?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  start?: Maybe<Scalars['DateTime']['output']>;
+  start?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   version?: Maybe<Scalars['Int']['output']>;
 };
@@ -606,16 +463,6 @@ export enum CycleSortFields {
   Name = 'name',
   UpdatedAt = 'updatedAt'
 }
-
-export type CycleUpdateFilter = {
-  and?: InputMaybe<Array<CycleUpdateFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<CycleUpdateFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
 
 export type DateFieldComparison = {
   between?: InputMaybe<DateFieldComparisonBetween>;
@@ -661,16 +508,6 @@ export type DebitConnection = {
   pageInfo: OffsetPageInfo;
   /** Fetch total count of records */
   totalCount: Scalars['Int']['output'];
-};
-
-export type DebitDeleteFilter = {
-  and?: InputMaybe<Array<DebitDeleteFilter>>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  description?: InputMaybe<StringFieldComparison>;
-  enrollmentId?: InputMaybe<StringFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  or?: InputMaybe<Array<DebitDeleteFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
 export type DebitDeleteResponse = {
@@ -720,82 +557,6 @@ export enum DebitState {
   Paid = 'PAID',
   PartiallyPaid = 'PARTIALLY_PAID'
 }
-
-export type DebitUpdateFilter = {
-  and?: InputMaybe<Array<DebitUpdateFilter>>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  description?: InputMaybe<StringFieldComparison>;
-  enrollmentId?: InputMaybe<StringFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  or?: InputMaybe<Array<DebitUpdateFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
-export type DeleteManyActionsInput = {
-  /** Filter to find records to delete */
-  filter: ActionDeleteFilter;
-};
-
-export type DeleteManyBranchesInput = {
-  /** Filter to find records to delete */
-  filter: BranchDeleteFilter;
-};
-
-export type DeleteManyClassroomsInput = {
-  /** Filter to find records to delete */
-  filter: ClassroomDeleteFilter;
-};
-
-export type DeleteManyCoursesInput = {
-  /** Filter to find records to delete */
-  filter: CourseDeleteFilter;
-};
-
-export type DeleteManyCyclesInput = {
-  /** Filter to find records to delete */
-  filter: CycleDeleteFilter;
-};
-
-export type DeleteManyDebitsInput = {
-  /** Filter to find records to delete */
-  filter: DebitDeleteFilter;
-};
-
-export type DeleteManyEnrollmentsInput = {
-  /** Filter to find records to delete */
-  filter: EnrollmentDeleteFilter;
-};
-
-export type DeleteManyFeesInput = {
-  /** Filter to find records to delete */
-  filter: FeeDeleteFilter;
-};
-
-export type DeleteManyPoliciesInput = {
-  /** Filter to find records to delete */
-  filter: PolicyDeleteFilter;
-};
-
-export type DeleteManyResponse = {
-  __typename?: 'DeleteManyResponse';
-  /** The number of records deleted. */
-  deletedCount: Scalars['Int']['output'];
-};
-
-export type DeleteManyStudentsInput = {
-  /** Filter to find records to delete */
-  filter: StudentDeleteFilter;
-};
-
-export type DeleteManyTeachersInput = {
-  /** Filter to find records to delete */
-  filter: TeacherDeleteFilter;
-};
-
-export type DeleteManyTutorsInput = {
-  /** Filter to find records to delete */
-  filter: TutorDeleteFilter;
-};
 
 export type DeleteOneActionInput = {
   /** The id of the record to delete. */
@@ -883,19 +644,6 @@ export type EnrollmentConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-export type EnrollmentDeleteFilter = {
-  and?: InputMaybe<Array<EnrollmentDeleteFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  classroomId?: InputMaybe<StringFieldComparison>;
-  courseId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  cycleId?: InputMaybe<StringFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  or?: InputMaybe<Array<EnrollmentDeleteFilter>>;
-  studentId?: InputMaybe<StringFieldComparison>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
 export type EnrollmentDeleteResponse = {
   __typename?: 'EnrollmentDeleteResponse';
   branchId?: Maybe<Scalars['String']['output']>;
@@ -948,19 +696,6 @@ export enum EnrollmentState {
   Paused = 'PAUSED'
 }
 
-export type EnrollmentUpdateFilter = {
-  and?: InputMaybe<Array<EnrollmentUpdateFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  classroomId?: InputMaybe<StringFieldComparison>;
-  courseId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  cycleId?: InputMaybe<StringFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  or?: InputMaybe<Array<EnrollmentUpdateFilter>>;
-  studentId?: InputMaybe<StringFieldComparison>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
 export type Fee = {
   __typename?: 'Fee';
   courseId: Scalars['String']['output'];
@@ -982,16 +717,6 @@ export type FeeConnection = {
   pageInfo: OffsetPageInfo;
   /** Fetch total count of records */
   totalCount: Scalars['Int']['output'];
-};
-
-export type FeeDeleteFilter = {
-  and?: InputMaybe<Array<FeeDeleteFilter>>;
-  courseId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<FeeDeleteFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
 export type FeeDeleteResponse = {
@@ -1031,16 +756,6 @@ export enum FeeSortFields {
   UpdatedAt = 'updatedAt'
 }
 
-export type FeeUpdateFilter = {
-  and?: InputMaybe<Array<FeeUpdateFilter>>;
-  courseId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<FeeUpdateFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
 export enum Frequency {
   Daily = 'DAILY',
   Hourly = 'HOURLY',
@@ -1068,18 +783,7 @@ export type IdFilterComparison = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createManyActions: Array<Action>;
-  createManyBranches: Array<Branch>;
-  createManyClassrooms: Array<Classroom>;
-  createManyCourses: Array<Course>;
-  createManyCycles: Array<Cycle>;
-  createManyDebits: Array<Debit>;
-  createManyEnrollments: Array<Enrollment>;
-  createManyFees: Array<Fee>;
-  createManyPolicies: Array<Policy>;
-  createManyStudents: Array<Student>;
-  createManyTeachers: Array<Teacher>;
-  createManyTutors: Array<Tutor>;
+  addBranchsToStudent: Student;
   createOneAction: Action;
   createOneBranch: Branch;
   createOneClassroom: Classroom;
@@ -1092,18 +796,6 @@ export type Mutation = {
   createOneStudent: Student;
   createOneTeacher: Teacher;
   createOneTutor: Tutor;
-  deleteManyActions: DeleteManyResponse;
-  deleteManyBranches: DeleteManyResponse;
-  deleteManyClassrooms: DeleteManyResponse;
-  deleteManyCourses: DeleteManyResponse;
-  deleteManyCycles: DeleteManyResponse;
-  deleteManyDebits: DeleteManyResponse;
-  deleteManyEnrollments: DeleteManyResponse;
-  deleteManyFees: DeleteManyResponse;
-  deleteManyPolicies: DeleteManyResponse;
-  deleteManyStudents: DeleteManyResponse;
-  deleteManyTeachers: DeleteManyResponse;
-  deleteManyTutors: DeleteManyResponse;
   deleteOneAction: ActionDeleteResponse;
   deleteOneBranch: BranchDeleteResponse;
   deleteOneClassroom: ClassroomDeleteResponse;
@@ -1116,23 +808,13 @@ export type Mutation = {
   deleteOneStudent: StudentDeleteResponse;
   deleteOneTeacher: TeacherDeleteResponse;
   deleteOneTutor: TutorDeleteResponse;
+  removeBranchsFromStudent: Student;
   removeUser: User;
   restoreManyVideos: UpdateManyResponse;
   restoreOneVideo: Tutor;
+  setBranchsOnStudent: Student;
   signIn: Session;
   signUp: Session;
-  updateManyActions: UpdateManyResponse;
-  updateManyBranches: UpdateManyResponse;
-  updateManyClassrooms: UpdateManyResponse;
-  updateManyCourses: UpdateManyResponse;
-  updateManyCycles: UpdateManyResponse;
-  updateManyDebits: UpdateManyResponse;
-  updateManyEnrollments: UpdateManyResponse;
-  updateManyFees: UpdateManyResponse;
-  updateManyPolicies: UpdateManyResponse;
-  updateManyStudents: UpdateManyResponse;
-  updateManyTeachers: UpdateManyResponse;
-  updateManyTutors: UpdateManyResponse;
   updateOneAction: Action;
   updateOneBranch: Branch;
   updateOneClassroom: Classroom;
@@ -1149,63 +831,8 @@ export type Mutation = {
 };
 
 
-export type MutationCreateManyActionsArgs = {
-  input: CreateManyActionsInput;
-};
-
-
-export type MutationCreateManyBranchesArgs = {
-  input: CreateManyBranchesInput;
-};
-
-
-export type MutationCreateManyClassroomsArgs = {
-  input: CreateManyClassroomsInput;
-};
-
-
-export type MutationCreateManyCoursesArgs = {
-  input: CreateManyCoursesInput;
-};
-
-
-export type MutationCreateManyCyclesArgs = {
-  input: CreateManyCyclesInput;
-};
-
-
-export type MutationCreateManyDebitsArgs = {
-  input: CreateManyDebitsInput;
-};
-
-
-export type MutationCreateManyEnrollmentsArgs = {
-  input: CreateManyEnrollmentsInput;
-};
-
-
-export type MutationCreateManyFeesArgs = {
-  input: CreateManyFeesInput;
-};
-
-
-export type MutationCreateManyPoliciesArgs = {
-  input: CreateManyPoliciesInput;
-};
-
-
-export type MutationCreateManyStudentsArgs = {
-  input: CreateManyStudentsInput;
-};
-
-
-export type MutationCreateManyTeachersArgs = {
-  input: CreateManyTeachersInput;
-};
-
-
-export type MutationCreateManyTutorsArgs = {
-  input: CreateManyTutorsInput;
+export type MutationAddBranchsToStudentArgs = {
+  input: AddBranchsToStudentInput;
 };
 
 
@@ -1269,66 +896,6 @@ export type MutationCreateOneTutorArgs = {
 };
 
 
-export type MutationDeleteManyActionsArgs = {
-  input: DeleteManyActionsInput;
-};
-
-
-export type MutationDeleteManyBranchesArgs = {
-  input: DeleteManyBranchesInput;
-};
-
-
-export type MutationDeleteManyClassroomsArgs = {
-  input: DeleteManyClassroomsInput;
-};
-
-
-export type MutationDeleteManyCoursesArgs = {
-  input: DeleteManyCoursesInput;
-};
-
-
-export type MutationDeleteManyCyclesArgs = {
-  input: DeleteManyCyclesInput;
-};
-
-
-export type MutationDeleteManyDebitsArgs = {
-  input: DeleteManyDebitsInput;
-};
-
-
-export type MutationDeleteManyEnrollmentsArgs = {
-  input: DeleteManyEnrollmentsInput;
-};
-
-
-export type MutationDeleteManyFeesArgs = {
-  input: DeleteManyFeesInput;
-};
-
-
-export type MutationDeleteManyPoliciesArgs = {
-  input: DeleteManyPoliciesInput;
-};
-
-
-export type MutationDeleteManyStudentsArgs = {
-  input: DeleteManyStudentsInput;
-};
-
-
-export type MutationDeleteManyTeachersArgs = {
-  input: DeleteManyTeachersInput;
-};
-
-
-export type MutationDeleteManyTutorsArgs = {
-  input: DeleteManyTutorsInput;
-};
-
-
 export type MutationDeleteOneActionArgs = {
   input: DeleteOneActionInput;
 };
@@ -1389,6 +956,11 @@ export type MutationDeleteOneTutorArgs = {
 };
 
 
+export type MutationRemoveBranchsFromStudentArgs = {
+  input: RemoveBranchsFromStudentInput;
+};
+
+
 export type MutationRemoveUserArgs = {
   id: Scalars['Int']['input'];
 };
@@ -1404,6 +976,11 @@ export type MutationRestoreOneVideoArgs = {
 };
 
 
+export type MutationSetBranchsOnStudentArgs = {
+  input: SetBranchsOnStudentInput;
+};
+
+
 export type MutationSignInArgs = {
   input: SignInInput;
 };
@@ -1411,66 +988,6 @@ export type MutationSignInArgs = {
 
 export type MutationSignUpArgs = {
   input: SignUpInput;
-};
-
-
-export type MutationUpdateManyActionsArgs = {
-  input: UpdateManyActionsInput;
-};
-
-
-export type MutationUpdateManyBranchesArgs = {
-  input: UpdateManyBranchesInput;
-};
-
-
-export type MutationUpdateManyClassroomsArgs = {
-  input: UpdateManyClassroomsInput;
-};
-
-
-export type MutationUpdateManyCoursesArgs = {
-  input: UpdateManyCoursesInput;
-};
-
-
-export type MutationUpdateManyCyclesArgs = {
-  input: UpdateManyCyclesInput;
-};
-
-
-export type MutationUpdateManyDebitsArgs = {
-  input: UpdateManyDebitsInput;
-};
-
-
-export type MutationUpdateManyEnrollmentsArgs = {
-  input: UpdateManyEnrollmentsInput;
-};
-
-
-export type MutationUpdateManyFeesArgs = {
-  input: UpdateManyFeesInput;
-};
-
-
-export type MutationUpdateManyPoliciesArgs = {
-  input: UpdateManyPoliciesInput;
-};
-
-
-export type MutationUpdateManyStudentsArgs = {
-  input: UpdateManyStudentsInput;
-};
-
-
-export type MutationUpdateManyTeachersArgs = {
-  input: UpdateManyTeachersInput;
-};
-
-
-export type MutationUpdateManyTutorsArgs = {
-  input: UpdateManyTutorsInput;
 };
 
 
@@ -1574,16 +1091,6 @@ export type PolicyConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-export type PolicyDeleteFilter = {
-  and?: InputMaybe<Array<PolicyDeleteFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<PolicyDeleteFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
 export type PolicyDeleteResponse = {
   __typename?: 'PolicyDeleteResponse';
   branchId?: Maybe<Scalars['String']['output']>;
@@ -1618,16 +1125,6 @@ export enum PolicySortFields {
   Name = 'name',
   UpdatedAt = 'updatedAt'
 }
-
-export type PolicyUpdateFilter = {
-  and?: InputMaybe<Array<PolicyUpdateFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<PolicyUpdateFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
 
 export type Query = {
   __typename?: 'Query';
@@ -1801,12 +1298,26 @@ export type QueryTutorsArgs = {
   sorting?: Array<TutorSort>;
 };
 
+export type RemoveBranchsFromStudentInput = {
+  /** The id of the record. */
+  id: Scalars['ID']['input'];
+  /** The ids of the relations. */
+  relationIds: Array<Scalars['ID']['input']>;
+};
+
 export type Session = {
   __typename?: 'Session';
   exp: Scalars['DateTime']['output'];
   iat: Scalars['DateTime']['output'];
   token: Scalars['String']['output'];
   username: Scalars['String']['output'];
+};
+
+export type SetBranchsOnStudentInput = {
+  /** The id of the record. */
+  id: Scalars['ID']['input'];
+  /** The ids of the relations. */
+  relationIds: Array<Scalars['ID']['input']>;
 };
 
 export type SignInInput = {
@@ -1816,6 +1327,7 @@ export type SignInInput = {
 
 export type SignUpInput = {
   branchId?: InputMaybe<Scalars['String']['input']>;
+  email: Scalars['String']['input'];
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
 };
@@ -1851,6 +1363,7 @@ export type StringFieldComparison = {
 
 export type Student = {
   __typename?: 'Student';
+  branchs: Array<Branch>;
   code: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -1864,6 +1377,12 @@ export type Student = {
   version: Scalars['Int']['output'];
 };
 
+
+export type StudentBranchsArgs = {
+  filter?: BranchFilter;
+  sorting?: Array<BranchSort>;
+};
+
 export type StudentConnection = {
   __typename?: 'StudentConnection';
   /** Array of nodes. */
@@ -1872,16 +1391,6 @@ export type StudentConnection = {
   pageInfo: OffsetPageInfo;
   /** Fetch total count of records */
   totalCount: Scalars['Int']['output'];
-};
-
-export type StudentDeleteFilter = {
-  and?: InputMaybe<Array<StudentDeleteFilter>>;
-  code?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  fullname?: InputMaybe<StringFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  or?: InputMaybe<Array<StudentDeleteFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
 export type StudentDeleteResponse = {
@@ -1901,11 +1410,21 @@ export type StudentDeleteResponse = {
 
 export type StudentFilter = {
   and?: InputMaybe<Array<StudentFilter>>;
+  branchs?: InputMaybe<StudentFilterBranchFilter>;
   code?: InputMaybe<StringFieldComparison>;
   createdAt?: InputMaybe<DateFieldComparison>;
   fullname?: InputMaybe<StringFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<StudentFilter>>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type StudentFilterBranchFilter = {
+  and?: InputMaybe<Array<StudentFilterBranchFilter>>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<StudentFilterBranchFilter>>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -1922,16 +1441,6 @@ export enum StudentSortFields {
   Id = 'id',
   UpdatedAt = 'updatedAt'
 }
-
-export type StudentUpdateFilter = {
-  and?: InputMaybe<Array<StudentUpdateFilter>>;
-  code?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  fullname?: InputMaybe<StringFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  or?: InputMaybe<Array<StudentUpdateFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
 
 export type Teacher = {
   __typename?: 'Teacher';
@@ -1955,15 +1464,6 @@ export type TeacherConnection = {
   pageInfo: OffsetPageInfo;
   /** Fetch total count of records */
   totalCount: Scalars['Int']['output'];
-};
-
-export type TeacherDeleteFilter = {
-  and?: InputMaybe<Array<TeacherDeleteFilter>>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  fullname?: InputMaybe<StringFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  or?: InputMaybe<Array<TeacherDeleteFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
 export type TeacherDeleteResponse = {
@@ -2002,15 +1502,6 @@ export enum TeacherSortFields {
   UpdatedAt = 'updatedAt'
 }
 
-export type TeacherUpdateFilter = {
-  and?: InputMaybe<Array<TeacherUpdateFilter>>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  fullname?: InputMaybe<StringFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  or?: InputMaybe<Array<TeacherUpdateFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
 export type Tutor = {
   __typename?: 'Tutor';
   createdAt: Scalars['DateTime']['output'];
@@ -2033,15 +1524,6 @@ export type TutorConnection = {
   pageInfo: OffsetPageInfo;
   /** Fetch total count of records */
   totalCount: Scalars['Int']['output'];
-};
-
-export type TutorDeleteFilter = {
-  and?: InputMaybe<Array<TutorDeleteFilter>>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  fullname?: InputMaybe<StringFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  or?: InputMaybe<Array<TutorDeleteFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
 export type TutorDeleteResponse = {
@@ -2080,15 +1562,6 @@ export enum TutorSortFields {
   UpdatedAt = 'updatedAt'
 }
 
-export type TutorUpdateFilter = {
-  and?: InputMaybe<Array<TutorUpdateFilter>>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  fullname?: InputMaybe<StringFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  or?: InputMaybe<Array<TutorUpdateFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
 export type UpdateAction = {
   action?: InputMaybe<Scalars['String']['input']>;
   effect?: InputMaybe<ActionEffect>;
@@ -2114,9 +1587,9 @@ export type UpdateCourse = {
 
 export type UpdateCycle = {
   branchId?: InputMaybe<Scalars['String']['input']>;
-  end?: InputMaybe<Scalars['DateTime']['input']>;
+  end?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  start?: InputMaybe<Scalars['DateTime']['input']>;
+  start?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateDebit = {
@@ -2146,94 +1619,10 @@ export type UpdateFee = {
   price?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type UpdateManyActionsInput = {
-  /** Filter used to find fields to update */
-  filter: ActionUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: UpdateAction;
-};
-
-export type UpdateManyBranchesInput = {
-  /** Filter used to find fields to update */
-  filter: BranchUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: UpdateBranch;
-};
-
-export type UpdateManyClassroomsInput = {
-  /** Filter used to find fields to update */
-  filter: ClassroomUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: UpdateClassroom;
-};
-
-export type UpdateManyCoursesInput = {
-  /** Filter used to find fields to update */
-  filter: CourseUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: UpdateCourse;
-};
-
-export type UpdateManyCyclesInput = {
-  /** Filter used to find fields to update */
-  filter: CycleUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: UpdateCycle;
-};
-
-export type UpdateManyDebitsInput = {
-  /** Filter used to find fields to update */
-  filter: DebitUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: UpdateDebit;
-};
-
-export type UpdateManyEnrollmentsInput = {
-  /** Filter used to find fields to update */
-  filter: EnrollmentUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: UpdateEnrollment;
-};
-
-export type UpdateManyFeesInput = {
-  /** Filter used to find fields to update */
-  filter: FeeUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: UpdateFee;
-};
-
-export type UpdateManyPoliciesInput = {
-  /** Filter used to find fields to update */
-  filter: PolicyUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: UpdatePolicy;
-};
-
 export type UpdateManyResponse = {
   __typename?: 'UpdateManyResponse';
   /** The number of records updated. */
   updatedCount: Scalars['Int']['output'];
-};
-
-export type UpdateManyStudentsInput = {
-  /** Filter used to find fields to update */
-  filter: StudentUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: UpdateStudent;
-};
-
-export type UpdateManyTeachersInput = {
-  /** Filter used to find fields to update */
-  filter: TeacherUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: UpdateTeacher;
-};
-
-export type UpdateManyTutorsInput = {
-  /** Filter used to find fields to update */
-  filter: TutorUpdateFilter;
-  /** The update to apply to all records found using the filter */
-  update: UpdateTutor;
 };
 
 export type UpdateOneActionInput = {
@@ -2349,6 +1738,7 @@ export type UpdateTutor = {
 
 export type UpdateUser = {
   branchId?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
   id: Scalars['ID']['input'];
   username?: InputMaybe<Scalars['String']['input']>;
 };
@@ -2358,6 +1748,7 @@ export type User = {
   branchId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   updatedAt: Scalars['DateTime']['output'];
   username: Scalars['String']['output'];
@@ -2479,14 +1870,14 @@ export type DeleteOneCourseMutationVariables = Exact<{
 
 export type DeleteOneCourseMutation = { __typename?: 'Mutation', deleteOneCourse: { __typename?: 'CourseDeleteResponse', id?: string | null } };
 
-export type CyclePartsFragment = { __typename?: 'Cycle', id: string, name: string, start: any, end: any, createdAt: any, updatedAt: any };
+export type CyclePartsFragment = { __typename?: 'Cycle', id: string, name: string, start: string, end: string, createdAt: any, updatedAt: any };
 
 export type CreateOneCycleMutationVariables = Exact<{
   cycle: CreateCycle;
 }>;
 
 
-export type CreateOneCycleMutation = { __typename?: 'Mutation', createOneCycle: { __typename?: 'Cycle', id: string, name: string, start: any, end: any, createdAt: any, updatedAt: any } };
+export type CreateOneCycleMutation = { __typename?: 'Mutation', createOneCycle: { __typename?: 'Cycle', id: string, name: string, start: string, end: string, createdAt: any, updatedAt: any } };
 
 export type GetCyclesPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2495,7 +1886,7 @@ export type GetCyclesPageQueryVariables = Exact<{
 }>;
 
 
-export type GetCyclesPageQuery = { __typename?: 'Query', cycles: { __typename?: 'CycleConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Cycle', id: string, name: string, start: any, end: any, createdAt: any, updatedAt: any }> } };
+export type GetCyclesPageQuery = { __typename?: 'Query', cycles: { __typename?: 'CycleConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Cycle', id: string, name: string, start: string, end: string, createdAt: any, updatedAt: any }> } };
 
 export type UpdateOneCycleMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2503,7 +1894,7 @@ export type UpdateOneCycleMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneCycleMutation = { __typename?: 'Mutation', updateOneCycle: { __typename?: 'Cycle', id: string, name: string, start: any, end: any, createdAt: any, updatedAt: any } };
+export type UpdateOneCycleMutation = { __typename?: 'Mutation', updateOneCycle: { __typename?: 'Cycle', id: string, name: string, start: string, end: string, createdAt: any, updatedAt: any } };
 
 export type DeleteOneCycleMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2544,6 +1935,55 @@ export type DeleteOneFeeMutationVariables = Exact<{
 
 
 export type DeleteOneFeeMutation = { __typename?: 'Mutation', deleteOneFee: { __typename?: 'FeeDeleteResponse', id?: string | null } };
+
+export type StudentPartsFragment = { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, createdAt: any, updatedAt: any };
+
+export type CreateOneStudentMutationVariables = Exact<{
+  student: CreateStudent;
+}>;
+
+
+export type CreateOneStudentMutation = { __typename?: 'Mutation', createOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, createdAt: any, updatedAt: any } };
+
+export type GetStudentsPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<StudentFilter>;
+}>;
+
+
+export type GetStudentsPageQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, createdAt: any, updatedAt: any }> } };
+
+export type UpdateOneStudentMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateStudent;
+}>;
+
+
+export type UpdateOneStudentMutation = { __typename?: 'Mutation', updateOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, createdAt: any, updatedAt: any } };
+
+export type DeleteOneStudentMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneStudentMutation = { __typename?: 'Mutation', deleteOneStudent: { __typename?: 'StudentDeleteResponse', id?: string | null } };
+
+export type AddBranchsToStudentMutationVariables = Exact<{
+  studentId: Scalars['ID']['input'];
+  branchIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+}>;
+
+
+export type AddBranchsToStudentMutation = { __typename?: 'Mutation', addBranchsToStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, createdAt: any, updatedAt: any } };
+
+export type RemoveBranchsFromStudentMutationVariables = Exact<{
+  studentId: Scalars['ID']['input'];
+  branchIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+}>;
+
+
+export type RemoveBranchsFromStudentMutation = { __typename?: 'Mutation', removeBranchsFromStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, createdAt: any, updatedAt: any } };
 
 export const SessionPartsFragmentDoc = gql`
     fragment SessionParts on Session {
@@ -2595,6 +2035,18 @@ export const FeePartsFragmentDoc = gql`
   name
   price
   frequency
+  createdAt
+  updatedAt
+}
+    `;
+export const StudentPartsFragmentDoc = gql`
+    fragment StudentParts on Student {
+  id
+  code
+  picture
+  fullname
+  firstname
+  lastname
   createdAt
   updatedAt
 }
@@ -3025,6 +2477,121 @@ export const DeleteOneFeeDocument = gql`
   })
   export class DeleteOneFeeGQL extends Apollo.Mutation<DeleteOneFeeMutation, DeleteOneFeeMutationVariables> {
     document = DeleteOneFeeDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneStudentDocument = gql`
+    mutation createOneStudent($student: CreateStudent!) {
+  createOneStudent(input: {student: $student}) {
+    ...StudentParts
+  }
+}
+    ${StudentPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneStudentGQL extends Apollo.Mutation<CreateOneStudentMutation, CreateOneStudentMutationVariables> {
+    document = CreateOneStudentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetStudentsPageDocument = gql`
+    query getStudentsPage($offset: Int = 0, $limit: Int = 10, $filter: StudentFilter = {}) {
+  students(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...StudentParts
+    }
+  }
+}
+    ${StudentPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetStudentsPageGQL extends Apollo.Query<GetStudentsPageQuery, GetStudentsPageQueryVariables> {
+    document = GetStudentsPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneStudentDocument = gql`
+    mutation updateOneStudent($id: ID!, $update: UpdateStudent!) {
+  updateOneStudent(input: {id: $id, update: $update}) {
+    ...StudentParts
+  }
+}
+    ${StudentPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneStudentGQL extends Apollo.Mutation<UpdateOneStudentMutation, UpdateOneStudentMutationVariables> {
+    document = UpdateOneStudentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneStudentDocument = gql`
+    mutation deleteOneStudent($id: ID!) {
+  deleteOneStudent(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneStudentGQL extends Apollo.Mutation<DeleteOneStudentMutation, DeleteOneStudentMutationVariables> {
+    document = DeleteOneStudentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AddBranchsToStudentDocument = gql`
+    mutation addBranchsToStudent($studentId: ID!, $branchIds: [ID!]!) {
+  addBranchsToStudent(input: {id: $studentId, relationIds: $branchIds}) {
+    ...StudentParts
+  }
+}
+    ${StudentPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddBranchsToStudentGQL extends Apollo.Mutation<AddBranchsToStudentMutation, AddBranchsToStudentMutationVariables> {
+    document = AddBranchsToStudentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const RemoveBranchsFromStudentDocument = gql`
+    mutation removeBranchsFromStudent($studentId: ID!, $branchIds: [ID!]!) {
+  removeBranchsFromStudent(input: {id: $studentId, relationIds: $branchIds}) {
+    ...StudentParts
+  }
+}
+    ${StudentPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RemoveBranchsFromStudentGQL extends Apollo.Mutation<RemoveBranchsFromStudentMutation, RemoveBranchsFromStudentMutationVariables> {
+    document = RemoveBranchsFromStudentDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

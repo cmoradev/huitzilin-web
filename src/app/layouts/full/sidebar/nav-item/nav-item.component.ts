@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
   selector: 'app-nav-item',
   imports: [MatListItem, MatListItemTitle, MatListItemIcon, MatIcon],
   templateUrl: './nav-item.component.html',
-  styleUrl: './nav-item.component.scss',
+  styles: ``,
 })
 export class NavItemComponent {
   @Input({ required: true }) route!: RouteItem;

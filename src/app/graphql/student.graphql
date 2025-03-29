@@ -1,0 +1,79 @@
+fragment StudentParts on Student {
+  id,
+  code
+  picture,
+  fullname,
+  firstname,
+  lastname,
+  createdAt
+  updatedAt
+}
+
+mutation createOneStudent ($student: CreateStudent!) {
+  createOneStudent (
+    input: {
+      student: $student
+    }
+  ) {
+    ...StudentParts
+  }
+}
+
+query getStudentsPage ($offset: Int = 0, $limit: Int = 10, $filter: StudentFilter = {})  {
+  students (
+    paging: { limit: $limit, offset: $offset },
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...StudentParts
+    }
+  }
+}
+
+mutation updateOneStudent ($id: ID!, $update: UpdateStudent!) {
+  updateOneStudent (
+    input: {
+      id: $id,
+      update: $update
+    }
+  ) {
+    ...StudentParts
+  }
+}
+
+mutation deleteOneStudent ($id: ID!) {
+	deleteOneStudent (
+    input: {
+      id: $id
+    }
+  ) {
+    id
+  }
+}
+
+mutation addBranchsToStudent ($studentId: ID!, $branchIds: [ID!]!) {
+  addBranchsToStudent (
+    input: {
+      id: $studentId,
+      relationIds: $branchIds
+    }
+  ) {
+    ...StudentParts
+  }
+}
+
+mutation removeBranchsFromStudent ($studentId: ID!, $branchIds: [ID!]!) {
+  removeBranchsFromStudent (
+    input: {
+      id: $studentId,
+      relationIds: $branchIds
+    }
+  ) {
+    ...StudentParts
+  }
+}

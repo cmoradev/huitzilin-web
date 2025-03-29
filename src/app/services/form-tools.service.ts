@@ -1,12 +1,15 @@
 import { inject, Injectable } from '@angular/core';
-import { AbstractControl, FormBuilder, ValidatorFn } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, ValidatorFn } from '@angular/forms';
+import { GetStudentsPageGQL } from '@graphql';
 import { ERROR_MESSAGES } from '@utils/messages';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FormToolsService {
   public readonly builder: FormBuilder = inject<FormBuilder>(FormBuilder);
+  private readonly _getStudentsPage = inject(GetStudentsPageGQL);
 
   /**
    * Busca el error y retorna una descripción
@@ -54,12 +57,35 @@ export class FormToolsService {
       if (control.hasError('unauthenticated')) {
         return ERROR_MESSAGES['unauthenticated']();
       }
+
       if (control.hasError('endDateInvalid')) {
         return ERROR_MESSAGES['endDateInvalid']();
+      }
+
+      if (control.hasError('studentNotFound')) {
+        return ERROR_MESSAGES['studentNotFound']();
       }
     }
 
     return '';
+  }
+
+  public get isStudentCodeValid(): AsyncValidatorFn {
+    return (control) =>
+      this._getStudentsPage
+        .fetch(
+          { filter: { code: { eq: control.value } } },
+          { fetchPolicy: 'network-only' }
+        )
+        .pipe(
+          map((resp) => {
+            const student = resp.data.students.nodes.some((value) =>
+              value.code.includes(control.value)
+            );
+
+            return student ? null : { studentNotFound: true };
+          })
+        );
   }
 
   public get isEndDateAfterStartDate(): ValidatorFn {
