@@ -206,6 +206,11 @@ export class PricesComponent implements OnInit {
             this.feesTotalCount.set(totalCount);
           },
         });
+    }  else {
+      this.fees.set([]);
+      this.feesLoading.set(false);
+      this.feesTotalCount.set(0);
     }
+
   }
 }

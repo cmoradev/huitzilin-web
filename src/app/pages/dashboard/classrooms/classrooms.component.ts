@@ -2,10 +2,20 @@ import { NgClass } from '@angular/common';
 import { Component, inject, signal, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
-import { MatCard, MatCardContent, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import {
+  MatCard,
+  MatCardContent,
+  MatCardHeader,
+  MatCardTitle,
+} from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { MatFormField, MatInput, MatLabel, MatPrefix } from '@angular/material/input';
+import {
+  MatFormField,
+  MatInput,
+  MatLabel,
+  MatPrefix,
+} from '@angular/material/input';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -17,6 +27,7 @@ import {
 import { debounceTime, merge, startWith } from 'rxjs';
 import { ClassroomDeleteDialogComponent } from './classroom-delete-dialog/classroom-delete-dialog.component';
 import { ClassroomFormDialogComponent } from './classroom-form-dialog/classroom-form-dialog.component';
+import { GlobalStateService } from '@services';
 
 @Component({
   selector: 'app-classrooms',
@@ -52,10 +63,15 @@ export class ClassroomsComponent {
   public totalCount = signal(0);
 
   private readonly dialog = inject(MatDialog);
+  private readonly _globalStateService = inject(GlobalStateService);
   private readonly _classroomsPageGQL = inject(GetClassroomsPageGQL);
 
   ngAfterViewInit(): void {
-    merge(this.paginator.page, this.searchControl.valueChanges)
+    merge(
+      this.paginator.page,
+      this.searchControl.valueChanges,
+      this._globalStateService.branch$
+    )
       .pipe(debounceTime(300), startWith({}))
       .subscribe({
         next: () => {
@@ -93,31 +109,34 @@ export class ClassroomsComponent {
   }
 
   public refresh() {
-    const limit: number = this.paginator.pageSize;
-    const offset: number = this.paginator.pageIndex * limit;
+    if (this._globalStateService.branch?.id) {
+      const limit: number = this.paginator.pageSize;
+      const offset: number = this.paginator.pageIndex * limit;
 
-    const filter: ClassroomFilter = {
-      name: { iLike: `%${this.searchControl.value}%` },
-    };
+      const filter: ClassroomFilter = {
+        name: { iLike: `%${this.searchControl.value}%` },
+        branchId: { eq: this._globalStateService.branch!.id },
+      };
 
-    this._classroomsPageGQL
-      .watch(
-        { limit, offset, filter },
-        {
-          fetchPolicy: 'cache-and-network',
-          nextFetchPolicy: 'cache-and-network',
-          notifyOnNetworkStatusChange: true,
-        }
-      )
-      .valueChanges.subscribe({
-        next: ({ data, loading }) => {
-          const { nodes, totalCount } = data.classrooms;
+      this._classroomsPageGQL
+        .watch(
+          { limit, offset, filter },
+          {
+            fetchPolicy: 'cache-and-network',
+            nextFetchPolicy: 'cache-and-network',
+            notifyOnNetworkStatusChange: true,
+          }
+        )
+        .valueChanges.subscribe({
+          next: ({ data, loading }) => {
+            const { nodes, totalCount } = data.classrooms;
 
-          this.dataSource.data = nodes;
+            this.dataSource.data = nodes;
 
-          this.loading.set(loading);
-          this.totalCount.set(totalCount);
-        },
-      });
+            this.loading.set(loading);
+            this.totalCount.set(totalCount);
+          },
+        });
+    }
   }
 }
