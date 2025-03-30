@@ -81,12 +81,12 @@
 
         <ng-scrollbar class="relative flex-1">
           <mat-nav-list>
-            @for (fee of debits(); track $index) {
-            <!-- <app-fee-item
-                [fee]="fee"
-                (update)="openFeeFormDialog($event)"
-                (delete)="openFeeDeleteDialog($event)"
-              /> -->
+            @for (debit of debits(); track $index) {
+            <app-debit-item
+              [debit]="debit"
+              (update)="openDebitFormDialog($event)"
+              (delete)="openDebitDeleteDialog($event)"
+            />
             }
           </mat-nav-list>
         </ng-scrollbar>

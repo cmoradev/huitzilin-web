@@ -2,6 +2,7 @@ fragment DebitParts on Debit {
   id
   description
   value
+  quantity
   state
   frequency
   dueDate

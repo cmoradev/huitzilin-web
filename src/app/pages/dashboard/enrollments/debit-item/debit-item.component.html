@@ -1,0 +1,40 @@
+<mat-list-item>
+  <div matListItemTitle>{{ debit.dueDate }} - {{ debit.description }}</div>
+  <div matListItemLine>
+    <span class="text-xs">Cantidad: {{ debit.quantity }}</span>
+    <span> - </span>
+    <span class="text-xs">Valor: {{ debit.value | currency }}</span>
+  </div>
+  <mat-icon
+    svgIcon="circle"
+    matListItemIcon
+    matTooltip="{{ debit.state | debitState }}"
+    [ngClass]="{
+    '!text-yellow-600': debit.state === 'CANCELED' || debit.state === 'DEBT' || debit.state === 'CONDONED',
+    '!text-purple-800': debit.state === 'PARTIALLY_PAID',
+    '!text-green-800': debit.state === 'PAID',
+}"
+  ></mat-icon>
+
+  <div matListItemMeta>
+    <button
+      class="mt-3"
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      (click)="openMenu($event)"
+    >
+      <mat-icon svgIcon="dots-vertical"></mat-icon>
+    </button>
+  </div>
+</mat-list-item>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="update.emit(debit)">
+    <mat-icon svgIcon="pencil"></mat-icon>
+    <span>Editar</span>
+  </button>
+  <button mat-menu-item (click)="delete.emit(debit)">
+    <mat-icon svgIcon="delete" class="!text-red-400"></mat-icon>
+    <span>Eliminar</span>
+  </button>
+</mat-menu>

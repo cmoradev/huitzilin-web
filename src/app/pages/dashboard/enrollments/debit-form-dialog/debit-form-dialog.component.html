@@ -1,0 +1,67 @@
+<h2 mat-dialog-title>{{ !!data?.id ? "Actualizar" : "Crear" }} adeudo</h2>
+<mat-dialog-content>
+  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
+    <div class="flex flex-col gap-3">
+      <mat-form-field>
+        <mat-label>Descripción del adeudo</mat-label>
+        <input
+          matInput
+          placeholder="Ej: Mensualidad del servicio"
+          formControlName="description"
+        />
+        <mat-hint>Ingrese una descripción detallada del adeudo</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("description")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Monto del adeudo</mat-label>
+        <input
+          matInput
+          placeholder="Ej: 800.00"
+          formControlName="value"
+          type="number"
+        />
+        <mat-hint>Ingrese el monto total del adeudo</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("value")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Fecha del pago</mat-label>
+        <input
+          matInput
+          [matDatepicker]="datepicker"
+          formControlName="dueDate"
+        />
+        <mat-hint>Seleccione la fecha en que se realizará el pago</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="datepicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #datepicker> </mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Estado del adeudo</mat-label>
+        <mat-select formControlName="state">
+          @for (state of states; track $index) {
+          <mat-option [value]="state.value">{{ state.label }}</mat-option>
+          }
+        </mat-select>
+        <mat-hint>Seleccione el estado actual del adeudo</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("state")) }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
+  <button mat-button cdkFocusInitial form="dataForm" [disabled]="loading()">
+    {{ loading() ? "Guardando..." : "Guardar" }}
+  </button>
+</mat-dialog-actions>

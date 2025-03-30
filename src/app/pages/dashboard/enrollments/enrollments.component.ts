@@ -28,6 +28,7 @@ import { DebitFormDialogComponent } from './debit-form-dialog/debit-form-dialog.
 import { EnrollmentDeleteDialogComponent } from './enrollment-delete-dialog/enrollment-delete-dialog.component';
 import { EnrollmentFormDialogComponent } from './enrollment-form-dialog/enrollment-form-dialog.component';
 import { EnrollmentItemComponent } from './enrollment-item/enrollment-item.component';
+import { DebitItemComponent } from './debit-item/debit-item.component';
 
 @Component({
   selector: 'app-enrollments',
@@ -47,6 +48,7 @@ import { EnrollmentItemComponent } from './enrollment-item/enrollment-item.compo
     StudentStateComponent,
     ReactiveFormsModule,
     EnrollmentItemComponent,
+    DebitItemComponent
   ],
   templateUrl: './enrollments.component.html',
   styles: ``,

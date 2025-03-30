@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>¿Deseas eliminar este registro?</h2>
+<mat-dialog-content>
+  <div class="flex items-center gap-2 mt-4">
+    <div>
+      <p>{{ data.description }}</p>
+
+      <p><span class="font-medium">Cantidad: </span> {{ data.quantity }}</p>
+      <p>
+        <span class="font-medium">Valor: </span> {{ data.value | currency }}
+      </p>
+      <p>
+        <span class="font-medium">State: </span>
+        {{ data.state | debitState }}
+      </p>
+      <p><span class="font-medium">Fecha de pago: </span> {{ data.dueDate }}</p>
+      @if (!!data.paymentDate) {
+      <p>
+        <span class="font-medium">Pagado: </span>
+        {{ data.paymentDate | date : "medium" }}
+      </p>
+      }
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancel</button>
+  <button mat-button cdkFocusInitial (click)="delete()" [disabled]="loading()">
+    {{ loading() ? "Eliminando..." : "Eliminar" }}
+  </button>
+</mat-dialog-actions>

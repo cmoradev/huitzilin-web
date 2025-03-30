@@ -293,7 +293,7 @@ export type CreateCycle = {
 
 export type CreateDebit = {
   description: Scalars['String']['input'];
-  dueDate: Scalars['DateTime']['input'];
+  dueDate: Scalars['String']['input'];
   enrollmentId: Scalars['String']['input'];
   frequency: Frequency;
   paymentDate?: InputMaybe<Scalars['DateTime']['input']>;
@@ -317,6 +317,11 @@ export type CreateFee = {
   frequency: Frequency;
   name: Scalars['String']['input'];
   price: Scalars['Float']['input'];
+};
+
+export type CreateManyDebitsInput = {
+  /** Array of records to create */
+  debits: Array<CreateDebit>;
 };
 
 export type CreateOneActionInput = {
@@ -490,7 +495,7 @@ export type Debit = {
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   description: Scalars['String']['output'];
-  dueDate: Scalars['DateTime']['output'];
+  dueDate: Scalars['String']['output'];
   enrollmentId: Scalars['String']['output'];
   frequency: Frequency;
   id: Scalars['ID']['output'];
@@ -517,7 +522,7 @@ export type DebitDeleteResponse = {
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
-  dueDate?: Maybe<Scalars['DateTime']['output']>;
+  dueDate?: Maybe<Scalars['String']['output']>;
   enrollmentId?: Maybe<Scalars['String']['output']>;
   frequency?: Maybe<Frequency>;
   id?: Maybe<Scalars['ID']['output']>;
@@ -794,6 +799,7 @@ export type IdFilterComparison = {
 export type Mutation = {
   __typename?: 'Mutation';
   addBranchsToStudent: Student;
+  createManyDebits: Array<Debit>;
   createOneAction: Action;
   createOneBranch: Branch;
   createOneClassroom: Classroom;
@@ -842,6 +848,11 @@ export type Mutation = {
 
 export type MutationAddBranchsToStudentArgs = {
   input: AddBranchsToStudentInput;
+};
+
+
+export type MutationCreateManyDebitsArgs = {
+  input: CreateManyDebitsInput;
 };
 
 
@@ -1603,7 +1614,7 @@ export type UpdateCycle = {
 
 export type UpdateDebit = {
   description?: InputMaybe<Scalars['String']['input']>;
-  dueDate?: InputMaybe<Scalars['DateTime']['input']>;
+  dueDate?: InputMaybe<Scalars['String']['input']>;
   enrollmentId?: InputMaybe<Scalars['String']['input']>;
   frequency?: InputMaybe<Frequency>;
   paymentDate?: InputMaybe<Scalars['DateTime']['input']>;
@@ -1921,14 +1932,14 @@ export type DeleteOneCycleMutationVariables = Exact<{
 
 export type DeleteOneCycleMutation = { __typename?: 'Mutation', deleteOneCycle: { __typename?: 'CycleDeleteResponse', id?: string | null } };
 
-export type DebitPartsFragment = { __typename?: 'Debit', id: string, description: string, value: number, state: DebitState, frequency: Frequency, dueDate: any, paymentDate?: any | null, createdAt: any, updatedAt: any };
+export type DebitPartsFragment = { __typename?: 'Debit', id: string, description: string, value: number, quantity: number, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, createdAt: any, updatedAt: any };
 
 export type CreateOneDebitMutationVariables = Exact<{
   debit: CreateDebit;
 }>;
 
 
-export type CreateOneDebitMutation = { __typename?: 'Mutation', createOneDebit: { __typename?: 'Debit', id: string, description: string, value: number, state: DebitState, frequency: Frequency, dueDate: any, paymentDate?: any | null, createdAt: any, updatedAt: any } };
+export type CreateOneDebitMutation = { __typename?: 'Mutation', createOneDebit: { __typename?: 'Debit', id: string, description: string, value: number, quantity: number, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, createdAt: any, updatedAt: any } };
 
 export type GetDebitsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1937,7 +1948,7 @@ export type GetDebitsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetDebitsPageQuery = { __typename?: 'Query', debits: { __typename?: 'DebitConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Debit', id: string, description: string, value: number, state: DebitState, frequency: Frequency, dueDate: any, paymentDate?: any | null, createdAt: any, updatedAt: any }> } };
+export type GetDebitsPageQuery = { __typename?: 'Query', debits: { __typename?: 'DebitConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Debit', id: string, description: string, value: number, quantity: number, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, createdAt: any, updatedAt: any }> } };
 
 export type UpdateOneDebitMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -1945,7 +1956,7 @@ export type UpdateOneDebitMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneDebitMutation = { __typename?: 'Mutation', updateOneDebit: { __typename?: 'Debit', id: string, description: string, value: number, state: DebitState, frequency: Frequency, dueDate: any, paymentDate?: any | null, createdAt: any, updatedAt: any } };
+export type UpdateOneDebitMutation = { __typename?: 'Mutation', updateOneDebit: { __typename?: 'Debit', id: string, description: string, value: number, quantity: number, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, createdAt: any, updatedAt: any } };
 
 export type DeleteOneDebitMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2130,6 +2141,7 @@ export const DebitPartsFragmentDoc = gql`
   id
   description
   value
+  quantity
   state
   frequency
   dueDate

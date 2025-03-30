@@ -1,4 +1,4 @@
-import { Frequency, EnrollmentState } from '@graphql';
+import { Frequency, EnrollmentState, DebitState } from '@graphql';
 
 export const frequencies = [
   {
@@ -20,6 +20,29 @@ export const frequencies = [
   {
     label: 'Por hora (una vez por hora)',
     value: Frequency.Hourly,
+  },
+];
+
+export const debitStates = [
+  {
+    label: 'Cancelado (no pagado)',
+    value: DebitState.Canceled,
+  },
+  {
+    label: 'Condonado (no pagado)',
+    value: DebitState.Condoned,
+  },
+  {
+    label: 'Adeudado (no pagado)',
+    value: DebitState.Debt,
+  },
+  {
+    label: 'Pagado (pagado)',
+    value: DebitState.Paid,
+  },
+  {
+    label: 'Abonado (parcialmente pagado)',
+    value: DebitState.PartiallyPaid,
   },
 ];
 
