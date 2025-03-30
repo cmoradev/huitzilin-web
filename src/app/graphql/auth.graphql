@@ -1,6 +1,9 @@
 fragment SessionParts on Session {
+  id,
   token,
   username,
+  branch { id, picture, name }
+  cycle { id, name, start, end }
   exp,
   iat
 }
@@ -15,4 +18,11 @@ mutation signUp($input: SignUpInput!) {
   signUp (input: $input) {
     ...SessionParts
   }
+}
+
+mutation updateOneUser ($update: UpdateUser!, $id: ID!) {
+  updateOneUser (
+    id: $id,
+    update: $update
+  ){id}
 }

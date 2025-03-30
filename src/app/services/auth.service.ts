@@ -33,7 +33,21 @@ export class AuthService {
       map(({ data }) => data?.signIn),
       tap((session) => {
         if (session) {
-          this._globalStateService.session = session;
+          this._globalStateService.session = {
+            id: session.id,
+            token: session.token,
+            username: session.username,
+            exp: session.exp,
+            iat: session.iat,
+          };
+        }
+
+        if (session?.branch) {
+          this._globalStateService.branch = session.branch;
+        }
+
+        if (session?.cycle) {
+          this._globalStateService.cycle = session.cycle;
         }
       })
     );

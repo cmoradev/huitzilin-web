@@ -297,6 +297,7 @@ export type CreateDebit = {
   enrollmentId: Scalars['String']['input'];
   frequency: Frequency;
   paymentDate?: InputMaybe<Scalars['DateTime']['input']>;
+  quantity: Scalars['Float']['input'];
   state: DebitState;
   value: Scalars['Float']['input'];
 };
@@ -494,6 +495,7 @@ export type Debit = {
   frequency: Frequency;
   id: Scalars['ID']['output'];
   paymentDate?: Maybe<Scalars['DateTime']['output']>;
+  quantity: Scalars['Float']['output'];
   state: DebitState;
   updatedAt: Scalars['DateTime']['output'];
   value: Scalars['Float']['output'];
@@ -520,6 +522,7 @@ export type DebitDeleteResponse = {
   frequency?: Maybe<Frequency>;
   id?: Maybe<Scalars['ID']['output']>;
   paymentDate?: Maybe<Scalars['DateTime']['output']>;
+  quantity?: Maybe<Scalars['Float']['output']>;
   state?: Maybe<DebitState>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   value?: Maybe<Scalars['Float']['output']>;
@@ -672,6 +675,7 @@ export type EnrollmentFilter = {
   courseId?: InputMaybe<StringFieldComparison>;
   createdAt?: InputMaybe<DateFieldComparison>;
   cycleId?: InputMaybe<StringFieldComparison>;
+  details?: InputMaybe<StringFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<EnrollmentFilter>>;
   studentId?: InputMaybe<StringFieldComparison>;
@@ -690,6 +694,7 @@ export enum EnrollmentSortFields {
   CourseId = 'courseId',
   CreatedAt = 'createdAt',
   CycleId = 'cycleId',
+  Details = 'details',
   Id = 'id',
   StudentId = 'studentId',
   UpdatedAt = 'updatedAt'
@@ -814,7 +819,6 @@ export type Mutation = {
   deleteOneTeacher: TeacherDeleteResponse;
   deleteOneTutor: TutorDeleteResponse;
   removeBranchsFromStudent: Student;
-  removeUser: User;
   restoreManyVideos: UpdateManyResponse;
   restoreOneVideo: Tutor;
   setBranchsOnStudent: Student;
@@ -832,7 +836,7 @@ export type Mutation = {
   updateOneStudent: Student;
   updateOneTeacher: Teacher;
   updateOneTutor: Tutor;
-  updateUser: User;
+  updateOneUser: User;
 };
 
 
@@ -966,11 +970,6 @@ export type MutationRemoveBranchsFromStudentArgs = {
 };
 
 
-export type MutationRemoveUserArgs = {
-  id: Scalars['Int']['input'];
-};
-
-
 export type MutationRestoreManyVideosArgs = {
   input: TutorFilter;
 };
@@ -1056,8 +1055,9 @@ export type MutationUpdateOneTutorArgs = {
 };
 
 
-export type MutationUpdateUserArgs = {
-  updateUserInput: UpdateUser;
+export type MutationUpdateOneUserArgs = {
+  id: Scalars['ID']['input'];
+  update: UpdateUser;
 };
 
 export type OffsetPageInfo = {
@@ -1312,8 +1312,11 @@ export type RemoveBranchsFromStudentInput = {
 
 export type Session = {
   __typename?: 'Session';
+  branch?: Maybe<Branch>;
+  cycle?: Maybe<Cycle>;
   exp: Scalars['DateTime']['output'];
   iat: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
   token: Scalars['String']['output'];
   username: Scalars['String']['output'];
 };
@@ -1332,6 +1335,7 @@ export type SignInInput = {
 
 export type SignUpInput = {
   branchId?: InputMaybe<Scalars['String']['input']>;
+  cycleId?: InputMaybe<Scalars['String']['input']>;
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
@@ -1603,6 +1607,7 @@ export type UpdateDebit = {
   enrollmentId?: InputMaybe<Scalars['String']['input']>;
   frequency?: InputMaybe<Frequency>;
   paymentDate?: InputMaybe<Scalars['DateTime']['input']>;
+  quantity?: InputMaybe<Scalars['Float']['input']>;
   state?: InputMaybe<DebitState>;
   value?: InputMaybe<Scalars['Float']['input']>;
 };
@@ -1743,8 +1748,8 @@ export type UpdateTutor = {
 
 export type UpdateUser = {
   branchId?: InputMaybe<Scalars['String']['input']>;
+  cycleId?: InputMaybe<Scalars['String']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
-  id: Scalars['ID']['input'];
   username?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -1760,21 +1765,29 @@ export type User = {
   version: Scalars['Int']['output'];
 };
 
-export type SessionPartsFragment = { __typename?: 'Session', token: string, username: string, exp: any, iat: any };
+export type SessionPartsFragment = { __typename?: 'Session', id: string, token: string, username: string, exp: any, iat: any, branch?: { __typename?: 'Branch', id: string, picture: string, name: string } | null, cycle?: { __typename?: 'Cycle', id: string, name: string, start: string, end: string } | null };
 
 export type SignInMutationVariables = Exact<{
   input: SignInInput;
 }>;
 
 
-export type SignInMutation = { __typename?: 'Mutation', signIn: { __typename?: 'Session', token: string, username: string, exp: any, iat: any } };
+export type SignInMutation = { __typename?: 'Mutation', signIn: { __typename?: 'Session', id: string, token: string, username: string, exp: any, iat: any, branch?: { __typename?: 'Branch', id: string, picture: string, name: string } | null, cycle?: { __typename?: 'Cycle', id: string, name: string, start: string, end: string } | null } };
 
 export type SignUpMutationVariables = Exact<{
   input: SignUpInput;
 }>;
 
 
-export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Session', token: string, username: string, exp: any, iat: any } };
+export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Session', id: string, token: string, username: string, exp: any, iat: any, branch?: { __typename?: 'Branch', id: string, picture: string, name: string } | null, cycle?: { __typename?: 'Cycle', id: string, name: string, start: string, end: string } | null } };
+
+export type UpdateOneUserMutationVariables = Exact<{
+  update: UpdateUser;
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type UpdateOneUserMutation = { __typename?: 'Mutation', updateOneUser: { __typename?: 'User', id: string } };
 
 export type ClassroomPartsFragment = { __typename?: 'Classroom', id: string, name: string, color: string, createdAt: any, updatedAt: any };
 
@@ -2058,8 +2071,20 @@ export type RemoveBranchsFromStudentMutation = { __typename?: 'Mutation', remove
 
 export const SessionPartsFragmentDoc = gql`
     fragment SessionParts on Session {
+  id
   token
   username
+  branch {
+    id
+    picture
+    name
+  }
+  cycle {
+    id
+    name
+    start
+    end
+  }
   exp
   iat
 }
@@ -2194,6 +2219,24 @@ export const SignUpDocument = gql`
   })
   export class SignUpGQL extends Apollo.Mutation<SignUpMutation, SignUpMutationVariables> {
     document = SignUpDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneUserDocument = gql`
+    mutation updateOneUser($update: UpdateUser!, $id: ID!) {
+  updateOneUser(id: $id, update: $update) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneUserGQL extends Apollo.Mutation<UpdateOneUserMutation, UpdateOneUserMutationVariables> {
+    document = UpdateOneUserDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

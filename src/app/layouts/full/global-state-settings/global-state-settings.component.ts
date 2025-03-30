@@ -28,7 +28,7 @@ import {
   GetCompaniesPageGQL,
   GetCyclesPageGQL,
 } from '@graphql';
-import { GlobalStateService } from '@services';
+import { BranchState, CycleState, GlobalStateService } from '@services';
 import { debounceTime, merge, startWith } from 'rxjs';
 
 @Component({
@@ -52,11 +52,11 @@ import { debounceTime, merge, startWith } from 'rxjs';
 export class GlobalStateSettingsComponent implements AfterViewInit, OnInit {
   @Output() closeSidenavLeft = new EventEmitter<void>();
 
-  public branchControl = new FormControl<BranchPartsFragment | string>('');
+  public branchControl = new FormControl<BranchState | string>('');
   public branches = signal<BranchPartsFragment[]>([]);
   public loadingBranches = signal<boolean>(false);
 
-  public cycleControl = new FormControl<CyclePartsFragment | string>('');
+  public cycleControl = new FormControl<CycleState | string>('');
   public cycles = signal<CyclePartsFragment[]>([]);
   public loadingCycles = signal<boolean>(false);
 

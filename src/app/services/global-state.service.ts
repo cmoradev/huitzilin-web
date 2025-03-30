@@ -19,8 +19,8 @@ export const ENROLLMENT_KEY = 'enrollment';
 })
 export class GlobalStateService {
   private readonly _session = signal<SessionPartsFragment | null>(null);
-  private readonly _branch = signal<BranchPartsFragment | null>(null);
-  private readonly _cycle = signal<CyclePartsFragment | null>(null);
+  private readonly _branch = signal<BranchState | null>(null);
+  private readonly _cycle = signal<CycleState | null>(null);
   private readonly _course = signal<CoursePartsFragment | null>(null);
   private readonly _enrollment = signal<EnrollmentPartsFragment | null>(null);
 
@@ -43,11 +43,11 @@ export class GlobalStateService {
     }
   }
 
-  get branch(): BranchPartsFragment | null {
+  get branch(): BranchState | null {
     return this._branch();
   }
 
-  set branch(value: BranchPartsFragment | null) {
+  set branch(value: BranchState | null) {
     this._branch.set(value);
     if (!!value) {
       sessionStorage.setItem(BRANCH_KEY, JSON.stringify(value));
@@ -85,11 +85,11 @@ export class GlobalStateService {
     }
   }
 
-  get cycle(): CyclePartsFragment | null {
+  get cycle(): CycleState | null {
     return this._cycle();
   }
 
-  set cycle(value: CyclePartsFragment | null) {
+  set cycle(value: CycleState | null) {
     this._cycle.set(value);
     if (!!value) {
       sessionStorage.setItem(CYCLE_KEY, JSON.stringify(value));
@@ -98,3 +98,16 @@ export class GlobalStateService {
     }
   }
 }
+
+export type BranchState = {
+  id: string;
+  name: string;
+  picture: string;
+};
+
+export type CycleState = {
+  id: string;
+  name: string;
+  start: string;
+  end: string;
+};
