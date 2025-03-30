@@ -27,6 +27,8 @@ import {
   CyclePartsFragment,
   GetCompaniesPageGQL,
   GetCyclesPageGQL,
+  UpdateOneUserGQL,
+  UpdateUser,
 } from '@graphql';
 import { BranchState, CycleState, GlobalStateService } from '@services';
 import { debounceTime, merge, startWith } from 'rxjs';
@@ -62,6 +64,7 @@ export class GlobalStateSettingsComponent implements AfterViewInit, OnInit {
 
   private readonly _globalStateService = inject(GlobalStateService);
   private readonly _companiesPageGQL = inject(GetCompaniesPageGQL);
+  private readonly _updateOneUserGQL = inject(UpdateOneUserGQL);
   private readonly _cyclesPageGQL = inject(GetCyclesPageGQL);
 
   ngOnInit(): void {
@@ -82,6 +85,10 @@ export class GlobalStateSettingsComponent implements AfterViewInit, OnInit {
           if (value && typeof value === 'object') {
             this._globalStateService.branch = value;
             this.cycleControl.setValue('');
+            this._updateUser({
+              branchId: value.id,
+              cycleId: null,
+            });
           } else if (typeof value === 'string') {
             this._fetchBranch();
           }
@@ -94,6 +101,12 @@ export class GlobalStateSettingsComponent implements AfterViewInit, OnInit {
         next: (value) => {
           if (value && typeof value === 'object') {
             this._globalStateService.cycle = value;
+            if (this._globalStateService.branch!.id) {
+              this._updateUser({
+                branchId: this._globalStateService.branch!.id,
+                cycleId: value.id,
+              });
+            }
           } else if (typeof value === 'string') {
             this._fetchCycles();
           }
@@ -160,5 +173,16 @@ export class GlobalStateSettingsComponent implements AfterViewInit, OnInit {
           this.branches.set(data?.branches.nodes ?? []);
         },
       });
+  }
+
+  private _updateUser(update: UpdateUser): void {
+    if (this._globalStateService.session!.id) {
+      this._updateOneUserGQL
+        .mutate({
+          id: this._globalStateService.session!.id,
+          update,
+        })
+        .subscribe({});
+    }
   }
 }
