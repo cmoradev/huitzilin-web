@@ -1,4 +1,4 @@
-import { Frequency } from '../graphql/generated';
+import { Frequency, EnrollmentState } from '@graphql';
 
 export const frequencies = [
   {
@@ -20,5 +20,20 @@ export const frequencies = [
   {
     label: 'Por hora (una vez por hora)',
     value: Frequency.Hourly,
+  },
+];
+
+export const enrollmentStates = [
+  {
+    label: 'Activo',
+    value: EnrollmentState.Active,
+  },
+  {
+    label: 'Inactivo (terminado)',
+    value: EnrollmentState.Inactive,
+  },
+  {
+    label: 'Pausado (en espera)',
+    value: EnrollmentState.Paused,
   },
 ];

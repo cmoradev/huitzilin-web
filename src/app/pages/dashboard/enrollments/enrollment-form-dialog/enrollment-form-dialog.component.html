@@ -1,0 +1,108 @@
+<h2 mat-dialog-title>{{ !!data?.id ? "Actualizar" : "Crear" }} inscripción</h2>
+<mat-dialog-content>
+  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
+    <div class="flex flex-col gap-3">
+      <mat-form-field class="w-full">
+        <mat-label>Seleccionar curso</mat-label>
+        <input
+          type="text"
+          placeholder="Ej. Taekwondo, Karate, Judo"
+          matInput
+          formControlName="course"
+          [matAutocomplete]="autoStudents"
+        />
+        <mat-hint>Seleccione el curso para la inscripción</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("course")) }}
+        </mat-error>
+        @if (formGroup.get("course")?.value) {
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="formGroup.get('course')?.setValue('')"
+        >
+          <mat-icon svgIcon="close" />
+        </button>
+        }
+        <mat-autocomplete
+          #autoStudents="matAutocomplete"
+          [displayWith]="displayFn"
+        >
+          @for (course of courses(); track course.id) {
+          <mat-option [value]="course">
+            {{ course.name }}
+          </mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field class="w-full">
+        <mat-label>Seleccionar salón</mat-label>
+        <input
+          type="text"
+          placeholder="Ej. Aula 101, Laboratorio 202"
+          matInput
+          formControlName="classroom"
+          [matAutocomplete]="autoClassroom"
+        />
+        <mat-hint>Seleccione el salón para la inscripción</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("classroom")) }}
+        </mat-error>
+        @if (formGroup.get("classroom")?.value) {
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="formGroup.get('classroom')?.setValue('')"
+        >
+          <mat-icon svgIcon="close" />
+        </button>
+        }
+        <mat-autocomplete
+          #autoClassroom="matAutocomplete"
+          [displayWith]="displayFn"
+        >
+          @for (classroom of classrooms(); track classroom.id) {
+          <mat-option [value]="classroom">
+            {{ classroom.name }}
+          </mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      @if (!!data?.id) {
+      <mat-form-field>
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="state">
+          @for (state of enrollmentStates; track $index) {
+          <mat-option [value]="state.value">{{ state.label }}</mat-option>
+          }
+        </mat-select>
+        <mat-hint> Seleccione el estado de la inscripción </mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("state")) }}
+        </mat-error>
+      </mat-form-field>
+      }
+
+      <mat-form-field>
+        <mat-label>Detalles de la inscripción</mat-label>
+        <input
+          matInput
+          placeholder="Ej: Introducción a la programación"
+          formControlName="details"
+        />
+        <mat-hint>Ingrese los detalles de la inscripción</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("details")) }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
+  <button mat-button cdkFocusInitial form="dataForm" [disabled]="loading()">
+    {{ loading() ? "Guardando..." : "Guardar" }}
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,49 @@
+@if (searching()) {
+<div class="px-2">
+  <mat-form-field class="w-full" subscriptSizing="dynamic">
+    <mat-label>Buscador</mat-label>
+    <input
+      type="text"
+      placeholder="Ej. Jhon Doe"
+      matInput
+      [formControl]="studentControl"
+      [matAutocomplete]="autoStudents"
+    />
+    @if (studentControl.value) {
+    <button mat-icon-button matSuffix (click)="studentControl.setValue('')">
+      <mat-icon svgIcon="close" />
+    </button>
+    }
+    <mat-autocomplete #autoStudents="matAutocomplete" [displayWith]="displayFn">
+      @for (student of students(); track student.id) {
+      <mat-option [value]="student">
+        <div class="flex items-center gap-2">
+          <img
+            [alt]="student.fullname"
+            class="h-6 w-6 rounded-[var(--mat-sys-corner-medium)]"
+            [src]="student.picture"
+          />
+          <span> {{ student.fullname }} </span>
+        </div>
+      </mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
+</div>
+} @else if (student()) {
+<div
+  class="p-2 cursor-pointer rounded-[var(--mat-sys-corner-medium)]"
+  (click)="toggleStudent(); studentControl.setValue('')"
+  matRipple
+>
+  <div class="flex items-center gap-2">
+    <app-avatar [imageSource]="student()!.picture" width="36px" height="36px" />
+    <div>
+      <p class="text-sm">{{ student()!.fullname }}</p>
+      <p class="text-xs">{{ student()!.code }}</p>
+    </div>
+    <span class="flex-1"></span>
+    <mat-icon svgIcon="chevron-down" />
+  </div>
+</div>
+}

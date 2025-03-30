@@ -5,6 +5,7 @@ import {
   CyclePartsFragment,
   EnrollmentPartsFragment,
   SessionPartsFragment,
+  StudentPartsFragment,
 } from '@graphql';
 import { toObservable } from '@angular/core/rxjs-interop';
 
@@ -13,6 +14,8 @@ export const BRANCH_KEY = 'branch';
 export const CYCLE_KEY = 'cycle';
 export const COURSE_KEY = 'course';
 export const ENROLLMENT_KEY = 'enrollment';
+export const STUDENT_KEY = 'student';
+
 
 @Injectable({
   providedIn: 'root',
@@ -23,12 +26,14 @@ export class GlobalStateService {
   private readonly _cycle = signal<CycleState | null>(null);
   private readonly _course = signal<CoursePartsFragment | null>(null);
   private readonly _enrollment = signal<EnrollmentPartsFragment | null>(null);
+  private readonly _student = signal<StudentPartsFragment | null>(null);
 
   public session$ = toObservable(this._session);
   public branch$ = toObservable(this._branch);
   public cycle$ = toObservable(this._cycle);
   public course$ = toObservable(this._course);
   public enrollment$ = toObservable(this._enrollment);
+  public student$ = toObservable(this._student);
 
   get session(): SessionPartsFragment | null {
     return this._session();
@@ -95,6 +100,19 @@ export class GlobalStateService {
       sessionStorage.setItem(CYCLE_KEY, JSON.stringify(value));
     } else {
       sessionStorage.removeItem(CYCLE_KEY);
+    }
+  }
+
+  get student(): StudentPartsFragment | null {
+    return this._student();
+  }
+
+  set student(value: StudentPartsFragment | null) {
+    this._student.set(value);
+    if (!!value) {
+      localStorage.setItem(STUDENT_KEY, JSON.stringify(value));
+    } else {
+      localStorage.removeItem(STUDENT_KEY);
     }
   }
 }

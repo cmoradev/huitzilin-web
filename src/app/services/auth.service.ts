@@ -8,6 +8,7 @@ import {
   CYCLE_KEY,
   ENROLLMENT_KEY,
   GlobalStateService,
+  STUDENT_KEY,
 } from './global-state.service';
 
 export const USERNAME_KEY = 'username';
@@ -67,6 +68,9 @@ export class AuthService {
     this._globalStateService.session = null;
     this._globalStateService.branch = null;
     this._globalStateService.cycle = null;
+    this._globalStateService.course = null;
+    this._globalStateService.enrollment = null;
+    this._globalStateService.student = null;
   }
 
   /**
@@ -83,13 +87,14 @@ export class AuthService {
 
     const enrollment = localStorage.getItem(ENROLLMENT_KEY);
     const course = localStorage.getItem(COURSE_KEY);
+    const student = localStorage.getItem(STUDENT_KEY);
 
     if (session) this._globalStateService.session = JSON.parse(session);
     if (branch) this._globalStateService.branch = JSON.parse(branch);
-    if (enrollment)
-      this._globalStateService.enrollment = JSON.parse(enrollment);
+    if (enrollment) this._globalStateService.enrollment = JSON.parse(enrollment);
     if (course) this._globalStateService.course = JSON.parse(course);
     if (cycle) this._globalStateService.cycle = JSON.parse(cycle);
+    if (student) this._globalStateService.student = JSON.parse(student);
   }
 
   /**

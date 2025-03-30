@@ -1,0 +1,34 @@
+<mat-list-item (click)="selectCourse()" [activated]="isActive()">
+  <div matListItemTitle>{{ enrollment.details }}</div>
+  <div
+    matListItemLine
+    class="text-xs"
+    [ngClass]="{
+    'text-red-800': enrollment.state === 'INACTIVE',
+    'text-green-800': enrollment.state === 'ACTIVE',
+    'text-yellow-800': enrollment.state === 'PAUSED',
+  }"
+  >
+    {{ enrollment.state | enrollmentState }}
+  </div>
+  <div matListItemMeta>
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      (click)="openMenu($event)"
+    >
+      <mat-icon svgIcon="dots-vertical"></mat-icon>
+    </button>
+  </div>
+</mat-list-item>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="update.emit(enrollment)">
+    <mat-icon svgIcon="pencil" />
+    <span>Editar</span>
+  </button>
+  <button mat-menu-item (click)="delete.emit(enrollment)">
+    <mat-icon svgIcon="delete" class="!text-red-400" />
+    <span>Eliminar</span>
+  </button>
+</mat-menu>
