@@ -109,4 +109,8 @@ export class AuthService {
   public set username(username: string) {
     localStorage.setItem(USERNAME_KEY, username);
   }
+
+  public get isLoggedIn(): boolean {
+    return !!this._globalStateService.session?.token;
+  }
 }

@@ -23,6 +23,7 @@
       "@utils/*": ["./src/app/utils/*"],
       "@services": ["./src/app/services"],
       "@pipes": ["./src/app/pipes"],
+      "@guards": ["./src/app/guards"],
       "@graphql": ["./src/app/graphql/generated.ts"],
       "@environment": ["./src/environments/environment.ts"],
     }
