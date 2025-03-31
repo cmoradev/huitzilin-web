@@ -170,7 +170,7 @@ export class EnrollmentsComponent implements OnInit {
   public refreshEnrollments(): void {
     if (
       !!this._globalStateService.branch?.id &&
-      !!this._globalStateService.cycle!.id
+      !!this._globalStateService.cycle?.id
     ) {
       this.enrollmentsLoading.set(true);
 

@@ -77,7 +77,7 @@ export class StudentFormDialogComponent {
     firstname: ['', [Validators.required, Validators.maxLength(32)]],
     lastname: ['', [Validators.required, Validators.maxLength(32)]],
     withCode: [false, []],
-    code: ['', [], [this.formTools.isStudentCodeValid]],
+    code: ['', [], []],
   });
 
   constructor() {
@@ -93,6 +93,7 @@ export class StudentFormDialogComponent {
         this.formGroup.get('lastname')?.clearValidators();
       } else {
         this.formGroup.get('code')?.clearValidators();
+        this.formGroup.get('code')?.clearAsyncValidators();
         this.formGroup
           .get('firstname')
           ?.setValidators([Validators.required, Validators.maxLength(32)]);
@@ -194,7 +195,13 @@ export class StudentFormDialogComponent {
     if (values.picture instanceof File) {
       return this._storage.upload(values.picture).pipe(
         switchMap((picture) =>
-          this._createOneStudent.mutate({ student: { ...values, picture } })
+          this._createOneStudent.mutate({
+            student: {
+              firstname: values.firstname,
+              lastname: values.lastname,
+              picture,
+            },
+          })
         ),
         switchMap((resp) =>
           this._addBranchsToStudent
@@ -211,7 +218,8 @@ export class StudentFormDialogComponent {
     return this._createOneStudent
       .mutate({
         student: {
-          ...values,
+          firstname: values.firstname,
+          lastname: values.lastname,
           picture: 'images/image-default.png',
         },
       })
