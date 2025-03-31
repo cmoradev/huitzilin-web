@@ -1958,6 +1958,13 @@ export type UpdateOneDebitMutationVariables = Exact<{
 
 export type UpdateOneDebitMutation = { __typename?: 'Mutation', updateOneDebit: { __typename?: 'Debit', id: string, description: string, value: number, quantity: number, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, createdAt: any, updatedAt: any } };
 
+export type CreateManyDebitsMutationVariables = Exact<{
+  debits: Array<CreateDebit> | CreateDebit;
+}>;
+
+
+export type CreateManyDebitsMutation = { __typename?: 'Mutation', createManyDebits: Array<{ __typename?: 'Debit', id: string, description: string, value: number, quantity: number, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, createdAt: any, updatedAt: any }> };
+
 export type DeleteOneDebitMutationVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -2626,6 +2633,24 @@ export const UpdateOneDebitDocument = gql`
   })
   export class UpdateOneDebitGQL extends Apollo.Mutation<UpdateOneDebitMutation, UpdateOneDebitMutationVariables> {
     document = UpdateOneDebitDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateManyDebitsDocument = gql`
+    mutation createManyDebits($debits: [CreateDebit!]!) {
+  createManyDebits(input: {debits: $debits}) {
+    ...DebitParts
+  }
+}
+    ${DebitPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateManyDebitsGQL extends Apollo.Mutation<CreateManyDebitsMutation, CreateManyDebitsMutationVariables> {
+    document = CreateManyDebitsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

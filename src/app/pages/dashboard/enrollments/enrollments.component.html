@@ -71,12 +71,13 @@
           </button>
           <button
             mat-icon-button
-            (click)="openDebitFormDialog()"
             [disabled]="!enrollment()?.id"
+            [matMenuTriggerFor]="menu"
           >
             <mat-icon svgIcon="plus" />
           </button>
         </div>
+        
         <mat-divider />
 
         <ng-scrollbar class="relative flex-1">
@@ -94,3 +95,14 @@
     </div>
   </mat-card-content>
 </mat-card>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="openDebitCatalogDialog()">
+    <mat-icon svgIcon="plus" />
+    <span>Usar catálogo</span>
+  </button>
+  <button mat-menu-item (click)="openDebitFormDialog()">
+    <mat-icon svgIcon="plus" />
+    <span>Creación manual</span>
+  </button>
+</mat-menu>

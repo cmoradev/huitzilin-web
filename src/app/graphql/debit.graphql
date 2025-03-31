@@ -40,6 +40,16 @@ mutation updateOneDebit($id: ID!, $update: UpdateDebit!) {
   }
 }
 
+mutation createManyDebits ($debits: [CreateDebit!]!) {
+  createManyDebits (
+    input: {
+      debits: $debits
+    }
+  ){
+    ...DebitParts
+  }
+}
+
 mutation deleteOneDebit($id: ID!) {
   deleteOneDebit(input: { id: $id }) {
     id

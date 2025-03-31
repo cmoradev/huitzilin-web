@@ -29,6 +29,8 @@ import { EnrollmentDeleteDialogComponent } from './enrollment-delete-dialog/enro
 import { EnrollmentFormDialogComponent } from './enrollment-form-dialog/enrollment-form-dialog.component';
 import { EnrollmentItemComponent } from './enrollment-item/enrollment-item.component';
 import { DebitItemComponent } from './debit-item/debit-item.component';
+import { MatMenu, MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { DebitFormCatalogDialogComponent } from './debit-form-catalog-dialog/debit-form-catalog-dialog.component';
 
 @Component({
   selector: 'app-enrollments',
@@ -48,7 +50,8 @@ import { DebitItemComponent } from './debit-item/debit-item.component';
     StudentStateComponent,
     ReactiveFormsModule,
     EnrollmentItemComponent,
-    DebitItemComponent
+    DebitItemComponent,
+    MatMenuModule,
   ],
   templateUrl: './enrollments.component.html',
   styles: ``,
@@ -117,6 +120,21 @@ export class EnrollmentsComponent implements OnInit {
     $dialog.afterClosed().subscribe({
       next: (enrollment) => {
         if (enrollment) this.refreshEnrollments();
+      },
+    });
+  }
+
+  public openDebitCatalogDialog(
+    value: DebitPartsFragment | undefined = undefined
+  ): void {
+    const $dialog = this._dialog.open(DebitFormCatalogDialogComponent, {
+      width: '30rem',
+      data: value,
+    });
+
+    $dialog.afterClosed().subscribe({
+      next: (debit) => {
+        if (debit) this.refreshDebits();
       },
     });
   }
@@ -197,6 +215,7 @@ export class EnrollmentsComponent implements OnInit {
             filter: {
               enrollmentId: { eq: this._globalStateService.enrollment!.id },
             },
+
             limit: 100,
             offset: 0,
           },

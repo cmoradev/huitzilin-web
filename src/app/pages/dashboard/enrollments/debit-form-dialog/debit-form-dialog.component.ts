@@ -38,7 +38,6 @@ import { map } from 'rxjs';
     MatDialogClose,
     MatButton,
     MatOption,
-    MatPrefix,
     MatSuffix,
     MatSelect,
     MatInputModule,
@@ -97,7 +96,7 @@ export class DebitFormDialogComponent {
             this._dialogRef.close(debit);
           },
           error: (err) => {
-            console.error('UPDATE FEE ERROR: ', err);
+            console.error('UPDATE DEBIT ERROR: ', err);
           },
           complete: () => {
             this.loading.set(false);
