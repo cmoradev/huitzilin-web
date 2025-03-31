@@ -60,6 +60,7 @@ export class StudentStateComponent implements AfterViewInit, OnInit {
         next: (value) => {
           if (value && typeof value === 'object') {
             this._globalStateService.student = value;
+            this._globalStateService.enrollment = null;
             this.toggleStudent();
           } else if (typeof value === 'string') {
             this._fetchStudents(value);

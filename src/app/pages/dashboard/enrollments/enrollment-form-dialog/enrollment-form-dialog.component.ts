@@ -161,7 +161,11 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
             this.loading.set(false);
           },
         });
-      } else if (this._globalStateService.branch!.id) {
+      } else if (
+        this._globalStateService.student!.id &&
+        this._globalStateService.branch!.id &&
+        this._globalStateService.cycle!.id
+      ) {
         this._save(values).subscribe({
           next: (branch) => {
             this._dialogRef.close(branch);

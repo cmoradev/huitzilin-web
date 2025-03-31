@@ -80,6 +80,7 @@ export class EnrollmentsComponent implements OnInit {
     merge(
       this._globalStateService.branch$,
       this._globalStateService.cycle$,
+      this._globalStateService.student$,
       this.searchControl.valueChanges
     )
       .pipe(debounceTime(300))
@@ -170,7 +171,8 @@ export class EnrollmentsComponent implements OnInit {
   public refreshEnrollments(): void {
     if (
       !!this._globalStateService.branch?.id &&
-      !!this._globalStateService.cycle?.id
+      !!this._globalStateService.cycle?.id &&
+      !!this._globalStateService.student?.id 
     ) {
       this.enrollmentsLoading.set(true);
 
@@ -180,6 +182,7 @@ export class EnrollmentsComponent implements OnInit {
           {
             filter: {
               branchId: { eq: this._globalStateService.branch!.id },
+              studentId: { eq: this._globalStateService.student!.id },
               cycleId: { eq: this._globalStateService.cycle!.id },
               details: { iLike: `%${this.searchControl.value}%` },
             },
