@@ -1,9 +1,16 @@
-<div class="item" (click)="selectActivity()" [ngClass]="{ active: isActive() }">
-  <mat-icon svgIcon="drag" class="cursor-move"></mat-icon>
+<div
+  class="item"
+  (click)="selectActivity()"
+  [ngClass]="{ active: isActive() }"
+  cdkDrag
+>
+  <mat-icon svgIcon="drag" class="cursor-move" cdkDragHandle></mat-icon>
   <div>
     <p class="font-medium">{{ activity.name }}</p>
     @if (activity.isPackage) {
-    <p class="text-xs">Paquete: <span class="font-medium">{{activity.quantity}}</span></p>
+    <p class="text-xs">
+      Paquete: <span class="font-medium">{{ activity.quantity }}</span>
+    </p>
     } @else {
     <p class="text-xs">Disciplina</p>
     }
@@ -12,6 +19,8 @@
   <button mat-icon-button [matMenuTriggerFor]="menu" (click)="openMenu($event)">
     <mat-icon svgIcon="dots-vertical"></mat-icon>
   </button>
+
+  <div class="item-placeholder" *cdkDragPlaceholder></div>
 </div>
 
 <mat-menu #menu="matMenu">

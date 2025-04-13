@@ -2,12 +2,9 @@ import { NgClass } from '@angular/common';
 import { Component, computed, EventEmitter, inject, Input, Output } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import {
-  MatListItem,
-  MatListItemMeta,
-  MatListItemTitle,
-} from '@angular/material/list';
-import { MatMenu, MatMenuItem, MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 import { ActivityPartsFragment } from '@graphql';
 import { GlobalStateService } from '@services';
 
@@ -18,6 +15,7 @@ import { GlobalStateService } from '@services';
     MatIcon,
     MatIconButton,
     MatMenuModule,
+    DragDropModule
   ],
   templateUrl: './activity-item.component.html',
   styleUrl: `./activity-item.component.scss`,

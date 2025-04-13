@@ -32,8 +32,12 @@
 
         <mat-divider />
 
-        <ng-scrollbar class="relative flex-1 mt-2">
-          @for (activity of activities(); track $index) {
+        <ng-scrollbar
+          cdkDropList
+          class="relative flex-1 mt-2"
+          (cdkDropListDropped)="dropActivity($event)"
+        >
+          @for (activity of activities(); track activity.id) {
           <app-activity-item
             [activity]="activity"
             (update)="openActivityFormDialog($event)"

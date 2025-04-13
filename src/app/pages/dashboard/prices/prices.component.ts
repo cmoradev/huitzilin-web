@@ -1,3 +1,9 @@
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import { NgClass } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
@@ -12,24 +18,23 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatDivider, MatNavList } from '@angular/material/list';
-import { MatProgressBar } from '@angular/material/progress-bar';
 import {
   ActivityPartsFragment,
   FeePartsFragment,
   GetActivityPageGQL,
   GetFeePageGQL,
+  SetOrderActivitiesGQL,
+  SetOrderActivity,
 } from '@graphql';
 import { GlobalStateService } from '@services';
+import { NgScrollbar } from 'ngx-scrollbar';
 import { debounceTime, merge } from 'rxjs';
+import { ActivityDeleteDialogComponent } from './activity-delete-dialog/activity-delete-dialog.component';
 import { ActivityFormDialogComponent } from './activity-form-dialog/activity-form-dialog.component';
 import { ActivityItemComponent } from './activity-item/activity-item.component';
-import { ActivityDeleteDialogComponent } from './activity-delete-dialog/activity-delete-dialog.component';
-import { NgClass } from '@angular/common';
-import { FeeItemComponent } from './fee-item/fee-item.component';
 import { FeeDeleteDialogComponent } from './fee-delete-dialog/fee-delete-dialog.component';
 import { FeeFormDialogComponent } from './fee-form-dialog/fee-form-dialog.component';
-import { Branch } from '../../../graphql/generated';
-import { NgScrollbar } from 'ngx-scrollbar';
+import { FeeItemComponent } from './fee-item/fee-item.component';
 
 @Component({
   selector: 'app-prices',
@@ -49,6 +54,7 @@ import { NgScrollbar } from 'ngx-scrollbar';
     ReactiveFormsModule,
     ActivityItemComponent,
     FeeItemComponent,
+    DragDropModule,
   ],
   templateUrl: './prices.component.html',
   styles: ``,
@@ -60,6 +66,7 @@ export class PricesComponent implements OnInit {
   public activity = computed(() => this._globalStateService.activity);
 
   private readonly _activitiesPageGQL = inject(GetActivityPageGQL);
+  private readonly _setOrderActivitiesGQL = inject(SetOrderActivitiesGQL);
   private readonly _feesPageGQL = inject(GetFeePageGQL);
 
   public activities = signal<ActivityPartsFragment[]>([]);
@@ -206,10 +213,42 @@ export class PricesComponent implements OnInit {
             this.feesTotalCount.set(totalCount);
           },
         });
-    }  else {
+    } else {
       this.fees.set([]);
       this.feesLoading.set(false);
       this.feesTotalCount.set(0);
     }
+  }
+
+  public dropActivity(event: CdkDragDrop<ActivityPartsFragment[]>) {
+    this.activities.update((previous) => {
+      const values = [...previous];
+      moveItemInArray(values, event.previousIndex, event.currentIndex);
+      return values;
+    });
+
+    this.updateOrderActivities();
+  }
+
+  private updateOrderActivities(): void {
+    const payload: SetOrderActivity[] = this.activities().map(
+      (item, index) => ({
+        activityId: item.id,
+        order: index + 1,
+      })
+    );
+
+    this._setOrderActivitiesGQL
+      .mutate({
+        payload,
+      })
+      .subscribe({
+        next: () => {
+          console.log('Order activities updated successfully');
+        },
+        error: (error) => {
+          console.error('Error updating order activities', error);
+        },
+      });
   }
 }

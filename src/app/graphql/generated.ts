@@ -152,6 +152,18 @@ export enum ActivitySortFields {
   UpdatedAt = 'updatedAt'
 }
 
+export type ActivityUpdateFilter = {
+  and?: InputMaybe<Array<ActivityUpdateFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  isPackage?: InputMaybe<BooleanFieldComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<ActivityUpdateFilter>>;
+  order?: InputMaybe<NumberFieldComparison>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
 export type AddBranchsToStudentInput = {
   /** The id of the record. */
   id: Scalars['ID']['input'];
@@ -936,11 +948,15 @@ export type Mutation = {
   deleteOneTeacher: TeacherDeleteResponse;
   deleteOneTutor: TutorDeleteResponse;
   removeBranchsFromStudent: Student;
+  restoreManyActivities: UpdateManyResponse;
   restoreManyVideos: UpdateManyResponse;
+  restoreOneActivity: Activity;
   restoreOneVideo: Tutor;
   setBranchsOnStudent: Student;
+  setOrderActivities: UpdateCount;
   signIn: Session;
   signUp: Session;
+  updateManyActivities: UpdateManyResponse;
   updateOneAction: Action;
   updateOneActivity: Activity;
   updateOneBranch: Branch;
@@ -1103,8 +1119,18 @@ export type MutationRemoveBranchsFromStudentArgs = {
 };
 
 
+export type MutationRestoreManyActivitiesArgs = {
+  input: ActivityFilter;
+};
+
+
 export type MutationRestoreManyVideosArgs = {
   input: TutorFilter;
+};
+
+
+export type MutationRestoreOneActivityArgs = {
+  input: Scalars['ID']['input'];
 };
 
 
@@ -1118,6 +1144,11 @@ export type MutationSetBranchsOnStudentArgs = {
 };
 
 
+export type MutationSetOrderActivitiesArgs = {
+  input: Array<SetOrderActivity>;
+};
+
+
 export type MutationSignInArgs = {
   input: SignInInput;
 };
@@ -1125,6 +1156,11 @@ export type MutationSignInArgs = {
 
 export type MutationSignUpArgs = {
   input: SignUpInput;
+};
+
+
+export type MutationUpdateManyActivitiesArgs = {
+  input: UpdateManyActivitiesInput;
 };
 
 
@@ -1500,6 +1536,11 @@ export type SetBranchsOnStudentInput = {
   relationIds: Array<Scalars['ID']['input']>;
 };
 
+export type SetOrderActivity = {
+  activityId: Scalars['String']['input'];
+  order: Scalars['Float']['input'];
+};
+
 export type SignInInput = {
   password: Scalars['String']['input'];
   username: Scalars['String']['input'];
@@ -1780,6 +1821,11 @@ export type UpdateClassroom = {
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateCount = {
+  __typename?: 'UpdateCount';
+  updatedCount?: Maybe<Scalars['Int']['output']>;
+};
+
 export type UpdateCycle = {
   branchId?: InputMaybe<Scalars['String']['input']>;
   end?: InputMaybe<Scalars['String']['input']>;
@@ -1821,6 +1867,13 @@ export type UpdateLevel = {
   abbreviation?: InputMaybe<Scalars['String']['input']>;
   branchId?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateManyActivitiesInput = {
+  /** Filter used to find fields to update */
+  filter: ActivityUpdateFilter;
+  /** The update to apply to all records found using the filter */
+  update: UpdateActivity;
 };
 
 export type UpdateManyResponse = {
@@ -2091,6 +2144,13 @@ export type DeleteOneActivityMutationVariables = Exact<{
 
 
 export type DeleteOneActivityMutation = { __typename?: 'Mutation', deleteOneActivity: { __typename?: 'ActivityDeleteResponse', id?: string | null } };
+
+export type SetOrderActivitiesMutationVariables = Exact<{
+  payload: Array<SetOrderActivity> | SetOrderActivity;
+}>;
+
+
+export type SetOrderActivitiesMutation = { __typename?: 'Mutation', setOrderActivities: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
 export type CyclePartsFragment = { __typename?: 'Cycle', id: string, name: string, start: string, end: string, createdAt: any, updatedAt: any };
 
@@ -2735,6 +2795,24 @@ export const DeleteOneActivityDocument = gql`
   })
   export class DeleteOneActivityGQL extends Apollo.Mutation<DeleteOneActivityMutation, DeleteOneActivityMutationVariables> {
     document = DeleteOneActivityDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const SetOrderActivitiesDocument = gql`
+    mutation setOrderActivities($payload: [SetOrderActivity!]!) {
+  setOrderActivities(input: $payload) {
+    updatedCount
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class SetOrderActivitiesGQL extends Apollo.Mutation<SetOrderActivitiesMutation, SetOrderActivitiesMutationVariables> {
+    document = SetOrderActivitiesDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
