@@ -42,6 +42,9 @@
           [for]="datepicker"
         ></mat-datepicker-toggle>
         <mat-datepicker #datepicker> </mat-datepicker>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("dueDate")) }}
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field>

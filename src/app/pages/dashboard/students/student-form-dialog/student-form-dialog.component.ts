@@ -2,26 +2,19 @@ import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
+  MatDialogModule,
   MatDialogRef,
-  MatDialogTitle,
 } from '@angular/material/dialog';
-import {
-  MatError,
-  MatFormField,
-  MatHint,
-  MatLabel,
-} from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { ImagePickerComponent } from '@components/image-picker/image-picker.component';
 import {
   AddBranchsToStudentGQL,
   CreateOneStudentGQL,
-  GetStudentsPageGQL,
+  FetchStudentGQL,
   StudentPartsFragment,
   UpdateOneStudentGQL,
 } from '@graphql';
@@ -35,18 +28,13 @@ import { map, switchMap } from 'rxjs';
 @Component({
   selector: 'app-student-form-dialog',
   imports: [
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
+    MatDialogModule,
     MatButton,
-    MatFormField,
-    MatInput,
-    MatHint,
-    MatError,
-    MatLabel,
     MatCheckbox,
     ImagePickerComponent,
+    MatInputModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
     ReactiveFormsModule,
   ],
   templateUrl: './student-form-dialog.component.html',
@@ -62,7 +50,7 @@ export class StudentFormDialogComponent {
   private readonly _globalStateService = inject(GlobalStateService);
   private readonly _createOneStudent = inject(CreateOneStudentGQL);
   private readonly _addBranchsToStudent = inject(AddBranchsToStudentGQL);
-  private readonly _getStudentsPage = inject(GetStudentsPageGQL);
+  private readonly _fetchStudentPage = inject(FetchStudentGQL);
 
   private readonly _updateOneStudent = inject(UpdateOneStudentGQL);
 
@@ -73,11 +61,13 @@ export class StudentFormDialogComponent {
   private previusPicture = '';
 
   public formGroup = this.formTools.builder.group({
+    withCode: [false],
     picture: [''],
-    firstname: ['', [Validators.required, Validators.maxLength(32)]],
-    lastname: ['', [Validators.required, Validators.maxLength(32)]],
-    withCode: [false, []],
-    code: ['', [], []],
+    firstname: [''],
+    lastname: [''],
+    code: [''],
+    dni: [''],
+    dateBirth: [''],
   });
 
   constructor() {
@@ -89,21 +79,38 @@ export class StudentFormDialogComponent {
         this.formGroup
           .get('code')
           ?.setAsyncValidators([this.formTools.isStudentCodeValid]);
+
+        this.formGroup.get('dni')?.clearValidators();
+        this.formGroup.get('dni')?.clearAsyncValidators();
+
         this.formGroup.get('firstname')?.clearValidators();
         this.formGroup.get('lastname')?.clearValidators();
+        this.formGroup.get('dateBirth')?.clearValidators();
       } else {
         this.formGroup.get('code')?.clearValidators();
         this.formGroup.get('code')?.clearAsyncValidators();
+
+        this.formGroup
+          .get('dni')
+          ?.setValidators([Validators.required, Validators.maxLength(32)]);
+        this.formGroup
+          .get('dni')
+          ?.setAsyncValidators([this.formTools.isDniStudentValid]);
+
         this.formGroup
           .get('firstname')
           ?.setValidators([Validators.required, Validators.maxLength(32)]);
         this.formGroup
           .get('lastname')
           ?.setValidators([Validators.required, Validators.maxLength(32)]);
+        this.formGroup.get('dateBirth')?.setValidators([Validators.required]);
       }
+
       this.formGroup.get('code')?.updateValueAndValidity();
       this.formGroup.get('firstname')?.updateValueAndValidity();
       this.formGroup.get('lastname')?.updateValueAndValidity();
+      this.formGroup.get('dateBirth')?.updateValueAndValidity();
+      this.formGroup.get('dni')?.updateValueAndValidity();
     });
   }
 
@@ -114,6 +121,8 @@ export class StudentFormDialogComponent {
         picture: this.data.picture,
         firstname: this.data.firstname,
         lastname: this.data.lastname,
+        dateBirth: this.data.dateBirth,
+        dni: this.data.dni,
       });
       this.previusPicture = this.data.picture;
       this.formGroup.get('picture')?.updateValueAndValidity();
@@ -198,12 +207,11 @@ export class StudentFormDialogComponent {
         switchMap((picture) =>
           this._createOneStudent.mutate({
             student: {
+              picture,
               firstname: values.firstname,
               lastname: values.lastname,
-              picture,
-              dni: '',
-              dateBirth: '',
-              levelId: ''
+              dateBirth: values.dateBirth,
+              dni: values.dni,
             },
           })
         ),
@@ -226,9 +234,8 @@ export class StudentFormDialogComponent {
           firstname: values.firstname,
           lastname: values.lastname,
           picture: 'images/image-default.png',
-          dateBirth: '',
-          dni: '',
-          levelId: ''
+          dateBirth: values.dateBirth,
+          dni: values.dni,
         },
       })
       .pipe(
@@ -247,11 +254,11 @@ export class StudentFormDialogComponent {
   private _addStudentInCurrentBranch(values: FormValues) {
     const branchId = this._globalStateService.branch!.id;
 
-    return this._getStudentsPage
+    return this._fetchStudentPage
       .fetch(
         {
           filter: {
-            code: { eq: values.code },
+            or: [{ code: { eq: values.code } }, { dni: { eq: values.code } }],
           },
         },
         {
@@ -277,6 +284,8 @@ type FormValues = {
   picture: File;
   firstname: string;
   lastname: string;
+  dateBirth: string;
+  dni: string;
   withCode: boolean;
   code: string;
 };

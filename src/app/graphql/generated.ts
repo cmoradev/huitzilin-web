@@ -171,6 +171,13 @@ export type AddBranchsToStudentInput = {
   relationIds: Array<Scalars['ID']['input']>;
 };
 
+export type AddLevelsToStudentInput = {
+  /** The id of the record. */
+  id: Scalars['ID']['input'];
+  /** The ids of the relations. */
+  relationIds: Array<Scalars['ID']['input']>;
+};
+
 export type BooleanFieldComparison = {
   is?: InputMaybe<Scalars['Boolean']['input']>;
   isNot?: InputMaybe<Scalars['Boolean']['input']>;
@@ -437,7 +444,6 @@ export type CreateStudent = {
   dni: Scalars['String']['input'];
   firstname: Scalars['String']['input'];
   lastname: Scalars['String']['input'];
-  levelId: Scalars['String']['input'];
   picture: Scalars['String']['input'];
   userId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -920,6 +926,7 @@ export enum LevelSortFields {
 export type Mutation = {
   __typename?: 'Mutation';
   addBranchsToStudent: Student;
+  addLevelsToStudent: Student;
   createManyDebits: Array<Debit>;
   createOneAction: Action;
   createOneActivity: Activity;
@@ -948,11 +955,13 @@ export type Mutation = {
   deleteOneTeacher: TeacherDeleteResponse;
   deleteOneTutor: TutorDeleteResponse;
   removeBranchsFromStudent: Student;
+  removeLevelsFromStudent: Student;
   restoreManyActivities: UpdateManyResponse;
   restoreManyVideos: UpdateManyResponse;
   restoreOneActivity: Activity;
   restoreOneVideo: Tutor;
   setBranchsOnStudent: Student;
+  setLevelsOnStudent: Student;
   setOrderActivities: UpdateCount;
   signIn: Session;
   signUp: Session;
@@ -976,6 +985,11 @@ export type Mutation = {
 
 export type MutationAddBranchsToStudentArgs = {
   input: AddBranchsToStudentInput;
+};
+
+
+export type MutationAddLevelsToStudentArgs = {
+  input: AddLevelsToStudentInput;
 };
 
 
@@ -1119,6 +1133,11 @@ export type MutationRemoveBranchsFromStudentArgs = {
 };
 
 
+export type MutationRemoveLevelsFromStudentArgs = {
+  input: RemoveLevelsFromStudentInput;
+};
+
+
 export type MutationRestoreManyActivitiesArgs = {
   input: ActivityFilter;
 };
@@ -1141,6 +1160,11 @@ export type MutationRestoreOneVideoArgs = {
 
 export type MutationSetBranchsOnStudentArgs = {
   input: SetBranchsOnStudentInput;
+};
+
+
+export type MutationSetLevelsOnStudentArgs = {
+  input: SetLevelsOnStudentInput;
 };
 
 
@@ -1518,6 +1542,13 @@ export type RemoveBranchsFromStudentInput = {
   relationIds: Array<Scalars['ID']['input']>;
 };
 
+export type RemoveLevelsFromStudentInput = {
+  /** The id of the record. */
+  id: Scalars['ID']['input'];
+  /** The ids of the relations. */
+  relationIds: Array<Scalars['ID']['input']>;
+};
+
 export type Session = {
   __typename?: 'Session';
   branch?: Maybe<Branch>;
@@ -1530,6 +1561,13 @@ export type Session = {
 };
 
 export type SetBranchsOnStudentInput = {
+  /** The id of the record. */
+  id: Scalars['ID']['input'];
+  /** The ids of the relations. */
+  relationIds: Array<Scalars['ID']['input']>;
+};
+
+export type SetLevelsOnStudentInput = {
   /** The id of the record. */
   id: Scalars['ID']['input'];
   /** The ids of the relations. */
@@ -1595,8 +1633,7 @@ export type Student = {
   fullname: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   lastname: Scalars['String']['output'];
-  level: Level;
-  levelId: Scalars['String']['output'];
+  levels: Array<Level>;
   picture: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   userId?: Maybe<Scalars['String']['output']>;
@@ -1607,6 +1644,12 @@ export type Student = {
 export type StudentBranchsArgs = {
   filter?: BranchFilter;
   sorting?: Array<BranchSort>;
+};
+
+
+export type StudentLevelsArgs = {
+  filter?: LevelFilter;
+  sorting?: Array<LevelSort>;
 };
 
 export type StudentConnection = {
@@ -1630,7 +1673,6 @@ export type StudentDeleteResponse = {
   fullname?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   lastname?: Maybe<Scalars['String']['output']>;
-  levelId?: Maybe<Scalars['String']['output']>;
   picture?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   userId?: Maybe<Scalars['String']['output']>;
@@ -1645,7 +1687,7 @@ export type StudentFilter = {
   dni?: InputMaybe<StringFieldComparison>;
   fullname?: InputMaybe<StringFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
-  levelId?: InputMaybe<StringFieldComparison>;
+  levels?: InputMaybe<StudentFilterLevelFilter>;
   or?: InputMaybe<Array<StudentFilter>>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
@@ -1656,6 +1698,17 @@ export type StudentFilterBranchFilter = {
   id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<StudentFilterBranchFilter>>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type StudentFilterLevelFilter = {
+  abbreviation?: InputMaybe<StringFieldComparison>;
+  and?: InputMaybe<Array<StudentFilterLevelFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<StudentFilterLevelFilter>>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -1671,7 +1724,6 @@ export enum StudentSortFields {
   Dni = 'dni',
   Fullname = 'fullname',
   Id = 'id',
-  LevelId = 'levelId',
   UpdatedAt = 'updatedAt'
 }
 
@@ -1983,7 +2035,6 @@ export type UpdateStudent = {
   dni?: InputMaybe<Scalars['String']['input']>;
   firstname?: InputMaybe<Scalars['String']['input']>;
   lastname?: InputMaybe<Scalars['String']['input']>;
-  levelId?: InputMaybe<Scalars['String']['input']>;
   picture?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -2324,23 +2375,33 @@ export type DeleteOneLevelMutationVariables = Exact<{
 
 export type DeleteOneLevelMutation = { __typename?: 'Mutation', deleteOneLevel: { __typename?: 'LevelDeleteResponse', id?: string | null } };
 
-export type StudentPartsFragment = { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, createdAt: any, updatedAt: any };
+export type StudentPartsFragment = { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any };
 
 export type CreateOneStudentMutationVariables = Exact<{
   student: CreateStudent;
 }>;
 
 
-export type CreateOneStudentMutation = { __typename?: 'Mutation', createOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, createdAt: any, updatedAt: any } };
+export type CreateOneStudentMutation = { __typename?: 'Mutation', createOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
 
 export type GetStudentsPageQueryVariables = Exact<{
+  branchId: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   filter?: InputMaybe<StudentFilter>;
 }>;
 
 
-export type GetStudentsPageQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, createdAt: any, updatedAt: any }> } };
+export type GetStudentsPageQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any, levels: Array<{ __typename?: 'Level', id: string, name: string, abbreviation: string }> }> } };
+
+export type FetchStudentQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<StudentFilter>;
+}>;
+
+
+export type FetchStudentQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any }> } };
 
 export type UpdateOneStudentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2348,7 +2409,7 @@ export type UpdateOneStudentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneStudentMutation = { __typename?: 'Mutation', updateOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, createdAt: any, updatedAt: any } };
+export type UpdateOneStudentMutation = { __typename?: 'Mutation', updateOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
 
 export type DeleteOneStudentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2363,7 +2424,7 @@ export type AddBranchsToStudentMutationVariables = Exact<{
 }>;
 
 
-export type AddBranchsToStudentMutation = { __typename?: 'Mutation', addBranchsToStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, createdAt: any, updatedAt: any } };
+export type AddBranchsToStudentMutation = { __typename?: 'Mutation', addBranchsToStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
 
 export type RemoveBranchsFromStudentMutationVariables = Exact<{
   studentId: Scalars['ID']['input'];
@@ -2371,7 +2432,7 @@ export type RemoveBranchsFromStudentMutationVariables = Exact<{
 }>;
 
 
-export type RemoveBranchsFromStudentMutation = { __typename?: 'Mutation', removeBranchsFromStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, createdAt: any, updatedAt: any } };
+export type RemoveBranchsFromStudentMutation = { __typename?: 'Mutation', removeBranchsFromStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
 
 export const SessionPartsFragmentDoc = gql`
     fragment SessionParts on Session {
@@ -2501,6 +2562,8 @@ export const StudentPartsFragmentDoc = gql`
   fullname
   firstname
   lastname
+  dateBirth
+  dni
   createdAt
   updatedAt
 }
@@ -3250,7 +3313,37 @@ export const CreateOneStudentDocument = gql`
     }
   }
 export const GetStudentsPageDocument = gql`
-    query getStudentsPage($offset: Int = 0, $limit: Int = 10, $filter: StudentFilter = {}) {
+    query getStudentsPage($branchId: String!, $offset: Int = 0, $limit: Int = 10, $filter: StudentFilter = {}) {
+  students(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...StudentParts
+      levels(filter: {branchId: {eq: $branchId}}) {
+        id
+        name
+        abbreviation
+      }
+    }
+  }
+}
+    ${StudentPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetStudentsPageGQL extends Apollo.Query<GetStudentsPageQuery, GetStudentsPageQueryVariables> {
+    document = GetStudentsPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const FetchStudentDocument = gql`
+    query fetchStudent($offset: Int = 0, $limit: Int = 10, $filter: StudentFilter = {}) {
   students(paging: {limit: $limit, offset: $offset}, filter: $filter) {
     totalCount
     pageInfo {
@@ -3267,8 +3360,8 @@ export const GetStudentsPageDocument = gql`
   @Injectable({
     providedIn: 'root'
   })
-  export class GetStudentsPageGQL extends Apollo.Query<GetStudentsPageQuery, GetStudentsPageQueryVariables> {
-    document = GetStudentsPageDocument;
+  export class FetchStudentGQL extends Apollo.Query<FetchStudentQuery, FetchStudentQueryVariables> {
+    document = FetchStudentDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

@@ -116,14 +116,16 @@ export class StudentsComponent {
       const limit: number = this.paginator.pageSize;
       const offset: number = this.paginator.pageIndex * limit;
 
+      const branchId = this._globalStateService.branch!.id;
+
       const filter: StudentFilter = {
         fullname: { iLike: `%${this.searchControl.value}%` },
-        branchs: { id: { eq: this._globalStateService.branch!.id } },
+        branchs: { id: { eq: branchId } },
       };
 
       this._companiesPageGQL
         .watch(
-          { limit, offset, filter },
+          { limit, offset, filter, branchId },
           {
             fetchPolicy: 'cache-and-network',
             nextFetchPolicy: 'cache-and-network',

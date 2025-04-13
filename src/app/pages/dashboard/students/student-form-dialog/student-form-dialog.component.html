@@ -21,6 +21,19 @@
       <app-image-picker formControlName="picture"></app-image-picker>
 
       <mat-form-field>
+        <mat-label>DNI</mat-label>
+        <input
+          matInput
+          placeholder="Ej: D123-456-7890-123"
+          formControlName="dni"
+        />
+        <mat-hint>Ingrese la clave documento nacional de identidad</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("dni")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
         <mat-label>Nombre</mat-label>
         <input matInput placeholder="Ej: Juan" formControlName="firstname" />
         <mat-hint>Ingrese el nombre del estudiante</mat-hint>
@@ -35,6 +48,24 @@
         <mat-hint>Ingrese el apellido del estudiante</mat-hint>
         <mat-error>
           {{ formTools.checkForErrorsIn(formGroup.get("lastname")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Fecha del pago</mat-label>
+        <input
+          matInput
+          [matDatepicker]="datepicker"
+          formControlName="dateBirth"
+        />
+        <mat-hint>Seleccione la fecha en que se realizará el pago</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="datepicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #datepicker> </mat-datepicker>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("dateBirth")) }}
         </mat-error>
       </mat-form-field>
       }

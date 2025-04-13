@@ -5,6 +5,8 @@ fragment StudentParts on Student {
   fullname,
   firstname,
   lastname,
+  dateBirth,
+  dni
   createdAt
   updatedAt
 }
@@ -19,7 +21,30 @@ mutation createOneStudent ($student: CreateStudent!) {
   }
 }
 
-query getStudentsPage ($offset: Int = 0, $limit: Int = 10, $filter: StudentFilter = {})  {
+query getStudentsPage ($branchId: String!, $offset: Int = 0, $limit: Int = 10, $filter: StudentFilter = {})  {
+  students (
+    paging: { limit: $limit, offset: $offset },
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...StudentParts
+            levels (
+        filter:{branchId: { eq: $branchId }}
+      ) {
+        id,
+        name,
+        abbreviation
+      }
+    }
+  }
+}
+
+query fetchStudent ($offset: Int = 0, $limit: Int = 10, $filter: StudentFilter = {})  {
   students (
     paging: { limit: $limit, offset: $offset },
     filter: $filter

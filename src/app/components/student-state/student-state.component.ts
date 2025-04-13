@@ -17,7 +17,7 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { AvatarComponent } from '@components/avatar/avatar.component';
-import { GetStudentsPageGQL, StudentPartsFragment } from '@graphql';
+import { FetchStudentGQL, GetStudentsPageGQL, StudentPartsFragment } from '@graphql';
 import { GlobalStateService } from '@services';
 import { debounceTime, startWith } from 'rxjs';
 
@@ -43,7 +43,7 @@ export class StudentStateComponent implements AfterViewInit, OnInit {
   public studentControl = new FormControl<StudentPartsFragment | string>('');
   public loadingStudents = signal<boolean>(false);
   public students = signal<StudentPartsFragment[]>([]);
-  private readonly _studentsPageGQL = inject(GetStudentsPageGQL);
+  private readonly _fetchStudentGQL = inject(FetchStudentGQL);
 
   private readonly _globalStateService = inject(GlobalStateService);
 
@@ -82,7 +82,7 @@ export class StudentStateComponent implements AfterViewInit, OnInit {
       this.loadingStudents.set(true);
 
       // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
-      this._studentsPageGQL
+      this._fetchStudentGQL
         .watch(
           {
             limit: 100,

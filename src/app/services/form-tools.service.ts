@@ -1,6 +1,11 @@
 import { inject, Injectable } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormBuilder, ValidatorFn } from '@angular/forms';
-import { GetStudentsPageGQL } from '@graphql';
+import {
+  AbstractControl,
+  AsyncValidatorFn,
+  FormBuilder,
+  ValidatorFn,
+} from '@angular/forms';
+import { FetchStudentGQL } from '@graphql';
 import { ERROR_MESSAGES } from '@utils/messages';
 import { map } from 'rxjs';
 
@@ -9,7 +14,7 @@ import { map } from 'rxjs';
 })
 export class FormToolsService {
   public readonly builder: FormBuilder = inject<FormBuilder>(FormBuilder);
-  private readonly _getStudentsPage = inject(GetStudentsPageGQL);
+  private readonly _fetchStudentPage = inject(FetchStudentGQL);
 
   /**
    * Busca el error y retorna una descripción
@@ -72,9 +77,13 @@ export class FormToolsService {
 
   public get isStudentCodeValid(): AsyncValidatorFn {
     return (control) =>
-      this._getStudentsPage
+      this._fetchStudentPage
         .fetch(
-          { filter: { code: { eq: control.value } } },
+          {
+            filter: {
+              or: [{ code: { eq: control.value } }],
+            },
+          },
           { fetchPolicy: 'network-only' }
         )
         .pipe(
@@ -84,6 +93,28 @@ export class FormToolsService {
             );
 
             return student ? null : { studentNotFound: true };
+          })
+        );
+  }
+
+  public get isDniStudentValid(): AsyncValidatorFn {
+    return (control) =>
+      this._fetchStudentPage
+        .fetch(
+          {
+            filter: {
+              or: [{ dni: { eq: control.value } }],
+            },
+          },
+          { fetchPolicy: 'network-only' }
+        )
+        .pipe(
+          map((resp) => {
+            const student = resp.data.students.nodes.some((value) =>
+              value.code.includes(control.value)
+            );
+
+            return student ? { studentNotFound: true } : null;
           })
         );
   }
