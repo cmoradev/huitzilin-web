@@ -21,14 +21,14 @@
             mat-icon-button
             color="primary"
             matTooltip="Refrescar"
-            (click)="refreshCourses()"
+            (click)="refreshActivities()"
           >
             <mat-icon
               svgIcon="refresh"
-              [ngClass]="{ 'animate-spin': coursesLoading() }"
+              [ngClass]="{ 'animate-spin': activitiesLoading() }"
             />
           </button>
-          <button mat-icon-button (click)="openCourseFormDialog()">
+          <button mat-icon-button (click)="openActivityFormDialog()">
             <mat-icon svgIcon="plus" />
           </button>
         </div>
@@ -37,12 +37,12 @@
 
         <ng-scrollbar class="relative flex-1">
           <mat-nav-list>
-            @for (course of courses(); track $index) {
-            <app-course-item
-              [course]="course"
-              (update)="openCourseFormDialog($event)"
-              (delete)="openCourseDeleteDialog($event)"
-            ></app-course-item>
+            @for (activity of activities(); track $index) {
+            <app-activity-item
+              [activity]="activity"
+              (update)="openActivityFormDialog($event)"
+              (delete)="openActivityDeleteDialog($event)"
+            ></app-activity-item>
             }
           </mat-nav-list>
         </ng-scrollbar>
@@ -50,8 +50,8 @@
       <!-- Fees Area -->
       <div class="w-2/3 flex flex-col">
         <div class="flex items-center gap-2 p-2">
-          @if (!!course()?.id) {
-          <h4 class="font-medium text-lg">{{ course()!.name }}</h4>
+          @if (!!activity()?.id) {
+          <h4 class="font-medium text-lg">{{ activity()!.name }}</h4>
           }
           <span class="flex-1 h-[52px]"></span>
 
@@ -61,14 +61,14 @@
             matTooltip="Refrescar"
             (click)="refreshFees()"
             [ngClass]="{ 'animate-spin': feesLoading() }"
-            [disabled]="!course()?.id"
+            [disabled]="!activity()?.id"
           >
             <mat-icon svgIcon="refresh" />
           </button>
           <button
             mat-icon-button
             (click)="openFeeFormDialog()"
-            [disabled]="!course()?.id"
+            [disabled]="!activity()?.id"
           >
             <mat-icon svgIcon="plus" />
           </button>

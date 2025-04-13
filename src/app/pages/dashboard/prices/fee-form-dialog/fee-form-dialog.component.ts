@@ -86,7 +86,7 @@ export class FeeFormDialogComponent implements OnInit {
         this.formGroup
           .get('name')
           ?.setValue(
-            `${this._globalStateService.course!.name} - ${this.getFrequencyName(
+            `${this._globalStateService.activity!.name} - ${this.getFrequencyName(
               value as Frequency
             )}`
           );
@@ -112,7 +112,7 @@ export class FeeFormDialogComponent implements OnInit {
             this.loading.set(false);
           },
         });
-      } else if (this._globalStateService.course!.id) {
+      } else if (this._globalStateService.activity!.id) {
         this._save(values).subscribe({
           next: (branch) => {
             this._dialogRef.close(branch);
@@ -142,7 +142,7 @@ export class FeeFormDialogComponent implements OnInit {
       .mutate({
         fee: {
           ...values,
-          courseId: this._globalStateService.course!.id,
+          activityId: this._globalStateService.activity!.id,
         },
       })
       .pipe(map((value) => value.data?.createOneFee));

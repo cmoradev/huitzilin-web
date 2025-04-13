@@ -49,7 +49,7 @@ export class EnrollmentItemComponent {
     return this._globalStateService.enrollment?.id === this.enrollment.id;
   });
 
-  public selectCourse() {
+  public selectEnrollment() {
     this._globalStateService.enrollment = this.enrollment;
   }
 

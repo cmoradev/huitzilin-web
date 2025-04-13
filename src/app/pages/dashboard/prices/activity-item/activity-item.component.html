@@ -1,5 +1,5 @@
-<mat-list-item (click)="selectCourse()" [activated]="isActive()">
-  <span matListItemTitle>{{ course.name }}</span>
+<mat-list-item (click)="selectActivity()" [activated]="isActive()">
+  <span matListItemTitle>{{ activity.name }}</span>
   <button
     mat-icon-button
     matListItemMeta
@@ -11,11 +11,11 @@
 </mat-list-item>
 
 <mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="update.emit(course)">
+  <button mat-menu-item (click)="update.emit(activity)">
     <mat-icon svgIcon="pencil" />
     <span>Editar</span>
   </button>
-  <button mat-menu-item (click)="delete.emit(course)">
+  <button mat-menu-item (click)="delete.emit(activity)">
     <mat-icon svgIcon="delete" class="!text-red-400" />
     <span>Eliminar</span>
   </button>

@@ -8,18 +8,18 @@
           type="text"
           placeholder="Ej. Taekwondo, Karate, Judo"
           matInput
-          formControlName="course"
+          formControlName="activity"
           [matAutocomplete]="autoStudents"
         />
         <mat-hint>Seleccione el curso para la inscripción</mat-hint>
         <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("course")) }}
+          {{ formTools.checkForErrorsIn(formGroup.get("activity")) }}
         </mat-error>
-        @if (formGroup.get("course")?.value) {
+        @if (formGroup.get("activity")?.value) {
         <button
           mat-icon-button
           matSuffix
-          (click)="formGroup.get('course')?.setValue('')"
+          (click)="formGroup.get('activity')?.setValue('')"
         >
           <mat-icon svgIcon="close" />
         </button>
@@ -28,9 +28,9 @@
           #autoStudents="matAutocomplete"
           [displayWith]="displayFn"
         >
-          @for (course of courses(); track course.id) {
-          <mat-option [value]="course">
-            {{ course.name }}
+          @for (activity of activities(); track activity.id) {
+          <mat-option [value]="activity">
+            {{ activity.name }}
           </mat-option>
           }
         </mat-autocomplete>

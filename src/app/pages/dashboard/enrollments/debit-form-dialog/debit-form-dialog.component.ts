@@ -102,7 +102,7 @@ export class DebitFormDialogComponent {
             this.loading.set(false);
           },
         });
-      } else if (this._globalStateService.course!.id) {
+      } else if (this._globalStateService.activity!.id) {
         this._save(values).subscribe({
           next: (debit) => {
             this._dialogRef.close(debit);

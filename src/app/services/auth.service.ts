@@ -3,7 +3,7 @@ import { SignInGQL, SignInInput } from '@graphql';
 import { map, tap } from 'rxjs';
 import {
   BRANCH_KEY,
-  COURSE_KEY,
+  ACTIVITY_KEY,
   SESSION_KEY,
   CYCLE_KEY,
   ENROLLMENT_KEY,
@@ -68,7 +68,7 @@ export class AuthService {
     this._globalStateService.session = null;
     this._globalStateService.branch = null;
     this._globalStateService.cycle = null;
-    this._globalStateService.course = null;
+    this._globalStateService.activity = null;
     this._globalStateService.enrollment = null;
     this._globalStateService.student = null;
   }
@@ -86,13 +86,13 @@ export class AuthService {
     const cycle = sessionStorage.getItem(CYCLE_KEY);
 
     const enrollment = localStorage.getItem(ENROLLMENT_KEY);
-    const course = localStorage.getItem(COURSE_KEY);
+    const activity = localStorage.getItem(ACTIVITY_KEY);
     const student = localStorage.getItem(STUDENT_KEY);
 
     if (session) this._globalStateService.session = JSON.parse(session);
     if (branch) this._globalStateService.branch = JSON.parse(branch);
     if (enrollment) this._globalStateService.enrollment = JSON.parse(enrollment);
-    if (course) this._globalStateService.course = JSON.parse(course);
+    if (activity) this._globalStateService.activity = JSON.parse(activity);
     if (cycle) this._globalStateService.cycle = JSON.parse(cycle);
     if (student) this._globalStateService.student = JSON.parse(student);
   }

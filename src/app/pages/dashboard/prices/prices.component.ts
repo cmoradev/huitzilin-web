@@ -14,16 +14,16 @@ import { MatInput } from '@angular/material/input';
 import { MatDivider, MatNavList } from '@angular/material/list';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import {
-  CoursePartsFragment,
+  ActivityPartsFragment,
   FeePartsFragment,
-  GetCoursePageGQL,
+  GetActivityPageGQL,
   GetFeePageGQL,
 } from '@graphql';
 import { GlobalStateService } from '@services';
 import { debounceTime, merge } from 'rxjs';
-import { CourseFormDialogComponent } from './course-form-dialog/course-form-dialog.component';
-import { CourseItemComponent } from './course-item/course-item.component';
-import { CourseDeleteDialogComponent } from './course-delete-dialog/course-delete-dialog.component';
+import { ActivityFormDialogComponent } from './activity-form-dialog/activity-form-dialog.component';
+import { ActivityItemComponent } from './activity-item/activity-item.component';
+import { ActivityDeleteDialogComponent } from './activity-delete-dialog/activity-delete-dialog.component';
 import { NgClass } from '@angular/common';
 import { FeeItemComponent } from './fee-item/fee-item.component';
 import { FeeDeleteDialogComponent } from './fee-delete-dialog/fee-delete-dialog.component';
@@ -47,7 +47,7 @@ import { NgScrollbar } from 'ngx-scrollbar';
     MatIconButton,
     MatInput,
     ReactiveFormsModule,
-    CourseItemComponent,
+    ActivityItemComponent,
     FeeItemComponent,
   ],
   templateUrl: './prices.component.html',
@@ -57,14 +57,14 @@ export class PricesComponent implements OnInit {
   private readonly _dialog = inject(MatDialog);
   private readonly _globalStateService = inject(GlobalStateService);
 
-  public course = computed(() => this._globalStateService.course);
+  public activity = computed(() => this._globalStateService.activity);
 
-  private readonly _coursesPageGQL = inject(GetCoursePageGQL);
+  private readonly _activitiesPageGQL = inject(GetActivityPageGQL);
   private readonly _feesPageGQL = inject(GetFeePageGQL);
 
-  public courses = signal<CoursePartsFragment[]>([]);
-  public coursesLoading = signal<boolean>(false);
-  public coursesTotalCount = signal<number>(0);
+  public activities = signal<ActivityPartsFragment[]>([]);
+  public activitiesLoading = signal<boolean>(false);
+  public activitiesTotalCount = signal<number>(0);
 
   public fees = signal<FeePartsFragment[]>([]);
   public feesLoading = signal<boolean>(false);
@@ -77,41 +77,41 @@ export class PricesComponent implements OnInit {
       .pipe(debounceTime(300))
       .subscribe({
         next: () => {
-          this.refreshCourses();
+          this.refreshActivities();
         },
       });
 
-    this._globalStateService.course$.subscribe({
+    this._globalStateService.activity$.subscribe({
       next: () => {
         this.refreshFees();
       },
     });
   }
 
-  public openCourseFormDialog(
-    value: CoursePartsFragment | undefined = undefined
+  public openActivityFormDialog(
+    value: ActivityPartsFragment | undefined = undefined
   ): void {
-    const $dialog = this._dialog.open(CourseFormDialogComponent, {
+    const $dialog = this._dialog.open(ActivityFormDialogComponent, {
       width: '30rem',
       data: value,
     });
 
     $dialog.afterClosed().subscribe({
-      next: (course) => {
-        if (course) this.refreshCourses();
+      next: (activity) => {
+        if (activity) this.refreshActivities();
       },
     });
   }
 
-  public openCourseDeleteDialog(value: CoursePartsFragment): void {
-    const $dialog = this._dialog.open(CourseDeleteDialogComponent, {
+  public openActivityDeleteDialog(value: ActivityPartsFragment): void {
+    const $dialog = this._dialog.open(ActivityDeleteDialogComponent, {
       width: '30rem',
       data: value,
     });
 
     $dialog.afterClosed().subscribe({
-      next: (course) => {
-        if (course) this.refreshCourses();
+      next: (activity) => {
+        if (activity) this.refreshActivities();
       },
     });
   }
@@ -144,12 +144,12 @@ export class PricesComponent implements OnInit {
     });
   }
 
-  public refreshCourses(): void {
+  public refreshActivities(): void {
     if (!!this._globalStateService.branch?.id) {
-      this.coursesLoading.set(true);
+      this.activitiesLoading.set(true);
 
       // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
-      this._coursesPageGQL
+      this._activitiesPageGQL
         .watch(
           {
             filter: {
@@ -167,18 +167,18 @@ export class PricesComponent implements OnInit {
         )
         .valueChanges.subscribe({
           next: ({ data, loading }) => {
-            const { nodes, totalCount } = data.courses;
+            const { nodes, totalCount } = data.activities;
 
-            this.courses.set(nodes);
-            this.coursesLoading.set(loading);
-            this.coursesTotalCount.set(totalCount);
+            this.activities.set(nodes);
+            this.activitiesLoading.set(loading);
+            this.activitiesTotalCount.set(totalCount);
           },
         });
     }
   }
 
   public refreshFees(): void {
-    if (!!this._globalStateService.course?.id) {
+    if (!!this._globalStateService.activity?.id) {
       this.feesLoading.set(true);
 
       // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
@@ -186,7 +186,7 @@ export class PricesComponent implements OnInit {
         .watch(
           {
             filter: {
-              courseId: { eq: this._globalStateService.course!.id },
+              activityId: { eq: this._globalStateService.activity!.id },
             },
             limit: 100,
             offset: 0,

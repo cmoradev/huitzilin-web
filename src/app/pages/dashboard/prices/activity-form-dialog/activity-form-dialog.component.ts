@@ -17,15 +17,15 @@ import {
 } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import {
-  CoursePartsFragment,
-  CreateOneCourseGQL,
-  UpdateOneCourseGQL,
+  ActivityPartsFragment,
+  CreateOneActivityGQL,
+  UpdateOneActivityGQL,
 } from '@graphql';
 import { FormToolsService, GlobalStateService } from '@services';
 import { map } from 'rxjs';
 
 @Component({
-  selector: 'app-course-form-dialog',
+  selector: 'app-activity-form-dialog',
   imports: [
     MatDialogTitle,
     MatDialogContent,
@@ -39,14 +39,14 @@ import { map } from 'rxjs';
     MatLabel,
     ReactiveFormsModule,
   ],
-  templateUrl: './course-form-dialog.component.html',
+  templateUrl: './activity-form-dialog.component.html',
   styles: ``,
 })
-export class CourseFormDialogComponent implements OnInit {
+export class ActivityFormDialogComponent implements OnInit {
   public readonly formTools = inject(FormToolsService);
 
   public loading = signal(false);
-  public data: CoursePartsFragment | null = inject(MAT_DIALOG_DATA);
+  public data: ActivityPartsFragment | null = inject(MAT_DIALOG_DATA);
 
   public formGroup = this.formTools.builder.group({
     name: [
@@ -56,10 +56,10 @@ export class CourseFormDialogComponent implements OnInit {
   });
 
   private readonly _globalStateService = inject(GlobalStateService);
-  private readonly _createOneCourse = inject(CreateOneCourseGQL);
-  private readonly _updateOneCourse = inject(UpdateOneCourseGQL);
+  private readonly _createOneActivity = inject(CreateOneActivityGQL);
+  private readonly _updateOneActivity = inject(UpdateOneActivityGQL);
 
-  private readonly _dialogRef = inject(MatDialogRef<CourseFormDialogComponent>);
+  private readonly _dialogRef = inject(MatDialogRef<ActivityFormDialogComponent>);
 
   ngOnInit(): void {
     if (!!this.data?.id) {
@@ -93,7 +93,7 @@ export class CourseFormDialogComponent implements OnInit {
             this._dialogRef.close(branch);
           },
           error: (err) => {
-            console.error('CREATE COURSE ERROR: ', err);
+            console.error('CREATE ACTIVITY ERROR: ', err);
           },
           complete: () => {
             this.loading.set(false);
@@ -104,23 +104,25 @@ export class CourseFormDialogComponent implements OnInit {
   }
 
   private _update(values: FormValues) {
-    return this._updateOneCourse
+    return this._updateOneActivity
       .mutate({
         id: this.data!.id,
         update: { ...values } as any,
       })
-      .pipe(map((value) => value.data?.updateOneCourse));
+      .pipe(map((value) => value.data?.updateOneActivity));
   }
 
   private _save(values: FormValues) {
-    return this._createOneCourse
+    return this._createOneActivity
       .mutate({
-        course: {
+        activity: {
           ...values,
           branchId: this._globalStateService.branch!.id,
+          isPackage: false,
+          order: 1,
         },
       })
-      .pipe(map((value) => value.data?.createOneCourse));
+      .pipe(map((value) => value.data?.createOneActivity));
   }
 }
 

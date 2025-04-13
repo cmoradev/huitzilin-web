@@ -15,7 +15,6 @@ import {
   Frequency,
   GetFeePageGQL,
 } from '@graphql';
-import { FrequencyPipe } from '@pipes';
 import { GlobalStateService } from '@services';
 import { debounceTime, startWith } from 'rxjs';
 import { format } from 'date-fns';
@@ -145,7 +144,7 @@ export class DebitFormCatalogDialogComponent implements AfterViewInit {
   }
 
   private _fetchFees(value: string): void {
-    if (this._globalStateService.enrollment?.course!.id) {
+    if (this._globalStateService.enrollment?.activity!.id) {
       this.loadingFees.set(true);
 
       // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
@@ -156,7 +155,7 @@ export class DebitFormCatalogDialogComponent implements AfterViewInit {
             offset: 0,
             filter: {
               name: { iLike: `%${value}%` },
-              courseId: { eq: this._globalStateService.enrollment?.course!.id },
+              activityId: { eq: this._globalStateService.enrollment?.activity!.id },
             },
           },
           {

@@ -2,7 +2,7 @@ fragment EnrollmentParts on Enrollment {
   id
   details
   state
-  course {
+  activity {
     id
     name
   }

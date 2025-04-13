@@ -7,11 +7,11 @@ import {
   MatListItemTitle,
 } from '@angular/material/list';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { CoursePartsFragment } from '@graphql';
+import { ActivityPartsFragment } from '@graphql';
 import { GlobalStateService } from '@services';
 
 @Component({
-  selector: 'app-course-item',
+  selector: 'app-activity-item',
   imports: [
     MatIcon,
     MatIconButton,
@@ -22,24 +22,24 @@ import { GlobalStateService } from '@services';
     MatMenuItem,
     MatMenuTrigger,
   ],
-  templateUrl: './course-item.component.html',
+  templateUrl: './activity-item.component.html',
   styles: ``,
 })
-export class CourseItemComponent {
-  @Input({ required: true }) course!: CoursePartsFragment;
+export class ActivityItemComponent {
+  @Input({ required: true }) activity!: ActivityPartsFragment;
   @Input() menuTrigger!: MatMenuTrigger;
 
-  @Output() update = new EventEmitter<CoursePartsFragment>();
-  @Output() delete = new EventEmitter<CoursePartsFragment>();
+  @Output() update = new EventEmitter<ActivityPartsFragment>();
+  @Output() delete = new EventEmitter<ActivityPartsFragment>();
 
   private readonly _globalStateService = inject(GlobalStateService);
 
   public isActive = computed(() => {
-    return this._globalStateService.course?.id === this.course.id;
+    return this._globalStateService.activity?.id === this.activity.id;
   });
 
-  public selectCourse() {
-    this._globalStateService.course = this.course;
+  public selectActivity() {
+    this._globalStateService.activity = this.activity;
   }
 
   public openMenu(event: MouseEvent) {

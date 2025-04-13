@@ -193,6 +193,7 @@ export class StudentFormDialogComponent {
     const branchId = this._globalStateService.branch!.id;
 
     if (values.picture instanceof File) {
+      // TODO - Get DNi dATE bIRTH FROM FORM
       return this._storage.upload(values.picture).pipe(
         switchMap((picture) =>
           this._createOneStudent.mutate({
@@ -200,6 +201,8 @@ export class StudentFormDialogComponent {
               firstname: values.firstname,
               lastname: values.lastname,
               picture,
+              dni: '',
+              dateBirth: ''
             },
           })
         ),
@@ -215,12 +218,15 @@ export class StudentFormDialogComponent {
       );
     }
 
+    // TODO - Get DNi dATE bIRTH FROM FORM
     return this._createOneStudent
       .mutate({
         student: {
           firstname: values.firstname,
           lastname: values.lastname,
           picture: 'images/image-default.png',
+          dateBirth: '',
+          dni: ''
         },
       })
       .pipe(

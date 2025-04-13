@@ -1,22 +1,22 @@
-fragment CourseParts on Course {
+fragment ActivityParts on Activity {
   id,
   name,
   createdAt
   updatedAt
 }
 
-mutation createOneCourse ($course: CreateCourse!) {
-  createOneCourse (
+mutation createOneActivity ($activity: CreateActivity!) {
+  createOneActivity (
     input: {
-      course: $course
+      activity: $activity
     }
   ) {
-    ...CourseParts
+    ...ActivityParts
   }
 }
 
-query getCoursePage ($offset: Int = 0, $limit: Int = 10, $filter: CourseFilter = {})  {
-  courses (
+query getActivityPage ($offset: Int = 0, $limit: Int = 10, $filter: ActivityFilter = {})  {
+  activities (
     paging: { limit: $limit, offset: $offset },
     filter: $filter
   ) {
@@ -26,24 +26,24 @@ query getCoursePage ($offset: Int = 0, $limit: Int = 10, $filter: CourseFilter =
       hasPreviousPage
     },
     nodes {
-			...CourseParts
+			...ActivityParts
     }
   }
 }
 
-mutation updateOneCourse ($id: ID!, $update: UpdateCourse!) {
-  updateOneCourse (
+mutation updateOneActivity ($id: ID!, $update: UpdateActivity!) {
+  updateOneActivity (
     input: {
       id: $id,
       update: $update
     }
   ) {
-    ...CourseParts
+    ...ActivityParts
   }
 }
 
-mutation deleteOneCourse ($id: ID!) {
-	deleteOneCourse (
+mutation deleteOneActivity ($id: ID!) {
+	deleteOneActivity (
     input: {
       id: $id
     }
