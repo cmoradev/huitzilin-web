@@ -16,20 +16,26 @@ export const DashboardRoutes: Routes = [
     loadComponent: () =>
       import('./enrollments/enrollments.component').then((m) => m.EnrollmentsComponent),
   },
-  {
-    path: 'prices',
-    loadComponent: () =>
-      import('./prices/prices.component').then((m) => m.PricesComponent),
-  },
+
   {
     path: 'cycles',
     loadComponent: () =>
       import('./cycles/cycles.component').then((m) => m.CyclesComponent),
   },
   {
+    path: 'levels',
+    loadComponent: () =>
+      import('./levels/levels.component').then((m) => m.LevelsComponent),
+  },
+  {
     path: 'classrooms',
     loadComponent: () =>
       import('./classrooms/classrooms.component').then((m) => m.ClassroomsComponent),
+  },
+  {
+    path: 'prices',
+    loadComponent: () =>
+      import('./prices/prices.component').then((m) => m.PricesComponent),
   },
   {
     path: 'branches',

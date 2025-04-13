@@ -12,15 +12,15 @@ import {
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {
-  ClassroomPartsFragment,
-  CreateOneClassroomGQL,
-  UpdateOneClassroomGQL,
+  CreateOneLevelGQL,
+  LevelPartsFragment,
+  UpdateOneLevelGQL,
 } from '@graphql';
 import { FormToolsService, GlobalStateService } from '@services';
 import { map } from 'rxjs';
 
 @Component({
-  selector: 'app-classroom-form-dialog',
+  selector: 'app-level-form-dialog',
   imports: [
     MatDialogTitle,
     MatDialogContent,
@@ -31,36 +31,31 @@ import { map } from 'rxjs';
     MatFormFieldModule,
     ReactiveFormsModule,
   ],
-  templateUrl: './classroom-form-dialog.component.html',
+  templateUrl: './level-form-dialog.component.html',
   styles: ``,
 })
-export class ClassroomFormDialogComponent {
+export class LevelFormDialogComponent {
   public readonly formTools = inject(FormToolsService);
 
   public loading = signal(false);
-  public data: ClassroomPartsFragment | null = inject(MAT_DIALOG_DATA);
+  public data: LevelPartsFragment | null = inject(MAT_DIALOG_DATA);
 
   private readonly _globalStateService = inject(GlobalStateService);
-  private readonly _createOneClassroom = inject(CreateOneClassroomGQL);
-  private readonly _updateOneClassroom = inject(UpdateOneClassroomGQL);
+  private readonly _createOneLevel = inject(CreateOneLevelGQL);
+  private readonly _updateOneLevel = inject(UpdateOneLevelGQL);
 
-  private readonly _dialogRef = inject(
-    MatDialogRef<ClassroomFormDialogComponent>
-  );
+  private readonly _dialogRef = inject(MatDialogRef<LevelFormDialogComponent>);
 
   public formGroup = this.formTools.builder.group({
-    name: [
-      '',
-      [Validators.required, Validators.minLength(3), Validators.maxLength(32)],
-    ],
-    color: ['#9660b8', [Validators.required, Validators.maxLength(10)]],
+    name: ['', [Validators.required, Validators.maxLength(32)]],
+    abbreviation: ['', [Validators.required, Validators.maxLength(8)]],
   });
 
   ngOnInit(): void {
     if (!!this.data?.id) {
       this.formGroup.patchValue({
         name: this.data.name,
-        color: this.data.color,
+        abbreviation: this.data.abbreviation,
       });
     }
   }
@@ -73,23 +68,23 @@ export class ClassroomFormDialogComponent {
 
       if (!!this.data?.id) {
         this._update(values).subscribe({
-          next: (classroom) => {
-            this._dialogRef.close(classroom);
+          next: (level) => {
+            this._dialogRef.close(level);
           },
           error: (err) => {
-            console.error('UPDATE CLASSROOM ERROR: ', err);
+            console.error('UPDATE LEVEL ERROR: ', err);
           },
           complete: () => {
             this.loading.set(false);
           },
         });
-      } else if (!!this._globalStateService.branch!.id) {
+      } else if (this._globalStateService.branch?.id) {
         this._save(values).subscribe({
-          next: (classroom) => {
-            this._dialogRef.close(classroom);
+          next: (cycle) => {
+            this._dialogRef.close(cycle);
           },
           error: (err) => {
-            console.error('CREATE CLASSROOM ERROR: ', err);
+            console.error('CREATE LEVEL ERROR: ', err);
           },
           complete: () => {
             this.loading.set(false);
@@ -100,29 +95,29 @@ export class ClassroomFormDialogComponent {
   }
 
   private _update(values: FormValues) {
-    return this._updateOneClassroom
+    return this._updateOneLevel
       .mutate({
         id: this.data!.id,
         update: {
           ...values,
         },
       })
-      .pipe(map((value) => value.data?.updateOneClassroom));
+      .pipe(map((value) => value.data?.updateOneLevel));
   }
 
   private _save(values: FormValues) {
-    return this._createOneClassroom
+    return this._createOneLevel
       .mutate({
-        classroom: {
+        level: {
           ...values,
           branchId: this._globalStateService.branch!.id,
         },
       })
-      .pipe(map((value) => value.data?.createOneClassroom));
+      .pipe(map((value) => value.data?.createOneLevel));
   }
 }
 
 type FormValues = {
-  color: string;
   name: string;
+  abbreviation: string;
 };

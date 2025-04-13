@@ -2222,6 +2222,39 @@ export type DeleteOneFeeMutationVariables = Exact<{
 
 export type DeleteOneFeeMutation = { __typename?: 'Mutation', deleteOneFee: { __typename?: 'FeeDeleteResponse', id?: string | null } };
 
+export type LevelPartsFragment = { __typename?: 'Level', id: string, name: string, abbreviation: string, createdAt: any, updatedAt: any };
+
+export type CreateOneLevelMutationVariables = Exact<{
+  level: CreateLevel;
+}>;
+
+
+export type CreateOneLevelMutation = { __typename?: 'Mutation', createOneLevel: { __typename?: 'Level', id: string, name: string, abbreviation: string, createdAt: any, updatedAt: any } };
+
+export type GetLevelsPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<LevelFilter>;
+}>;
+
+
+export type GetLevelsPageQuery = { __typename?: 'Query', levels: { __typename?: 'LevelConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Level', id: string, name: string, abbreviation: string, createdAt: any, updatedAt: any }> } };
+
+export type UpdateOneLevelMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateLevel;
+}>;
+
+
+export type UpdateOneLevelMutation = { __typename?: 'Mutation', updateOneLevel: { __typename?: 'Level', id: string, name: string, abbreviation: string, createdAt: any, updatedAt: any } };
+
+export type DeleteOneLevelMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneLevelMutation = { __typename?: 'Mutation', deleteOneLevel: { __typename?: 'LevelDeleteResponse', id?: string | null } };
+
 export type StudentPartsFragment = { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, createdAt: any, updatedAt: any };
 
 export type CreateOneStudentMutationVariables = Exact<{
@@ -2375,6 +2408,15 @@ export const FeePartsFragmentDoc = gql`
   name
   price
   frequency
+  createdAt
+  updatedAt
+}
+    `;
+export const LevelPartsFragmentDoc = gql`
+    fragment LevelParts on Level {
+  id
+  name
+  abbreviation
   createdAt
   updatedAt
 }
@@ -3011,6 +3053,85 @@ export const DeleteOneFeeDocument = gql`
   })
   export class DeleteOneFeeGQL extends Apollo.Mutation<DeleteOneFeeMutation, DeleteOneFeeMutationVariables> {
     document = DeleteOneFeeDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneLevelDocument = gql`
+    mutation createOneLevel($level: CreateLevel!) {
+  createOneLevel(input: {level: $level}) {
+    ...LevelParts
+  }
+}
+    ${LevelPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneLevelGQL extends Apollo.Mutation<CreateOneLevelMutation, CreateOneLevelMutationVariables> {
+    document = CreateOneLevelDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetLevelsPageDocument = gql`
+    query getLevelsPage($offset: Int = 0, $limit: Int = 10, $filter: LevelFilter = {}) {
+  levels(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...LevelParts
+    }
+  }
+}
+    ${LevelPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetLevelsPageGQL extends Apollo.Query<GetLevelsPageQuery, GetLevelsPageQueryVariables> {
+    document = GetLevelsPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneLevelDocument = gql`
+    mutation updateOneLevel($id: ID!, $update: UpdateLevel!) {
+  updateOneLevel(input: {id: $id, update: $update}) {
+    ...LevelParts
+  }
+}
+    ${LevelPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneLevelGQL extends Apollo.Mutation<UpdateOneLevelMutation, UpdateOneLevelMutationVariables> {
+    document = UpdateOneLevelDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneLevelDocument = gql`
+    mutation deleteOneLevel($id: ID!) {
+  deleteOneLevel(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneLevelGQL extends Apollo.Mutation<DeleteOneLevelMutation, DeleteOneLevelMutationVariables> {
+    document = DeleteOneLevelDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

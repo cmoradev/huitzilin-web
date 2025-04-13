@@ -24,21 +24,27 @@ export const navItems: RouteItem[] = [
     section: NavigationEnum.OPERATIONS,
   },
   {
-    displayName: 'Precios',
-    iconName: 'cash',
-    route: '/prices',
-    section: NavigationEnum.ADMINISTRATION,
-  },
-  {
     displayName: 'Ciclos',
-    iconName: 'timeline-text',
+    iconName: 'calendar-blank-outline',
     route: '/cycles',
     section: NavigationEnum.ADMINISTRATION,
   },
   {
+    displayName: 'Niveles',
+    iconName: 'magic-staff',
+    route: '/levels',
+    section: NavigationEnum.ADMINISTRATION,
+  },
+  {
     displayName: 'Aulas',
-    iconName: 'billboard',
+    iconName: 'human-male-board',
     route: '/classrooms',
+    section: NavigationEnum.ADMINISTRATION,
+  },
+  {
+    displayName: 'Precios',
+    iconName: 'currency-usd',
+    route: '/prices',
     section: NavigationEnum.ADMINISTRATION,
   },
   {

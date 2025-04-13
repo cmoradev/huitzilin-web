@@ -9,14 +9,8 @@ import {
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
-import {
-  MatError,
-  MatFormField,
-  MatFormFieldModule,
-  MatHint,
-  MatLabel,
-} from '@angular/material/form-field';
-import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   CreateOneCycleGQL,
@@ -25,7 +19,6 @@ import {
 } from '@graphql';
 import { FormToolsService, GlobalStateService } from '@services';
 import { map } from 'rxjs';
-import { validate } from 'graphql';
 
 @Component({
   selector: 'app-cycle-form-dialog',
@@ -36,7 +29,7 @@ import { validate } from 'graphql';
     MatDialogClose,
     MatButton,
     MatInputModule,
-    MatFormFieldModule, 
+    MatFormFieldModule,
     MatDatepickerModule,
     ReactiveFormsModule,
   ],

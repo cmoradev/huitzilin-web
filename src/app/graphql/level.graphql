@@ -1,0 +1,54 @@
+fragment LevelParts on Level {
+  id,
+  name,
+  abbreviation,
+  createdAt
+  updatedAt
+}
+
+mutation createOneLevel ($level: CreateLevel!) {
+  createOneLevel (
+    input: {
+      level: $level
+    }
+  ) {
+    ...LevelParts
+  }
+}
+
+query getLevelsPage ($offset: Int = 0, $limit: Int = 10, $filter: LevelFilter = {})  {
+  levels (
+    paging: { limit: $limit, offset: $offset },
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...LevelParts
+    }
+  }
+}
+
+mutation updateOneLevel ($id: ID!, $update: UpdateLevel!) {
+  updateOneLevel (
+    input: {
+      id: $id,
+      update: $update
+    }
+  ) {
+    ...LevelParts
+  }
+}
+
+mutation deleteOneLevel ($id: ID!) {
+	deleteOneLevel (
+    input: {
+      id: $id
+    }
+  ) {
+    id
+  }
+}

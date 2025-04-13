@@ -1,42 +1,32 @@
-import {
-  AfterViewInit,
-  Component,
-  inject,
-  signal,
-  ViewChild,
-} from '@angular/core';
+import { Component, inject, signal, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatIconButton } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { GetLevelsPageGQL, LevelFilter, LevelPartsFragment } from '@graphql';
+import { debounceTime, merge, startWith } from 'rxjs';
+import { LevelFormDialogComponent } from './level-form-dialog/level-form-dialog.component';
+import { LevelDeleteDialogComponent } from './level-delete-dialog/level-delete-dialog.component';
+import { NgClass } from '@angular/common';
 import {
   MatCard,
   MatCardContent,
   MatCardHeader,
   MatCardTitle,
 } from '@angular/material/card';
-import { MatDialog } from '@angular/material/dialog';
 import {
   MatFormField,
   MatLabel,
   MatPrefix,
 } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
-import { AvatarComponent } from '@components/avatar/avatar.component';
-import {
-  BranchFilter,
-  BranchPartsFragment,
-  GetCompaniesPageGQL,
-} from '@graphql';
-import { debounceTime, merge, startWith } from 'rxjs';
-import { BranchDeleteDialogComponent } from './branch-delete-dialog/branch-delete-dialog.component';
-import { BranchFormDialogComponent } from './branch-form-dialog/branch-form-dialog.component';
-import { NgClass } from '@angular/common';
+import { GlobalStateService } from '@services';
 
 @Component({
-  selector: 'app-business',
+  selector: 'app-levels',
   imports: [
     NgClass,
     MatCard,
@@ -52,27 +42,31 @@ import { NgClass } from '@angular/common';
     MatTooltip,
     MatTableModule,
     MatPaginator,
-    AvatarComponent,
     ReactiveFormsModule,
   ],
-  templateUrl: './branches.component.html',
+  templateUrl: './levels.component.html',
   styles: ``,
 })
-export class BranchsComponent implements AfterViewInit {
+export class LevelsComponent {
   @ViewChild('paginator') public paginator!: MatPaginator;
   public searchControl = new FormControl('');
 
   public displayedColumns: string[] = ['name', 'actions'];
-  public dataSource = new MatTableDataSource<BranchPartsFragment>([]);
+  public dataSource = new MatTableDataSource<LevelPartsFragment>([]);
 
   public loading = signal(false);
   public totalCount = signal(0);
 
   private readonly dialog = inject(MatDialog);
-  private readonly _companiesPageGQL = inject(GetCompaniesPageGQL);
+  private readonly _levelsPageGQL = inject(GetLevelsPageGQL);
+  private readonly _globalStateService = inject(GlobalStateService);
 
   ngAfterViewInit(): void {
-    merge(this.paginator.page, this.searchControl.valueChanges)
+    merge(
+      this.paginator.page,
+      this.searchControl.valueChanges,
+      this._globalStateService.branch$,
+    )
       .pipe(debounceTime(300), startWith({}))
       .subscribe({
         next: () => {
@@ -81,10 +75,12 @@ export class BranchsComponent implements AfterViewInit {
       });
   }
 
-  public openFormDialog(branch: BranchPartsFragment | undefined = undefined): void {
-    const $dialog = this.dialog.open(BranchFormDialogComponent, {
+  public openFormDialog(
+    level: LevelPartsFragment | undefined = undefined
+  ): void {
+    const $dialog = this.dialog.open(LevelFormDialogComponent, {
       width: '30rem',
-      data: branch,
+      data: level,
     });
 
     $dialog.afterClosed().subscribe({
@@ -94,9 +90,9 @@ export class BranchsComponent implements AfterViewInit {
     });
   }
 
-  public openDeleteDialog(branch: BranchPartsFragment): void {
-    const $dialog = this.dialog.open(BranchDeleteDialogComponent, {
-      data: branch,
+  public openDeleteDialog(level: LevelPartsFragment): void {
+    const $dialog = this.dialog.open(LevelDeleteDialogComponent, {
+      data: level,
       width: '30rem',
     });
 
@@ -111,11 +107,17 @@ export class BranchsComponent implements AfterViewInit {
     const limit: number = this.paginator.pageSize;
     const offset: number = this.paginator.pageIndex * limit;
 
-    const filter: BranchFilter = {
-      name: { iLike: `%${this.searchControl.value}%` },
+    const filter: LevelFilter = {
+      branchId: { eq: this._globalStateService.branch!.id },
+      or: [
+        {
+          name: { iLike: `%${this.searchControl.value}%` },
+          abbreviation: { iLike: `%${this.searchControl.value}%` },
+        },
+      ],
     };
 
-    this._companiesPageGQL
+    this._levelsPageGQL
       .watch(
         { limit, offset, filter },
         {
@@ -126,7 +128,7 @@ export class BranchsComponent implements AfterViewInit {
       )
       .valueChanges.subscribe({
         next: ({ data, loading }) => {
-          const { nodes, totalCount } = data.branches;
+          const { nodes, totalCount } = data.levels;
 
           this.dataSource.data = nodes;
 
