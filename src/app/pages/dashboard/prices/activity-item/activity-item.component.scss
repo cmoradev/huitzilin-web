@@ -1,0 +1,16 @@
+.item {
+  gap: 0.25rem;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--mat-sys-surface-container);
+  }
+
+  &.active {
+    background-color: var(--mat-sys-primary-fixed);
+  }
+}

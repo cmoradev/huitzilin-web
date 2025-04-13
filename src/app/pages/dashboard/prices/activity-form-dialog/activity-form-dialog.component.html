@@ -1,4 +1,6 @@
-<h2 mat-dialog-title>{{ !!data?.id ? "Actualizar" : "Crear" }} disciplina/paquete</h2>
+<h2 mat-dialog-title>
+  {{ !!data?.id ? "Actualizar" : "Crear" }} disciplina/paquete
+</h2>
 <mat-dialog-content>
   <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
     <div class="flex flex-col gap-3">
@@ -7,17 +9,47 @@
       </mat-checkbox>
 
       <mat-form-field>
-        <mat-label>Nombre del {{ formGroup.get('isPackage')?.value ? 'paquete' : 'disciplina' }}</mat-label>
+        <mat-label
+          >Nombre del
+          {{
+            formGroup.get("isPackage")?.value ? "paquete" : "disciplina"
+          }}</mat-label
+        >
         <input
           matInput
-          [placeholder]="formGroup.get('isPackage')?.value ? 'Ej. Paquete 3' : 'Ej. Taekwondo'"
+          [placeholder]="
+            formGroup.get('isPackage')?.value
+              ? 'Ej. Paquete 3'
+              : 'Ej. Taekwondo'
+          "
           formControlName="name"
         />
-        <mat-hint>Ingrese el nombre del {{ formGroup.get('isPackage')?.value ? 'paquete' : 'disciplina' }}</mat-hint>
+        <mat-hint
+          >Ingrese el nombre del
+          {{
+            formGroup.get("isPackage")?.value ? "paquete" : "disciplina"
+          }}</mat-hint
+        >
         <mat-error>
           {{ formTools.checkForErrorsIn(formGroup.get("name")) }}
         </mat-error>
       </mat-form-field>
+
+      @if (formGroup.get("isPackage")?.value) {
+      <mat-form-field>
+        <mat-label>Cantidad de disciplinas</mat-label>
+        <input
+          matInput
+          type="number"
+          placeholder="Ej. 3"
+          formControlName="quantity"
+        />
+        <mat-hint>Ingrese la cantidad de disciplina permitidas</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("quantity")) }}
+        </mat-error>
+      </mat-form-field>
+      }
     </div>
   </form>
 </mat-dialog-content>

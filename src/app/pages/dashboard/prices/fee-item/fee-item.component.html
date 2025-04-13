@@ -1,19 +1,15 @@
-<mat-list-item>
-  <div matListItemTitle>{{ fee.name }}</div>
-  <div matListItemLine class="text-xs" ng>
-    {{ fee.frequency | frequency }} | {{ fee.price | currency }}
+<div class="item">
+  <div>
+    <p class="font-medium">{{ fee.name }}</p>
+    <p class="text-xs">
+      {{ fee.frequency | frequency }} | {{ fee.price | currency }}
+    </p>
   </div>
-  <div matListItemMeta>
-    <button
-      class="mt-3"
-      mat-icon-button
-      (click)="openMenu($event)"
-      [matMenuTriggerFor]="menu"
-    >
-      <mat-icon svgIcon="dots-vertical"></mat-icon>
-    </button>
-  </div>
-</mat-list-item>
+  <span class="flex-1"></span>
+  <button mat-icon-button (click)="openMenu($event)" [matMenuTriggerFor]="menu">
+    <mat-icon svgIcon="dots-vertical"></mat-icon>
+  </button>
+</div>
 
 <mat-menu #menu="matMenu">
   <button mat-menu-item (click)="update.emit(fee)">

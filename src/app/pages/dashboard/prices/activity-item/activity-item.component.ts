@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import { Component, computed, EventEmitter, inject, Input, Output } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -6,24 +7,20 @@ import {
   MatListItemMeta,
   MatListItemTitle,
 } from '@angular/material/list';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatMenu, MatMenuItem, MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { ActivityPartsFragment } from '@graphql';
 import { GlobalStateService } from '@services';
 
 @Component({
   selector: 'app-activity-item',
   imports: [
+    NgClass,
     MatIcon,
     MatIconButton,
-    MatListItem,
-    MatListItemTitle,
-    MatListItemMeta,
-    MatMenu,
-    MatMenuItem,
-    MatMenuTrigger,
+    MatMenuModule,
   ],
   templateUrl: './activity-item.component.html',
-  styles: ``,
+  styleUrl: `./activity-item.component.scss`,
 })
 export class ActivityItemComponent {
   @Input({ required: true }) activity!: ActivityPartsFragment;
