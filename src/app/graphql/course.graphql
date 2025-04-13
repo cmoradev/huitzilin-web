@@ -1,53 +1,51 @@
 fragment ActivityParts on Activity {
-  id,
-  name,
+  id
+  name
+  quantity
+  isPackage
+  order
   createdAt
   updatedAt
 }
 
-mutation createOneActivity ($activity: CreateActivity!) {
-  createOneActivity (
-    input: {
-      activity: $activity
-    }
-  ) {
+mutation createOneActivity($activity: CreateActivity!) {
+  createOneActivity(input: { activity: $activity }) {
     ...ActivityParts
   }
 }
 
-query getActivityPage ($offset: Int = 0, $limit: Int = 10, $filter: ActivityFilter = {})  {
-  activities (
-    paging: { limit: $limit, offset: $offset },
+query getActivityPage(
+  $offset: Int = 0
+  $limit: Int = 10
+  $filter: ActivityFilter = {}
+) {
+  activities(
+    paging: { limit: $limit, offset: $offset }
+    sorting: [
+      { field: order, direction: ASC }
+      { field: createdAt, direction: DESC }
+    ]
     filter: $filter
   ) {
     totalCount
     pageInfo {
-      hasNextPage,
+      hasNextPage
       hasPreviousPage
-    },
+    }
     nodes {
-			...ActivityParts
+      ...ActivityParts
     }
   }
 }
 
-mutation updateOneActivity ($id: ID!, $update: UpdateActivity!) {
-  updateOneActivity (
-    input: {
-      id: $id,
-      update: $update
-    }
-  ) {
+mutation updateOneActivity($id: ID!, $update: UpdateActivity!) {
+  updateOneActivity(input: { id: $id, update: $update }) {
     ...ActivityParts
   }
 }
 
-mutation deleteOneActivity ($id: ID!) {
-	deleteOneActivity (
-    input: {
-      id: $id
-    }
-  ) {
+mutation deleteOneActivity($id: ID!) {
+  deleteOneActivity(input: { id: $id }) {
     id
   }
 }

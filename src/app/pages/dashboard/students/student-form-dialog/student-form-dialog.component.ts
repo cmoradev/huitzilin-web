@@ -202,7 +202,8 @@ export class StudentFormDialogComponent {
               lastname: values.lastname,
               picture,
               dni: '',
-              dateBirth: ''
+              dateBirth: '',
+              levelId: ''
             },
           })
         ),
@@ -226,7 +227,8 @@ export class StudentFormDialogComponent {
           lastname: values.lastname,
           picture: 'images/image-default.png',
           dateBirth: '',
-          dni: ''
+          dni: '',
+          levelId: ''
         },
       })
       .pipe(

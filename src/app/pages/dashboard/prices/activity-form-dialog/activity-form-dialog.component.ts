@@ -1,21 +1,24 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
+  MatDialogModule,
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
 import {
   MatError,
   MatFormField,
+  MatFormFieldModule,
   MatHint,
   MatLabel,
 } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
+import { MatInput, MatInputModule } from '@angular/material/input';
 import {
   ActivityPartsFragment,
   CreateOneActivityGQL,
@@ -27,16 +30,12 @@ import { map } from 'rxjs';
 @Component({
   selector: 'app-activity-form-dialog',
   imports: [
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
-    MatButton,
+    MatDialogModule,
+    MatButtonModule,
     MatFormField,
-    MatInput,
-    MatHint,
-    MatError,
-    MatLabel,
+    MatFormFieldModule,
+    MatCheckboxModule,
+    MatInputModule,
     ReactiveFormsModule,
   ],
   templateUrl: './activity-form-dialog.component.html',
@@ -53,18 +52,24 @@ export class ActivityFormDialogComponent implements OnInit {
       '',
       [Validators.required, Validators.minLength(3), Validators.maxLength(32)],
     ],
+    quantity: [0, [Validators.required]],
+    isPackage: [false],
   });
 
   private readonly _globalStateService = inject(GlobalStateService);
   private readonly _createOneActivity = inject(CreateOneActivityGQL);
   private readonly _updateOneActivity = inject(UpdateOneActivityGQL);
 
-  private readonly _dialogRef = inject(MatDialogRef<ActivityFormDialogComponent>);
+  private readonly _dialogRef = inject(
+    MatDialogRef<ActivityFormDialogComponent>
+  );
 
   ngOnInit(): void {
     if (!!this.data?.id) {
       this.formGroup.patchValue({
         name: this.data.name,
+        quantity: this.data.quantity,
+        isPackage: this.data.isPackage,
       });
     }
   }
@@ -118,7 +123,6 @@ export class ActivityFormDialogComponent implements OnInit {
         activity: {
           ...values,
           branchId: this._globalStateService.branch!.id,
-          isPackage: false,
           order: 1,
         },
       })
@@ -128,4 +132,6 @@ export class ActivityFormDialogComponent implements OnInit {
 
 type FormValues = {
   name: string;
+  quantity: number;
+  isPackage: boolean;
 };

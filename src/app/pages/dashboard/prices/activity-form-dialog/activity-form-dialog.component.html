@@ -1,15 +1,19 @@
-<h2 mat-dialog-title>{{ !!data?.id ? "Actualizar" : "Crear" }} curso</h2>
+<h2 mat-dialog-title>{{ !!data?.id ? "Actualizar" : "Crear" }} disciplina/paquete</h2>
 <mat-dialog-content>
   <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
     <div class="flex flex-col gap-3">
+      <mat-checkbox color="primary" formControlName="isPackage">
+        ¿Es un paquete de disciplinas?
+      </mat-checkbox>
+
       <mat-form-field>
-        <mat-label>Nombre del curso</mat-label>
+        <mat-label>Nombre del {{ formGroup.get('isPackage')?.value ? 'paquete' : 'disciplina' }}</mat-label>
         <input
           matInput
-          placeholder="Ej: Introducción a la programación"
+          [placeholder]="formGroup.get('isPackage')?.value ? 'Ej. Paquete 3' : 'Ej. Taekwondo'"
           formControlName="name"
         />
-        <mat-hint>Ingrese el nombre del curso</mat-hint>
+        <mat-hint>Ingrese el nombre del {{ formGroup.get('isPackage')?.value ? 'paquete' : 'disciplina' }}</mat-hint>
         <mat-error>
           {{ formTools.checkForErrorsIn(formGroup.get("name")) }}
         </mat-error>

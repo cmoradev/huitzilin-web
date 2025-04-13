@@ -95,6 +95,7 @@ export type Activity = {
   isPackage: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   order: Scalars['Float']['output'];
+  quantity: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
 };
@@ -118,6 +119,7 @@ export type ActivityDeleteResponse = {
   isPackage?: Maybe<Scalars['Boolean']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   order?: Maybe<Scalars['Float']['output']>;
+  quantity?: Maybe<Scalars['Float']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   version?: Maybe<Scalars['Int']['output']>;
 };
@@ -286,6 +288,7 @@ export type CreateActivity = {
   isPackage: Scalars['Boolean']['input'];
   name: Scalars['String']['input'];
   order: Scalars['Float']['input'];
+  quantity: Scalars['Float']['input'];
 };
 
 export type CreateBranch = {
@@ -422,6 +425,7 @@ export type CreateStudent = {
   dni: Scalars['String']['input'];
   firstname: Scalars['String']['input'];
   lastname: Scalars['String']['input'];
+  levelId: Scalars['String']['input'];
   picture: Scalars['String']['input'];
   userId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1550,9 +1554,11 @@ export type Student = {
   fullname: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   lastname: Scalars['String']['output'];
+  level: Level;
+  levelId: Scalars['String']['output'];
   picture: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
-  userId: Scalars['String']['output'];
+  userId?: Maybe<Scalars['String']['output']>;
   version: Scalars['Int']['output'];
 };
 
@@ -1583,6 +1589,7 @@ export type StudentDeleteResponse = {
   fullname?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   lastname?: Maybe<Scalars['String']['output']>;
+  levelId?: Maybe<Scalars['String']['output']>;
   picture?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   userId?: Maybe<Scalars['String']['output']>;
@@ -1594,10 +1601,10 @@ export type StudentFilter = {
   branchs?: InputMaybe<StudentFilterBranchFilter>;
   code?: InputMaybe<StringFieldComparison>;
   createdAt?: InputMaybe<DateFieldComparison>;
-  dateBirth?: InputMaybe<StringFieldComparison>;
   dni?: InputMaybe<StringFieldComparison>;
   fullname?: InputMaybe<StringFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
+  levelId?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<StudentFilter>>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
@@ -1620,10 +1627,10 @@ export type StudentSort = {
 export enum StudentSortFields {
   Code = 'code',
   CreatedAt = 'createdAt',
-  DateBirth = 'dateBirth',
   Dni = 'dni',
   Fullname = 'fullname',
   Id = 'id',
+  LevelId = 'levelId',
   UpdatedAt = 'updatedAt'
 }
 
@@ -1759,6 +1766,7 @@ export type UpdateActivity = {
   isPackage?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   order?: InputMaybe<Scalars['Float']['input']>;
+  quantity?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type UpdateBranch = {
@@ -1922,6 +1930,7 @@ export type UpdateStudent = {
   dni?: InputMaybe<Scalars['String']['input']>;
   firstname?: InputMaybe<Scalars['String']['input']>;
   lastname?: InputMaybe<Scalars['String']['input']>;
+  levelId?: InputMaybe<Scalars['String']['input']>;
   picture?: InputMaybe<Scalars['String']['input']>;
   userId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -2050,14 +2059,14 @@ export type DeleteOneBranchMutationVariables = Exact<{
 
 export type DeleteOneBranchMutation = { __typename?: 'Mutation', deleteOneBranch: { __typename?: 'BranchDeleteResponse', id?: string | null } };
 
-export type ActivityPartsFragment = { __typename?: 'Activity', id: string, name: string, createdAt: any, updatedAt: any };
+export type ActivityPartsFragment = { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, order: number, createdAt: any, updatedAt: any };
 
 export type CreateOneActivityMutationVariables = Exact<{
   activity: CreateActivity;
 }>;
 
 
-export type CreateOneActivityMutation = { __typename?: 'Mutation', createOneActivity: { __typename?: 'Activity', id: string, name: string, createdAt: any, updatedAt: any } };
+export type CreateOneActivityMutation = { __typename?: 'Mutation', createOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, order: number, createdAt: any, updatedAt: any } };
 
 export type GetActivityPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2066,7 +2075,7 @@ export type GetActivityPageQueryVariables = Exact<{
 }>;
 
 
-export type GetActivityPageQuery = { __typename?: 'Query', activities: { __typename?: 'ActivityConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Activity', id: string, name: string, createdAt: any, updatedAt: any }> } };
+export type GetActivityPageQuery = { __typename?: 'Query', activities: { __typename?: 'ActivityConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, order: number, createdAt: any, updatedAt: any }> } };
 
 export type UpdateOneActivityMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2074,7 +2083,7 @@ export type UpdateOneActivityMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneActivityMutation = { __typename?: 'Mutation', updateOneActivity: { __typename?: 'Activity', id: string, name: string, createdAt: any, updatedAt: any } };
+export type UpdateOneActivityMutation = { __typename?: 'Mutation', updateOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, order: number, createdAt: any, updatedAt: any } };
 
 export type DeleteOneActivityMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2346,6 +2355,9 @@ export const ActivityPartsFragmentDoc = gql`
     fragment ActivityParts on Activity {
   id
   name
+  quantity
+  isPackage
+  order
   createdAt
   updatedAt
 }
@@ -2665,7 +2677,11 @@ export const CreateOneActivityDocument = gql`
   }
 export const GetActivityPageDocument = gql`
     query getActivityPage($offset: Int = 0, $limit: Int = 10, $filter: ActivityFilter = {}) {
-  activities(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+  activities(
+    paging: {limit: $limit, offset: $offset}
+    sorting: [{field: order, direction: ASC}, {field: createdAt, direction: DESC}]
+    filter: $filter
+  ) {
     totalCount
     pageInfo {
       hasNextPage
