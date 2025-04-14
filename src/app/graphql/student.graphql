@@ -102,3 +102,25 @@ mutation removeBranchsFromStudent ($studentId: ID!, $branchIds: [ID!]!) {
     ...StudentParts
   }
 }
+
+mutation addLevelsToStudent ($studentId: ID!, $levelId: ID!) {
+  addLevelsToStudent (
+    input: {
+      id: $studentId,
+      relationIds: [$levelId]
+    }
+  ) {
+    ...StudentParts
+  }
+}
+
+mutation removeLevelsFromStudent ($studentId: ID!, $levelId: ID!) {
+  removeLevelsFromStudent (
+    input: {
+      id: $studentId,
+     relationIds: [$levelId]
+    }
+  ) {
+    ...StudentParts
+  }
+}

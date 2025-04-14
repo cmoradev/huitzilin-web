@@ -2434,6 +2434,22 @@ export type RemoveBranchsFromStudentMutationVariables = Exact<{
 
 export type RemoveBranchsFromStudentMutation = { __typename?: 'Mutation', removeBranchsFromStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
 
+export type AddLevelsToStudentMutationVariables = Exact<{
+  studentId: Scalars['ID']['input'];
+  levelId: Scalars['ID']['input'];
+}>;
+
+
+export type AddLevelsToStudentMutation = { __typename?: 'Mutation', addLevelsToStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
+
+export type RemoveLevelsFromStudentMutationVariables = Exact<{
+  studentId: Scalars['ID']['input'];
+  levelId: Scalars['ID']['input'];
+}>;
+
+
+export type RemoveLevelsFromStudentMutation = { __typename?: 'Mutation', removeLevelsFromStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
+
 export const SessionPartsFragmentDoc = gql`
     fragment SessionParts on Session {
   id
@@ -3434,6 +3450,42 @@ export const RemoveBranchsFromStudentDocument = gql`
   })
   export class RemoveBranchsFromStudentGQL extends Apollo.Mutation<RemoveBranchsFromStudentMutation, RemoveBranchsFromStudentMutationVariables> {
     document = RemoveBranchsFromStudentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AddLevelsToStudentDocument = gql`
+    mutation addLevelsToStudent($studentId: ID!, $levelId: ID!) {
+  addLevelsToStudent(input: {id: $studentId, relationIds: [$levelId]}) {
+    ...StudentParts
+  }
+}
+    ${StudentPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddLevelsToStudentGQL extends Apollo.Mutation<AddLevelsToStudentMutation, AddLevelsToStudentMutationVariables> {
+    document = AddLevelsToStudentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const RemoveLevelsFromStudentDocument = gql`
+    mutation removeLevelsFromStudent($studentId: ID!, $levelId: ID!) {
+  removeLevelsFromStudent(input: {id: $studentId, relationIds: [$levelId]}) {
+    ...StudentParts
+  }
+}
+    ${StudentPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RemoveLevelsFromStudentGQL extends Apollo.Mutation<RemoveLevelsFromStudentMutation, RemoveLevelsFromStudentMutationVariables> {
+    document = RemoveLevelsFromStudentDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

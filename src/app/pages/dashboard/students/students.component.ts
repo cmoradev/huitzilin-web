@@ -59,7 +59,7 @@ export class StudentsComponent {
   @ViewChild('paginator') public paginator!: MatPaginator;
   public searchControl = new FormControl('');
 
-  public displayedColumns: string[] = ['name', 'actions'];
+  public displayedColumns: string[] = ['name', 'details', 'actions'];
   public dataSource = new MatTableDataSource<StudentPartsFragment>([]);
 
   public loading = signal(false);
@@ -136,7 +136,14 @@ export class StudentsComponent {
           next: ({ data, loading }) => {
             const { nodes, totalCount } = data.students;
 
-            this.dataSource.data = nodes;
+            this.dataSource.data = nodes.map((node) => {
+              const level = node.levels.find((level) => level?.id);
+
+              return {
+                ...node,
+                level,
+              };
+            });
 
             this.loading.set(loading);
             this.totalCount.set(totalCount);

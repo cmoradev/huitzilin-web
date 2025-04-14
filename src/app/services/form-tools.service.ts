@@ -81,16 +81,17 @@ export class FormToolsService {
         .fetch(
           {
             filter: {
-              or: [{ code: { eq: control.value } }],
+              or: [
+                { code: { eq: control.value } },
+                { dni: { eq: control.value } },
+              ],
             },
           },
           { fetchPolicy: 'network-only' }
         )
         .pipe(
           map((resp) => {
-            const student = resp.data.students.nodes.some((value) =>
-              value.code.includes(control.value)
-            );
+            const student = resp.data.students.nodes.find((value) => value.id);
 
             return student ? null : { studentNotFound: true };
           })
@@ -103,16 +104,14 @@ export class FormToolsService {
         .fetch(
           {
             filter: {
-              or: [{ dni: { eq: control.value } }],
+              dni: { eq: control.value },
             },
           },
           { fetchPolicy: 'network-only' }
         )
         .pipe(
           map((resp) => {
-            const student = resp.data.students.nodes.some((value) =>
-              value.code.includes(control.value)
-            );
+            const student = resp.data.students.nodes.find((value) => value?.id);
 
             return student ? { studentNotFound: true } : null;
           })
