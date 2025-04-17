@@ -3,6 +3,7 @@ fragment ActivityParts on Activity {
   name
   quantity
   isPackage
+  inPackage
   order
   createdAt
   updatedAt

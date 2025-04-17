@@ -1,31 +1,21 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButton, MatButtonModule } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
   MatDialogModule,
   MatDialogRef,
-  MatDialogTitle,
 } from '@angular/material/dialog';
-import {
-  MatError,
-  MatFormField,
-  MatFormFieldModule,
-  MatHint,
-  MatLabel,
-} from '@angular/material/form-field';
-import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import {
   ActivityPartsFragment,
   CreateOneActivityGQL,
   UpdateOneActivityGQL,
 } from '@graphql';
 import { FormToolsService, GlobalStateService } from '@services';
-import { map } from 'rxjs';
+import { map, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-activity-form-dialog',
@@ -54,6 +44,7 @@ export class ActivityFormDialogComponent implements OnInit {
     ],
     quantity: [0, [Validators.required]],
     isPackage: [false],
+    inPackage: [false],
   });
 
   private readonly _globalStateService = inject(GlobalStateService);
@@ -65,11 +56,22 @@ export class ActivityFormDialogComponent implements OnInit {
   );
 
   ngOnInit(): void {
+    this.formGroup
+      .get('isPackage')
+      ?.valueChanges.pipe(startWith(false))
+      .subscribe((value) => {
+        if (value) {
+          this.formGroup.get('inPackage')?.setValue(false);
+          this.formGroup.get('inPackage')?.disable();
+        }
+      });
+
     if (!!this.data?.id) {
       this.formGroup.patchValue({
         name: this.data.name,
         quantity: this.data.quantity,
         isPackage: this.data.isPackage,
+        inPackage: this.data.inPackage,
       });
     }
   }
@@ -134,4 +136,5 @@ type FormValues = {
   name: string;
   quantity: number;
   isPackage: boolean;
+  inPackage: boolean;
 };

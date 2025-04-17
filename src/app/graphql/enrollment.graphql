@@ -2,9 +2,13 @@ fragment EnrollmentParts on Enrollment {
   id
   details
   state
+  isPackage
+  inPackage
   activity {
     id
     name
+    isPackage
+    inPackage
   }
   cycle {
     id

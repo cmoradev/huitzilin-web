@@ -213,6 +213,8 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
           details: values.details,
           state: values.state,
           order: 1,
+          isPackage: values.activity.isPackage,
+          inPackage: values.activity.inPackage,
           parentId: null
         },
       })
