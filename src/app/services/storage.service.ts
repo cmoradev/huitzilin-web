@@ -49,6 +49,7 @@ export class StorageService {
     const formData = new FormData();
 
     formData.append('file', file);
+    formData.append('folder', 'file');
 
     return this.http
       .post<Stored>(`${this.storageUri}/upload`, formData)

@@ -104,7 +104,7 @@ export class CyclesComponent {
   }
 
   public refresh() {
-    if (this._globalStateService.branch!.id) {
+    if (this._globalStateService.branch?.id) {
       const limit: number = this.paginator.pageSize;
       const offset: number = this.paginator.pageIndex * limit;
 
