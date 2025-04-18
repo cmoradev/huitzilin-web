@@ -975,6 +975,7 @@ export type Mutation = {
   restoreOneVideo: Tutor;
   setBranchsOnStudent: Student;
   setOrderActivities: UpdateCount;
+  setOrderEnrollments: UpdateCount;
   signIn: Session;
   signUp: Session;
   updateManyActivities: UpdateManyResponse;
@@ -1167,6 +1168,11 @@ export type MutationSetBranchsOnStudentArgs = {
 
 export type MutationSetOrderActivitiesArgs = {
   input: Array<SetOrderActivity>;
+};
+
+
+export type MutationSetOrderEnrollmentsArgs = {
+  input: Array<SetOrderEnrollment>;
 };
 
 
@@ -1559,6 +1565,11 @@ export type SetBranchsOnStudentInput = {
 
 export type SetOrderActivity = {
   activityId: Scalars['String']['input'];
+  order: Scalars['Float']['input'];
+};
+
+export type SetOrderEnrollment = {
+  enrollmentId: Scalars['String']['input'];
   order: Scalars['Float']['input'];
 };
 
@@ -2276,6 +2287,13 @@ export type DeleteOneEnrollmentMutationVariables = Exact<{
 
 
 export type DeleteOneEnrollmentMutation = { __typename?: 'Mutation', deleteOneEnrollment: { __typename?: 'EnrollmentDeleteResponse', id?: string | null } };
+
+export type SetOrderEnrollmentsMutationVariables = Exact<{
+  payload: Array<SetOrderEnrollment> | SetOrderEnrollment;
+}>;
+
+
+export type SetOrderEnrollmentsMutation = { __typename?: 'Mutation', setOrderEnrollments: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
 export type FeePartsFragment = { __typename?: 'Fee', id: string, name: string, price: number, frequency: Frequency, createdAt: any, updatedAt: any };
 
@@ -3054,7 +3072,11 @@ export const CreateOneEnrollmentDocument = gql`
   }
 export const GetEnrollmentsPageDocument = gql`
     query getEnrollmentsPage($offset: Int = 0, $limit: Int = 10, $filter: EnrollmentFilter = {}) {
-  enrollments(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+  enrollments(
+    paging: {limit: $limit, offset: $offset}
+    filter: $filter
+    sorting: [{field: order, direction: ASC}, {field: createdAt, direction: DESC}]
+  ) {
     totalCount
     pageInfo {
       hasNextPage
@@ -3108,6 +3130,24 @@ export const DeleteOneEnrollmentDocument = gql`
   })
   export class DeleteOneEnrollmentGQL extends Apollo.Mutation<DeleteOneEnrollmentMutation, DeleteOneEnrollmentMutationVariables> {
     document = DeleteOneEnrollmentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const SetOrderEnrollmentsDocument = gql`
+    mutation setOrderEnrollments($payload: [SetOrderEnrollment!]!) {
+  setOrderEnrollments(input: $payload) {
+    updatedCount
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class SetOrderEnrollmentsGQL extends Apollo.Mutation<SetOrderEnrollmentsMutation, SetOrderEnrollmentsMutationVariables> {
+    document = SetOrderEnrollmentsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

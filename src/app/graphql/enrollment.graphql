@@ -45,7 +45,14 @@ query getEnrollmentsPage(
   $limit: Int = 10
   $filter: EnrollmentFilter = {}
 ) {
-  enrollments(paging: { limit: $limit, offset: $offset }, filter: $filter) {
+  enrollments(
+    paging: { limit: $limit, offset: $offset }, 
+    filter: $filter,
+    sorting: [
+      { field: order, direction: ASC }
+      { field: createdAt, direction: DESC }
+    ]
+    ) {
     totalCount
     pageInfo {
       hasNextPage
@@ -66,5 +73,11 @@ mutation updateOneEnrollment($id: ID!, $update: UpdateEnrollment!) {
 mutation deleteOneEnrollment($id: ID!) {
   deleteOneEnrollment(input: { id: $id }) {
     id
+  }
+}
+
+mutation setOrderEnrollments($payload: [SetOrderEnrollment!]!) {
+  setOrderEnrollments(input: $payload) {
+    updatedCount
   }
 }

@@ -39,16 +39,18 @@
         </div>
         <mat-divider />
 
-        <ng-scrollbar class="relative flex-1">
-          <mat-nav-list>
-            @for (enrollment of enrollments(); track $index) {
-            <app-enrollment-item
-              [enrollment]="enrollment"
-              (update)="openEnrollmentFormDialog($event)"
-              (delete)="openEnrollmentDeleteDialog($event)"
-            />
-            }
-          </mat-nav-list>
+        <ng-scrollbar
+          class="relative flex-1 mt-2"
+          cdkDropList
+          (cdkDropListDropped)="dropEnrollment($event)"
+        >
+          @for (enrollment of enrollments(); track enrollment.id) {
+          <app-enrollment-item
+            [enrollment]="enrollment"
+            (update)="openEnrollmentFormDialog($event)"
+            (delete)="openEnrollmentDeleteDialog($event)"
+          />
+          }
         </ng-scrollbar>
       </div>
       <!-- Debits Area -->
@@ -80,7 +82,7 @@
 
         <mat-divider />
 
-        <ng-scrollbar class="relative flex-1">
+        <ng-scrollbar class="relative flex-1 mt-2">
           <mat-nav-list>
             @for (debit of debits(); track $index) {
             <app-debit-item

@@ -1,26 +1,32 @@
-<mat-list-item (click)="selectEnrollment()" [activated]="isActive()">
-  <div matListItemTitle>{{ enrollment.details }}</div>
-  <div
-    matListItemLine
-    class="text-xs"
-    [ngClass]="{
+<div
+  class="item"
+  (click)="selectEnrollment()"
+  [ngClass]="{ active: isActive() }"
+  cdkDrag
+>
+  <mat-icon svgIcon="drag" class="cursor-move" cdkDragHandle></mat-icon>
+  <div>
+    <p class="font-medium">{{ enrollment.details }}</p>
+    <div
+      matListItemLine
+      class="text-xs"
+      [ngClass]="{
     'text-red-800': enrollment.state === 'INACTIVE',
     'text-green-800': enrollment.state === 'ACTIVE',
     'text-yellow-800': enrollment.state === 'PAUSED',
   }"
-  >
-    {{ enrollment.state | enrollmentState }}
-  </div>
-  <div matListItemMeta>
-    <button
-      mat-icon-button
-      [matMenuTriggerFor]="menu"
-      (click)="openMenu($event)"
     >
-      <mat-icon svgIcon="dots-vertical"></mat-icon>
-    </button>
+      {{ enrollment.state | enrollmentState }}
+    </div>
   </div>
-</mat-list-item>
+  <span class="flex-1"></span>
+  <button mat-icon-button [matMenuTriggerFor]="menu" (click)="openMenu($event)">
+    <mat-icon svgIcon="dots-vertical"></mat-icon>
+  </button>
+
+
+  <div class="item-placeholder" *cdkDragPlaceholder></div>
+</div>
 
 <mat-menu #menu="matMenu">
   <button mat-menu-item (click)="update.emit(enrollment)">

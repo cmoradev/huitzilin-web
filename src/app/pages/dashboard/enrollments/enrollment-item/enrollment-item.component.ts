@@ -1,3 +1,4 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgClass } from '@angular/common';
 import {
   Component,
@@ -9,12 +10,7 @@ import {
 } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import {
-  MatListItem,
-  MatListItemMeta,
-  MatListItemTitle,
-} from '@angular/material/list';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { EnrollmentPartsFragment } from '@graphql';
 import { EnrollmentStatePipe } from '@pipes';
 import { GlobalStateService } from '@services';
@@ -25,16 +21,12 @@ import { GlobalStateService } from '@services';
     NgClass,
     MatIcon,
     MatIconButton,
-    MatListItem,
-    MatListItemTitle,
-    MatListItemMeta,
-    MatMenu,
-    MatMenuItem,
-    MatMenuTrigger,
+    MatMenuModule,
     EnrollmentStatePipe,
+    DragDropModule,
   ],
   templateUrl: './enrollment-item.component.html',
-  styles: ``,
+  styleUrl: './enrollment-item.component.scss',
 })
 export class EnrollmentItemComponent {
   @Input({ required: true }) enrollment!: EnrollmentPartsFragment;

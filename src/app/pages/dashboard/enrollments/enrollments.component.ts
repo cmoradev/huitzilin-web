@@ -19,6 +19,8 @@ import {
   EnrollmentPartsFragment,
   GetDebitsPageGQL,
   GetEnrollmentsPageGQL,
+  SetOrderEnrollment,
+  SetOrderEnrollmentsGQL,
 } from '@graphql';
 import { GlobalStateService } from '@services';
 import { NgScrollbar } from 'ngx-scrollbar';
@@ -29,8 +31,9 @@ import { EnrollmentDeleteDialogComponent } from './enrollment-delete-dialog/enro
 import { EnrollmentFormDialogComponent } from './enrollment-form-dialog/enrollment-form-dialog.component';
 import { EnrollmentItemComponent } from './enrollment-item/enrollment-item.component';
 import { DebitItemComponent } from './debit-item/debit-item.component';
-import { MatMenu, MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { DebitFormCatalogDialogComponent } from './debit-form-catalog-dialog/debit-form-catalog-dialog.component';
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-enrollments',
@@ -52,6 +55,7 @@ import { DebitFormCatalogDialogComponent } from './debit-form-catalog-dialog/deb
     EnrollmentItemComponent,
     DebitItemComponent,
     MatMenuModule,
+    DragDropModule,
   ],
   templateUrl: './enrollments.component.html',
   styles: ``,
@@ -64,6 +68,8 @@ export class EnrollmentsComponent implements OnInit {
   public student = computed(() => this._globalStateService.student);
   public branch = computed(() => this._globalStateService.branch);
   public cycle = computed(() => this._globalStateService.cycle);
+
+  private readonly _setOrderEnrollmentsGQL = inject(SetOrderEnrollmentsGQL);
 
   private readonly _enrollmentsPageGQL = inject(GetEnrollmentsPageGQL);
   private readonly _debitsPageGQL = inject(GetDebitsPageGQL);
@@ -174,7 +180,7 @@ export class EnrollmentsComponent implements OnInit {
     if (
       !!this._globalStateService.branch?.id &&
       !!this._globalStateService.cycle?.id &&
-      !!this._globalStateService.student?.id 
+      !!this._globalStateService.student?.id
     ) {
       this.enrollmentsLoading.set(true);
 
@@ -244,5 +250,37 @@ export class EnrollmentsComponent implements OnInit {
       this.debitsLoading.set(false);
       this.debitsTotalCount.set(0);
     }
+  }
+
+  public dropEnrollment(event: CdkDragDrop<EnrollmentPartsFragment[]>) {
+    this.enrollments.update((previous) => {
+      const values = [...previous];
+      moveItemInArray(values, event.previousIndex, event.currentIndex);
+      return values;
+    });
+
+    this.updateOrderEnrollments();
+  }
+
+  private updateOrderEnrollments(): void {
+    const payload: SetOrderEnrollment[] = this.enrollments().map(
+      (item, index) => ({
+        enrollmentId: item.id,
+        order: index + 1,
+      })
+    );
+
+    this._setOrderEnrollmentsGQL
+      .mutate({
+        payload,
+      })
+      .subscribe({
+        next: () => {
+          console.log('Order enrollments updated successfully');
+        },
+        error: (error) => {
+          console.error('Error updating order enrollments', error);
+        },
+      });
   }
 }
