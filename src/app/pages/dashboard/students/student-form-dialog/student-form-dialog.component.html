@@ -69,34 +69,6 @@
         </mat-error>
       </mat-form-field>
       }
-
-      <mat-form-field class="w-full">
-        <mat-label>Nivel</mat-label>
-        <input
-          type="text"
-          placeholder="Ej. MG"
-          matInput
-          formControlName="level"
-          [matAutocomplete]="autoLevels"
-        />
-        <mat-autocomplete
-          #autoLevels="matAutocomplete"
-          [displayWith]="displayFn"
-        >
-          @for (level of levels(); track level.id) {
-          <mat-option [value]="level">
-            <div class="flex items-center gap-2">
-              <span> {{ level.name }} </span>
-            </div>
-          </mat-option>
-          }
-        </mat-autocomplete>
-        <mat-hint>Seleccione un nivel</mat-hint>
-
-        <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("level")) }}
-        </mat-error>
-      </mat-form-field>
     </div>
   </form>
 </mat-dialog-content>

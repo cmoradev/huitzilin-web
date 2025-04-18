@@ -75,9 +75,12 @@ export class FormToolsService {
     return '';
   }
 
+  /**
+   * @todo - Revisar con el  filtro branchs: { id: { neq: branchId } }.
+   */
   public get isStudentCodeValid(): AsyncValidatorFn {
-    return (control) =>
-      this._fetchStudentPage
+    return (control) => {
+      return this._fetchStudentPage
         .fetch(
           {
             filter: {
@@ -96,6 +99,7 @@ export class FormToolsService {
             return student ? null : { studentNotFound: true };
           })
         );
+    };
   }
 
   public get isDniStudentValid(): AsyncValidatorFn {

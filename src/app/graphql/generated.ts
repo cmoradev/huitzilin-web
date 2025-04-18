@@ -176,13 +176,6 @@ export type AddBranchsToStudentInput = {
   relationIds: Array<Scalars['ID']['input']>;
 };
 
-export type AddLevelsToStudentInput = {
-  /** The id of the record. */
-  id: Scalars['ID']['input'];
-  /** The ids of the relations. */
-  relationIds: Array<Scalars['ID']['input']>;
-};
-
 export type BooleanFieldComparison = {
   is?: InputMaybe<Scalars['Boolean']['input']>;
   isNot?: InputMaybe<Scalars['Boolean']['input']>;
@@ -353,6 +346,7 @@ export type CreateEnrollment = {
   details: Scalars['String']['input'];
   inPackage: Scalars['Boolean']['input'];
   isPackage: Scalars['Boolean']['input'];
+  levelId: Scalars['String']['input'];
   order: Scalars['Float']['input'];
   parentId?: InputMaybe<Scalars['String']['input']>;
   state: EnrollmentState;
@@ -709,6 +703,8 @@ export type Enrollment = {
   id: Scalars['ID']['output'];
   inPackage: Scalars['Boolean']['output'];
   isPackage: Scalars['Boolean']['output'];
+  level: Level;
+  levelId: Scalars['String']['output'];
   order: Scalars['Float']['output'];
   parentId?: Maybe<Scalars['Float']['output']>;
   state: EnrollmentState;
@@ -740,6 +736,7 @@ export type EnrollmentDeleteResponse = {
   id?: Maybe<Scalars['ID']['output']>;
   inPackage?: Maybe<Scalars['Boolean']['output']>;
   isPackage?: Maybe<Scalars['Boolean']['output']>;
+  levelId?: Maybe<Scalars['String']['output']>;
   order?: Maybe<Scalars['Float']['output']>;
   parentId?: Maybe<Scalars['Float']['output']>;
   state?: Maybe<EnrollmentState>;
@@ -759,6 +756,7 @@ export type EnrollmentFilter = {
   id?: InputMaybe<IdFilterComparison>;
   inPackage?: InputMaybe<BooleanFieldComparison>;
   isPackage?: InputMaybe<BooleanFieldComparison>;
+  levelId?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<EnrollmentFilter>>;
   order?: InputMaybe<NumberFieldComparison>;
   parentId?: InputMaybe<NumberFieldComparison>;
@@ -782,6 +780,7 @@ export enum EnrollmentSortFields {
   Id = 'id',
   InPackage = 'inPackage',
   IsPackage = 'isPackage',
+  LevelId = 'levelId',
   Order = 'order',
   ParentId = 'parentId',
   StudentId = 'studentId',
@@ -942,7 +941,6 @@ export enum LevelSortFields {
 export type Mutation = {
   __typename?: 'Mutation';
   addBranchsToStudent: Student;
-  addLevelsToStudent: Student;
   createManyDebits: Array<Debit>;
   createOneAction: Action;
   createOneActivity: Activity;
@@ -971,13 +969,11 @@ export type Mutation = {
   deleteOneTeacher: TeacherDeleteResponse;
   deleteOneTutor: TutorDeleteResponse;
   removeBranchsFromStudent: Student;
-  removeLevelsFromStudent: Student;
   restoreManyActivities: UpdateManyResponse;
   restoreManyVideos: UpdateManyResponse;
   restoreOneActivity: Activity;
   restoreOneVideo: Tutor;
   setBranchsOnStudent: Student;
-  setLevelsOnStudent: Student;
   setOrderActivities: UpdateCount;
   signIn: Session;
   signUp: Session;
@@ -1001,11 +997,6 @@ export type Mutation = {
 
 export type MutationAddBranchsToStudentArgs = {
   input: AddBranchsToStudentInput;
-};
-
-
-export type MutationAddLevelsToStudentArgs = {
-  input: AddLevelsToStudentInput;
 };
 
 
@@ -1149,11 +1140,6 @@ export type MutationRemoveBranchsFromStudentArgs = {
 };
 
 
-export type MutationRemoveLevelsFromStudentArgs = {
-  input: RemoveLevelsFromStudentInput;
-};
-
-
 export type MutationRestoreManyActivitiesArgs = {
   input: ActivityFilter;
 };
@@ -1176,11 +1162,6 @@ export type MutationRestoreOneVideoArgs = {
 
 export type MutationSetBranchsOnStudentArgs = {
   input: SetBranchsOnStudentInput;
-};
-
-
-export type MutationSetLevelsOnStudentArgs = {
-  input: SetLevelsOnStudentInput;
 };
 
 
@@ -1558,13 +1539,6 @@ export type RemoveBranchsFromStudentInput = {
   relationIds: Array<Scalars['ID']['input']>;
 };
 
-export type RemoveLevelsFromStudentInput = {
-  /** The id of the record. */
-  id: Scalars['ID']['input'];
-  /** The ids of the relations. */
-  relationIds: Array<Scalars['ID']['input']>;
-};
-
 export type Session = {
   __typename?: 'Session';
   branch?: Maybe<Branch>;
@@ -1577,13 +1551,6 @@ export type Session = {
 };
 
 export type SetBranchsOnStudentInput = {
-  /** The id of the record. */
-  id: Scalars['ID']['input'];
-  /** The ids of the relations. */
-  relationIds: Array<Scalars['ID']['input']>;
-};
-
-export type SetLevelsOnStudentInput = {
   /** The id of the record. */
   id: Scalars['ID']['input'];
   /** The ids of the relations. */
@@ -1649,7 +1616,6 @@ export type Student = {
   fullname: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   lastname: Scalars['String']['output'];
-  levels: Array<Level>;
   picture: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   userId?: Maybe<Scalars['String']['output']>;
@@ -1660,12 +1626,6 @@ export type Student = {
 export type StudentBranchsArgs = {
   filter?: BranchFilter;
   sorting?: Array<BranchSort>;
-};
-
-
-export type StudentLevelsArgs = {
-  filter?: LevelFilter;
-  sorting?: Array<LevelSort>;
 };
 
 export type StudentConnection = {
@@ -1703,7 +1663,6 @@ export type StudentFilter = {
   dni?: InputMaybe<StringFieldComparison>;
   fullname?: InputMaybe<StringFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
-  levels?: InputMaybe<StudentFilterLevelFilter>;
   or?: InputMaybe<Array<StudentFilter>>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
@@ -1714,17 +1673,6 @@ export type StudentFilterBranchFilter = {
   id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<StudentFilterBranchFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
-export type StudentFilterLevelFilter = {
-  abbreviation?: InputMaybe<StringFieldComparison>;
-  and?: InputMaybe<Array<StudentFilterLevelFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<StudentFilterLevelFilter>>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -1921,6 +1869,7 @@ export type UpdateEnrollment = {
   details?: InputMaybe<Scalars['String']['input']>;
   inPackage?: InputMaybe<Scalars['Boolean']['input']>;
   isPackage?: InputMaybe<Scalars['Boolean']['input']>;
+  levelId?: InputMaybe<Scalars['String']['input']>;
   order?: InputMaybe<Scalars['Float']['input']>;
   parentId?: InputMaybe<Scalars['String']['input']>;
   state?: InputMaybe<EnrollmentState>;
@@ -2404,14 +2353,13 @@ export type CreateOneStudentMutationVariables = Exact<{
 export type CreateOneStudentMutation = { __typename?: 'Mutation', createOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
 
 export type GetStudentsPageQueryVariables = Exact<{
-  branchId: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   filter?: InputMaybe<StudentFilter>;
 }>;
 
 
-export type GetStudentsPageQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any, levels: Array<{ __typename?: 'Level', id: string, name: string, abbreviation: string }> }> } };
+export type GetStudentsPageQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any }> } };
 
 export type FetchStudentQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2452,22 +2400,6 @@ export type RemoveBranchsFromStudentMutationVariables = Exact<{
 
 
 export type RemoveBranchsFromStudentMutation = { __typename?: 'Mutation', removeBranchsFromStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
-
-export type AddLevelsToStudentMutationVariables = Exact<{
-  studentId: Scalars['ID']['input'];
-  levelId: Scalars['ID']['input'];
-}>;
-
-
-export type AddLevelsToStudentMutation = { __typename?: 'Mutation', addLevelsToStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
-
-export type RemoveLevelsFromStudentMutationVariables = Exact<{
-  studentId: Scalars['ID']['input'];
-  levelId: Scalars['ID']['input'];
-}>;
-
-
-export type RemoveLevelsFromStudentMutation = { __typename?: 'Mutation', removeLevelsFromStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
 
 export const SessionPartsFragmentDoc = gql`
     fragment SessionParts on Session {
@@ -3353,7 +3285,7 @@ export const CreateOneStudentDocument = gql`
     }
   }
 export const GetStudentsPageDocument = gql`
-    query getStudentsPage($branchId: String!, $offset: Int = 0, $limit: Int = 10, $filter: StudentFilter = {}) {
+    query getStudentsPage($offset: Int = 0, $limit: Int = 10, $filter: StudentFilter = {}) {
   students(paging: {limit: $limit, offset: $offset}, filter: $filter) {
     totalCount
     pageInfo {
@@ -3362,11 +3294,6 @@ export const GetStudentsPageDocument = gql`
     }
     nodes {
       ...StudentParts
-      levels(filter: {branchId: {eq: $branchId}}) {
-        id
-        name
-        abbreviation
-      }
     }
   }
 }
@@ -3474,42 +3401,6 @@ export const RemoveBranchsFromStudentDocument = gql`
   })
   export class RemoveBranchsFromStudentGQL extends Apollo.Mutation<RemoveBranchsFromStudentMutation, RemoveBranchsFromStudentMutationVariables> {
     document = RemoveBranchsFromStudentDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const AddLevelsToStudentDocument = gql`
-    mutation addLevelsToStudent($studentId: ID!, $levelId: ID!) {
-  addLevelsToStudent(input: {id: $studentId, relationIds: [$levelId]}) {
-    ...StudentParts
-  }
-}
-    ${StudentPartsFragmentDoc}`;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class AddLevelsToStudentGQL extends Apollo.Mutation<AddLevelsToStudentMutation, AddLevelsToStudentMutationVariables> {
-    document = AddLevelsToStudentDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const RemoveLevelsFromStudentDocument = gql`
-    mutation removeLevelsFromStudent($studentId: ID!, $levelId: ID!) {
-  removeLevelsFromStudent(input: {id: $studentId, relationIds: [$levelId]}) {
-    ...StudentParts
-  }
-}
-    ${StudentPartsFragmentDoc}`;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class RemoveLevelsFromStudentGQL extends Apollo.Mutation<RemoveLevelsFromStudentMutation, RemoveLevelsFromStudentMutationVariables> {
-    document = RemoveLevelsFromStudentDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

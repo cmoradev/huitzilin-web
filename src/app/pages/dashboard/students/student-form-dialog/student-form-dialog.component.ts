@@ -11,16 +11,11 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Observable } from '@apollo/client/utilities';
 import { ImagePickerComponent } from '@components/image-picker/image-picker.component';
 import {
   AddBranchsToStudentGQL,
-  AddLevelsToStudentGQL,
   CreateOneStudentGQL,
   FetchStudentGQL,
-  GetLevelsPageGQL,
-  LevelPartsFragment,
-  RemoveLevelsFromStudentGQL,
   StudentPartsFragment,
   UpdateOneStudentGQL,
 } from '@graphql';
@@ -29,7 +24,7 @@ import {
   GlobalStateService,
   StorageService,
 } from '@services';
-import { debounceTime, filter, map, of, startWith, switchMap, tap } from 'rxjs';
+import { filter, map, of, startWith, switchMap, catchError } from 'rxjs';
 
 @Component({
   selector: 'app-student-form-dialog',
@@ -51,25 +46,15 @@ export class StudentFormDialogComponent {
   public readonly formTools = inject(FormToolsService);
 
   public loading = signal(false);
-  public data: StudentParts | null = inject(MAT_DIALOG_DATA);
+  public data: StudentPartsFragment | null = inject(MAT_DIALOG_DATA);
   public readonly _storage = inject(StorageService);
 
   private readonly _globalStateService = inject(GlobalStateService);
   private readonly _createOneStudent = inject(CreateOneStudentGQL);
   private readonly _addBranchsToStudent = inject(AddBranchsToStudentGQL);
-  private readonly _addLevelsToStudent = inject(AddLevelsToStudentGQL);
-  private readonly _removeLevelsFromStudent = inject(
-    RemoveLevelsFromStudentGQL
-  );
   private readonly _fetchStudentPage = inject(FetchStudentGQL);
 
   private readonly _updateOneStudent = inject(UpdateOneStudentGQL);
-
-  public levels = signal<LevelPartsFragment[]>([]);
-  public loadingLevels = signal<boolean>(false);
-  private readonly _levelsPageGQL = inject(GetLevelsPageGQL);
-
-  private previusLevelId: string | null = null;
 
   private readonly _dialogRef = inject(
     MatDialogRef<StudentFormDialogComponent>
@@ -85,7 +70,6 @@ export class StudentFormDialogComponent {
     code: [''],
     dni: [''],
     dateBirth: [''],
-    level: ['' as any],
   });
 
   ngOnInit(): void {
@@ -126,27 +110,12 @@ export class StudentFormDialogComponent {
             ?.setValidators([Validators.required, Validators.maxLength(32)]);
           this.formGroup.get('dateBirth')?.setValidators([Validators.required]);
         }
-        this.formGroup.get('level')?.setValidators([Validators.required]);
 
         this.formGroup.get('code')?.updateValueAndValidity();
         this.formGroup.get('firstname')?.updateValueAndValidity();
         this.formGroup.get('lastname')?.updateValueAndValidity();
         this.formGroup.get('dateBirth')?.updateValueAndValidity();
         this.formGroup.get('dni')?.updateValueAndValidity();
-        this.formGroup.get('level')?.updateValueAndValidity();
-      });
-
-    this.formGroup
-      .get('level')
-      ?.valueChanges.pipe(
-        debounceTime(300),
-        startWith(''),
-        filter((value) => typeof value === 'string')
-      )
-      .subscribe({
-        next: (value) => {
-          this._fetchLevel(value);
-        },
       });
 
     if (!!this.data?.id) {
@@ -157,9 +126,7 @@ export class StudentFormDialogComponent {
         lastname: this.data.lastname,
         dateBirth: this.data.dateBirth,
         dni: this.data.dni,
-        level: this.data?.level || '',
       });
-      this.previusLevelId = this.data.level?.id || null;
       this.previusPicture = this.data.picture;
       this.formGroup.get('picture')?.updateValueAndValidity();
 
@@ -230,10 +197,6 @@ export class StudentFormDialogComponent {
     }
   }
 
-  public displayFn(value: LevelPartsFragment): string {
-    return value?.name ?? '';
-  }
-
   private _update(values: FormValues) {
     const uploadPicture$ =
       values.picture instanceof File
@@ -242,27 +205,7 @@ export class StudentFormDialogComponent {
             .pipe(switchMap(() => this._storage.upload(values.picture)))
         : of(this.previusPicture);
 
-    const removeAndAddLevel$ =
-      this.previusLevelId !== values.level.id
-        ? this._removeLevelsFromStudent
-            .mutate({
-              studentId: this.data!.id,
-              levelId: this!.previusLevelId as string,
-            })
-            .pipe(
-              switchMap(() => {
-                console.log('removeAndAddLevel$');
-                return this._addLevelsToStudent.mutate({
-                  studentId: this.data!.id,
-                  levelId: values.level.id,
-                });
-              }),
-              map(() => null)
-            )
-        : of(null);
-
     return uploadPicture$.pipe(
-      switchMap((picture) => removeAndAddLevel$.pipe(map(() => picture))),
       switchMap((picture) =>
         this._updateOneStudent.mutate({
           id: this.data!.id,
@@ -299,14 +242,6 @@ export class StudentFormDialogComponent {
         })
       ),
       switchMap((resp) =>
-        this._addLevelsToStudent
-          .mutate({
-            studentId: resp.data!.createOneStudent.id,
-            levelId: values.level.id,
-          })
-          .pipe(map(() => resp))
-      ),
-      switchMap((resp) =>
         this._addBranchsToStudent
           .mutate({
             branchIds: [branchId],
@@ -317,8 +252,10 @@ export class StudentFormDialogComponent {
     );
   }
 
-  private _setLevelToStudent() {}
-
+  /**
+   * @todo - Revisar el error de llaves duplicadas cuando el estudiante ya existe en sucursal actual.
+   * @todo - Revisar con el  filtro branchs: { id: { neq: branchId } }.
+   */
   private _addStudentInCurrentBranch(values: FormValues) {
     const branchId = this._globalStateService.branch!.id;
 
@@ -326,7 +263,10 @@ export class StudentFormDialogComponent {
       .fetch(
         {
           filter: {
-            or: [{ code: { eq: values.code } }, { dni: { eq: values.code } }],
+            or: [
+              { code: { eq: values.code } },
+              { dni: { eq: values.code } },
+            ],
           },
         },
         {
@@ -343,56 +283,13 @@ export class StudentFormDialogComponent {
               studentId: student!.id,
             })
             .pipe(
-              switchMap(() =>
-                this._addLevelsToStudent.mutate({
-                  studentId: student!.id,
-                  levelId: values.level.id,
-                })
-              ),
-              map(() => student)
+              map(() => student),
+              catchError(() => of(student))
             );
         })
       );
   }
-
-  private _fetchLevel(text: string): void {
-    if (this._globalStateService.branch!.id) {
-      this.loadingLevels.set(true);
-
-      // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
-      this._levelsPageGQL
-        .watch(
-          {
-            limit: 100,
-            offset: 0,
-            filter: {
-              branchId: { eq: this._globalStateService.branch!.id },
-              or: [
-                { name: { iLike: `%${text}%` } },
-                { abbreviation: { iLike: `%${text}%` } },
-              ],
-            },
-          },
-          {
-            fetchPolicy: 'cache-and-network',
-            nextFetchPolicy: 'cache-and-network',
-            notifyOnNetworkStatusChange: true,
-          }
-        )
-        .valueChanges.subscribe({
-          next: ({ loading, data }) => {
-            this.loadingLevels.set(loading);
-
-            this.levels.set(data?.levels.nodes ?? []);
-          },
-        });
-    }
-  }
 }
-
-type StudentParts = StudentPartsFragment & {
-  level: LevelPartsFragment;
-};
 
 type FormValues = {
   picture: File;
@@ -402,5 +299,4 @@ type FormValues = {
   dni: string;
   withCode: boolean;
   code: string;
-  level: LevelPartsFragment;
 };

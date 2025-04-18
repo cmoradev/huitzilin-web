@@ -9,4 +9,5 @@ export const ERROR_MESSAGES: { [key: string]: (...args: any) => string } = {
     maxLength: (requirement: string) => `El valor no puede tener más de ${requirement} caracteres.`,
     endDateInvalid: () => `La fecha de finalización debe ser mayor a la fecha de inicio`,
     studentNotFound: () => `El estudiante no fue encontrado`,
+    noSelectedBranch: () => `No hay sucursal seleccionada`,
   };

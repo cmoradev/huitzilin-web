@@ -125,7 +125,7 @@ export class StudentsComponent {
 
       this._companiesPageGQL
         .watch(
-          { limit, offset, filter, branchId },
+          { limit, offset, filter },
           {
             fetchPolicy: 'cache-and-network',
             nextFetchPolicy: 'cache-and-network',
@@ -137,11 +137,8 @@ export class StudentsComponent {
             const { nodes, totalCount } = data.students;
 
             this.dataSource.data = nodes.map((node) => {
-              const level = node.levels.find((level) => level?.id);
-
               return {
                 ...node,
-                level,
               };
             });
 

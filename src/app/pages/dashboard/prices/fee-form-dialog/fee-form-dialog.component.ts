@@ -85,11 +85,7 @@ export class FeeFormDialogComponent implements OnInit {
       if (!!value) {
         this.formGroup
           .get('name')
-          ?.setValue(
-            `${this._globalStateService.activity!.name} - ${this.getFrequencyName(
-              value as Frequency
-            )}`
-          );
+          ?.setValue(`${this.getFrequencyName(value as Frequency)}`);
       }
     });
   }

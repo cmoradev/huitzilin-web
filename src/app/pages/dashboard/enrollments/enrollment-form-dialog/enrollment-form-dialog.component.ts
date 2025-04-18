@@ -210,6 +210,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
           cycleId: this._globalStateService.cycle!.id,
           activityId: values.activity.id,
           classroomId: values.classroom.id,
+          levelId: values.level.id,
           details: values.details,
           state: values.state,
           order: 1,
@@ -295,4 +296,5 @@ type FormValues = {
   state: EnrollmentState;
   activity: ActivityPartsFragment;
   classroom: ClassroomPartsFragment;
+  level: ClassroomPartsFragment;
 };
