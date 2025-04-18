@@ -113,6 +113,7 @@ export class GlobalStateService {
     } else {
       localStorage.removeItem(STUDENT_KEY);
     }
+    this._enrollment.set(null);
   }
 }
 

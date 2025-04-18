@@ -17,9 +17,13 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { AvatarComponent } from '@components/avatar/avatar.component';
-import { FetchStudentGQL, GetStudentsPageGQL, StudentPartsFragment } from '@graphql';
+import {
+  FetchStudentGQL,
+  GetStudentsPageGQL,
+  StudentPartsFragment,
+} from '@graphql';
 import { GlobalStateService } from '@services';
-import { debounceTime, startWith } from 'rxjs';
+import { debounceTime, filter, merge, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-student-state',
@@ -33,7 +37,7 @@ import { debounceTime, startWith } from 'rxjs';
     ReactiveFormsModule,
     MatIcon,
     MatRipple,
-    AvatarComponent
+    AvatarComponent,
   ],
   templateUrl: './student-state.component.html',
   styles: ``,
@@ -43,6 +47,7 @@ export class StudentStateComponent implements AfterViewInit, OnInit {
   public studentControl = new FormControl<StudentPartsFragment | string>('');
   public loadingStudents = signal<boolean>(false);
   public students = signal<StudentPartsFragment[]>([]);
+
   private readonly _fetchStudentGQL = inject(FetchStudentGQL);
 
   private readonly _globalStateService = inject(GlobalStateService);
@@ -50,21 +55,27 @@ export class StudentStateComponent implements AfterViewInit, OnInit {
   public student = computed(() => this._globalStateService.student);
 
   ngOnInit(): void {
-    this.searching.set(this._globalStateService.student === null);
+    this._globalStateService.student$.subscribe({
+      next: (student) => {
+        this.searching.set(student === null);
+      },
+    });
   }
 
   ngAfterViewInit(): void {
-    this.studentControl.valueChanges
+    merge(this.studentControl.valueChanges, this._globalStateService.branch$)
       .pipe(debounceTime(300), startWith(''))
       .subscribe({
         next: (value) => {
-          if (value && typeof value === 'object') {
-            this._globalStateService.student = value;
-            this._globalStateService.enrollment = null;
-            this.toggleStudent();
-          } else if (typeof value === 'string') {
-            this._fetchStudents(value);
-          }
+          if (typeof value === 'string') this._fetchStudents(value);
+        },
+      });
+
+    this.studentControl.valueChanges
+      .pipe(filter((value) => typeof value === 'object'))
+      .subscribe({
+        next: (value) => {
+          this._globalStateService.student = value;
         },
       });
   }
@@ -88,8 +99,12 @@ export class StudentStateComponent implements AfterViewInit, OnInit {
             limit: 100,
             offset: 0,
             filter: {
-              fullname: { iLike: `%${value}%` },
               branchs: { id: { eq: this._globalStateService.branch!.id } },
+              or: [
+                { fullname: { iLike: `%${value}%` } },
+                { code: { eq: `${value}` } },
+                { dni: { eq: `${value}` } },
+              ],
             },
           },
           {
