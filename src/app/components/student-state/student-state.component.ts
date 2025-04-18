@@ -55,6 +55,19 @@ export class StudentStateComponent implements AfterViewInit, OnInit {
   public student = computed(() => this._globalStateService.student);
 
   ngOnInit(): void {
+
+    // @todo - Existe un bug al cambiar de sucursal, no refrescar el autocomplete 
+
+    merge(
+      this._globalStateService.branch$,
+      this._globalStateService.cycle$
+    ).subscribe({
+      next: () => {
+        this.studentControl.setValue('');
+        this._fetchStudents('');
+      },
+    });
+
     this._globalStateService.student$.subscribe({
       next: (student) => {
         this.searching.set(student === null);

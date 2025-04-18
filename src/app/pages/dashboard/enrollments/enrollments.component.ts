@@ -62,6 +62,8 @@ export class EnrollmentsComponent implements OnInit {
 
   public enrollment = computed(() => this._globalStateService.enrollment);
   public student = computed(() => this._globalStateService.student);
+  public branch = computed(() => this._globalStateService.branch);
+  public cycle = computed(() => this._globalStateService.cycle);
 
   private readonly _enrollmentsPageGQL = inject(GetEnrollmentsPageGQL);
   private readonly _debitsPageGQL = inject(GetDebitsPageGQL);

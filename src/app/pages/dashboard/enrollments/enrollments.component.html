@@ -32,7 +32,7 @@
           <button
             mat-icon-button
             (click)="openEnrollmentFormDialog()"
-            [disabled]="!student()?.id"
+            [disabled]="!student()?.id || !branch()?.id || !cycle()?.id"
           >
             <mat-icon svgIcon="plus" />
           </button>
@@ -77,7 +77,7 @@
             <mat-icon svgIcon="plus" />
           </button>
         </div>
-        
+
         <mat-divider />
 
         <ng-scrollbar class="relative flex-1">
