@@ -58,6 +58,10 @@ export class StudentStateComponent implements AfterViewInit, OnInit {
     this._globalStateService.student$.subscribe({
       next: (student) => {
         this.searching.set(student === null);
+
+        if (student === null) {
+          this.studentControl.setValue('');
+        }
       },
     });
   }
