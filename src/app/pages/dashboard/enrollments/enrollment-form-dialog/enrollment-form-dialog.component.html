@@ -3,15 +3,49 @@
   <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
     <div class="flex flex-col gap-3">
       <mat-form-field class="w-full">
-        <mat-label>Seleccionar curso</mat-label>
+        <mat-label>Seleccione un nivel</mat-label>
         <input
           type="text"
-          placeholder="Ej. Taekwondo, Karate, Judo"
+          placeholder="Ej. Little Magicians, Wizards"
+          matInput
+          formControlName="level"
+          [matAutocomplete]="autoLevels"
+        />
+        <mat-hint>Seleccione un nivel para la inscripción</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("level")) }}
+        </mat-error>
+        @if (formGroup.get("level")?.value) {
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="formGroup.get('level')?.setValue('')"
+        >
+          <mat-icon svgIcon="close" />
+        </button>
+        }
+        <mat-autocomplete
+          #autoLevels="matAutocomplete"
+          [displayWith]="displayFn"
+        >
+          @for (level of levels(); track level.id) {
+          <mat-option [value]="level">
+            <p>{{ level.name }}</p>
+          </mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field class="w-full">
+        <mat-label>Seleccionar lista de precios</mat-label>
+        <input
+          type="text"
+          placeholder="Ej. Paquete 1, Nacional"
           matInput
           formControlName="activity"
           [matAutocomplete]="autoStudents"
         />
-        <mat-hint>Seleccione el curso para la inscripción</mat-hint>
+        <mat-hint>Seleccione una lista de precios para la inscripción</mat-hint>
         <mat-error>
           {{ formTools.checkForErrorsIn(formGroup.get("activity")) }}
         </mat-error>
@@ -40,7 +74,7 @@
         <mat-label>Seleccionar salón</mat-label>
         <input
           type="text"
-          placeholder="Ej. Aula 101, Laboratorio 202"
+          placeholder="Ej. Blue, Green"
           matInput
           formControlName="classroom"
           [matAutocomplete]="autoClassroom"

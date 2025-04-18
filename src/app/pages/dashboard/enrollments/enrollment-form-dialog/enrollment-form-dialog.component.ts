@@ -33,6 +33,8 @@ import {
   GetClassroomsPageGQL,
   GetActivityPageGQL,
   UpdateOneEnrollmentGQL,
+  GetLevelsPageGQL,
+  LevelPartsFragment,
 } from '@graphql';
 import { FormToolsService, GlobalStateService } from '@services';
 import { enrollmentStates } from '@utils/contains';
@@ -76,6 +78,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
     state: [EnrollmentState.Active, [Validators.required]],
     activity: ['' as any, [Validators.required]],
     classroom: ['' as any, [Validators.required]],
+    level: ['' as any, [Validators.required]],
   });
 
   private readonly _globalStateService = inject(GlobalStateService);
@@ -85,9 +88,14 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   public loadingActivities = signal<boolean>(false);
   public activities = signal<ActivityPartsFragment[]>([]);
   private readonly _activitiesPageGQL = inject(GetActivityPageGQL);
+
   public loadingClassrooms = signal<boolean>(false);
   public classrooms = signal<ClassroomPartsFragment[]>([]);
   private readonly _classroomsPageGQL = inject(GetClassroomsPageGQL);
+
+  public loadingLevels = signal<boolean>(false);
+  public levels = signal<LevelPartsFragment[]>([]);
+  private readonly _levelsPageGQL = inject(GetLevelsPageGQL);
 
   public enrollmentStates = enrollmentStates;
 
@@ -101,21 +109,28 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
         details: this.data.details,
         activity: this.data.activity,
         classroom: this.data.classroom,
+        level: this.data.level,
       });
     }
-
+    // @todo - Check this event rename details enrollment
     merge(
       this.formGroup.get('activity')!.valueChanges,
-      this.formGroup.get('classroom')!.valueChanges
+      this.formGroup.get('classroom')!.valueChanges,
+      this.formGroup.get('level')!.valueChanges
     )
       .pipe(filter((value) => typeof value === 'object'))
       .subscribe(() => {
-        const activityName = this.formGroup.get('activity')?.value.name ?? '';
-        const classroomName = this.formGroup.get('classroom')?.value.name ?? '';
+        const activityName = this.formGroup.get('activity')?.value?.name ?? '';
+        const classroomName =
+          this.formGroup.get('classroom')?.value?.name ?? '';
+        const levelAbbrevation =
+          this.formGroup.get('level')?.value?.abbreviation ?? '';
 
         this.formGroup
           .get('details')
-          ?.setValue(`${activityName} - ${classroomName}`);
+          ?.setValue(
+            `${levelAbbrevation} - ${activityName} - ${classroomName}`
+          );
       });
   }
 
@@ -138,6 +153,17 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
         next: (value) => {
           if (typeof value === 'string') {
             this._fetchClassroom(value);
+          }
+        },
+      });
+
+    this.formGroup
+      .get('level')
+      ?.valueChanges.pipe(debounceTime(300), startWith(''))
+      .subscribe({
+        next: (value) => {
+          if (typeof value === 'string') {
+            this._fetchLevels(value);
           }
         },
       });
@@ -216,7 +242,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
           order: 1,
           isPackage: values.activity.isPackage,
           inPackage: values.activity.inPackage,
-          parentId: null
+          parentId: null,
         },
       })
       .pipe(map((value) => value.data?.createOneEnrollment));
@@ -287,6 +313,43 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
     } else {
       this.loadingClassrooms.set(false);
       this.classrooms.set([]);
+    }
+  }
+
+  private _fetchLevels(value: string): void {
+    if (this._globalStateService.branch!.id) {
+      this.loadingLevels.set(true);
+
+      // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
+      this._levelsPageGQL
+        .watch(
+          {
+            limit: 100,
+            offset: 0,
+            filter: {
+              or: [
+                { name: { iLike: `%${value}%` } },
+                { abbreviation: { iLike: `%${value}%` } },
+              ],
+              branchId: { eq: this._globalStateService.branch!.id },
+            },
+          },
+          {
+            fetchPolicy: 'cache-and-network',
+            nextFetchPolicy: 'cache-and-network',
+            notifyOnNetworkStatusChange: true,
+          }
+        )
+        .valueChanges.subscribe({
+          next: ({ loading, data }) => {
+            this.loadingLevels.set(loading);
+
+            this.levels.set(data?.levels.nodes ?? []);
+          },
+        });
+    } else {
+      this.loadingLevels.set(false);
+      this.levels.set([]);
     }
   }
 }

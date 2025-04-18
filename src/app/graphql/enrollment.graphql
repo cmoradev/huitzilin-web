@@ -25,6 +25,11 @@ fragment EnrollmentParts on Enrollment {
     name
     color
   }
+  level {
+    id, 
+    name,
+    abbreviation
+  }
   createdAt
   updatedAt
 }
