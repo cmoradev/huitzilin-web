@@ -24,11 +24,16 @@
     <mat-icon svgIcon="dots-vertical"></mat-icon>
   </button>
 
-
   <div class="item-placeholder" *cdkDragPlaceholder></div>
 </div>
 
 <mat-menu #menu="matMenu">
+  @if (enrollment.activity.isPackage) {
+  <button mat-menu-item (click)="create.emit(enrollment)">
+    <mat-icon svgIcon="plus" />
+    <span>Agregar inscrición</span>
+  </button>
+  }
   <button mat-menu-item (click)="update.emit(enrollment)">
     <mat-icon svgIcon="pencil" />
     <span>Editar</span>

@@ -32,6 +32,7 @@ export class EnrollmentItemComponent {
   @Input({ required: true }) enrollment!: EnrollmentPartsFragment;
   @Input() menuTrigger!: MatMenuTrigger;
 
+  @Output() create = new EventEmitter<EnrollmentPartsFragment>();
   @Output() update = new EventEmitter<EnrollmentPartsFragment>();
   @Output() delete = new EventEmitter<EnrollmentPartsFragment>();
 
