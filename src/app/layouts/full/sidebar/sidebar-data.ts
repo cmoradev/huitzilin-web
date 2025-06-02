@@ -30,15 +30,15 @@ export const navItems: RouteItem[] = [
     section: NavigationEnum.ADMINISTRATION,
   },
   {
-    displayName: 'Niveles',
-    iconName: 'magic-staff',
-    route: '/levels',
-    section: NavigationEnum.ADMINISTRATION,
-  },
-  {
     displayName: 'Aulas',
     iconName: 'human-male-board',
     route: '/classrooms',
+    section: NavigationEnum.ADMINISTRATION,
+  },
+  {
+    displayName: 'Niveles',
+    iconName: 'magic-staff',
+    route: '/levels',
     section: NavigationEnum.ADMINISTRATION,
   },
   {
