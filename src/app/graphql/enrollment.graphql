@@ -30,8 +30,10 @@ fragment EnrollmentParts on Enrollment {
     name,
     abbreviation
   }
-  createdAt
-  updatedAt
+  parentId
+  children {
+    totalCount
+  }
 }
 
 mutation createOneEnrollment($enrollment: CreateEnrollment!) {

@@ -19,20 +19,9 @@
           </mat-form-field>
           <button
             mat-icon-button
-            color="primary"
-            matTooltip="Refrescar"
-            (click)="refreshEnrollments()"
-            [disabled]="!student()?.id"
-          >
-            <mat-icon
-              svgIcon="refresh"
-              [ngClass]="{ 'animate-spin': enrollmentsLoading() }"
-            />
-          </button>
-          <button
-            mat-icon-button
             (click)="openEnrollmentFormDialog()"
             [disabled]="!student()?.id || !branch()?.id || !cycle()?.id"
+            matTooltip="Agregar inscripción"
           >
             <mat-icon svgIcon="plus" />
           </button>
@@ -60,21 +49,11 @@
           <h4 class="font-medium text-lg">{{ enrollment()!.details }}</h4>
           }
           <span class="flex-1 h-[52px]"></span>
-
-          <button
-            mat-icon-button
-            color="primary"
-            matTooltip="Refrescar"
-            (click)="refreshDebits()"
-            [ngClass]="{ 'animate-spin': debitsLoading() }"
-            [disabled]="!enrollment()?.id"
-          >
-            <mat-icon svgIcon="refresh" />
-          </button>
           <button
             mat-icon-button
             [disabled]="!enrollment()?.id"
             [matMenuTriggerFor]="menu"
+            matTooltip="Agregar pagos"
           >
             <mat-icon svgIcon="plus" />
           </button>

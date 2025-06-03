@@ -1,17 +1,11 @@
-import { NgClass } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatIconButton } from '@angular/material/button';
-import {
-  MatCard,
-  MatCardContent,
-  MatCardHeader,
-  MatCardTitle,
-} from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import { MatFormField } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatDivider, MatNavList } from '@angular/material/list';
 import { StudentStateComponent } from '@components/student-state/student-state.component';
 import {
@@ -33,29 +27,32 @@ import { EnrollmentItemComponent } from './enrollment-item/enrollment-item.compo
 import { DebitItemComponent } from './debit-item/debit-item.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { DebitFormCatalogDialogComponent } from './debit-form-catalog-dialog/debit-form-catalog-dialog.component';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-enrollments',
   imports: [
-    NgClass,
-    MatCard,
-    MatIcon,
-    MatCardContent,
-    MatCardHeader,
-    MatCardTitle,
+    MatIconModule,
+    MatCardModule,
     MatNavList,
     MatDivider,
     NgScrollbar,
     MatFormField,
-    MatIconButton,
-    MatInput,
-    StudentStateComponent,
+    MatButtonModule,
+    MatInputModule,
     ReactiveFormsModule,
-    EnrollmentItemComponent,
-    DebitItemComponent,
     MatMenuModule,
     DragDropModule,
+    MatTooltipModule,
+    StudentStateComponent,
+    EnrollmentItemComponent,
+    DebitItemComponent,
   ],
   templateUrl: './enrollments.component.html',
   styles: ``,
@@ -63,6 +60,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 export class EnrollmentsComponent implements OnInit {
   private readonly _dialog = inject(MatDialog);
   private readonly _globalStateService = inject(GlobalStateService);
+  private readonly _snackBar = inject(MatSnackBar);
 
   public enrollment = computed(() => this._globalStateService.enrollment);
   public student = computed(() => this._globalStateService.student);
@@ -263,12 +261,10 @@ export class EnrollmentsComponent implements OnInit {
   }
 
   private updateOrderEnrollments(): void {
-    const payload: SetOrderInput[] = this.enrollments().map(
-      (item, index) => ({
-        id: item.id,
-        order: index + 1,
-      })
-    );
+    const payload: SetOrderInput[] = this.enrollments().map((item, index) => ({
+      id: item.id,
+      order: index + 1,
+    }));
 
     this._setOrderEnrollmentsGQL
       .mutate({
@@ -276,7 +272,15 @@ export class EnrollmentsComponent implements OnInit {
       })
       .subscribe({
         next: () => {
-          console.log('Order enrollments updated successfully');
+          this._snackBar.open(
+            'Se ha actualizado el orden correctamente',
+            'Cerrar',
+            {
+              duration: 1000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+            }
+          );
         },
         error: (error) => {
           console.error('Error updating order enrollments', error);

@@ -24,6 +24,7 @@
       "@services": ["./src/app/services"],
       "@pipes": ["./src/app/pipes"],
       "@guards": ["./src/app/guards"],
+      "@models": ["./src/app/models"],
       "@graphql": ["./src/app/graphql/generated.ts"],
       "@environment": ["./src/environments/environment.ts"],
     }
