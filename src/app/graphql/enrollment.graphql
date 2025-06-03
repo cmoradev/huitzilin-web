@@ -76,7 +76,7 @@ mutation deleteOneEnrollment($id: ID!) {
   }
 }
 
-mutation setOrderEnrollments($payload: [SetOrderEnrollment!]!) {
+mutation setOrderEnrollments($payload: [SetOrderInput!]!) {
   setOrderEnrollments(input: $payload) {
     updatedCount
   }

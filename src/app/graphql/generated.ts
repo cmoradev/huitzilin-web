@@ -99,6 +99,7 @@ export type Activity = {
   quantity: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
+  withTax: Scalars['Boolean']['output'];
 };
 
 export type ActivityConnection = {
@@ -124,6 +125,7 @@ export type ActivityDeleteResponse = {
   quantity?: Maybe<Scalars['Float']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   version?: Maybe<Scalars['Int']['output']>;
+  withTax?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type ActivityFilter = {
@@ -307,6 +309,7 @@ export type CreateActivity = {
   name: Scalars['String']['input'];
   order: Scalars['Float']['input'];
   quantity: Scalars['Float']['input'];
+  withTax: Scalars['Boolean']['input'];
 };
 
 export type CreateBranch = {
@@ -358,12 +361,14 @@ export type CreateFee = {
   frequency: Frequency;
   name: Scalars['String']['input'];
   price: Scalars['Float']['input'];
+  withTax: Scalars['Boolean']['input'];
 };
 
 export type CreateLevel = {
   abbreviation: Scalars['String']['input'];
   branchId: Scalars['String']['input'];
   name: Scalars['String']['input'];
+  order: Scalars['Float']['input'];
 };
 
 export type CreateManyDebitsInput = {
@@ -796,14 +801,17 @@ export enum EnrollmentState {
 export type Fee = {
   __typename?: 'Fee';
   activityId: Scalars['String']['output'];
+  amount: Scalars['Float']['output'];
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   frequency: Frequency;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   price: Scalars['Float']['output'];
+  tax: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
+  withTax: Scalars['Boolean']['output'];
 };
 
 export type FeeConnection = {
@@ -819,14 +827,17 @@ export type FeeConnection = {
 export type FeeDeleteResponse = {
   __typename?: 'FeeDeleteResponse';
   activityId?: Maybe<Scalars['String']['output']>;
+  amount?: Maybe<Scalars['Float']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   frequency?: Maybe<Frequency>;
   id?: Maybe<Scalars['ID']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
+  tax?: Maybe<Scalars['Float']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   version?: Maybe<Scalars['Int']['output']>;
+  withTax?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export type FeeFilter = {
@@ -878,6 +889,26 @@ export type IdFilterComparison = {
   notLike?: InputMaybe<Scalars['ID']['input']>;
 };
 
+export type IntFieldComparison = {
+  between?: InputMaybe<IntFieldComparisonBetween>;
+  eq?: InputMaybe<Scalars['Int']['input']>;
+  gt?: InputMaybe<Scalars['Int']['input']>;
+  gte?: InputMaybe<Scalars['Int']['input']>;
+  in?: InputMaybe<Array<Scalars['Int']['input']>>;
+  is?: InputMaybe<Scalars['Boolean']['input']>;
+  isNot?: InputMaybe<Scalars['Boolean']['input']>;
+  lt?: InputMaybe<Scalars['Int']['input']>;
+  lte?: InputMaybe<Scalars['Int']['input']>;
+  neq?: InputMaybe<Scalars['Int']['input']>;
+  notBetween?: InputMaybe<IntFieldComparisonBetween>;
+  notIn?: InputMaybe<Array<Scalars['Int']['input']>>;
+};
+
+export type IntFieldComparisonBetween = {
+  lower: Scalars['Int']['input'];
+  upper: Scalars['Int']['input'];
+};
+
 export type Level = {
   __typename?: 'Level';
   abbreviation: Scalars['String']['output'];
@@ -886,6 +917,7 @@ export type Level = {
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  order: Scalars['Int']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
 };
@@ -908,6 +940,7 @@ export type LevelDeleteResponse = {
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  order?: Maybe<Scalars['Int']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   version?: Maybe<Scalars['Int']['output']>;
 };
@@ -920,6 +953,7 @@ export type LevelFilter = {
   id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<LevelFilter>>;
+  order?: InputMaybe<IntFieldComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -935,6 +969,7 @@ export enum LevelSortFields {
   CreatedAt = 'createdAt',
   Id = 'id',
   Name = 'name',
+  Order = 'order',
   UpdatedAt = 'updatedAt'
 }
 
@@ -1167,12 +1202,12 @@ export type MutationSetBranchsOnStudentArgs = {
 
 
 export type MutationSetOrderActivitiesArgs = {
-  input: Array<SetOrderActivity>;
+  input: Array<SetOrderInput>;
 };
 
 
 export type MutationSetOrderEnrollmentsArgs = {
-  input: Array<SetOrderEnrollment>;
+  input: Array<SetOrderInput>;
 };
 
 
@@ -1563,13 +1598,8 @@ export type SetBranchsOnStudentInput = {
   relationIds: Array<Scalars['ID']['input']>;
 };
 
-export type SetOrderActivity = {
-  activityId: Scalars['String']['input'];
-  order: Scalars['Float']['input'];
-};
-
-export type SetOrderEnrollment = {
-  enrollmentId: Scalars['String']['input'];
+export type SetOrderInput = {
+  id: Scalars['ID']['input'];
   order: Scalars['Float']['input'];
 };
 
@@ -1836,6 +1866,7 @@ export type UpdateActivity = {
   name?: InputMaybe<Scalars['String']['input']>;
   order?: InputMaybe<Scalars['Float']['input']>;
   quantity?: InputMaybe<Scalars['Float']['input']>;
+  withTax?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type UpdateBranch = {
@@ -1892,12 +1923,14 @@ export type UpdateFee = {
   frequency?: InputMaybe<Frequency>;
   name?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
+  withTax?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type UpdateLevel = {
   abbreviation?: InputMaybe<Scalars['String']['input']>;
   branchId?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  order?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type UpdateManyActivitiesInput = {
@@ -2176,7 +2209,7 @@ export type DeleteOneActivityMutationVariables = Exact<{
 export type DeleteOneActivityMutation = { __typename?: 'Mutation', deleteOneActivity: { __typename?: 'ActivityDeleteResponse', id?: string | null } };
 
 export type SetOrderActivitiesMutationVariables = Exact<{
-  payload: Array<SetOrderActivity> | SetOrderActivity;
+  payload: Array<SetOrderInput> | SetOrderInput;
 }>;
 
 
@@ -2289,7 +2322,7 @@ export type DeleteOneEnrollmentMutationVariables = Exact<{
 export type DeleteOneEnrollmentMutation = { __typename?: 'Mutation', deleteOneEnrollment: { __typename?: 'EnrollmentDeleteResponse', id?: string | null } };
 
 export type SetOrderEnrollmentsMutationVariables = Exact<{
-  payload: Array<SetOrderEnrollment> | SetOrderEnrollment;
+  payload: Array<SetOrderInput> | SetOrderInput;
 }>;
 
 
@@ -2859,7 +2892,7 @@ export const DeleteOneActivityDocument = gql`
     }
   }
 export const SetOrderActivitiesDocument = gql`
-    mutation setOrderActivities($payload: [SetOrderActivity!]!) {
+    mutation setOrderActivities($payload: [SetOrderInput!]!) {
   setOrderActivities(input: $payload) {
     updatedCount
   }
@@ -3136,7 +3169,7 @@ export const DeleteOneEnrollmentDocument = gql`
     }
   }
 export const SetOrderEnrollmentsDocument = gql`
-    mutation setOrderEnrollments($payload: [SetOrderEnrollment!]!) {
+    mutation setOrderEnrollments($payload: [SetOrderInput!]!) {
   setOrderEnrollments(input: $payload) {
     updatedCount
   }

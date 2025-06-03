@@ -1,53 +1,74 @@
 <mat-card>
-    <mat-card-header>
-      <mat-card-title>Niveles</mat-card-title>
-    </mat-card-header>
-    <mat-card-content class="min-h-[calc(100vh-10rem)]">
-      <div class="flex gap-2 mt-2 items-center">
-        <mat-form-field class="w-full" subscriptSizing="dynamic">
-          <mat-label>Buscador</mat-label>
-          <mat-icon svgIcon="magnify" matPrefix />
-          <input
-            type="search"
-            [formControl]="searchControl"
-            matInput
-            placeholder="Ej: Little Magicians"
-          />
-        </mat-form-field>
-  
-        <button
-          mat-icon-button
-          color="primary"
-          matTooltip="Refrescar"
-          (click)="refresh()"
-          [ngClass]="{ 'animate-spin': loading() }"
-        >
-          <mat-icon svgIcon="refresh" />
-        </button>
-        <button
-          mat-icon-button
-          color="primary"
-          matTooltip="Crear nuevo"
-          (click)="openFormDialog()"
-        >
-          <mat-icon svgIcon="plus" />
-        </button>
-      </div>
-      <table mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Nombre</th>
-          <td mat-cell *matCellDef="let element">
-            <p>
-              {{ element.name }}
-            </p>
-            <p class="text-gray-700">
-              {{ element.abbreviation }}
-            </p>
-          </td>
-        </ng-container>
-        <ng-container matColumnDef="actions">
-          <th mat-header-cell *matHeaderCellDef class="!text-right">Acciones</th>
-          <td mat-cell *matCellDef="let element" class="!text-right">
+  <mat-card-header>
+    <mat-card-title>Niveles</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="min-h-[calc(100vh-10rem)]">
+    <div class="flex gap-2 mt-2 items-center">
+      <mat-form-field class="w-full" subscriptSizing="dynamic">
+        <mat-label>Buscador</mat-label>
+        <mat-icon svgIcon="magnify" matPrefix />
+        <input
+          type="search"
+          [formControl]="searchControl"
+          matInput
+          placeholder="Ej: Little Magicians"
+        />
+      </mat-form-field>
+
+      <button
+        mat-icon-button
+        color="primary"
+        matTooltip="Refrescar"
+        (click)="refresh()"
+        [ngClass]="{ 'animate-spin': loading() }"
+      >
+        <mat-icon svgIcon="refresh" />
+      </button>
+      <button
+        mat-icon-button
+        color="primary"
+        matTooltip="Crear nuevo"
+        (click)="openFormDialog()"
+      >
+        <mat-icon svgIcon="plus" />
+      </button>
+    </div>
+    <mat-table
+      [dataSource]="dataSource"
+      cdkDropList
+      (cdkDropListDropped)="dropLevel($event)"
+      [cdkDropListData]="dataSource.data"
+    >
+      <!-- [cdkDropListData]="dataSource.data" -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <!-- {{ element.name }} -->
+          <div class="flex items-center gap-2">
+            <mat-icon
+              svgIcon="drag"
+              class="cursor-move"
+              cdkDragHandle
+            ></mat-icon>
+
+            <div>
+              <p>
+                {{ element.name }}
+              </p>
+              <p class="text-gray-700">
+                {{ element.abbreviation }}
+              </p>
+            </div>
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>
+          <p class="w-full text-right!">Acciones</p>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <div class="w-full text-right">
             <button
               mat-icon-button
               color="primary"
@@ -64,19 +85,25 @@
             >
               <mat-icon svgIcon="delete" class="!text-red-400" />
             </button>
-          </td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
-  
-      <mat-paginator
-        #paginator
-        [length]="totalCount()"
-        [pageSize]="10"
-        [pageSizeOptions]="[10, 25, 100]"
-      >
-      </mat-paginator>
-    </mat-card-content>
-  </mat-card>
-  
+          </div>
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+      <mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        cdkDrag
+        [cdkDragData]="row"
+      ></mat-row>
+    </mat-table>
+
+    <mat-paginator
+      #paginator
+      [length]="totalCount()"
+      [pageSize]="10"
+      [pageSizeOptions]="[10, 25, 100]"
+    >
+    </mat-paginator>
+  </mat-card-content>
+</mat-card>

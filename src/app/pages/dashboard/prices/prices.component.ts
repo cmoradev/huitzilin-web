@@ -24,7 +24,7 @@ import {
   GetActivityPageGQL,
   GetFeePageGQL,
   SetOrderActivitiesGQL,
-  SetOrderActivity,
+  SetOrderInput,
 } from '@graphql';
 import { GlobalStateService } from '@services';
 import { NgScrollbar } from 'ngx-scrollbar';
@@ -231,9 +231,9 @@ export class PricesComponent implements OnInit {
   }
 
   private updateOrderActivities(): void {
-    const payload: SetOrderActivity[] = this.activities().map(
+    const payload: SetOrderInput[] = this.activities().map(
       (item, index) => ({
-        activityId: item.id,
+        id: item.id,
         order: index + 1,
       })
     );

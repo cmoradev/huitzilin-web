@@ -51,7 +51,7 @@ mutation deleteOneActivity($id: ID!) {
   }
 }
 
-mutation setOrderActivities($payload: [SetOrderActivity!]!) {
+mutation setOrderActivities($payload: [SetOrderInput!]!) {
   setOrderActivities(input: $payload) {
     updatedCount
   }

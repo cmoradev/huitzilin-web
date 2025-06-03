@@ -19,7 +19,7 @@ import {
   EnrollmentPartsFragment,
   GetDebitsPageGQL,
   GetEnrollmentsPageGQL,
-  SetOrderEnrollment,
+  SetOrderInput,
   SetOrderEnrollmentsGQL,
 } from '@graphql';
 import { GlobalStateService } from '@services';
@@ -263,9 +263,9 @@ export class EnrollmentsComponent implements OnInit {
   }
 
   private updateOrderEnrollments(): void {
-    const payload: SetOrderEnrollment[] = this.enrollments().map(
+    const payload: SetOrderInput[] = this.enrollments().map(
       (item, index) => ({
-        enrollmentId: item.id,
+        id: item.id,
         order: index + 1,
       })
     );
