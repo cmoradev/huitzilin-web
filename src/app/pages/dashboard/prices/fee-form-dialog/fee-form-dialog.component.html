@@ -45,6 +45,10 @@
           {{ formTools.checkForErrorsIn(formGroup.get("price")) }}
         </mat-error>
       </mat-form-field>
+
+      <mat-checkbox color="primary" formControlName="withTax">
+        ¿Incluye IVA?
+      </mat-checkbox>
     </div>
   </form>
 </mat-dialog-content>

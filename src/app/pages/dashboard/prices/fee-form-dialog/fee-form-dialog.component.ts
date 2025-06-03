@@ -1,25 +1,17 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatOption } from '@angular/material/autocomplete';
-import { MatButton } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
+  MatDialogModule,
   MatDialogRef,
-  MatDialogTitle,
 } from '@angular/material/dialog';
 import {
-  MatError,
-  MatFormField,
-  MatHint,
-  MatLabel,
-  MatPrefix,
-  MatSuffix,
+  MatFormFieldModule,
 } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatSelect } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import {
   CreateOneFeeGQL,
   FeePartsFragment,
@@ -34,26 +26,19 @@ import { map } from 'rxjs';
   selector: 'app-fee-form-dialog',
   imports: [
     ReactiveFormsModule,
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
-    MatButton,
-    MatFormField,
-    MatOption,
-    MatInput,
-    MatHint,
-    MatError,
-    MatLabel,
-    MatPrefix,
-    MatSuffix,
-    MatSelect,
+    MatDialogModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
   ],
   templateUrl: './fee-form-dialog.component.html',
   styles: ``,
 })
 export class FeeFormDialogComponent implements OnInit {
   public readonly formTools = inject(FormToolsService);
+  private readonly _globalState = inject(GlobalStateService);
 
   public loading = signal(false);
   public data: FeePartsFragment | null = inject(MAT_DIALOG_DATA);
@@ -64,6 +49,7 @@ export class FeeFormDialogComponent implements OnInit {
     name: ['', [Validators.required, Validators.maxLength(64)]],
     price: [0, [Validators.required, Validators.min(1)]],
     frequency: ['', [Validators.required]],
+    withTax: [this._globalState.activity?.withTax ?? true],
   });
 
   private readonly _globalStateService = inject(GlobalStateService);
@@ -78,6 +64,7 @@ export class FeeFormDialogComponent implements OnInit {
         name: this.data.name,
         price: this.data.price,
         frequency: this.data.frequency,
+        withTax: this.data.withTax,
       });
     }
 
@@ -166,4 +153,5 @@ type FormValues = {
   name: string;
   price: number;
   frequency: Frequency;
+  withTax: boolean;
 };

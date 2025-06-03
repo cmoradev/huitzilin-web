@@ -3,58 +3,56 @@ import {
   DragDropModule,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { NgClass } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatIconButton } from '@angular/material/button';
-import {
-  MatCard,
-  MatCardContent,
-  MatCardHeader,
-  MatCardTitle,
-} from '@angular/material/card';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
-import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
-import { MatDivider, MatNavList } from '@angular/material/list';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatDivider, MatListModule } from '@angular/material/list';
 import {
+  ActivityFilter,
   ActivityPartsFragment,
   FeePartsFragment,
   GetActivityPageGQL,
+  GetActivityPageQueryVariables,
   GetFeePageGQL,
+  GetFeePageQueryVariables,
   SetOrderActivitiesGQL,
   SetOrderInput,
 } from '@graphql';
 import { GlobalStateService } from '@services';
 import { NgScrollbar } from 'ngx-scrollbar';
-import { debounceTime, merge } from 'rxjs';
+import { debounceTime, map, merge } from 'rxjs';
 import { ActivityDeleteDialogComponent } from './activity-delete-dialog/activity-delete-dialog.component';
 import { ActivityFormDialogComponent } from './activity-form-dialog/activity-form-dialog.component';
 import { ActivityItemComponent } from './activity-item/activity-item.component';
 import { FeeDeleteDialogComponent } from './fee-delete-dialog/fee-delete-dialog.component';
 import { FeeFormDialogComponent } from './fee-form-dialog/fee-form-dialog.component';
 import { FeeItemComponent } from './fee-item/fee-item.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-prices',
   imports: [
-    NgClass,
-    MatCard,
-    MatIcon,
-    MatCardContent,
-    MatCardHeader,
-    MatCardTitle,
-    MatNavList,
+    MatIconModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatListModule,
+    MatTooltipModule,
+    MatProgressBarModule,
     MatDivider,
     NgScrollbar,
-    MatFormField,
-    MatIconButton,
-    MatInput,
+    MatButtonModule,
+    MatInputModule,
+    DragDropModule,
     ReactiveFormsModule,
     ActivityItemComponent,
     FeeItemComponent,
-    DragDropModule,
   ],
   templateUrl: './prices.component.html',
   styles: ``,
@@ -62,6 +60,7 @@ import { FeeItemComponent } from './fee-item/fee-item.component';
 export class PricesComponent implements OnInit {
   private readonly _dialog = inject(MatDialog);
   private readonly _globalStateService = inject(GlobalStateService);
+  private readonly _snackBar = inject(MatSnackBar);
 
   public activity = computed(() => this._globalStateService.activity);
 
@@ -151,68 +150,92 @@ export class PricesComponent implements OnInit {
     });
   }
 
-  public refreshActivities(): void {
+  public refreshActivities(accumulared: ActivityPartsFragment[] = []): void {
     if (!!this._globalStateService.branch?.id) {
+      const limit = 50;
+      const offset = accumulared.length;
+
+      const params: GetActivityPageQueryVariables = {
+        limit,
+        offset,
+        filter: {
+          branchId: { eq: this._globalStateService.branch!.id },
+          name: { iLike: `%${this.searchControl.value}%` },
+        },
+      };
+
       this.activitiesLoading.set(true);
 
-      // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
-      this._activitiesPageGQL
-        .watch(
-          {
-            filter: {
-              branchId: { eq: this._globalStateService.branch!.id },
-              name: { iLike: `%${this.searchControl.value}%` },
-            },
-            limit: 100,
-            offset: 0,
-          },
-          {
-            fetchPolicy: 'cache-and-network',
-            nextFetchPolicy: 'cache-and-network',
-            notifyOnNetworkStatusChange: true,
-          }
-        )
-        .valueChanges.subscribe({
-          next: ({ data, loading }) => {
-            const { nodes, totalCount } = data.activities;
+      const getActivities$ = this._activitiesPageGQL.watch(params, {
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-and-network',
+        notifyOnNetworkStatusChange: true,
+      }).valueChanges;
 
-            this.activities.set(nodes);
-            this.activitiesLoading.set(loading);
+      getActivities$.pipe(map((resp) => resp.data.activities)).subscribe({
+        next: ({ nodes, totalCount }) => {
+          const allItems = accumulared.concat(nodes);
+
+          if (allItems.length >= totalCount) {
+            this.activities.set(allItems);
+            this.activitiesLoading.set(false);
             this.activitiesTotalCount.set(totalCount);
-          },
-        });
+            return; // No more activities to fetch
+          }
+
+          this.refreshActivities(allItems);
+        },
+        error: (error) => {
+          console.error('Error fetching activities', error);
+          this.activitiesLoading.set(false);
+        },
+      });
+    } else {
+      this.activities.set([]);
+      this.activitiesLoading.set(false);
+      this.activitiesTotalCount.set(0);
     }
   }
 
-  public refreshFees(): void {
+  public refreshFees(accumulared: FeePartsFragment[] = []): void {
     if (!!this._globalStateService.activity?.id) {
+      const limit = 50;
+      const offset = accumulared.length;
+
+      const params: GetFeePageQueryVariables = {
+        filter: {
+          activityId: { eq: this._globalStateService.activity!.id },
+        },
+        limit,
+        offset,
+      };
+
       this.feesLoading.set(true);
 
-      // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
-      this._feesPageGQL
-        .watch(
-          {
-            filter: {
-              activityId: { eq: this._globalStateService.activity!.id },
-            },
-            limit: 100,
-            offset: 0,
-          },
-          {
-            fetchPolicy: 'cache-and-network',
-            nextFetchPolicy: 'cache-and-network',
-            notifyOnNetworkStatusChange: true,
-          }
-        )
-        .valueChanges.subscribe({
-          next: ({ data, loading }) => {
-            const { nodes, totalCount } = data.fees;
+      const getFees$ = this._feesPageGQL.watch(params, {
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-and-network',
+        notifyOnNetworkStatusChange: true,
+      }).valueChanges;
 
-            this.fees.set(nodes);
-            this.feesLoading.set(loading);
+      getFees$.pipe(map((resp) => resp.data.fees)).subscribe({
+        next: ({ nodes, totalCount }) => {
+          const allItems = accumulared.concat(nodes);
+
+          if (allItems.length >= totalCount) {
+            this.fees.set(allItems);
+            this.feesLoading.set(false);
             this.feesTotalCount.set(totalCount);
-          },
-        });
+            return; // No more fees to fetch
+          }
+
+          this.refreshFees(allItems);
+        },
+        error: (error) => {
+          console.error('Error fetching fees', error);
+          this.feesLoading.set(false);
+        },
+      });
     } else {
       this.fees.set([]);
       this.feesLoading.set(false);
@@ -231,24 +254,26 @@ export class PricesComponent implements OnInit {
   }
 
   private updateOrderActivities(): void {
-    const payload: SetOrderInput[] = this.activities().map(
-      (item, index) => ({
-        id: item.id,
-        order: index + 1,
-      })
-    );
+    const payload: SetOrderInput[] = this.activities().map((item, index) => ({
+      id: item.id,
+      order: index + 1,
+    }));
 
-    this._setOrderActivitiesGQL
-      .mutate({
-        payload,
-      })
-      .subscribe({
-        next: () => {
-          console.log('Order activities updated successfully');
-        },
-        error: (error) => {
-          console.error('Error updating order activities', error);
-        },
-      });
+    this._setOrderActivitiesGQL.mutate({ payload }).subscribe({
+      next: () => {
+        this._snackBar.open(
+          'Se ha actualizado el orden correctamente',
+          'Cerrar',
+          {
+            duration: 1000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+          }
+        );
+      },
+      error: (error) => {
+        console.error('Error updating order activities', error);
+      },
+    });
   }
 }

@@ -56,7 +56,7 @@ export class LevelsComponent {
   public loading = signal(false);
   public totalCount = signal(0);
 
-  private _snackBar = inject(MatSnackBar);
+  private readonly _snackBar = inject(MatSnackBar);
 
   private readonly dialog = inject(MatDialog);
   private readonly _setOrderLevelsGQL = inject(SetOrderLevelsGQL);

@@ -45,6 +45,7 @@ export class ActivityFormDialogComponent implements OnInit {
     quantity: [0, [Validators.required]],
     isPackage: [false],
     inPackage: [false],
+    withTax: [true]
   });
 
   private readonly _globalStateService = inject(GlobalStateService);
@@ -72,6 +73,7 @@ export class ActivityFormDialogComponent implements OnInit {
         quantity: this.data.quantity,
         isPackage: this.data.isPackage,
         inPackage: this.data.inPackage,
+        withTax: this.data.withTax,
       });
     }
   }
@@ -137,4 +139,5 @@ type FormValues = {
   quantity: number;
   isPackage: boolean;
   inPackage: boolean;
+  withTax: boolean;
 };

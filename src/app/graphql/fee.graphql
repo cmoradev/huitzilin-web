@@ -3,6 +3,7 @@ fragment FeeParts on Fee {
   name,
   price
   frequency
+  withTax
   createdAt
   updatedAt
 }
