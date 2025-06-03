@@ -25,9 +25,18 @@
               <mat-label>Contraseña</mat-label>
               <input
                 matInput
+                [type]="showPassword() ? 'text' : 'password'"
                 placeholder="Ej: usuario123"
                 formControlName="password"
               />
+              <button
+                type="button"
+                mat-icon-button
+                (click)="togglePasswordVisibility()"
+                matSuffix
+              >
+                <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+              </button>
               <mat-hint>Ingrese su contraseña</mat-hint>
               <mat-error>
                 {{ formTools.checkForErrorsIn(formGroup.get("password")) }}

@@ -1,5 +1,6 @@
 export const ERROR_MESSAGES: { [key: string]: (...args: any) => string } = {
     unauthenticated: () => 'Credenciales no validas',
+    userNotFound: () => 'Usuario no encontrado',
     required: () => `Campo requerido`,
     notAvailable: () => 'Este registro ya esta en uso',
     email: () => `Dirección de correo electrónico válida`,

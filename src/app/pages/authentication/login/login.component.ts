@@ -1,27 +1,25 @@
 import { Component, inject, signal } from '@angular/core';
-import { MatCard, MatCardContent } from '@angular/material/card';
-import { MatError, MatFormField, MatHint, MatLabel } from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
-import { MatCheckbox } from '@angular/material/checkbox';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService, FormToolsService } from '@services';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-login',
   imports: [
-    MatCard,
-    MatCardContent,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatHint,
-    MatButton,
-    MatCheckbox,
-    MatError,
     RouterLink,
     ReactiveFormsModule,
+    MatFormFieldModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    MatInputModule,
+    MatCardModule,
+    MatIconModule,
   ],
   templateUrl: './login.component.html',
   styles: ``,
@@ -34,12 +32,17 @@ export class LoginComponent {
   public readonly formTools = inject(FormToolsService);
 
   public loading = signal(false);
+  public showPassword = signal(false);
 
   public formGroup = this.formTools.builder.group({
     password: ['', [Validators.required]],
     username: [this._authService.username, [Validators.required]],
     rememberMe: [false],
   });
+
+  public togglePasswordVisibility() {
+    this.showPassword.update((current) => !current);
+  }
 
   public submit() {
     this.loading.set(true);
@@ -58,7 +61,21 @@ export class LoginComponent {
           this.loading.set(false);
           this.router.navigate(['/']);
         },
-        error: () => {
+        error: (err) => {
+          const error = err?.cause?.extensions?.originalError || null;
+
+          if (error?.statusCode === 401) {
+            this.formGroup.get('password')?.setErrors({
+              unauthenticated: true,
+            });
+          }
+
+          if (error?.statusCode === 409) {
+            this.formGroup.get('username')?.setErrors({
+              userNotFound: true,
+            });
+          }
+
           this.loading.set(false);
         },
       });

@@ -63,6 +63,10 @@ export class FormToolsService {
         return ERROR_MESSAGES['unauthenticated']();
       }
 
+      if (control.hasError('userNotFound')) {
+        return ERROR_MESSAGES['userNotFound']();
+      }
+
       if (control.hasError('endDateInvalid')) {
         return ERROR_MESSAGES['endDateInvalid']();
       }
