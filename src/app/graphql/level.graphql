@@ -2,6 +2,7 @@ fragment LevelParts on Level {
   id,
   name,
   abbreviation,
+  order,
   createdAt
   updatedAt
 }
@@ -19,6 +20,7 @@ mutation createOneLevel ($level: CreateLevel!) {
 query getLevelsPage ($offset: Int = 0, $limit: Int = 10, $filter: LevelFilter = {})  {
   levels (
     paging: { limit: $limit, offset: $offset },
+    sorting: [{field: order, direction: ASC}, {field: createdAt, direction: DESC}]
     filter: $filter
   ) {
     totalCount
@@ -50,5 +52,11 @@ mutation deleteOneLevel ($id: ID!) {
     }
   ) {
     id
+  }
+}
+
+mutation setOrderLevels($payload: [SetOrderInput!]!) {
+  setOrderLevels(input: $payload) {
+    updatedCount
   }
 }

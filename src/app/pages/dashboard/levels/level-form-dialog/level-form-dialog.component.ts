@@ -110,6 +110,7 @@ export class LevelFormDialogComponent {
       .mutate({
         level: {
           ...values,
+          order: 0,
           branchId: this._globalStateService.branch!.id,
         },
       })

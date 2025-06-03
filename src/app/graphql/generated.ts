@@ -1011,6 +1011,7 @@ export type Mutation = {
   setBranchsOnStudent: Student;
   setOrderActivities: UpdateCount;
   setOrderEnrollments: UpdateCount;
+  setOrderLevels: UpdateCount;
   signIn: Session;
   signUp: Session;
   updateManyActivities: UpdateManyResponse;
@@ -1207,6 +1208,11 @@ export type MutationSetOrderActivitiesArgs = {
 
 
 export type MutationSetOrderEnrollmentsArgs = {
+  input: Array<SetOrderInput>;
+};
+
+
+export type MutationSetOrderLevelsArgs = {
   input: Array<SetOrderInput>;
 };
 
@@ -2175,14 +2181,14 @@ export type DeleteOneBranchMutationVariables = Exact<{
 
 export type DeleteOneBranchMutation = { __typename?: 'Mutation', deleteOneBranch: { __typename?: 'BranchDeleteResponse', id?: string | null } };
 
-export type ActivityPartsFragment = { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, order: number, createdAt: any, updatedAt: any };
+export type ActivityPartsFragment = { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number, createdAt: any, updatedAt: any };
 
 export type CreateOneActivityMutationVariables = Exact<{
   activity: CreateActivity;
 }>;
 
 
-export type CreateOneActivityMutation = { __typename?: 'Mutation', createOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, order: number, createdAt: any, updatedAt: any } };
+export type CreateOneActivityMutation = { __typename?: 'Mutation', createOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number, createdAt: any, updatedAt: any } };
 
 export type GetActivityPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2191,7 +2197,7 @@ export type GetActivityPageQueryVariables = Exact<{
 }>;
 
 
-export type GetActivityPageQuery = { __typename?: 'Query', activities: { __typename?: 'ActivityConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, order: number, createdAt: any, updatedAt: any }> } };
+export type GetActivityPageQuery = { __typename?: 'Query', activities: { __typename?: 'ActivityConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number, createdAt: any, updatedAt: any }> } };
 
 export type UpdateOneActivityMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2199,7 +2205,7 @@ export type UpdateOneActivityMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneActivityMutation = { __typename?: 'Mutation', updateOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, order: number, createdAt: any, updatedAt: any } };
+export type UpdateOneActivityMutation = { __typename?: 'Mutation', updateOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number, createdAt: any, updatedAt: any } };
 
 export type DeleteOneActivityMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2361,14 +2367,14 @@ export type DeleteOneFeeMutationVariables = Exact<{
 
 export type DeleteOneFeeMutation = { __typename?: 'Mutation', deleteOneFee: { __typename?: 'FeeDeleteResponse', id?: string | null } };
 
-export type LevelPartsFragment = { __typename?: 'Level', id: string, name: string, abbreviation: string, createdAt: any, updatedAt: any };
+export type LevelPartsFragment = { __typename?: 'Level', id: string, name: string, abbreviation: string, order: number, createdAt: any, updatedAt: any };
 
 export type CreateOneLevelMutationVariables = Exact<{
   level: CreateLevel;
 }>;
 
 
-export type CreateOneLevelMutation = { __typename?: 'Mutation', createOneLevel: { __typename?: 'Level', id: string, name: string, abbreviation: string, createdAt: any, updatedAt: any } };
+export type CreateOneLevelMutation = { __typename?: 'Mutation', createOneLevel: { __typename?: 'Level', id: string, name: string, abbreviation: string, order: number, createdAt: any, updatedAt: any } };
 
 export type GetLevelsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2377,7 +2383,7 @@ export type GetLevelsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetLevelsPageQuery = { __typename?: 'Query', levels: { __typename?: 'LevelConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Level', id: string, name: string, abbreviation: string, createdAt: any, updatedAt: any }> } };
+export type GetLevelsPageQuery = { __typename?: 'Query', levels: { __typename?: 'LevelConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Level', id: string, name: string, abbreviation: string, order: number, createdAt: any, updatedAt: any }> } };
 
 export type UpdateOneLevelMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2385,7 +2391,7 @@ export type UpdateOneLevelMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneLevelMutation = { __typename?: 'Mutation', updateOneLevel: { __typename?: 'Level', id: string, name: string, abbreviation: string, createdAt: any, updatedAt: any } };
+export type UpdateOneLevelMutation = { __typename?: 'Mutation', updateOneLevel: { __typename?: 'Level', id: string, name: string, abbreviation: string, order: number, createdAt: any, updatedAt: any } };
 
 export type DeleteOneLevelMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2393,6 +2399,13 @@ export type DeleteOneLevelMutationVariables = Exact<{
 
 
 export type DeleteOneLevelMutation = { __typename?: 'Mutation', deleteOneLevel: { __typename?: 'LevelDeleteResponse', id?: string | null } };
+
+export type SetOrderLevelsMutationVariables = Exact<{
+  payload: Array<SetOrderInput> | SetOrderInput;
+}>;
+
+
+export type SetOrderLevelsMutation = { __typename?: 'Mutation', setOrderLevels: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
 export type StudentPartsFragment = { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any };
 
@@ -2497,6 +2510,7 @@ export const ActivityPartsFragmentDoc = gql`
   quantity
   isPackage
   inPackage
+  withTax
   order
   createdAt
   updatedAt
@@ -2578,6 +2592,7 @@ export const LevelPartsFragmentDoc = gql`
   id
   name
   abbreviation
+  order
   createdAt
   updatedAt
 }
@@ -3285,7 +3300,11 @@ export const CreateOneLevelDocument = gql`
   }
 export const GetLevelsPageDocument = gql`
     query getLevelsPage($offset: Int = 0, $limit: Int = 10, $filter: LevelFilter = {}) {
-  levels(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+  levels(
+    paging: {limit: $limit, offset: $offset}
+    sorting: [{field: order, direction: ASC}, {field: createdAt, direction: DESC}]
+    filter: $filter
+  ) {
     totalCount
     pageInfo {
       hasNextPage
@@ -3339,6 +3358,24 @@ export const DeleteOneLevelDocument = gql`
   })
   export class DeleteOneLevelGQL extends Apollo.Mutation<DeleteOneLevelMutation, DeleteOneLevelMutationVariables> {
     document = DeleteOneLevelDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const SetOrderLevelsDocument = gql`
+    mutation setOrderLevels($payload: [SetOrderInput!]!) {
+  setOrderLevels(input: $payload) {
+    updatedCount
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class SetOrderLevelsGQL extends Apollo.Mutation<SetOrderLevelsMutation, SetOrderLevelsMutationVariables> {
+    document = SetOrderLevelsDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

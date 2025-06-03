@@ -1,7 +1,12 @@
 import { NgClass } from '@angular/common';
 import { Component, inject, signal, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,7 +16,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { GetLevelsPageGQL, LevelFilter, LevelPartsFragment } from '@graphql';
+import {
+  GetLevelsPageGQL,
+  LevelFilter,
+  LevelPartsFragment,
+  SetOrderInput,
+  SetOrderLevelsGQL,
+} from '@graphql';
 import { GlobalStateService } from '@services';
 import { debounceTime, merge, startWith } from 'rxjs';
 import { LevelDeleteDialogComponent } from './level-delete-dialog/level-delete-dialog.component';
@@ -45,7 +56,10 @@ export class LevelsComponent {
   public loading = signal(false);
   public totalCount = signal(0);
 
+  private _snackBar = inject(MatSnackBar);
+
   private readonly dialog = inject(MatDialog);
+  private readonly _setOrderLevelsGQL = inject(SetOrderLevelsGQL);
   private readonly _levelsPageGQL = inject(GetLevelsPageGQL);
   private readonly _globalStateService = inject(GlobalStateService);
 
@@ -131,6 +145,31 @@ export class LevelsComponent {
     moveItemInArray(values, event.previousIndex, event.currentIndex);
     this.dataSource.data = values;
 
-    // this.updateOrderLevels();
+    this.updateOrderLevels();
+  }
+
+  private updateOrderLevels(): void {
+    const limit: number = this.paginator.pageSize;
+    const offset: number = this.paginator.pageIndex * limit;
+
+    const payload: SetOrderInput[] = this.dataSource.data.map(
+      (item, index) => ({
+        id: item.id,
+        order: index + 1 + offset,
+      })
+    );
+
+    this._setOrderLevelsGQL.mutate({ payload }).subscribe({
+      next: () => {
+        this._snackBar.open('Se ha actualizado el orden correctamente', 'Cerrar', {
+          duration: 1000,
+          horizontalPosition: 'center',
+          verticalPosition: 'bottom',
+        });
+      },
+      error: (error) => {
+        console.error('Error updating order activities', error);
+      },
+    });
   }
 }
