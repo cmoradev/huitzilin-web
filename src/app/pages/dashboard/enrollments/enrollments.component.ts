@@ -74,7 +74,6 @@ export class EnrollmentsComponent implements OnInit {
   public branch = computed(() => this._globalStateService.branch);
   public cycle = computed(() => this._globalStateService.cycle);
 
-  private readonly _setOrderEnrollmentsGQL = inject(SetOrderEnrollmentsGQL);
   private readonly _debitsPageGQL = inject(GetDebitsPageGQL);
 
   private readonly _enrollmentFlatTree = inject(EnrollmentFlatTreeService);
@@ -284,41 +283,4 @@ export class EnrollmentsComponent implements OnInit {
     }
   }
 
-  public dropEnrollment(event: CdkDragDrop<EnrollmentPartsFragment[]>) {
-    const values = [...this.enrollmentsDataSource.data];
-    moveItemInArray(values, event.previousIndex, event.currentIndex);
-    this.enrollmentsDataSource.data = values;
-
-    this.updateOrderEnrollments();
-  }
-
-  private updateOrderEnrollments(): void {
-    const payload: SetOrderInput[] = this.enrollmentsDataSource.data.map(
-      (node, index) => ({
-        id: node.item.id,
-        order: index + 1,
-      })
-    );
-
-    this._setOrderEnrollmentsGQL
-      .mutate({
-        payload,
-      })
-      .subscribe({
-        next: () => {
-          this._snackBar.open(
-            'Se ha actualizado el orden correctamente',
-            'Cerrar',
-            {
-              duration: 1000,
-              horizontalPosition: 'center',
-              verticalPosition: 'bottom',
-            }
-          );
-        },
-        error: (error) => {
-          console.error('Error updating order enrollments', error);
-        },
-      });
-  }
 }

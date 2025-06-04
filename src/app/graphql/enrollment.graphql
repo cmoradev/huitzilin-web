@@ -9,6 +9,7 @@ fragment EnrollmentParts on Enrollment {
     name
     isPackage
     inPackage
+    quantity
   }
   cycle {
     id

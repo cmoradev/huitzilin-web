@@ -75,7 +75,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   public formGroup = this.formTools.builder.group({
     details: [
       '',
-      [Validators.required, Validators.minLength(3), Validators.maxLength(32)],
+      [Validators.required, Validators.minLength(3), Validators.maxLength(128)],
     ],
     state: [EnrollmentState.Active, [Validators.required]],
     activity: ['' as any, [Validators.required]],

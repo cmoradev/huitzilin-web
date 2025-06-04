@@ -28,11 +28,7 @@
         </div>
         <mat-divider />
 
-        <ng-scrollbar
-          class="relative flex-1 mt-2"
-          cdkDropList
-          (cdkDropListDropped)="dropEnrollment($event)"
-        >
+        <ng-scrollbar class="relative flex-1 mt-2">
           <cdk-tree
             #tree="cdkTree"
             [dataSource]="enrollmentsDataSource"
@@ -44,7 +40,6 @@
               [isExpandable]="node.expandable"
               [cdkTreeNodeTypeaheadLabel]="node.item.id"
               (expandedChange)="enrollmentsDataSource.toggleNode(node, $event)"
-
             >
               <app-enrollment-item
                 [node]="node"

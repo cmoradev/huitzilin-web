@@ -3,18 +3,14 @@
     class="item"
     (click)="selectEnrollment()"
     [ngClass]="{ active: isActive() }"
-    cdkDrag
   >
     @if (node.expandable) {
-    <mat-icon cdkTreeNodeToggle>
-      {{ isExpanded ? "expand_more" : "chevron_right" }}
-    </mat-icon>
+    <mat-icon
+      cdkTreeNodeToggle
+      [svgIcon]="isExpanded ? 'chevron-down' : 'chevron-right'"
+    />
     } @else {
     <span class="w-6 h-6"></span>
-    }
-
-    @if (node.level === 0) {
-      <mat-icon svgIcon="drag" class="cursor-move" cdkDragHandle></mat-icon>
     }
 
     <div>
@@ -40,16 +36,19 @@
     >
       <mat-icon svgIcon="dots-vertical"></mat-icon>
     </button>
-
-    <div class="item-placeholder" *cdkDragPlaceholder></div>
   </div>
 </div>
+
+<!-- <pre>
+  {{ node.item | json }}
+</pre> -->
+
 @if (node.isLoading()) {
 <mat-progress-bar mode="indeterminate" class="w-full" />
 }
 
 <mat-menu #menu="matMenu">
-  @if (node.item.activity.isPackage) {
+  @if (node.item.activity.isPackage && node.item.activity.quantity > node.item.children.totalCount) {
   <button mat-menu-item (click)="create.emit(node)">
     <mat-icon svgIcon="plus" />
     <span>Agregar inscrición</span>
