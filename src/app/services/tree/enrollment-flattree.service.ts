@@ -72,7 +72,7 @@ export class EnrollmentFlatTreeService {
   }
 }
 
-export class DepartmentDataSource
+export class EnrollmentDataSource
   implements
     DataSource<FlatNode<EnrollmentPartsFragment>>,
     FlatTreeDataSource<EnrollmentPartsFragment>

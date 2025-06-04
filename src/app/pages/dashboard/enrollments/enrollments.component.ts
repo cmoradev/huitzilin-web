@@ -12,11 +12,15 @@ import {
   DebitPartsFragment,
   EnrollmentPartsFragment,
   GetDebitsPageGQL,
-  GetEnrollmentsPageGQL,
   SetOrderInput,
   SetOrderEnrollmentsGQL,
+  GetEnrollmentsPageQueryVariables,
 } from '@graphql';
-import { GlobalStateService } from '@services';
+import {
+  EnrollmentDataSource,
+  EnrollmentFlatTreeService,
+  GlobalStateService,
+} from '@services';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { debounceTime, merge } from 'rxjs';
 import { DebitDeleteDialogComponent } from './debit-delete-dialog/debit-delete-dialog.component';
@@ -34,6 +38,8 @@ import {
 } from '@angular/cdk/drag-drop';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { CdkTreeModule } from '@angular/cdk/tree';
+import { FlatNode } from '@models';
 
 @Component({
   selector: 'app-enrollments',
@@ -51,8 +57,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     DragDropModule,
     MatTooltipModule,
     StudentStateComponent,
-    EnrollmentItemComponent,
+    CdkTreeModule,
     DebitItemComponent,
+    EnrollmentItemComponent,
   ],
   templateUrl: './enrollments.component.html',
   styles: ``,
@@ -68,11 +75,12 @@ export class EnrollmentsComponent implements OnInit {
   public cycle = computed(() => this._globalStateService.cycle);
 
   private readonly _setOrderEnrollmentsGQL = inject(SetOrderEnrollmentsGQL);
-
-  private readonly _enrollmentsPageGQL = inject(GetEnrollmentsPageGQL);
   private readonly _debitsPageGQL = inject(GetDebitsPageGQL);
 
-  public enrollments = signal<EnrollmentPartsFragment[]>([]);
+  private readonly _enrollmentFlatTree = inject(EnrollmentFlatTreeService);
+  public enrollmentsDataSource = new EnrollmentDataSource(
+    this._enrollmentFlatTree
+  );
   public enrollmentsLoading = signal<boolean>(false);
   public enrollmentsTotalCount = signal<number>(0);
 
@@ -104,11 +112,11 @@ export class EnrollmentsComponent implements OnInit {
   }
 
   public openEnrollmentFormDialog(
-    value: EnrollmentPartsFragment | undefined = undefined
+    value: FlatNode<EnrollmentPartsFragment> | undefined = undefined
   ): void {
     const $dialog = this._dialog.open(EnrollmentFormDialogComponent, {
       width: '30rem',
-      data: value,
+      data: value?.item,
     });
 
     $dialog.afterClosed().subscribe({
@@ -118,10 +126,29 @@ export class EnrollmentsComponent implements OnInit {
     });
   }
 
-  public openEnrollmentDeleteDialog(value: EnrollmentPartsFragment): void {
+  public createChildEnrollmentFormDialog(
+    value: FlatNode<EnrollmentPartsFragment>
+  ) {
+    const $dialog = this._dialog.open(EnrollmentFormDialogComponent, {
+      width: '30rem',
+      data: {
+        parentId: value?.item.id,
+      },
+    });
+
+    $dialog.afterClosed().subscribe({
+      next: (enrollment) => {
+        if (enrollment) this.refreshEnrollments();
+      },
+    });
+  }
+
+  public openEnrollmentDeleteDialog(
+    value: FlatNode<EnrollmentPartsFragment>
+  ): void {
     const $dialog = this._dialog.open(EnrollmentDeleteDialogComponent, {
       width: '30rem',
-      data: value,
+      data: value.item,
     });
 
     $dialog.afterClosed().subscribe({
@@ -174,42 +201,49 @@ export class EnrollmentsComponent implements OnInit {
     });
   }
 
-  public refreshEnrollments(): void {
+  public refreshEnrollments(
+    accumulared: FlatNode<EnrollmentPartsFragment>[] = []
+  ): void {
     if (
       !!this._globalStateService.branch?.id &&
       !!this._globalStateService.cycle?.id &&
       !!this._globalStateService.student?.id
     ) {
+      const limit = 50;
+      const offset = accumulared.length;
+
+      const params: GetEnrollmentsPageQueryVariables = {
+        limit,
+        offset,
+        filter: {
+          branchId: { eq: this._globalStateService.branch!.id },
+          studentId: { eq: this._globalStateService.student!.id },
+          cycleId: { eq: this._globalStateService.cycle!.id },
+          parentId: { is: null },
+          details: { iLike: `%${this.searchControl.value}%` },
+        },
+      };
+
       this.enrollmentsLoading.set(true);
 
-      // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
-      this._enrollmentsPageGQL
-        .watch(
-          {
-            filter: {
-              branchId: { eq: this._globalStateService.branch!.id },
-              studentId: { eq: this._globalStateService.student!.id },
-              cycleId: { eq: this._globalStateService.cycle!.id },
-              details: { iLike: `%${this.searchControl.value}%` },
-            },
-            limit: 100,
-            offset: 0,
-          },
-          {
-            fetchPolicy: 'cache-and-network',
-            nextFetchPolicy: 'cache-and-network',
-            notifyOnNetworkStatusChange: true,
-          }
-        )
-        .valueChanges.subscribe({
-          next: ({ data, loading }) => {
-            const { nodes, totalCount } = data.enrollments;
+      this._enrollmentFlatTree.loadRoots(params).subscribe({
+        next: ({ nodes, totalCount }) => {
+          const allItems = accumulared.concat(nodes);
 
-            this.enrollments.set(nodes);
-            this.enrollmentsLoading.set(loading);
+          if (allItems.length >= totalCount) {
+            this.enrollmentsDataSource.data = allItems;
+            this.enrollmentsLoading.set(false);
             this.enrollmentsTotalCount.set(totalCount);
-          },
-        });
+            return; // No more activities to fetch
+          }
+
+          this.refreshEnrollments(allItems);
+        },
+        error: (error) => {
+          console.error('Error fetching activities', error);
+          this.enrollmentsLoading.set(false);
+        },
+      });
     }
   }
 
@@ -251,20 +285,20 @@ export class EnrollmentsComponent implements OnInit {
   }
 
   public dropEnrollment(event: CdkDragDrop<EnrollmentPartsFragment[]>) {
-    this.enrollments.update((previous) => {
-      const values = [...previous];
-      moveItemInArray(values, event.previousIndex, event.currentIndex);
-      return values;
-    });
+    const values = [...this.enrollmentsDataSource.data];
+    moveItemInArray(values, event.previousIndex, event.currentIndex);
+    this.enrollmentsDataSource.data = values;
 
     this.updateOrderEnrollments();
   }
 
   private updateOrderEnrollments(): void {
-    const payload: SetOrderInput[] = this.enrollments().map((item, index) => ({
-      id: item.id,
-      order: index + 1,
-    }));
+    const payload: SetOrderInput[] = this.enrollmentsDataSource.data.map(
+      (node, index) => ({
+        id: node.item.id,
+        order: index + 1,
+      })
+    );
 
     this._setOrderEnrollmentsGQL
       .mutate({

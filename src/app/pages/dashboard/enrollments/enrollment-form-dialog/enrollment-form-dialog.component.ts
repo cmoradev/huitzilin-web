@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { AfterViewInit, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import {
@@ -35,10 +34,13 @@ import {
   UpdateOneEnrollmentGQL,
   GetLevelsPageGQL,
   LevelPartsFragment,
+  ActivityFilter,
 } from '@graphql';
 import { FormToolsService, GlobalStateService } from '@services';
 import { enrollmentStates } from '@utils/contains';
 import { debounceTime, filter, map, merge, startWith } from 'rxjs';
+
+type EnrollmentFormDialogData = EnrollmentPartsFragment | null;
 
 @Component({
   selector: 'app-enrollment-form-dialog',
@@ -68,7 +70,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   public readonly formTools = inject(FormToolsService);
 
   public loading = signal(false);
-  public data: EnrollmentPartsFragment | null = inject(MAT_DIALOG_DATA);
+  public data: EnrollmentFormDialogData = inject(MAT_DIALOG_DATA);
 
   public formGroup = this.formTools.builder.group({
     details: [
@@ -192,6 +194,10 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
         this._globalStateService.branch!.id &&
         this._globalStateService.cycle!.id
       ) {
+        if (!!this.data?.parentId) {
+          values.parentId = this.data?.parentId
+        }
+        
         this._save(values).subscribe({
           next: (branch) => {
             this._dialogRef.close(branch);
@@ -242,7 +248,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
           order: 1,
           isPackage: values.activity.isPackage,
           inPackage: values.activity.inPackage,
-          parentId: null,
+          parentId: values?.parentId ?? null,
         },
       })
       .pipe(map((value) => value.data?.createOneEnrollment));
@@ -252,16 +258,19 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
     if (this._globalStateService.branch!.id) {
       this.loadingActivities.set(true);
 
+      const filter: ActivityFilter = {
+        name: { iLike: `%${value}%` },
+        branchId: { eq: this._globalStateService.branch!.id },
+        inPackage: { is: !!this.data?.parentId }
+      };
+
       // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
       this._activitiesPageGQL
         .watch(
           {
             limit: 100,
             offset: 0,
-            filter: {
-              name: { iLike: `%${value}%` },
-              branchId: { eq: this._globalStateService.branch!.id },
-            },
+            filter,
           },
           {
             fetchPolicy: 'cache-and-network',
@@ -360,4 +369,5 @@ type FormValues = {
   activity: ActivityPartsFragment;
   classroom: ClassroomPartsFragment;
   level: ClassroomPartsFragment;
+  parentId: string | null;
 };

@@ -33,13 +33,28 @@
           cdkDropList
           (cdkDropListDropped)="dropEnrollment($event)"
         >
-          @for (enrollment of enrollments(); track enrollment.id) {
-          <app-enrollment-item
-            [enrollment]="enrollment"
-            (update)="openEnrollmentFormDialog($event)"
-            (delete)="openEnrollmentDeleteDialog($event)"
-          />
-          }
+          <cdk-tree
+            #tree="cdkTree"
+            [dataSource]="enrollmentsDataSource"
+            [levelAccessor]="enrollmentsDataSource.levelAccessor"
+            [trackBy]="enrollmentsDataSource.trackBy"
+          >
+            <cdk-tree-node
+              *cdkTreeNodeDef="let node"
+              [isExpandable]="node.expandable"
+              [cdkTreeNodeTypeaheadLabel]="node.item.id"
+              (expandedChange)="enrollmentsDataSource.toggleNode(node, $event)"
+
+            >
+              <app-enrollment-item
+                [node]="node"
+                [isExpanded]="tree.isExpanded(node)"
+                (create)="createChildEnrollmentFormDialog($event)"
+                (update)="openEnrollmentFormDialog($event)"
+                (remove)="openEnrollmentDeleteDialog($event)"
+              />
+            </cdk-tree-node>
+          </cdk-tree>
         </ng-scrollbar>
       </div>
       <!-- Debits Area -->

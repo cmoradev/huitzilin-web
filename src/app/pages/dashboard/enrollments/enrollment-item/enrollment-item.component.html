@@ -1,44 +1,65 @@
-<div
-  class="item"
-  (click)="selectEnrollment()"
-  [ngClass]="{ active: isActive() }"
-  cdkDrag
->
-  <mat-icon svgIcon="drag" class="cursor-move" cdkDragHandle></mat-icon>
-  <div>
-    <p class="font-medium">{{ enrollment.details }}</p>
-    <div
-      matListItemLine
-      class="text-xs"
-      [ngClass]="{
-    'text-red-800': enrollment.state === 'INACTIVE',
-    'text-green-800': enrollment.state === 'ACTIVE',
-    'text-yellow-800': enrollment.state === 'PAUSED',
-  }"
-    >
-      {{ enrollment.state | enrollmentState }}
-    </div>
-  </div>
-  <span class="flex-1"></span>
-  <button mat-icon-button [matMenuTriggerFor]="menu" (click)="openMenu($event)">
-    <mat-icon svgIcon="dots-vertical"></mat-icon>
-  </button>
+<div [style.paddingLeft.px]="node.level * 24">
+  <div
+    class="item"
+    (click)="selectEnrollment()"
+    [ngClass]="{ active: isActive() }"
+    cdkDrag
+  >
+    @if (node.expandable) {
+    <mat-icon cdkTreeNodeToggle>
+      {{ isExpanded ? "expand_more" : "chevron_right" }}
+    </mat-icon>
+    } @else {
+    <span class="w-6 h-6"></span>
+    }
 
-  <div class="item-placeholder" *cdkDragPlaceholder></div>
+    @if (node.level === 0) {
+      <mat-icon svgIcon="drag" class="cursor-move" cdkDragHandle></mat-icon>
+    }
+
+    <div>
+      <p class="font-medium">{{ node.item.details }}</p>
+      <div
+        matListItemLine
+        class="text-xs"
+        [ngClass]="{
+    'text-red-800': node.item.state === 'INACTIVE',
+    'text-green-800': node.item.state === 'ACTIVE',
+    'text-yellow-800': node.item.state === 'PAUSED',
+  }"
+      >
+        {{ node.item.state | enrollmentState }}
+      </div>
+    </div>
+    <span class="flex-1"></span>
+
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="menu"
+      (click)="openMenu($event)"
+    >
+      <mat-icon svgIcon="dots-vertical"></mat-icon>
+    </button>
+
+    <div class="item-placeholder" *cdkDragPlaceholder></div>
+  </div>
 </div>
+@if (node.isLoading()) {
+<mat-progress-bar mode="indeterminate" class="w-full" />
+}
 
 <mat-menu #menu="matMenu">
-  @if (enrollment.activity.isPackage) {
-  <button mat-menu-item (click)="create.emit(enrollment)">
+  @if (node.item.activity.isPackage) {
+  <button mat-menu-item (click)="create.emit(node)">
     <mat-icon svgIcon="plus" />
     <span>Agregar inscrición</span>
   </button>
   }
-  <button mat-menu-item (click)="update.emit(enrollment)">
+  <button mat-menu-item (click)="update.emit(node)">
     <mat-icon svgIcon="pencil" />
     <span>Editar</span>
   </button>
-  <button mat-menu-item (click)="delete.emit(enrollment)">
+  <button mat-menu-item (click)="remove.emit(node)">
     <mat-icon svgIcon="delete" class="!text-red-400" />
     <span>Eliminar</span>
   </button>
