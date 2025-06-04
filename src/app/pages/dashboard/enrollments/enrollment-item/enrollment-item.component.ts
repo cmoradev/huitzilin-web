@@ -1,6 +1,5 @@
-import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkTreeNodeToggle } from '@angular/cdk/tree';
-import { JsonPipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
   Component,
   computed,
@@ -27,8 +26,7 @@ import { GlobalStateService } from '@services';
     MatMenuModule,
     MatProgressBarModule,
     EnrollmentStatePipe,
-    CdkTreeNodeToggle,
-    JsonPipe
+    CdkTreeNodeToggle,    
   ],
   templateUrl: './enrollment-item.component.html',
   styleUrl: './enrollment-item.component.scss',
