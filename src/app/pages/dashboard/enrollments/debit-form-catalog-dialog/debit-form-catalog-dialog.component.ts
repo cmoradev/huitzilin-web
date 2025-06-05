@@ -107,16 +107,16 @@ export class DebitFormCatalogDialogComponent implements AfterViewInit {
           while (currentDate <= new Date(endCycle)) {
             currentDate.setDate(1)
             
-            debits.push({
-              description: value.name,
-              value: value.price,
-              frequency: value.frequency,
-              state: DebitState.Debt,
-              enrollmentId: this._globalStateService.enrollment!.id,
-              quantity: 1,
-              paymentDate: null,
-              dueDate: format(new Date(currentDate), 'yyyy-MM-dd'),
-            });
+            // debits.push({
+            //   description: value.name,
+            //   value: value.price,
+            //   frequency: value.frequency,
+            //   state: DebitState.Debt,
+            //   enrollmentId: this._globalStateService.enrollment!.id,
+            //   quantity: 1,
+            //   paymentDate: null,
+            //   dueDate: format(new Date(currentDate), 'yyyy-MM-dd'),
+            // });
 
             currentDate.setMonth(currentDate.getMonth() + 1);
             currentDate.setDate(1);
@@ -126,18 +126,18 @@ export class DebitFormCatalogDialogComponent implements AfterViewInit {
 
           break;
         default:
-          this.debits.set([
-            {
-              description: value.name,
-              value: value.price,
-              frequency: value.frequency,
-              state: DebitState.Debt,
-              enrollmentId: this._globalStateService.enrollment!.id,
-              quantity: 1,
-              paymentDate: null,
-              dueDate: format(new Date(), 'yyyy-MM-dd'),
-            },
-          ]);
+          // this.debits.set([
+          //   {
+          //     description: value.name,
+          //     value: value.price,
+          //     frequency: value.frequency,
+          //     state: DebitState.Debt,
+          //     enrollmentId: this._globalStateService.enrollment!.id,
+          //     quantity: 1,
+          //     paymentDate: null,
+          //     dueDate: format(new Date(), 'yyyy-MM-dd'),
+          //   },
+          // ]);
           break;
       }
     }

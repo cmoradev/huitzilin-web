@@ -37,6 +37,11 @@ export const DashboardRoutes: Routes = [
     loadComponent: () =>
       import('./prices/prices.component').then((m) => m.PricesComponent),
   },
+    {
+    path: 'discounts',
+    loadComponent: () =>
+      import('./discounts/discounts.component').then((m) => m.DiscountsComponent),
+  },
   {
     path: 'branches',
     loadComponent: () =>

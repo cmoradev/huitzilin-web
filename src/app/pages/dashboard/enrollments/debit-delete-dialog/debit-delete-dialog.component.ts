@@ -21,7 +21,6 @@ import { DebitStatePipe } from '@pipes';
     MatDialogClose,
     MatButton,
     DebitStatePipe,
-    CurrencyPipe,
     DatePipe,
   ],
   templateUrl: './debit-delete-dialog.component.html',

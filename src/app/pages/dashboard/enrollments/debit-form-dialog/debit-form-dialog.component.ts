@@ -75,12 +75,12 @@ export class DebitFormDialogComponent {
 
   ngOnInit(): void {
     if (!!this.data?.id) {
-      this.formGroup.patchValue({
-        description: this.data.description,
-        value: this.data.value,
-        state: this.data.state,
-        dueDate: `${this.data.dueDate}T12:00:00`,
-      });
+      // this.formGroup.patchValue({
+      //   description: this.data.description,
+      //   value: this.data.value,
+      //   state: this.data.state,
+      //   dueDate: `${this.data.dueDate}T12:00:00`,
+      // });
     }
   }
 
@@ -103,17 +103,17 @@ export class DebitFormDialogComponent {
           },
         });
       } else if (this._globalStateService.activity!.id) {
-        this._save(values).subscribe({
-          next: (debit) => {
-            this._dialogRef.close(debit);
-          },
-          error: (err) => {
-            console.error('CREATE FEE ERROR: ', err);
-          },
-          complete: () => {
-            this.loading.set(false);
-          },
-        });
+        // this._save(values).subscribe({
+        //   next: (debit) => {
+        //     this._dialogRef.close(debit);
+        //   },
+        //   error: (err) => {
+        //     console.error('CREATE FEE ERROR: ', err);
+        //   },
+        //   complete: () => {
+        //     this.loading.set(false);
+        //   },
+        // });
       }
     }
   }
@@ -127,19 +127,19 @@ export class DebitFormDialogComponent {
       .pipe(map((value) => value.data?.updateOneDebit));
   }
 
-  private _save(values: FormValues) {
-    return this._createOneDebit
-      .mutate({
-        debit: {
-          ...values,
-          frequency: Frequency.Single,
-          quantity: 1,
-          paymentDate: null,
-          enrollmentId: this._globalStateService.enrollment!.id,
-        },
-      })
-      .pipe(map((value) => value.data?.createOneDebit));
-  }
+  // private _save(values: FormValues) {
+  //   return this._createOneDebit
+  //     .mutate({
+  //       debit: {
+  //         ...values,
+  //         frequency: Frequency.Single,
+  //         quantity: 1,
+  //         paymentDate: null,
+  //         enrollmentId: this._globalStateService.enrollment!.id,
+  //       },
+  //     })
+  //     .pipe(map((value) => value.data?.createOneDebit));
+  // }
 }
 
 type FormValues = {
