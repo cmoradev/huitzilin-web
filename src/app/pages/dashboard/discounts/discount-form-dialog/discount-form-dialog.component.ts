@@ -124,11 +124,7 @@ export class DiscountFormDialogComponent {
           },
         });
       } else if (this._globalStateService.branch?.id) {
-        this._save({
-          ...values,
-          name: values.name.trim(),
-          branchId: this._globalStateService.branch.id,
-        }).subscribe({
+        this._save(values).subscribe({
           next: (cycle) => {
             this._snackBar.open(
               'Se ha creado un descuento correctamente',
@@ -161,10 +157,10 @@ export class DiscountFormDialogComponent {
       .pipe(map((value) => value.data?.updateOneDiscount));
   }
 
-  private _save(values: CreateDiscount) {
+  private _save(values: Omit<CreateDiscount, 'branchId'>) {
     return this._createOneCycle
       .mutate({
-        discount: values,
+        discount: { ...values, branchId: this._globalStateService.branch!.id },
       })
       .pipe(map((value) => value.data?.createOneDiscount));
   }

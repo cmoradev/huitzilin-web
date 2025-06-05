@@ -2,6 +2,10 @@
 <mat-dialog-content>
   <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
     <div class="flex flex-col gap-3">
+      <mat-checkbox color="primary" formControlName="withTax" matTooltip="El IVA se aplica despues de los descuentos">
+        ¿Incluye IVA?
+      </mat-checkbox>
+
       <mat-form-field>
         <mat-label>Descripción del adeudo</mat-label>
         <input
@@ -15,17 +19,47 @@
         </mat-error>
       </mat-form-field>
 
+      <div class="grid grid-cols-2 gap-3">
+        <mat-form-field>
+          <mat-label>Precio unitario</mat-label>
+          <input
+            matInput
+            placeholder="Ej: 100.00"
+            formControlName="unitPrice"
+            type="number"
+          />
+          <mat-hint>Precio por unidad del concepto</mat-hint>
+          <mat-error>
+            {{ formTools.checkForErrorsIn(formGroup.get("unitPrice")) }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Cantidad de unidades</mat-label>
+          <input
+            matInput
+            placeholder="Ej: 2"
+            formControlName="quantity"
+            type="number"
+          />
+          <mat-hint>Cantidad de unidades a cobrar</mat-hint>
+          <mat-error>
+            {{ formTools.checkForErrorsIn(formGroup.get("quantity")) }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
       <mat-form-field>
-        <mat-label>Monto del adeudo</mat-label>
+        <mat-label>Importe</mat-label>
         <input
           matInput
-          placeholder="Ej: 800.00"
-          formControlName="value"
+          placeholder="Ej: 200.00"
+          formControlName="amount"
           type="number"
         />
-        <mat-hint>Ingrese el monto total del adeudo</mat-hint>
+        <mat-hint>Importe total a cobrar por el adeudo</mat-hint>
         <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("value")) }}
+          {{ formTools.checkForErrorsIn(formGroup.get("amount")) }}
         </mat-error>
       </mat-form-field>
 

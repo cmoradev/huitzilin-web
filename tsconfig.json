@@ -23,6 +23,7 @@
       "@utils/*": ["./src/app/utils/*"],
       "@services": ["./src/app/services"],
       "@pipes": ["./src/app/pipes"],
+      "@calculations": ["./src/app/lib/calculations"],
       "@guards": ["./src/app/guards"],
       "@models": ["./src/app/models"],
       "@graphql": ["./src/app/graphql/generated.ts"],

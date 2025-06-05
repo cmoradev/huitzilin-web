@@ -338,7 +338,6 @@ export type CreateCycle = {
 };
 
 export type CreateDebit = {
-  amount: Scalars['Float']['input'];
   description: Scalars['String']['input'];
   discount: Scalars['Float']['input'];
   dueDate: Scalars['String']['input'];
@@ -347,9 +346,6 @@ export type CreateDebit = {
   paymentDate?: InputMaybe<Scalars['DateTime']['input']>;
   quantity: Scalars['Float']['input'];
   state: DebitState;
-  subtotal: Scalars['Float']['input'];
-  taxes: Scalars['Float']['input'];
-  total: Scalars['Float']['input'];
   unitPrice: Scalars['Float']['input'];
   withTax: Scalars['Boolean']['input'];
 };
@@ -2351,7 +2347,6 @@ export type UpdateCycle = {
 };
 
 export type UpdateDebit = {
-  amount?: InputMaybe<Scalars['Float']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   discount?: InputMaybe<Scalars['Float']['input']>;
   dueDate?: InputMaybe<Scalars['String']['input']>;
@@ -2360,9 +2355,6 @@ export type UpdateDebit = {
   paymentDate?: InputMaybe<Scalars['DateTime']['input']>;
   quantity?: InputMaybe<Scalars['Float']['input']>;
   state?: InputMaybe<DebitState>;
-  subtotal?: InputMaybe<Scalars['Float']['input']>;
-  taxes?: InputMaybe<Scalars['Float']['input']>;
-  total?: InputMaybe<Scalars['Float']['input']>;
   unitPrice?: InputMaybe<Scalars['Float']['input']>;
   withTax?: InputMaybe<Scalars['Boolean']['input']>;
 };
