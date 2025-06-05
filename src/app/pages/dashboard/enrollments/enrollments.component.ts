@@ -161,7 +161,7 @@ export class EnrollmentsComponent implements OnInit {
     value: DebitPartsFragment | undefined = undefined
   ): void {
     const $dialog = this._dialog.open(DebitFormCatalogDialogComponent, {
-      width: '30rem',
+      width: '42rem',
       data: value,
     });
 

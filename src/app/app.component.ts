@@ -4,6 +4,14 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from '@services';
 
+import { setDefaultOptions } from 'date-fns';
+import { es } from 'date-fns/locale'
+
+
+setDefaultOptions({
+  locale: es,
+})
+
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],

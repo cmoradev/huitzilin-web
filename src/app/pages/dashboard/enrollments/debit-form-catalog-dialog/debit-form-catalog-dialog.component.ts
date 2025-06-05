@@ -1,12 +1,12 @@
 import { CurrencyPipe } from '@angular/common';
-import { AfterViewInit, Component, inject, signal } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import {
   CreateDebit,
   CreateManyDebitsGQL,
@@ -14,165 +14,239 @@ import {
   FeePartsFragment,
   Frequency,
   GetFeePageGQL,
+  GetFeePageQueryVariables,
 } from '@graphql';
-import { GlobalStateService } from '@services';
-import { debounceTime, startWith } from 'rxjs';
-import { format } from 'date-fns';
+import { FrequencyPipe } from '@pipes';
+import { FormToolsService, GlobalStateService } from '@services';
+import {
+  addMonths,
+  format,
+  isBefore,
+  startOfMonth,
+  endOfMonth,
+  setDate,
+  constructNow,
+} from 'date-fns';
+import Decimal from 'decimal.js';
+import { map } from 'rxjs';
+
+const defaultDueDate = `${format(
+  addMonths(new Date(), 1),
+  'yyyy-MM'
+)}-05T12:00:00`;
 
 @Component({
   selector: 'app-debit-form-catalog-dialog',
   imports: [
-    MatAutocompleteModule,
+    MatSelectModule,
     MatDialogModule,
     MatInputModule,
     MatFormFieldModule,
     ReactiveFormsModule,
     MatButtonModule,
-    MatIcon,
+    MatIconModule,
     CurrencyPipe,
+    FrequencyPipe,
   ],
   templateUrl: './debit-form-catalog-dialog.component.html',
   styles: ``,
 })
-export class DebitFormCatalogDialogComponent implements AfterViewInit {
-  public loading = signal<boolean>(false);
-
-  public loadingFees = signal<boolean>(false);
-  public fees = signal<FeePartsFragment[]>([]);
-  private readonly _feesPageGQL = inject(GetFeePageGQL);
-  private readonly _createManyDebits = inject(CreateManyDebitsGQL);
-
-  public feeControl = new FormControl<FeePartsFragment | string>('');
-
+export class DebitFormCatalogDialogComponent implements OnInit {
+  private readonly _formTools = inject(FormToolsService);
   private readonly _globalStateService = inject(GlobalStateService);
+  private readonly _createManyDebits = inject(CreateManyDebitsGQL);
+  private readonly _feesPageGQL = inject(GetFeePageGQL);
+  private readonly _dialogRef = inject(
+    MatDialogRef<DebitFormCatalogDialogComponent>
+  );
 
-  private readonly _dialogRef = inject(MatDialogRef<DebitFormCatalogDialogComponent>);
+  public loading = signal<boolean>(false);
+  public fees = signal<FeePartsFragment[]>([]);
 
-  public debits = signal<CreateDebit[]>([]);
+  public formGroup = this._formTools.builder.group({
+    fee: this._formTools.builder.control<FeePartsFragment | null>(null, {
+      nonNullable: false,
+    }),
+    debits: this._formTools.builder.array([]),
+  });
 
-  ngAfterViewInit(): void {
-    this.feeControl.valueChanges
-      .pipe(debounceTime(300), startWith(''))
-      .subscribe({
-        next: (value) => {
-          if (!!value && typeof value === 'object') {
-            this.generateDebits(value);
-          } else if (typeof value === 'string') {
-            this._fetchFees(value);
-          }
-        },
-      });
+  ngOnInit(): void {
+    this._fetchAllFees();
+
+    this.formGroup.get('fee')!.valueChanges.subscribe((value) => {
+      if (value) {
+        this.generateDebits(value);
+      }
+    });
   }
 
-  public displayFn(value: FeePartsFragment): string {
-    return value?.name ?? '';
+  public addDebit(
+    initialValues: Omit<
+      CreateDebit,
+      'enrollmentId' | 'paymentDate' | 'discount'
+    >
+  ): void {
+    const {
+      description,
+      unitPrice,
+      quantity,
+      dueDate,
+      state,
+      withTax,
+      frequency,
+    } = initialValues;
+
+    const unitPriceDecimal = new Decimal(unitPrice);
+    const quantityDecimal = new Decimal(quantity);
+
+    const amount = Number(unitPriceDecimal.times(quantityDecimal).toFixed(2));
+
+    const debitFormGroup = this._formTools.builder.group({
+      description: this._formTools.builder.control<string>(description, {
+        validators: [Validators.required],
+        nonNullable: true,
+      }),
+      unitPrice: this._formTools.builder.control<number>(unitPrice, {
+        validators: [Validators.required, Validators.min(1)],
+        nonNullable: true,
+      }),
+      quantity: this._formTools.builder.control<number>(quantity, {
+        validators: [Validators.required, Validators.min(1)],
+        nonNullable: true,
+      }),
+      amount: this._formTools.builder.control<number>(amount, {
+        validators: [Validators.required, Validators.min(1)],
+        nonNullable: true,
+      }),
+      discount: this._formTools.builder.control<number>(0, {
+        validators: [Validators.required, Validators.min(1)],
+        nonNullable: true,
+      }),
+      withTax: this._formTools.builder.control<boolean>(withTax, {
+        nonNullable: true,
+      }),
+      state: this._formTools.builder.control<DebitState>(state, {
+        validators: [Validators.required],
+        nonNullable: true,
+      }),
+      frequency: this._formTools.builder.control<Frequency>(frequency, {
+        validators: [Validators.required],
+        nonNullable: true,
+      }),
+      dueDate: this._formTools.builder.control<string>(dueDate, {
+        validators: [Validators.required],
+        nonNullable: true,
+      }),
+    });
+
+    this.debits.push(debitFormGroup);
   }
 
-  public save(): void {
-    if (this.debits().length > 0) {
-      this.loading.set(true);
+  public get debits(): FormArray {
+    return this.formGroup.get('debits') as FormArray;
+  }
 
-      this._createManyDebits
-        .mutate({
-          debits: this.debits(),
-        })
-        .subscribe({
-          next: (debit) => {
-            this._dialogRef.close(debit);
-          },
-          error: (err) => {
-            console.error('CREATE DEBIT ERROR: ', err);
-          },
-          complete: () => {
-            this.loading.set(false);
-          },
-        });
+  public removeDebit(index: number): void {
+    this.debits.removeAt(index);
+  }
+
+  public submit(): void {
+    if (this.formGroup.valid) {
+      const values = this.formGroup.getRawValue();
+
+      console.log(values);
     }
   }
 
   private generateDebits(value: FeePartsFragment) {
-    if (
-      this._globalStateService.enrollment?.id &&
-      this._globalStateService.cycle?.id
-    ) {
-      const startCycle = this._globalStateService.cycle.start;
-      const endCycle = this._globalStateService.cycle.end;
+    this.formGroup.get('fee')!.setValue(null);
 
-      switch (value.frequency) {
-        case Frequency.Monthly:
-          const debits: CreateDebit[] = [];
+    switch (value.frequency) {
+      case Frequency.Monthly:
+        if (
+          !!this._globalStateService?.cycle?.start &&
+          !!this._globalStateService?.cycle?.end
+        ) {
+          const startCycle = startOfMonth(
+            this._globalStateService!.cycle!.start
+          );
+          const endCycle = endOfMonth(this._globalStateService!.cycle!.end);
 
-          let currentDate = new Date(startCycle);
+          let currentDate = startCycle;
 
-          while (currentDate <= new Date(endCycle)) {
-            currentDate.setDate(1)
-            
-            // debits.push({
-            //   description: value.name,
-            //   value: value.price,
-            //   frequency: value.frequency,
-            //   state: DebitState.Debt,
-            //   enrollmentId: this._globalStateService.enrollment!.id,
-            //   quantity: 1,
-            //   paymentDate: null,
-            //   dueDate: format(new Date(currentDate), 'yyyy-MM-dd'),
-            // });
+          while (isBefore(currentDate, endCycle)) {
+            currentDate = setDate(currentDate, 5);
 
-            currentDate.setMonth(currentDate.getMonth() + 1);
-            currentDate.setDate(1);
+            const description = `${value.name} - ${format(
+              currentDate,
+              'MMMM'
+            )}`;
+
+            this.addDebit({
+              description,
+              unitPrice: value.price,
+              quantity: 1,
+              state: DebitState.Debt,
+              dueDate: format(new Date(currentDate), 'yyyy-MM-dd'),
+              withTax: value.withTax,
+              frequency: Frequency.Single,
+            });
+
+            currentDate = addMonths(currentDate, 1);
           }
+        }
 
-          this.debits.set(debits);
+        break;
 
-          break;
-        default:
-          // this.debits.set([
-          //   {
-          //     description: value.name,
-          //     value: value.price,
-          //     frequency: value.frequency,
-          //     state: DebitState.Debt,
-          //     enrollmentId: this._globalStateService.enrollment!.id,
-          //     quantity: 1,
-          //     paymentDate: null,
-          //     dueDate: format(new Date(), 'yyyy-MM-dd'),
-          //   },
-          // ]);
-          break;
-      }
+      default:
+        this.addDebit({
+          description: value.name,
+          unitPrice: value.price,
+          quantity: 1,
+          state: DebitState.Debt,
+          dueDate: defaultDueDate,
+          withTax: value.withTax,
+          frequency: Frequency.Single,
+        });
+        break;
     }
   }
 
-  private _fetchFees(value: string): void {
-    if (this._globalStateService.enrollment?.activity!.id) {
-      this.loadingFees.set(true);
+  private _fetchAllFees(accumulared: FeePartsFragment[] = []): void {
+    if (!!this._globalStateService.enrollment?.activity!.id) {
+      const limit = 50;
+      const offset = accumulared.length;
 
-      // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
-      this._feesPageGQL
-        .watch(
-          {
-            limit: 100,
-            offset: 0,
-            filter: {
-              name: { iLike: `%${value}%` },
-              activityId: { eq: this._globalStateService.enrollment?.activity!.id },
-            },
-          },
-          {
-            fetchPolicy: 'cache-and-network',
-            nextFetchPolicy: 'cache-and-network',
-            notifyOnNetworkStatusChange: true,
+      const params: GetFeePageQueryVariables = {
+        filter: {
+          activityId: { eq: this._globalStateService.enrollment?.activity!.id },
+        },
+        limit,
+        offset,
+      };
+
+      const getFees$ = this._feesPageGQL.watch(params, {
+        fetchPolicy: 'cache-first', // Usa cache primero, solo pide a la API si no hay datos en cache
+        nextFetchPolicy: 'cache-first', // Mantiene la política de cache en siguientes peticiones
+        notifyOnNetworkStatusChange: false, // No notifica cambios de red para evitar refetch innecesario
+      }).valueChanges;
+
+      getFees$.pipe(map((resp) => resp.data.fees)).subscribe({
+        next: ({ nodes, totalCount }) => {
+          const allItems = accumulared.concat(nodes);
+
+          if (allItems.length >= totalCount) {
+            this.fees.set(allItems);
+            return; // No more fees to fetch
           }
-        )
-        .valueChanges.subscribe({
-          next: ({ loading, data }) => {
-            this.loadingFees.set(loading);
 
-            this.fees.set(data?.fees.nodes ?? []);
-          },
-        });
+          this._fetchAllFees(allItems);
+        },
+        error: (error) => {
+          console.error('Error fetching fees', error);
+        },
+      });
     } else {
-      this.loadingFees.set(false);
       this.fees.set([]);
     }
   }

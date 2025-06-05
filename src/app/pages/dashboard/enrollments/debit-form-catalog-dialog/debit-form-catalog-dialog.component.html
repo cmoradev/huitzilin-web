@@ -1,34 +1,24 @@
 <h2 mat-dialog-title>Creación de adeudo desde catálogo</h2>
 <mat-dialog-content>
-  <mat-form-field class="w-full" subscriptSizing="dynamic">
-    <mat-label>Buscador</mat-label>
-    <input
-      type="text"
-      placeholder="Ej. Jhon Doe"
-      matInput
-      [formControl]="feeControl"
-      [matAutocomplete]="autoStudents"
-    />
-    @if (feeControl.value) {
-    <button mat-icon-button matSuffix (click)="feeControl.setValue('')">
-      <mat-icon svgIcon="close" />
-    </button>
-    }
-    <mat-autocomplete #autoStudents="matAutocomplete" [displayWith]="displayFn">
-      @for (fee of fees(); track fee.id) {
-      <mat-option [value]="fee">
-        <div class="flex flex-col">
-          <p>{{ fee.name }}</p>
-          <p class="text-sm">{{ fee.price | currency }}</p>
-        </div>
-      </mat-option>
-      }
-    </mat-autocomplete>
-  </mat-form-field>
+  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()" >
+    <mat-form-field class="w-full">
+      <mat-label>Seleccione una cuota</mat-label>
+      <mat-select formControlName="fee" multiLineOption>
+        @for (fee of fees(); track fee.id) {
+        <mat-option [value]="fee">
+          <h4 mat-line>{{ fee.name }}</h4>
+          <p mat-line class="text-sm text-gray-500">
+            {{ fee.price | currency }} - {{ fee.frequency | frequency }}
+          </p>
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
-  <button mat-button cdkFocusInitial [disabled]="loading()" (click)="save()">
+  <button mat-button cdkFocusInitial form="dataForm" [disabled]="loading()">
     {{ loading() ? "Guardando..." : "Guardar" }}
   </button>
 </mat-dialog-actions>
