@@ -1,4 +1,15 @@
-import { Frequency, EnrollmentState, DebitState } from '@graphql';
+import { Frequency, EnrollmentState, DebitState, DiscountBy } from '@graphql';
+
+export const discountTypes = [
+  {
+    label: 'Porcentaje',
+    value: DiscountBy.Percentage,
+  },
+  {
+    label: 'Monto fijo',
+    value: DiscountBy.Fixed,
+  },
+];
 
 export const frequencies = [
   {

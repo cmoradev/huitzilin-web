@@ -1,0 +1,53 @@
+fragment DiscountParts on Discount {
+  id,
+  name,
+  value
+  type
+}
+
+mutation createOneDiscount ($discount: CreateDiscount!) {
+  createOneDiscount (
+    input: {
+      discount: $discount
+    }
+  ) {
+    ...DiscountParts
+  }
+}
+
+query getDiscountsPage ($offset: Int = 0, $limit: Int = 10, $filter: DiscountFilter = {})  {
+  discounts (
+    paging: { limit: $limit, offset: $offset },
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...DiscountParts
+    }
+  }
+}
+
+mutation updateOneDiscount ($id: ID!, $update: UpdateDiscount!) {
+  updateOneDiscount (
+    input: {
+      id: $id,
+      update: $update
+    }
+  ) {
+    ...DiscountParts
+  }
+}
+
+mutation deleteOneDiscount ($id: ID!) {
+	deleteOneDiscount (
+    input: {
+      id: $id
+    }
+  ) {
+    id
+  }
+}

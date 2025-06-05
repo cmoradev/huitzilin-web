@@ -178,6 +178,13 @@ export type AddBranchsToStudentInput = {
   relationIds: Array<Scalars['ID']['input']>;
 };
 
+export type AddStudentsToDocumentInput = {
+  /** The id of the record. */
+  id: Scalars['ID']['input'];
+  /** The ids of the relations. */
+  relationIds: Array<Scalars['ID']['input']>;
+};
+
 export type BooleanFieldComparison = {
   is?: InputMaybe<Scalars['Boolean']['input']>;
   isNot?: InputMaybe<Scalars['Boolean']['input']>;
@@ -331,14 +338,39 @@ export type CreateCycle = {
 };
 
 export type CreateDebit = {
+  amount: Scalars['Float']['input'];
   description: Scalars['String']['input'];
+  discount: Scalars['Float']['input'];
   dueDate: Scalars['String']['input'];
   enrollmentId: Scalars['String']['input'];
   frequency: Frequency;
   paymentDate?: InputMaybe<Scalars['DateTime']['input']>;
   quantity: Scalars['Float']['input'];
   state: DebitState;
+  subtotal: Scalars['Float']['input'];
+  taxes: Scalars['Float']['input'];
+  total: Scalars['Float']['input'];
+  unitPrice: Scalars['Float']['input'];
+  withTax: Scalars['Boolean']['input'];
+};
+
+export type CreateDebitDiscount = {
+  debitId: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  type: DiscountBy;
   value: Scalars['Float']['input'];
+};
+
+export type CreateDiscount = {
+  branchId: Scalars['ID']['input'];
+  name: Scalars['String']['input'];
+  type: DiscountBy;
+  value: Scalars['Float']['input'];
+};
+
+export type CreateDocument = {
+  name: Scalars['String']['input'];
+  url: Scalars['String']['input'];
 };
 
 export type CreateEnrollment = {
@@ -371,9 +403,24 @@ export type CreateLevel = {
   order: Scalars['Float']['input'];
 };
 
+export type CreateManyDebitDiscountsInput = {
+  /** Array of records to create */
+  debitDiscounts: Array<CreateDebitDiscount>;
+};
+
 export type CreateManyDebitsInput = {
   /** Array of records to create */
   debits: Array<CreateDebit>;
+};
+
+export type CreateManyDiscountsInput = {
+  /** Array of records to create */
+  discounts: Array<CreateDiscount>;
+};
+
+export type CreateManyDocumentsInput = {
+  /** Array of records to create */
+  documents: Array<CreateDocument>;
 };
 
 export type CreateOneActionInput = {
@@ -401,9 +448,24 @@ export type CreateOneCycleInput = {
   cycle: CreateCycle;
 };
 
+export type CreateOneDebitDiscountInput = {
+  /** The record to create */
+  debitDiscount: CreateDebitDiscount;
+};
+
 export type CreateOneDebitInput = {
   /** The record to create */
   debit: CreateDebit;
+};
+
+export type CreateOneDiscountInput = {
+  /** The record to create */
+  discount: CreateDiscount;
+};
+
+export type CreateOneDocumentInput = {
+  /** The record to create */
+  document: CreateDocument;
 };
 
 export type CreateOneEnrollmentInput = {
@@ -551,9 +613,11 @@ export type DateFieldComparisonBetween = {
 
 export type Debit = {
   __typename?: 'Debit';
+  amount: Scalars['Float']['output'];
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   description: Scalars['String']['output'];
+  discount: Scalars['Float']['output'];
   dueDate: Scalars['String']['output'];
   enrollmentId: Scalars['String']['output'];
   frequency: Frequency;
@@ -561,9 +625,13 @@ export type Debit = {
   paymentDate?: Maybe<Scalars['DateTime']['output']>;
   quantity: Scalars['Float']['output'];
   state: DebitState;
+  subtotal: Scalars['Float']['output'];
+  taxes: Scalars['Float']['output'];
+  total: Scalars['Float']['output'];
+  unitPrice: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
-  value: Scalars['Float']['output'];
   version: Scalars['Int']['output'];
+  withTax: Scalars['Boolean']['output'];
 };
 
 export type DebitConnection = {
@@ -578,9 +646,11 @@ export type DebitConnection = {
 
 export type DebitDeleteResponse = {
   __typename?: 'DebitDeleteResponse';
+  amount?: Maybe<Scalars['Float']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
+  discount?: Maybe<Scalars['Float']['output']>;
   dueDate?: Maybe<Scalars['String']['output']>;
   enrollmentId?: Maybe<Scalars['String']['output']>;
   frequency?: Maybe<Frequency>;
@@ -588,10 +658,74 @@ export type DebitDeleteResponse = {
   paymentDate?: Maybe<Scalars['DateTime']['output']>;
   quantity?: Maybe<Scalars['Float']['output']>;
   state?: Maybe<DebitState>;
+  subtotal?: Maybe<Scalars['Float']['output']>;
+  taxes?: Maybe<Scalars['Float']['output']>;
+  total?: Maybe<Scalars['Float']['output']>;
+  unitPrice?: Maybe<Scalars['Float']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+  withTax?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type DebitDiscount = {
+  __typename?: 'DebitDiscount';
+  createdAt: Scalars['DateTime']['output'];
+  debitId: Scalars['ID']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  type: DiscountBy;
+  updatedAt: Scalars['DateTime']['output'];
+  value: Scalars['Float']['output'];
+  version: Scalars['Int']['output'];
+};
+
+export type DebitDiscountConnection = {
+  __typename?: 'DebitDiscountConnection';
+  /** Array of nodes. */
+  nodes: Array<DebitDiscount>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type DebitDiscountDeleteResponse = {
+  __typename?: 'DebitDiscountDeleteResponse';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  debitId?: Maybe<Scalars['ID']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<DiscountBy>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   value?: Maybe<Scalars['Float']['output']>;
   version?: Maybe<Scalars['Int']['output']>;
 };
+
+export type DebitDiscountFilter = {
+  and?: InputMaybe<Array<DebitDiscountFilter>>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  debitId?: InputMaybe<IdFilterComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<DebitDiscountFilter>>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type DebitDiscountSort = {
+  direction: SortDirection;
+  field: DebitDiscountSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum DebitDiscountSortFields {
+  CreatedAt = 'createdAt',
+  DebitId = 'debitId',
+  Id = 'id',
+  Name = 'name',
+  UpdatedAt = 'updatedAt'
+}
 
 export type DebitFilter = {
   and?: InputMaybe<Array<DebitFilter>>;
@@ -652,7 +786,22 @@ export type DeleteOneCycleInput = {
   id: Scalars['ID']['input'];
 };
 
+export type DeleteOneDebitDiscountInput = {
+  /** The id of the record to delete. */
+  id: Scalars['ID']['input'];
+};
+
 export type DeleteOneDebitInput = {
+  /** The id of the record to delete. */
+  id: Scalars['ID']['input'];
+};
+
+export type DeleteOneDiscountInput = {
+  /** The id of the record to delete. */
+  id: Scalars['ID']['input'];
+};
+
+export type DeleteOneDocumentInput = {
   /** The id of the record to delete. */
   id: Scalars['ID']['input'];
 };
@@ -691,6 +840,144 @@ export type DeleteOneTutorInput = {
   /** The id of the record to delete. */
   id: Scalars['ID']['input'];
 };
+
+export type Discount = {
+  __typename?: 'Discount';
+  branchId: Scalars['ID']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  type: DiscountBy;
+  updatedAt: Scalars['DateTime']['output'];
+  value: Scalars['Float']['output'];
+  version: Scalars['Int']['output'];
+};
+
+export enum DiscountBy {
+  Fixed = 'FIXED',
+  Percentage = 'PERCENTAGE'
+}
+
+export type DiscountConnection = {
+  __typename?: 'DiscountConnection';
+  /** Array of nodes. */
+  nodes: Array<Discount>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type DiscountDeleteResponse = {
+  __typename?: 'DiscountDeleteResponse';
+  branchId?: Maybe<Scalars['ID']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<DiscountBy>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  value?: Maybe<Scalars['Float']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type DiscountFilter = {
+  and?: InputMaybe<Array<DiscountFilter>>;
+  branchId?: InputMaybe<IdFilterComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<DiscountFilter>>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type DiscountSort = {
+  direction: SortDirection;
+  field: DiscountSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum DiscountSortFields {
+  BranchId = 'branchId',
+  CreatedAt = 'createdAt',
+  Id = 'id',
+  Name = 'name',
+  UpdatedAt = 'updatedAt'
+}
+
+export type Document = {
+  __typename?: 'Document';
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  students: Array<Student>;
+  updatedAt: Scalars['DateTime']['output'];
+  url: Scalars['String']['output'];
+  version: Scalars['Int']['output'];
+};
+
+
+export type DocumentStudentsArgs = {
+  filter?: StudentFilter;
+  sorting?: Array<StudentSort>;
+};
+
+export type DocumentConnection = {
+  __typename?: 'DocumentConnection';
+  /** Array of nodes. */
+  nodes: Array<Document>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type DocumentDeleteResponse = {
+  __typename?: 'DocumentDeleteResponse';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  url?: Maybe<Scalars['String']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type DocumentFilter = {
+  and?: InputMaybe<Array<DocumentFilter>>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<DocumentFilter>>;
+  students?: InputMaybe<DocumentFilterStudentFilter>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type DocumentFilterStudentFilter = {
+  and?: InputMaybe<Array<DocumentFilterStudentFilter>>;
+  code?: InputMaybe<StringFieldComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  dni?: InputMaybe<StringFieldComparison>;
+  fullname?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  or?: InputMaybe<Array<DocumentFilterStudentFilter>>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type DocumentSort = {
+  direction: SortDirection;
+  field: DocumentSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum DocumentSortFields {
+  CreatedAt = 'createdAt',
+  Id = 'id',
+  Name = 'name',
+  UpdatedAt = 'updatedAt'
+}
 
 export type Enrollment = {
   __typename?: 'Enrollment';
@@ -827,7 +1114,7 @@ export type Fee = {
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
   price: Scalars['Float']['output'];
-  tax: Scalars['Float']['output'];
+  taxes: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
   withTax: Scalars['Boolean']['output'];
@@ -853,7 +1140,7 @@ export type FeeDeleteResponse = {
   id?: Maybe<Scalars['ID']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
-  tax?: Maybe<Scalars['Float']['output']>;
+  taxes?: Maybe<Scalars['Float']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   version?: Maybe<Scalars['Int']['output']>;
   withTax?: Maybe<Scalars['Boolean']['output']>;
@@ -995,13 +1282,20 @@ export enum LevelSortFields {
 export type Mutation = {
   __typename?: 'Mutation';
   addBranchsToStudent: Student;
+  addStudentsToDocument: Document;
+  createManyDebitDiscounts: Array<DebitDiscount>;
   createManyDebits: Array<Debit>;
+  createManyDiscounts: Array<Discount>;
+  createManyDocuments: Array<Document>;
   createOneAction: Action;
   createOneActivity: Activity;
   createOneBranch: Branch;
   createOneClassroom: Classroom;
   createOneCycle: Cycle;
   createOneDebit: Debit;
+  createOneDebitDiscount: DebitDiscount;
+  createOneDiscount: Discount;
+  createOneDocument: Document;
   createOneEnrollment: Enrollment;
   createOneFee: Fee;
   createOneLevel: Level;
@@ -1015,6 +1309,9 @@ export type Mutation = {
   deleteOneClassroom: ClassroomDeleteResponse;
   deleteOneCycle: CycleDeleteResponse;
   deleteOneDebit: DebitDeleteResponse;
+  deleteOneDebitDiscount: DebitDiscountDeleteResponse;
+  deleteOneDiscount: DiscountDeleteResponse;
+  deleteOneDocument: DocumentDeleteResponse;
   deleteOneEnrollment: EnrollmentDeleteResponse;
   deleteOneFee: FeeDeleteResponse;
   deleteOneLevel: LevelDeleteResponse;
@@ -1023,14 +1320,16 @@ export type Mutation = {
   deleteOneTeacher: TeacherDeleteResponse;
   deleteOneTutor: TutorDeleteResponse;
   removeBranchsFromStudent: Student;
+  removeStudentsFromDocument: Document;
   restoreManyActivities: UpdateManyResponse;
   restoreManyVideos: UpdateManyResponse;
   restoreOneActivity: Activity;
-  restoreOneVideo: Tutor;
+  restoreOneVideo: Discount;
   setBranchsOnStudent: Student;
   setOrderActivities: UpdateCount;
   setOrderEnrollments: UpdateCount;
   setOrderLevels: UpdateCount;
+  setStudentsOnDocument: Document;
   signIn: Session;
   signUp: Session;
   updateManyActivities: UpdateManyResponse;
@@ -1040,6 +1339,9 @@ export type Mutation = {
   updateOneClassroom: Classroom;
   updateOneCycle: Cycle;
   updateOneDebit: Debit;
+  updateOneDebitDiscount: DebitDiscount;
+  updateOneDiscount: Discount;
+  updateOneDocument: Document;
   updateOneEnrollment: Enrollment;
   updateOneFee: Fee;
   updateOneLevel: Level;
@@ -1056,8 +1358,28 @@ export type MutationAddBranchsToStudentArgs = {
 };
 
 
+export type MutationAddStudentsToDocumentArgs = {
+  input: AddStudentsToDocumentInput;
+};
+
+
+export type MutationCreateManyDebitDiscountsArgs = {
+  input: CreateManyDebitDiscountsInput;
+};
+
+
 export type MutationCreateManyDebitsArgs = {
   input: CreateManyDebitsInput;
+};
+
+
+export type MutationCreateManyDiscountsArgs = {
+  input: CreateManyDiscountsInput;
+};
+
+
+export type MutationCreateManyDocumentsArgs = {
+  input: CreateManyDocumentsInput;
 };
 
 
@@ -1088,6 +1410,21 @@ export type MutationCreateOneCycleArgs = {
 
 export type MutationCreateOneDebitArgs = {
   input: CreateOneDebitInput;
+};
+
+
+export type MutationCreateOneDebitDiscountArgs = {
+  input: CreateOneDebitDiscountInput;
+};
+
+
+export type MutationCreateOneDiscountArgs = {
+  input: CreateOneDiscountInput;
+};
+
+
+export type MutationCreateOneDocumentArgs = {
+  input: CreateOneDocumentInput;
 };
 
 
@@ -1156,6 +1493,21 @@ export type MutationDeleteOneDebitArgs = {
 };
 
 
+export type MutationDeleteOneDebitDiscountArgs = {
+  input: DeleteOneDebitDiscountInput;
+};
+
+
+export type MutationDeleteOneDiscountArgs = {
+  input: DeleteOneDiscountInput;
+};
+
+
+export type MutationDeleteOneDocumentArgs = {
+  input: DeleteOneDocumentInput;
+};
+
+
 export type MutationDeleteOneEnrollmentArgs = {
   input: DeleteOneEnrollmentInput;
 };
@@ -1196,13 +1548,18 @@ export type MutationRemoveBranchsFromStudentArgs = {
 };
 
 
+export type MutationRemoveStudentsFromDocumentArgs = {
+  input: RemoveStudentsFromDocumentInput;
+};
+
+
 export type MutationRestoreManyActivitiesArgs = {
   input: ActivityFilter;
 };
 
 
 export type MutationRestoreManyVideosArgs = {
-  input: TutorFilter;
+  input: DiscountFilter;
 };
 
 
@@ -1233,6 +1590,11 @@ export type MutationSetOrderEnrollmentsArgs = {
 
 export type MutationSetOrderLevelsArgs = {
   input: Array<SetOrderInput>;
+};
+
+
+export type MutationSetStudentsOnDocumentArgs = {
+  input: SetStudentsOnDocumentInput;
 };
 
 
@@ -1278,6 +1640,21 @@ export type MutationUpdateOneCycleArgs = {
 
 export type MutationUpdateOneDebitArgs = {
   input: UpdateOneDebitInput;
+};
+
+
+export type MutationUpdateOneDebitDiscountArgs = {
+  input: UpdateOneDebitDiscountInput;
+};
+
+
+export type MutationUpdateOneDiscountArgs = {
+  input: UpdateOneDiscountInput;
+};
+
+
+export type MutationUpdateOneDocumentArgs = {
+  input: UpdateOneDocumentInput;
 };
 
 
@@ -1425,7 +1802,13 @@ export type Query = {
   cycle: Cycle;
   cycles: CycleConnection;
   debit: Debit;
+  debitDiscount: DebitDiscount;
+  debitDiscounts: DebitDiscountConnection;
   debits: DebitConnection;
+  discount: Discount;
+  discounts: DiscountConnection;
+  document: Document;
+  documents: DocumentConnection;
   enrollment: Enrollment;
   enrollments: EnrollmentConnection;
   fee: Fee;
@@ -1508,10 +1891,46 @@ export type QueryDebitArgs = {
 };
 
 
+export type QueryDebitDiscountArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryDebitDiscountsArgs = {
+  filter?: DebitDiscountFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<DebitDiscountSort>;
+};
+
+
 export type QueryDebitsArgs = {
   filter?: DebitFilter;
   paging?: OffsetPaging;
   sorting?: Array<DebitSort>;
+};
+
+
+export type QueryDiscountArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryDiscountsArgs = {
+  filter?: DiscountFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<DiscountSort>;
+};
+
+
+export type QueryDocumentArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryDocumentsArgs = {
+  filter?: DocumentFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<DocumentSort>;
 };
 
 
@@ -1605,6 +2024,13 @@ export type RemoveBranchsFromStudentInput = {
   relationIds: Array<Scalars['ID']['input']>;
 };
 
+export type RemoveStudentsFromDocumentInput = {
+  /** The id of the record. */
+  id: Scalars['ID']['input'];
+  /** The ids of the relations. */
+  relationIds: Array<Scalars['ID']['input']>;
+};
+
 export type Session = {
   __typename?: 'Session';
   branch?: Maybe<Branch>;
@@ -1626,6 +2052,13 @@ export type SetBranchsOnStudentInput = {
 export type SetOrderInput = {
   id: Scalars['ID']['input'];
   order: Scalars['Float']['input'];
+};
+
+export type SetStudentsOnDocumentInput = {
+  /** The id of the record. */
+  id: Scalars['ID']['input'];
+  /** The ids of the relations. */
+  relationIds: Array<Scalars['ID']['input']>;
 };
 
 export type SignInInput = {
@@ -1918,14 +2351,39 @@ export type UpdateCycle = {
 };
 
 export type UpdateDebit = {
+  amount?: InputMaybe<Scalars['Float']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
+  discount?: InputMaybe<Scalars['Float']['input']>;
   dueDate?: InputMaybe<Scalars['String']['input']>;
   enrollmentId?: InputMaybe<Scalars['String']['input']>;
   frequency?: InputMaybe<Frequency>;
   paymentDate?: InputMaybe<Scalars['DateTime']['input']>;
   quantity?: InputMaybe<Scalars['Float']['input']>;
   state?: InputMaybe<DebitState>;
+  subtotal?: InputMaybe<Scalars['Float']['input']>;
+  taxes?: InputMaybe<Scalars['Float']['input']>;
+  total?: InputMaybe<Scalars['Float']['input']>;
+  unitPrice?: InputMaybe<Scalars['Float']['input']>;
+  withTax?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type UpdateDebitDiscount = {
+  debitId?: InputMaybe<Scalars['ID']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<DiscountBy>;
   value?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type UpdateDiscount = {
+  branchId?: InputMaybe<Scalars['ID']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<DiscountBy>;
+  value?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type UpdateDocument = {
+  name?: InputMaybe<Scalars['String']['input']>;
+  url?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateEnrollment = {
@@ -2006,11 +2464,32 @@ export type UpdateOneCycleInput = {
   update: UpdateCycle;
 };
 
+export type UpdateOneDebitDiscountInput = {
+  /** The id of the record to update */
+  id: Scalars['ID']['input'];
+  /** The update to apply. */
+  update: UpdateDebitDiscount;
+};
+
 export type UpdateOneDebitInput = {
   /** The id of the record to update */
   id: Scalars['ID']['input'];
   /** The update to apply. */
   update: UpdateDebit;
+};
+
+export type UpdateOneDiscountInput = {
+  /** The id of the record to update */
+  id: Scalars['ID']['input'];
+  /** The update to apply. */
+  update: UpdateDiscount;
+};
+
+export type UpdateOneDocumentInput = {
+  /** The id of the record to update */
+  id: Scalars['ID']['input'];
+  /** The update to apply. */
+  update: UpdateDocument;
 };
 
 export type UpdateOneEnrollmentInput = {
@@ -2134,14 +2613,14 @@ export type UpdateOneUserMutationVariables = Exact<{
 
 export type UpdateOneUserMutation = { __typename?: 'Mutation', updateOneUser: { __typename?: 'User', id: string } };
 
-export type ClassroomPartsFragment = { __typename?: 'Classroom', id: string, name: string, color: string, createdAt: any, updatedAt: any };
+export type ClassroomPartsFragment = { __typename?: 'Classroom', id: string, name: string, color: string };
 
 export type CreateOneClassroomMutationVariables = Exact<{
   classroom: CreateClassroom;
 }>;
 
 
-export type CreateOneClassroomMutation = { __typename?: 'Mutation', createOneClassroom: { __typename?: 'Classroom', id: string, name: string, color: string, createdAt: any, updatedAt: any } };
+export type CreateOneClassroomMutation = { __typename?: 'Mutation', createOneClassroom: { __typename?: 'Classroom', id: string, name: string, color: string } };
 
 export type GetClassroomsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2150,7 +2629,7 @@ export type GetClassroomsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetClassroomsPageQuery = { __typename?: 'Query', classrooms: { __typename?: 'ClassroomConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Classroom', id: string, name: string, color: string, createdAt: any, updatedAt: any }> } };
+export type GetClassroomsPageQuery = { __typename?: 'Query', classrooms: { __typename?: 'ClassroomConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Classroom', id: string, name: string, color: string }> } };
 
 export type UpdateOneClassroomMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2158,7 +2637,7 @@ export type UpdateOneClassroomMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneClassroomMutation = { __typename?: 'Mutation', updateOneClassroom: { __typename?: 'Classroom', id: string, name: string, color: string, createdAt: any, updatedAt: any } };
+export type UpdateOneClassroomMutation = { __typename?: 'Mutation', updateOneClassroom: { __typename?: 'Classroom', id: string, name: string, color: string } };
 
 export type DeleteOneClassroomMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2167,14 +2646,14 @@ export type DeleteOneClassroomMutationVariables = Exact<{
 
 export type DeleteOneClassroomMutation = { __typename?: 'Mutation', deleteOneClassroom: { __typename?: 'ClassroomDeleteResponse', id?: string | null } };
 
-export type BranchPartsFragment = { __typename?: 'Branch', id: string, name: string, picture: string, createdAt: any, updatedAt: any };
+export type BranchPartsFragment = { __typename?: 'Branch', id: string, name: string, picture: string };
 
 export type CreateOneBranchMutationVariables = Exact<{
   branch: CreateBranch;
 }>;
 
 
-export type CreateOneBranchMutation = { __typename?: 'Mutation', createOneBranch: { __typename?: 'Branch', id: string, name: string, picture: string, createdAt: any, updatedAt: any } };
+export type CreateOneBranchMutation = { __typename?: 'Mutation', createOneBranch: { __typename?: 'Branch', id: string, name: string, picture: string } };
 
 export type GetCompaniesPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2183,7 +2662,7 @@ export type GetCompaniesPageQueryVariables = Exact<{
 }>;
 
 
-export type GetCompaniesPageQuery = { __typename?: 'Query', branches: { __typename?: 'BranchConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Branch', id: string, name: string, picture: string, createdAt: any, updatedAt: any }> } };
+export type GetCompaniesPageQuery = { __typename?: 'Query', branches: { __typename?: 'BranchConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Branch', id: string, name: string, picture: string }> } };
 
 export type UpdateOneBranchMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2191,7 +2670,7 @@ export type UpdateOneBranchMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneBranchMutation = { __typename?: 'Mutation', updateOneBranch: { __typename?: 'Branch', id: string, name: string, picture: string, createdAt: any, updatedAt: any } };
+export type UpdateOneBranchMutation = { __typename?: 'Mutation', updateOneBranch: { __typename?: 'Branch', id: string, name: string, picture: string } };
 
 export type DeleteOneBranchMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2200,14 +2679,14 @@ export type DeleteOneBranchMutationVariables = Exact<{
 
 export type DeleteOneBranchMutation = { __typename?: 'Mutation', deleteOneBranch: { __typename?: 'BranchDeleteResponse', id?: string | null } };
 
-export type ActivityPartsFragment = { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number, createdAt: any, updatedAt: any };
+export type ActivityPartsFragment = { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number };
 
 export type CreateOneActivityMutationVariables = Exact<{
   activity: CreateActivity;
 }>;
 
 
-export type CreateOneActivityMutation = { __typename?: 'Mutation', createOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number, createdAt: any, updatedAt: any } };
+export type CreateOneActivityMutation = { __typename?: 'Mutation', createOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number } };
 
 export type GetActivityPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2216,7 +2695,7 @@ export type GetActivityPageQueryVariables = Exact<{
 }>;
 
 
-export type GetActivityPageQuery = { __typename?: 'Query', activities: { __typename?: 'ActivityConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number, createdAt: any, updatedAt: any }> } };
+export type GetActivityPageQuery = { __typename?: 'Query', activities: { __typename?: 'ActivityConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number }> } };
 
 export type UpdateOneActivityMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2224,7 +2703,7 @@ export type UpdateOneActivityMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneActivityMutation = { __typename?: 'Mutation', updateOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number, createdAt: any, updatedAt: any } };
+export type UpdateOneActivityMutation = { __typename?: 'Mutation', updateOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number } };
 
 export type DeleteOneActivityMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2240,14 +2719,14 @@ export type SetOrderActivitiesMutationVariables = Exact<{
 
 export type SetOrderActivitiesMutation = { __typename?: 'Mutation', setOrderActivities: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
-export type CyclePartsFragment = { __typename?: 'Cycle', id: string, name: string, start: string, end: string, createdAt: any, updatedAt: any };
+export type CyclePartsFragment = { __typename?: 'Cycle', id: string, name: string, start: string, end: string };
 
 export type CreateOneCycleMutationVariables = Exact<{
   cycle: CreateCycle;
 }>;
 
 
-export type CreateOneCycleMutation = { __typename?: 'Mutation', createOneCycle: { __typename?: 'Cycle', id: string, name: string, start: string, end: string, createdAt: any, updatedAt: any } };
+export type CreateOneCycleMutation = { __typename?: 'Mutation', createOneCycle: { __typename?: 'Cycle', id: string, name: string, start: string, end: string } };
 
 export type GetCyclesPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2256,7 +2735,7 @@ export type GetCyclesPageQueryVariables = Exact<{
 }>;
 
 
-export type GetCyclesPageQuery = { __typename?: 'Query', cycles: { __typename?: 'CycleConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Cycle', id: string, name: string, start: string, end: string, createdAt: any, updatedAt: any }> } };
+export type GetCyclesPageQuery = { __typename?: 'Query', cycles: { __typename?: 'CycleConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Cycle', id: string, name: string, start: string, end: string }> } };
 
 export type UpdateOneCycleMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2264,7 +2743,7 @@ export type UpdateOneCycleMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneCycleMutation = { __typename?: 'Mutation', updateOneCycle: { __typename?: 'Cycle', id: string, name: string, start: string, end: string, createdAt: any, updatedAt: any } };
+export type UpdateOneCycleMutation = { __typename?: 'Mutation', updateOneCycle: { __typename?: 'Cycle', id: string, name: string, start: string, end: string } };
 
 export type DeleteOneCycleMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2273,14 +2752,14 @@ export type DeleteOneCycleMutationVariables = Exact<{
 
 export type DeleteOneCycleMutation = { __typename?: 'Mutation', deleteOneCycle: { __typename?: 'CycleDeleteResponse', id?: string | null } };
 
-export type DebitPartsFragment = { __typename?: 'Debit', id: string, description: string, value: number, quantity: number, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, createdAt: any, updatedAt: any };
+export type DebitPartsFragment = { __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null };
 
 export type CreateOneDebitMutationVariables = Exact<{
   debit: CreateDebit;
 }>;
 
 
-export type CreateOneDebitMutation = { __typename?: 'Mutation', createOneDebit: { __typename?: 'Debit', id: string, description: string, value: number, quantity: number, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, createdAt: any, updatedAt: any } };
+export type CreateOneDebitMutation = { __typename?: 'Mutation', createOneDebit: { __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null } };
 
 export type GetDebitsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2289,7 +2768,7 @@ export type GetDebitsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetDebitsPageQuery = { __typename?: 'Query', debits: { __typename?: 'DebitConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Debit', id: string, description: string, value: number, quantity: number, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, createdAt: any, updatedAt: any }> } };
+export type GetDebitsPageQuery = { __typename?: 'Query', debits: { __typename?: 'DebitConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null }> } };
 
 export type UpdateOneDebitMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2297,14 +2776,14 @@ export type UpdateOneDebitMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneDebitMutation = { __typename?: 'Mutation', updateOneDebit: { __typename?: 'Debit', id: string, description: string, value: number, quantity: number, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, createdAt: any, updatedAt: any } };
+export type UpdateOneDebitMutation = { __typename?: 'Mutation', updateOneDebit: { __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null } };
 
 export type CreateManyDebitsMutationVariables = Exact<{
   debits: Array<CreateDebit> | CreateDebit;
 }>;
 
 
-export type CreateManyDebitsMutation = { __typename?: 'Mutation', createManyDebits: Array<{ __typename?: 'Debit', id: string, description: string, value: number, quantity: number, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, createdAt: any, updatedAt: any }> };
+export type CreateManyDebitsMutation = { __typename?: 'Mutation', createManyDebits: Array<{ __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null }> };
 
 export type DeleteOneDebitMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2312,6 +2791,39 @@ export type DeleteOneDebitMutationVariables = Exact<{
 
 
 export type DeleteOneDebitMutation = { __typename?: 'Mutation', deleteOneDebit: { __typename?: 'DebitDeleteResponse', id?: string | null } };
+
+export type DiscountPartsFragment = { __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy };
+
+export type CreateOneDiscountMutationVariables = Exact<{
+  discount: CreateDiscount;
+}>;
+
+
+export type CreateOneDiscountMutation = { __typename?: 'Mutation', createOneDiscount: { __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy } };
+
+export type GetDiscountsPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<DiscountFilter>;
+}>;
+
+
+export type GetDiscountsPageQuery = { __typename?: 'Query', discounts: { __typename?: 'DiscountConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> } };
+
+export type UpdateOneDiscountMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateDiscount;
+}>;
+
+
+export type UpdateOneDiscountMutation = { __typename?: 'Mutation', updateOneDiscount: { __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy } };
+
+export type DeleteOneDiscountMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneDiscountMutation = { __typename?: 'Mutation', deleteOneDiscount: { __typename?: 'DiscountDeleteResponse', id?: string | null } };
 
 export type EnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, isPackage: boolean, inPackage: boolean, parentId?: string | null, activity: { __typename?: 'Activity', id: string, name: string, isPackage: boolean, inPackage: boolean, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, classroom: { __typename?: 'Classroom', id: string, name: string, color: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string }, children: { __typename?: 'EnrollmentChildrenConnection', totalCount: number } };
 
@@ -2353,14 +2865,14 @@ export type SetOrderEnrollmentsMutationVariables = Exact<{
 
 export type SetOrderEnrollmentsMutation = { __typename?: 'Mutation', setOrderEnrollments: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
-export type FeePartsFragment = { __typename?: 'Fee', id: string, name: string, price: number, frequency: Frequency, withTax: boolean, createdAt: any, updatedAt: any };
+export type FeePartsFragment = { __typename?: 'Fee', id: string, name: string, price: number, frequency: Frequency, withTax: boolean };
 
 export type CreateOneFeeMutationVariables = Exact<{
   fee: CreateFee;
 }>;
 
 
-export type CreateOneFeeMutation = { __typename?: 'Mutation', createOneFee: { __typename?: 'Fee', id: string, name: string, price: number, frequency: Frequency, withTax: boolean, createdAt: any, updatedAt: any } };
+export type CreateOneFeeMutation = { __typename?: 'Mutation', createOneFee: { __typename?: 'Fee', id: string, name: string, price: number, frequency: Frequency, withTax: boolean } };
 
 export type GetFeePageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2369,7 +2881,7 @@ export type GetFeePageQueryVariables = Exact<{
 }>;
 
 
-export type GetFeePageQuery = { __typename?: 'Query', fees: { __typename?: 'FeeConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Fee', id: string, name: string, price: number, frequency: Frequency, withTax: boolean, createdAt: any, updatedAt: any }> } };
+export type GetFeePageQuery = { __typename?: 'Query', fees: { __typename?: 'FeeConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Fee', id: string, name: string, price: number, frequency: Frequency, withTax: boolean }> } };
 
 export type UpdateOneFeeMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2377,7 +2889,7 @@ export type UpdateOneFeeMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneFeeMutation = { __typename?: 'Mutation', updateOneFee: { __typename?: 'Fee', id: string, name: string, price: number, frequency: Frequency, withTax: boolean, createdAt: any, updatedAt: any } };
+export type UpdateOneFeeMutation = { __typename?: 'Mutation', updateOneFee: { __typename?: 'Fee', id: string, name: string, price: number, frequency: Frequency, withTax: boolean } };
 
 export type DeleteOneFeeMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2386,14 +2898,14 @@ export type DeleteOneFeeMutationVariables = Exact<{
 
 export type DeleteOneFeeMutation = { __typename?: 'Mutation', deleteOneFee: { __typename?: 'FeeDeleteResponse', id?: string | null } };
 
-export type LevelPartsFragment = { __typename?: 'Level', id: string, name: string, abbreviation: string, order: number, createdAt: any, updatedAt: any };
+export type LevelPartsFragment = { __typename?: 'Level', id: string, name: string, abbreviation: string, order: number };
 
 export type CreateOneLevelMutationVariables = Exact<{
   level: CreateLevel;
 }>;
 
 
-export type CreateOneLevelMutation = { __typename?: 'Mutation', createOneLevel: { __typename?: 'Level', id: string, name: string, abbreviation: string, order: number, createdAt: any, updatedAt: any } };
+export type CreateOneLevelMutation = { __typename?: 'Mutation', createOneLevel: { __typename?: 'Level', id: string, name: string, abbreviation: string, order: number } };
 
 export type GetLevelsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2402,7 +2914,7 @@ export type GetLevelsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetLevelsPageQuery = { __typename?: 'Query', levels: { __typename?: 'LevelConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Level', id: string, name: string, abbreviation: string, order: number, createdAt: any, updatedAt: any }> } };
+export type GetLevelsPageQuery = { __typename?: 'Query', levels: { __typename?: 'LevelConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Level', id: string, name: string, abbreviation: string, order: number }> } };
 
 export type UpdateOneLevelMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2410,7 +2922,7 @@ export type UpdateOneLevelMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneLevelMutation = { __typename?: 'Mutation', updateOneLevel: { __typename?: 'Level', id: string, name: string, abbreviation: string, order: number, createdAt: any, updatedAt: any } };
+export type UpdateOneLevelMutation = { __typename?: 'Mutation', updateOneLevel: { __typename?: 'Level', id: string, name: string, abbreviation: string, order: number } };
 
 export type DeleteOneLevelMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2426,14 +2938,14 @@ export type SetOrderLevelsMutationVariables = Exact<{
 
 export type SetOrderLevelsMutation = { __typename?: 'Mutation', setOrderLevels: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
-export type StudentPartsFragment = { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any };
+export type StudentPartsFragment = { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string };
 
 export type CreateOneStudentMutationVariables = Exact<{
   student: CreateStudent;
 }>;
 
 
-export type CreateOneStudentMutation = { __typename?: 'Mutation', createOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
+export type CreateOneStudentMutation = { __typename?: 'Mutation', createOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string } };
 
 export type GetStudentsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2442,7 +2954,7 @@ export type GetStudentsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetStudentsPageQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any }> } };
+export type GetStudentsPageQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string }> } };
 
 export type FetchStudentQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2451,7 +2963,7 @@ export type FetchStudentQueryVariables = Exact<{
 }>;
 
 
-export type FetchStudentQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any }> } };
+export type FetchStudentQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string }> } };
 
 export type UpdateOneStudentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2459,7 +2971,7 @@ export type UpdateOneStudentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneStudentMutation = { __typename?: 'Mutation', updateOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
+export type UpdateOneStudentMutation = { __typename?: 'Mutation', updateOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string } };
 
 export type DeleteOneStudentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2474,7 +2986,7 @@ export type AddBranchsToStudentMutationVariables = Exact<{
 }>;
 
 
-export type AddBranchsToStudentMutation = { __typename?: 'Mutation', addBranchsToStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
+export type AddBranchsToStudentMutation = { __typename?: 'Mutation', addBranchsToStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string } };
 
 export type RemoveBranchsFromStudentMutationVariables = Exact<{
   studentId: Scalars['ID']['input'];
@@ -2482,7 +2994,7 @@ export type RemoveBranchsFromStudentMutationVariables = Exact<{
 }>;
 
 
-export type RemoveBranchsFromStudentMutation = { __typename?: 'Mutation', removeBranchsFromStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, createdAt: any, updatedAt: any } };
+export type RemoveBranchsFromStudentMutation = { __typename?: 'Mutation', removeBranchsFromStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string } };
 
 export const SessionPartsFragmentDoc = gql`
     fragment SessionParts on Session {
@@ -2509,8 +3021,6 @@ export const ClassroomPartsFragmentDoc = gql`
   id
   name
   color
-  createdAt
-  updatedAt
 }
     `;
 export const BranchPartsFragmentDoc = gql`
@@ -2518,8 +3028,6 @@ export const BranchPartsFragmentDoc = gql`
   id
   name
   picture
-  createdAt
-  updatedAt
 }
     `;
 export const ActivityPartsFragmentDoc = gql`
@@ -2531,8 +3039,6 @@ export const ActivityPartsFragmentDoc = gql`
   inPackage
   withTax
   order
-  createdAt
-  updatedAt
 }
     `;
 export const CyclePartsFragmentDoc = gql`
@@ -2541,22 +3047,32 @@ export const CyclePartsFragmentDoc = gql`
   name
   start
   end
-  createdAt
-  updatedAt
 }
     `;
 export const DebitPartsFragmentDoc = gql`
     fragment DebitParts on Debit {
   id
   description
-  value
+  unitPrice
   quantity
+  amount
+  discount
+  subtotal
+  taxes
+  total
+  withTax
   state
   frequency
   dueDate
   paymentDate
-  createdAt
-  updatedAt
+}
+    `;
+export const DiscountPartsFragmentDoc = gql`
+    fragment DiscountParts on Discount {
+  id
+  name
+  value
+  type
 }
     `;
 export const EnrollmentPartsFragmentDoc = gql`
@@ -2606,8 +3122,6 @@ export const FeePartsFragmentDoc = gql`
   price
   frequency
   withTax
-  createdAt
-  updatedAt
 }
     `;
 export const LevelPartsFragmentDoc = gql`
@@ -2616,8 +3130,6 @@ export const LevelPartsFragmentDoc = gql`
   name
   abbreviation
   order
-  createdAt
-  updatedAt
 }
     `;
 export const StudentPartsFragmentDoc = gql`
@@ -2630,8 +3142,6 @@ export const StudentPartsFragmentDoc = gql`
   lastname
   dateBirth
   dni
-  createdAt
-  updatedAt
 }
     `;
 export const SignInDocument = gql`
@@ -3118,6 +3628,85 @@ export const DeleteOneDebitDocument = gql`
   })
   export class DeleteOneDebitGQL extends Apollo.Mutation<DeleteOneDebitMutation, DeleteOneDebitMutationVariables> {
     document = DeleteOneDebitDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneDiscountDocument = gql`
+    mutation createOneDiscount($discount: CreateDiscount!) {
+  createOneDiscount(input: {discount: $discount}) {
+    ...DiscountParts
+  }
+}
+    ${DiscountPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneDiscountGQL extends Apollo.Mutation<CreateOneDiscountMutation, CreateOneDiscountMutationVariables> {
+    document = CreateOneDiscountDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetDiscountsPageDocument = gql`
+    query getDiscountsPage($offset: Int = 0, $limit: Int = 10, $filter: DiscountFilter = {}) {
+  discounts(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...DiscountParts
+    }
+  }
+}
+    ${DiscountPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetDiscountsPageGQL extends Apollo.Query<GetDiscountsPageQuery, GetDiscountsPageQueryVariables> {
+    document = GetDiscountsPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneDiscountDocument = gql`
+    mutation updateOneDiscount($id: ID!, $update: UpdateDiscount!) {
+  updateOneDiscount(input: {id: $id, update: $update}) {
+    ...DiscountParts
+  }
+}
+    ${DiscountPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneDiscountGQL extends Apollo.Mutation<UpdateOneDiscountMutation, UpdateOneDiscountMutationVariables> {
+    document = UpdateOneDiscountDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneDiscountDocument = gql`
+    mutation deleteOneDiscount($id: ID!) {
+  deleteOneDiscount(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneDiscountGQL extends Apollo.Mutation<DeleteOneDiscountMutation, DeleteOneDiscountMutationVariables> {
+    document = DeleteOneDiscountDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
