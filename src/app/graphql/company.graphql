@@ -2,8 +2,6 @@ fragment BranchParts on Branch {
   id,
   name,
   picture,
-  createdAt
-  updatedAt
 }
 
 mutation createOneBranch ($branch: CreateBranch!) {

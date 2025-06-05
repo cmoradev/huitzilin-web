@@ -2,8 +2,6 @@ fragment ClassroomParts on Classroom {
   id,
   name
   color
-  createdAt
-  updatedAt
 }
 
 mutation createOneClassroom ($classroom: CreateClassroom!) {

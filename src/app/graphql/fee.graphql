@@ -4,8 +4,6 @@ fragment FeeParts on Fee {
   price
   frequency
   withTax
-  createdAt
-  updatedAt
 }
 
 mutation createOneFee ($fee: CreateFee!) {

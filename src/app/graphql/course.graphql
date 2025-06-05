@@ -6,8 +6,6 @@ fragment ActivityParts on Activity {
   inPackage
   withTax
   order
-  createdAt
-  updatedAt
 }
 
 mutation createOneActivity($activity: CreateActivity!) {

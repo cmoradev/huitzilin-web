@@ -3,8 +3,6 @@ fragment LevelParts on Level {
   name,
   abbreviation,
   order,
-  createdAt
-  updatedAt
 }
 
 mutation createOneLevel ($level: CreateLevel!) {

@@ -3,8 +3,6 @@ fragment CycleParts on Cycle {
   name,
   start
   end
-  createdAt
-  updatedAt
 }
 
 mutation createOneCycle ($cycle: CreateCycle!) {

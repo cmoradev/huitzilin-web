@@ -1,14 +1,18 @@
 fragment DebitParts on Debit {
   id
   description
-  value
+  unitPrice
   quantity
+  amount
+  discount
+  subtotal
+  taxes
+  total
+  withTax
   state
   frequency
   dueDate
   paymentDate
-  createdAt
-  updatedAt
 }
 
 mutation createOneDebit($debit: CreateDebit!) {
