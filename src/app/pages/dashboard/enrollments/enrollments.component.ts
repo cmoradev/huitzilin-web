@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormField } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatDivider, MatNavList } from '@angular/material/list';
+import { MatDivider } from '@angular/material/list';
 import { StudentStateComponent } from '@components/student-state/student-state.component';
 import {
   DebitPartsFragment,
@@ -46,7 +46,6 @@ import { FlatNode } from '@models';
   imports: [
     MatIconModule,
     MatCardModule,
-    MatNavList,
     MatDivider,
     NgScrollbar,
     MatFormField,
