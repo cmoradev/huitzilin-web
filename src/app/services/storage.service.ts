@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@environment';
-import { map, Observable } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 
 export type Stored = {
   key: string;
@@ -32,8 +32,8 @@ export class StorageService {
     }
 
     return this.http.delete<Stored>(url).pipe(
-      map((resp) => {
-        console.log('Imagen eliminado', resp);
+      catchError(() => of('')),
+      map(() => {
         return '';
       })
     );
