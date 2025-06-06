@@ -1,9 +1,7 @@
 <mat-list-item>
   <div matListItemTitle>{{ debit.dueDate }} - {{ debit.description }}</div>
   <div matListItemLine>
-    <span class="text-xs">Cantidad: {{ debit.quantity }}</span>
-    <span> - </span>
-    <span class="text-xs">Valor: {{ debit.amount| currency }}</span>
+    <span class="text-xs">Cobranza: {{ debit.total | currency }}</span>
   </div>
   <mat-icon
     svgIcon="circle"

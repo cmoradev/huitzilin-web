@@ -137,12 +137,14 @@ export class DebitFormDialogComponent {
         const unitPrice = this.formGroup.get('unitPrice')!.value;
         const quantity = this.formGroup.get('quantity')!.value;
 
-        const amount = calculateAmountFromUnitPriceAndQuantity(
-          unitPrice,
-          quantity
-        );
+        if (unitPrice !== null && quantity === null) {
+          const amount = calculateAmountFromUnitPriceAndQuantity(
+            unitPrice,
+            quantity
+          );
 
-        this.formGroup.get('amount')!.setValue(amount);
+          this.formGroup.get('amount')!.setValue(amount);
+        }
       },
     });
   }

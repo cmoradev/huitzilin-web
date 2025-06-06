@@ -1,8 +1,14 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormArray,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -25,10 +31,15 @@ import {
   startOfMonth,
   endOfMonth,
   setDate,
-  constructNow,
 } from 'date-fns';
 import Decimal from 'decimal.js';
 import { map } from 'rxjs';
+import { DebitWithDiscountFormComponent } from '../debit-with-discount-form/debit-with-discount-form.component';
+import {
+  calculateAmountFromTotalAndTax,
+  calculateAmountFromUnitPriceAndQuantity,
+  TaxEnum,
+} from '@calculations';
 
 const defaultDueDate = `${format(
   addMonths(new Date(), 1),
@@ -45,8 +56,10 @@ const defaultDueDate = `${format(
     ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
+    MatExpansionModule,
     CurrencyPipe,
     FrequencyPipe,
+    DebitWithDiscountFormComponent,
   ],
   templateUrl: './debit-form-catalog-dialog.component.html',
   styles: ``,
@@ -78,6 +91,14 @@ export class DebitFormCatalogDialogComponent implements OnInit {
         this.generateDebits(value);
       }
     });
+  }
+
+  public get debits(): FormArray<FormGroup> {
+    return this.formGroup.get('debits') as FormArray<FormGroup>;
+  }
+
+  public removeDebit(index: number): void {
+    this.debits.removeAt(index);
   }
 
   public addDebit(
@@ -137,29 +158,54 @@ export class DebitFormCatalogDialogComponent implements OnInit {
         validators: [Validators.required],
         nonNullable: true,
       }),
+      discounts: this._formTools.builder.array<FormGroup>([]),
     });
 
     this.debits.push(debitFormGroup);
-  }
-
-  public get debits(): FormArray {
-    return this.formGroup.get('debits') as FormArray;
-  }
-
-  public removeDebit(index: number): void {
-    this.debits.removeAt(index);
   }
 
   public submit(): void {
     if (this.formGroup.valid) {
       const values = this.formGroup.getRawValue();
 
-      console.log(values);
+      this.loading.set(true);
+
+      if (!!this._globalStateService.enrollment?.id) {
+        this._createManyDebits
+          .mutate({
+            debits: values.debits.map((debit: any) => ({
+              description: debit.description,
+              unitPrice: debit.unitPrice,
+  
+              discount: debit.discount,
+              dueDate: debit.dueDate,
+              quantity: debit.quantity,
+              state: debit.state,
+              withTax: debit.withTax,
+              frequency: debit.frequency,
+              paymentDate: null,
+              enrollmentId: this._globalStateService.enrollment!.id,
+            })),
+          })
+          .pipe(map((resp) => resp.data?.createManyDebits))
+          .subscribe({
+            next: (resp) => {
+              console.log(resp);
+              this.loading.set(false);
+              this._dialogRef.close(resp);
+            },
+          });
+      }
     }
   }
 
   private generateDebits(value: FeePartsFragment) {
     this.formGroup.get('fee')!.setValue(null);
+
+    const { amount, taxes } = calculateAmountFromTotalAndTax(
+      value.price,
+      value.withTax ? TaxEnum.Sixteen : TaxEnum.Zero
+    );
 
     switch (value.frequency) {
       case Frequency.Monthly:
@@ -184,10 +230,10 @@ export class DebitFormCatalogDialogComponent implements OnInit {
 
             this.addDebit({
               description,
-              unitPrice: value.price,
+              unitPrice: amount,
               quantity: 1,
               state: DebitState.Debt,
-              dueDate: format(new Date(currentDate), 'yyyy-MM-dd'),
+              dueDate: format(currentDate, 'yyyy-MM-dd') + 'T12:00:00',
               withTax: value.withTax,
               frequency: Frequency.Single,
             });
@@ -201,7 +247,7 @@ export class DebitFormCatalogDialogComponent implements OnInit {
       default:
         this.addDebit({
           description: value.name,
-          unitPrice: value.price,
+          unitPrice: amount,
           quantity: 1,
           state: DebitState.Debt,
           dueDate: defaultDueDate,
