@@ -2,10 +2,12 @@
   <mat-card-header>
     <mat-card-title>Inscripciones</mat-card-title>
   </mat-card-header>
-  <mat-card-content class="h-[calc(100vh-10rem)]">
+  <mat-card-content>
     <div class="my-2">
       <app-student-state />
     </div>
+  </mat-card-content>
+  <mat-card-content class="h-[calc(100vh-13.5rem)]">
     <div class="flex gap-2 h-full">
       <!-- Sidebar (Chats List) -->
       <div class="w-1/3 flex flex-col">
@@ -26,6 +28,7 @@
             <mat-icon svgIcon="plus" />
           </button>
         </div>
+
         <mat-divider />
 
         <ng-scrollbar class="relative flex-1 mt-2">
@@ -72,28 +75,26 @@
         <mat-divider />
 
         <ng-scrollbar class="relative flex-1 mt-2">
-          <mat-nav-list>
-            @for (debit of debits(); track $index) {
-            <app-debit-item
-              [debit]="debit"
-              (update)="openDebitFormDialog($event)"
-              (delete)="openDebitDeleteDialog($event)"
-            />
-            }
-          </mat-nav-list>
+          @for (debit of debits(); track $index) {
+          <app-debit-item
+            [debit]="debit"
+            (update)="openDebitFormDialog($event)"
+            (delete)="openDebitDeleteDialog($event)"
+          />
+          }
         </ng-scrollbar>
       </div>
     </div>
   </mat-card-content>
-</mat-card>
 
-<mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="openDebitCatalogDialog()">
-    <mat-icon svgIcon="plus" />
-    <span>Usar catálogo</span>
-  </button>
-  <button mat-menu-item (click)="openDebitFormDialog()">
-    <mat-icon svgIcon="plus" />
-    <span>Creación manual</span>
-  </button>
-</mat-menu>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="openDebitCatalogDialog()">
+      <mat-icon svgIcon="plus" />
+      <span>Usar catálogo</span>
+    </button>
+    <button mat-menu-item (click)="openDebitFormDialog()">
+      <mat-icon svgIcon="plus" />
+      <span>Creación manual</span>
+    </button>
+  </mat-menu>
+</mat-card>

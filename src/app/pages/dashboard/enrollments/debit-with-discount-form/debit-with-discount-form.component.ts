@@ -1,11 +1,212 @@
-import { Component } from '@angular/core';
+import { CurrencyPipe, JsonPipe } from '@angular/common';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import {
+  FormArray,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
+import {
+  calculateAmountFromUnitPriceAndQuantity,
+  calculateDiscountFromAmountAndDiscounts,
+  calculateTaxesFromSubtotal,
+  TaxEnum,
+} from '@calculations';
+import { FormToolsService } from '@services';
+import { merge, startWith } from 'rxjs';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDialog } from '@angular/material/dialog';
+import { DebitDiscountFormDialogComponent } from '../debit-discount-form-dialog/debit-discount-form-dialog.component';
+import { SelectDebitDiscountFormDialogComponent } from '../select-debit-discount-form-dialog/select-debit-discount-form-dialog.component';
+import { CreateDebitDiscount, DiscountBy } from '@graphql';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-debit-with-discount-form',
-  imports: [],
+  imports: [
+    MatExpansionModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatDatepickerModule,
+    MatSelectModule,
+    MatCheckboxModule,
+    MatInputModule,
+    MatChipsModule,
+    MatMenuModule,
+    CurrencyPipe,
+  ],
   templateUrl: './debit-with-discount-form.component.html',
-  styles: ``
+  styles: ``,
 })
-export class DebitWithDiscountFormComponent {
+export class DebitWithDiscountFormComponent implements OnInit {
+  @Input({ required: true }) formGroup!: FormGroup;
 
+  private readonly _dialog = inject(MatDialog);
+  private readonly _formTools = inject(FormToolsService);
+
+  public readonly formTools = inject(FormToolsService);
+
+  public subtotal = signal(0);
+  public subtotal$ = toObservable(this.subtotal);
+
+  public amount = signal(0);
+  public taxes = signal(0);
+  public total = signal(0);
+
+  ngOnInit(): void {
+    this.formGroup.get('amount')?.disable();
+    this.formGroup.get('discount')?.disable();
+
+    merge(
+      this.formGroup.get('unitPrice')!.valueChanges,
+      this.formGroup.get('quantity')!.valueChanges
+    )
+      .pipe(startWith(0))
+      .subscribe({
+        next: () => {
+          const unitPrice = this.formGroup.get('unitPrice')!.value;
+          const quantity = this.formGroup.get('quantity')!.value;
+
+          if (unitPrice === null || quantity === null) {
+            const amount = calculateAmountFromUnitPriceAndQuantity(
+              unitPrice,
+              quantity
+            );
+
+            this.formGroup.get('amount')!.setValue(amount);
+          }
+        },
+      });
+
+    merge(
+      this.formGroup.get('discounts')!.valueChanges,
+      this.formGroup.get('amount')!.valueChanges
+    )
+      .pipe(startWith(0))
+      .subscribe({
+        next: () => {
+          const discounts = this.formGroup.get('discounts')?.value;
+          const amount = this.formGroup.get('amount')?.value;
+
+          const { discount, subtotal } =
+            calculateDiscountFromAmountAndDiscounts(amount, discounts);
+
+          this.formGroup.get('discount')?.setValue(discount);
+
+          this.amount.set(amount);
+          this.subtotal.set(subtotal);
+        },
+      });
+
+    this.subtotal$.pipe(startWith(0)).subscribe({
+      next: () => {
+        const withTax = this.formGroup.get('withTax')?.value ?? false;
+
+        const { taxes, total } = calculateTaxesFromSubtotal(
+          this.subtotal(),
+          withTax ? TaxEnum.Sixteen : TaxEnum.Zero
+        );
+
+        this.taxes.set(taxes);
+        this.total.set(total);
+      },
+    });
+  }
+
+  public createDebitDiscount() {
+    const dialog$ = this._dialog.open(DebitDiscountFormDialogComponent, {
+      width: '30rem',
+    });
+
+    dialog$.afterClosed().subscribe({
+      next: (discount) => {
+        if (discount) {
+          const discountName = this.generateDiscountName(discount);
+
+          this.addDebitDiscount({
+            name: discountName,
+            type: discount.type,
+            value: discount.value,
+          });
+        }
+      },
+    });
+  }
+
+  public selectDebitDiscount() {
+    const dialog$ = this._dialog.open(SelectDebitDiscountFormDialogComponent, {
+      width: '30rem',
+    });
+
+    dialog$.afterClosed().subscribe({
+      next: (discount) => {
+        if (discount) {
+          const discountName = this.generateDiscountName(discount);
+
+          this.addDebitDiscount({
+            name: discountName,
+            type: discount.type,
+            value: discount.value,
+          });
+        }
+      },
+    });
+  }
+
+  public get discounts(): FormArray<FormGroup> {
+    return this.formGroup.get('discounts') as FormArray<FormGroup>;
+  }
+
+  public removeDiscount(index: number): void {
+    this.discounts.removeAt(index);
+  }
+
+  private generateDiscountName(
+    params: Pick<CreateDebitDiscount, 'value' | 'type'>
+  ): string {
+    const { value, type } = params;
+
+    switch (type) {
+      case DiscountBy.Percentage:
+        return `${value}%`;
+      case DiscountBy.Fixed:
+        return `$ ${value.toString()}`;
+      default:
+        return '';
+    }
+  }
+
+  private addDebitDiscount(
+    initialValues: Omit<CreateDebitDiscount, 'debitId'>
+  ): void {
+    const { name, type, value } = initialValues;
+
+    const debitDiscountFormGroup = this._formTools.builder.group({
+      name: this._formTools.builder.control<string>(name, {
+        validators: [Validators.required],
+        nonNullable: true,
+      }),
+      type: this._formTools.builder.control<DiscountBy>(type, {
+        validators: [Validators.required],
+        nonNullable: true,
+      }),
+      value: this._formTools.builder.control<number>(value, {
+        validators: [Validators.required, Validators.min(1)],
+        nonNullable: true,
+      }),
+    });
+
+    this.discounts.push(debitDiscountFormGroup);
+  }
 }

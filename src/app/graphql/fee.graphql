@@ -1,7 +1,8 @@
 fragment FeeParts on Fee {
   id,
   name,
-  price
+  price,
+  amount,
   frequency
   withTax
 }

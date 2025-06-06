@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>Creación de adeudo desde catálogo</h2>
 <mat-dialog-content>
-  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()" >
+  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
     <mat-form-field class="w-full">
       <mat-label>Seleccione una cuota</mat-label>
       <mat-select formControlName="fee" multiLineOption>
@@ -8,12 +8,18 @@
         <mat-option [value]="fee">
           <h4 mat-line>{{ fee.name }}</h4>
           <p mat-line class="text-sm text-gray-500">
-            {{ fee.price | currency }} - {{ fee.frequency | frequency }}
+            {{ fee.amount| currency }} - {{ fee.frequency | frequency }}
           </p>
         </mat-option>
         }
       </mat-select>
     </mat-form-field>
+
+    <mat-accordion multi formArrayName="debits">
+      @for (debitFormGroup of debits.controls; track $index + debitFormGroup.get('description')?.value) {
+      <app-debit-with-discount-form [formGroup]="debitFormGroup" />
+      }
+    </mat-accordion>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Seleccione un descuento</h2>
+<mat-dialog-content>
+  <form id="selectDiscountForm" [formGroup]="formGroup" (ngSubmit)="submit()">
+    <mat-form-field class="w-full">
+      <mat-label>Descuento</mat-label>
+      <mat-select formControlName="discount" multiLineOption>
+        @for (discount of discounts(); track discount.id) {
+        <mat-option [value]="discount">
+          <h4 mat-line>{{ discount.name }}</h4>
+          <p mat-line class="text-sm text-gray-500">
+            @if (discount.type === 'PERCENTAGE') {
+            <span>{{ discount.value }} %</span>
+            } @else if (discount.type === 'FIXED') {
+            <span>{{ discount.value | currency }}</span>
+            }
+          </p>
+        </mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
+  <button mat-button cdkFocusInitial form="selectDiscountForm" [disabled]="loading()">
+    {{ loading() ? "Guardando..." : "Guardar" }}
+  </button>
+</mat-dialog-actions>

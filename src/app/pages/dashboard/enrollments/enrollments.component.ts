@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatFormField } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatDivider, MatNavList } from '@angular/material/list';
+import { MatDivider } from '@angular/material/list';
 import { StudentStateComponent } from '@components/student-state/student-state.component';
 import {
   DebitPartsFragment,
@@ -46,7 +46,6 @@ import { FlatNode } from '@models';
   imports: [
     MatIconModule,
     MatCardModule,
-    MatNavList,
     MatDivider,
     NgScrollbar,
     MatFormField,
@@ -161,7 +160,7 @@ export class EnrollmentsComponent implements OnInit {
     value: DebitPartsFragment | undefined = undefined
   ): void {
     const $dialog = this._dialog.open(DebitFormCatalogDialogComponent, {
-      width: '42rem',
+      width: '48rem',
       data: value,
     });
 
@@ -176,7 +175,7 @@ export class EnrollmentsComponent implements OnInit {
     value: DebitPartsFragment | undefined = undefined
   ): void {
     const $dialog = this._dialog.open(DebitFormDialogComponent, {
-      width: '42rem',
+      width: '38rem',
       data: value,
     });
 
@@ -282,5 +281,4 @@ export class EnrollmentsComponent implements OnInit {
       this.debitsTotalCount.set(0);
     }
   }
-
 }

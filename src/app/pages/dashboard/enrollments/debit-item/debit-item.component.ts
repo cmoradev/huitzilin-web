@@ -23,7 +23,7 @@ import { DebitStatePipe } from '@pipes';
     CurrencyPipe,
   ],
   templateUrl: './debit-item.component.html',
-  styles: ``,
+  styleUrl: './debit-item.component.scss',
 })
 export class DebitItemComponent {
   @Input({ required: true }) debit!: DebitPartsFragment;

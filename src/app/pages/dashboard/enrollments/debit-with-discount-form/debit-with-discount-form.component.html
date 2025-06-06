@@ -1,1 +1,127 @@
-<p>debit-with-discount-form works!</p>
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      {{ formGroup.get("description")?.value || "No description provided" }}
+    </mat-panel-title>
+    <mat-panel-description> 
+      {{ total() | currency }}
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+
+  <form id="dataForm" [formGroup]="formGroup">
+    <div class="flex flex-col gap-3">
+      <div class="grid grid-cols-2 gap-3">
+        <mat-form-field>
+          <mat-label>Fecha del pago</mat-label>
+          <input
+            matInput
+            [matDatepicker]="datepicker"
+            formControlName="dueDate"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="datepicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #datepicker> </mat-datepicker>
+          <mat-hint> Seleccione la fecha del pago </mat-hint>
+          <mat-error>
+            {{ formTools.checkForErrorsIn(formGroup.get("dueDate")) }}
+          </mat-error>
+        </mat-form-field>
+        <mat-checkbox
+          color="primary"
+          formControlName="withTax"
+          matTooltip="El IVA se aplica despues de los descuentos"
+        >
+          ¿Incluye IVA?
+        </mat-checkbox>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <mat-form-field>
+          <mat-label>Precio unitario</mat-label>
+          <input
+            matInput
+            placeholder="Ej: 100.00"
+            formControlName="unitPrice"
+            type="number"
+          />
+          <mat-hint>Ingrese el precio unitario</mat-hint>
+          <mat-error>
+            {{ formTools.checkForErrorsIn(formGroup.get("unitPrice")) }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Cantidad de unidades</mat-label>
+          <input
+            matInput
+            placeholder="Ej: 2"
+            formControlName="quantity"
+            type="number"
+          />
+          <mat-hint>Ingrese la cantidad de unidades</mat-hint>
+          <mat-error>
+            {{ formTools.checkForErrorsIn(formGroup.get("quantity")) }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-chip-set formArrayName="discounts">
+        @for (discountFormGroup of discounts.controls; track $index +
+        discountFormGroup.get('value')?.value) {
+
+        <mat-chip>
+          @if (discountFormGroup.get('type')?.value === 'PERCENTAGE') {
+          <span>- {{ discountFormGroup.get("value")?.value }} %</span>
+          } @else if (discountFormGroup.get('type')?.value === 'FIXED') {
+          <span>- {{ discountFormGroup.get("value")?.value | currency }}</span>
+          }
+
+          <button matChipRemove (click)="removeDiscount($index)">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+        }
+
+        <mat-chip [matMenuTriggerFor]="menu"> Agregar descuento </mat-chip>
+      </mat-chip-set>
+
+      <div class="w-60 flex flex-col gap-2 ml-auto">
+        <div class="flex gap-2 w-full">
+          <p class="w-full text-right font-semibold">Importe</p>
+          <p class="w-full text-right">{{ amount() | currency }}</p>
+        </div>
+        <div class="flex gap-2 w-full">
+          <p class="w-full text-right font-semibold">Descuentos</p>
+          <p class="w-full text-right">
+            {{ this.formGroup.get("discount")?.value ?? 0 | currency }}
+          </p>
+        </div>
+        <div class="flex gap-2 w-full">
+          <p class="w-full text-right font-semibold">Subtotal</p>
+          <p class="w-full text-right">{{ subtotal() | currency }}</p>
+        </div>
+        <div class="flex gap-2 w-full">
+          <p class="w-full text-right font-semibold">IVA</p>
+          <p class="w-full text-right">{{ taxes() | currency }}</p>
+        </div>
+        <div class="flex gap-2 w-full">
+          <p class="w-full text-right font-semibold">Total</p>
+          <p class="w-full text-right">{{ total() | currency }}</p>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-expansion-panel>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="createDebitDiscount()">
+    <mat-icon svgIcon="plus" />
+    <span>Crear un descuento</span>
+  </button>
+  <button mat-menu-item (click)="selectDebitDiscount()">
+    <mat-icon svgIcon="plus" />
+    <span>Seleccionar un descuento</span>
+  </button>
+</mat-menu>

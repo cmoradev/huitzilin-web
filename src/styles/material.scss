@@ -54,6 +54,12 @@ html {
     )
   );
 
+  @include mat.dialog-overrides(
+    (
+      container-max-width: 95vw,
+    )
+  );
+
   @include mat.form-field-density(-1);
 }
 
