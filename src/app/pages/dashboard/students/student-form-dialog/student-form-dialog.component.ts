@@ -202,7 +202,7 @@ export class StudentFormDialogComponent {
       values.picture instanceof File
         ? this._storage
             .delete(this.previusPicture)
-            .pipe(switchMap(() => this._storage.upload(values.picture)))
+            .pipe(catchError(() => of(null)), switchMap(() => this._storage.upload(values.picture)))
         : of(this.previusPicture);
 
     return uploadPicture$.pipe(
