@@ -44,7 +44,6 @@ export class ActivityFormDialogComponent implements OnInit {
     ],
     quantity: [0, [Validators.required]],
     isPackage: [false],
-    inPackage: [false],
     withTax: [true]
   });
 
@@ -57,22 +56,11 @@ export class ActivityFormDialogComponent implements OnInit {
   );
 
   ngOnInit(): void {
-    this.formGroup
-      .get('isPackage')
-      ?.valueChanges.pipe(startWith(false))
-      .subscribe((value) => {
-        if (value) {
-          this.formGroup.get('inPackage')?.setValue(false);
-          this.formGroup.get('inPackage')?.disable();
-        }
-      });
-
     if (!!this.data?.id) {
       this.formGroup.patchValue({
         name: this.data.name,
         quantity: this.data.quantity,
         isPackage: this.data.isPackage,
-        inPackage: this.data.inPackage,
         withTax: this.data.withTax,
       });
     }
@@ -138,6 +126,5 @@ type FormValues = {
   name: string;
   quantity: number;
   isPackage: boolean;
-  inPackage: boolean;
   withTax: boolean;
 };

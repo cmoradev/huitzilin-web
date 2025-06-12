@@ -28,11 +28,6 @@ export const DashboardRoutes: Routes = [
       import('./levels/levels.component').then((m) => m.LevelsComponent),
   },
   {
-    path: 'classrooms',
-    loadComponent: () =>
-      import('./classrooms/classrooms.component').then((m) => m.ClassroomsComponent),
-  },
-  {
     path: 'prices',
     loadComponent: () =>
       import('./prices/prices.component').then((m) => m.PricesComponent),

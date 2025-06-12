@@ -3,7 +3,6 @@ fragment ActivityParts on Activity {
   name
   quantity
   isPackage
-  inPackage
   withTax
   order
 }

@@ -70,40 +70,6 @@
         </mat-autocomplete>
       </mat-form-field>
 
-      <mat-form-field class="w-full">
-        <mat-label>Seleccionar salón</mat-label>
-        <input
-          type="text"
-          placeholder="Ej. Blue, Green"
-          matInput
-          formControlName="classroom"
-          [matAutocomplete]="autoClassroom"
-        />
-        <mat-hint>Seleccione el salón para la inscripción</mat-hint>
-        <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("classroom")) }}
-        </mat-error>
-        @if (formGroup.get("classroom")?.value) {
-        <button
-          mat-icon-button
-          matSuffix
-          (click)="formGroup.get('classroom')?.setValue('')"
-        >
-          <mat-icon svgIcon="close" />
-        </button>
-        }
-        <mat-autocomplete
-          #autoClassroom="matAutocomplete"
-          [displayWith]="displayFn"
-        >
-          @for (classroom of classrooms(); track classroom.id) {
-          <mat-option [value]="classroom">
-            {{ classroom.name }}
-          </mat-option>
-          }
-        </mat-autocomplete>
-      </mat-form-field>
-
       @if (!!data?.id) {
       <mat-form-field>
         <mat-label>Estado</mat-label>

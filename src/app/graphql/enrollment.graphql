@@ -3,12 +3,10 @@ fragment EnrollmentParts on Enrollment {
   details
   state
   isPackage
-  inPackage
   activity {
     id
     name
     isPackage
-    inPackage
     quantity
   }
   cycle {
@@ -20,11 +18,6 @@ fragment EnrollmentParts on Enrollment {
     picture
     fullname
     code
-  }
-  classroom {
-    id
-    name
-    color
   }
   level {
     id, 

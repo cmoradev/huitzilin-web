@@ -92,7 +92,6 @@ export type Activity = {
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
-  inPackage: Scalars['Boolean']['output'];
   isPackage: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   order: Scalars['Float']['output'];
@@ -118,7 +117,6 @@ export type ActivityDeleteResponse = {
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
-  inPackage?: Maybe<Scalars['Boolean']['output']>;
   isPackage?: Maybe<Scalars['Boolean']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   order?: Maybe<Scalars['Float']['output']>;
@@ -133,7 +131,6 @@ export type ActivityFilter = {
   branchId?: InputMaybe<StringFieldComparison>;
   createdAt?: InputMaybe<DateFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
-  inPackage?: InputMaybe<BooleanFieldComparison>;
   isPackage?: InputMaybe<BooleanFieldComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<ActivityFilter>>;
@@ -151,7 +148,6 @@ export enum ActivitySortFields {
   BranchId = 'branchId',
   CreatedAt = 'createdAt',
   Id = 'id',
-  InPackage = 'inPackage',
   IsPackage = 'isPackage',
   Name = 'name',
   Order = 'order',
@@ -163,7 +159,6 @@ export type ActivityUpdateFilter = {
   branchId?: InputMaybe<StringFieldComparison>;
   createdAt?: InputMaybe<DateFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
-  inPackage?: InputMaybe<BooleanFieldComparison>;
   isPackage?: InputMaybe<BooleanFieldComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<ActivityUpdateFilter>>;
@@ -244,64 +239,6 @@ export enum BranchSortFields {
   UpdatedAt = 'updatedAt'
 }
 
-export type Classroom = {
-  __typename?: 'Classroom';
-  branchId: Scalars['String']['output'];
-  color: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  deletedAt?: Maybe<Scalars['DateTime']['output']>;
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
-  updatedAt: Scalars['DateTime']['output'];
-  version: Scalars['Int']['output'];
-};
-
-export type ClassroomConnection = {
-  __typename?: 'ClassroomConnection';
-  /** Array of nodes. */
-  nodes: Array<Classroom>;
-  /** Paging information */
-  pageInfo: OffsetPageInfo;
-  /** Fetch total count of records */
-  totalCount: Scalars['Int']['output'];
-};
-
-export type ClassroomDeleteResponse = {
-  __typename?: 'ClassroomDeleteResponse';
-  branchId?: Maybe<Scalars['String']['output']>;
-  color?: Maybe<Scalars['String']['output']>;
-  createdAt?: Maybe<Scalars['DateTime']['output']>;
-  deletedAt?: Maybe<Scalars['DateTime']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['DateTime']['output']>;
-  version?: Maybe<Scalars['Int']['output']>;
-};
-
-export type ClassroomFilter = {
-  and?: InputMaybe<Array<ClassroomFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<ClassroomFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
-export type ClassroomSort = {
-  direction: SortDirection;
-  field: ClassroomSortFields;
-  nulls?: InputMaybe<SortNulls>;
-};
-
-export enum ClassroomSortFields {
-  BranchId = 'branchId',
-  CreatedAt = 'createdAt',
-  Id = 'id',
-  Name = 'name',
-  UpdatedAt = 'updatedAt'
-}
-
 export type CreateAction = {
   action: Scalars['String']['input'];
   effect: ActionEffect;
@@ -311,7 +248,6 @@ export type CreateAction = {
 
 export type CreateActivity = {
   branchId: Scalars['String']['input'];
-  inPackage: Scalars['Boolean']['input'];
   isPackage: Scalars['Boolean']['input'];
   name: Scalars['String']['input'];
   order: Scalars['Float']['input'];
@@ -322,12 +258,6 @@ export type CreateActivity = {
 export type CreateBranch = {
   name: Scalars['String']['input'];
   picture: Scalars['String']['input'];
-};
-
-export type CreateClassroom = {
-  branchId: Scalars['String']['input'];
-  color: Scalars['String']['input'];
-  name: Scalars['String']['input'];
 };
 
 export type CreateCycle = {
@@ -372,7 +302,6 @@ export type CreateDocument = {
 export type CreateEnrollment = {
   activityId: Scalars['String']['input'];
   branchId: Scalars['String']['input'];
-  classroomId: Scalars['String']['input'];
   cycleId: Scalars['String']['input'];
   details: Scalars['String']['input'];
   inPackage: Scalars['Boolean']['input'];
@@ -432,11 +361,6 @@ export type CreateOneActivityInput = {
 export type CreateOneBranchInput = {
   /** The record to create */
   branch: CreateBranch;
-};
-
-export type CreateOneClassroomInput = {
-  /** The record to create */
-  classroom: CreateClassroom;
 };
 
 export type CreateOneCycleInput = {
@@ -772,11 +696,6 @@ export type DeleteOneBranchInput = {
   id: Scalars['ID']['input'];
 };
 
-export type DeleteOneClassroomInput = {
-  /** The id of the record to delete. */
-  id: Scalars['ID']['input'];
-};
-
 export type DeleteOneCycleInput = {
   /** The id of the record to delete. */
   id: Scalars['ID']['input'];
@@ -982,8 +901,6 @@ export type Enrollment = {
   branch: Branch;
   branchId: Scalars['ID']['output'];
   children: EnrollmentChildrenConnection;
-  classroom: Classroom;
-  classroomId: Scalars['ID']['output'];
   createdAt: Scalars['DateTime']['output'];
   cycle: Cycle;
   cycleId: Scalars['ID']['output'];
@@ -1035,7 +952,6 @@ export type EnrollmentDeleteResponse = {
   __typename?: 'EnrollmentDeleteResponse';
   activityId?: Maybe<Scalars['ID']['output']>;
   branchId?: Maybe<Scalars['ID']['output']>;
-  classroomId?: Maybe<Scalars['ID']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   cycleId?: Maybe<Scalars['ID']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -1056,7 +972,6 @@ export type EnrollmentFilter = {
   activityId?: InputMaybe<IdFilterComparison>;
   and?: InputMaybe<Array<EnrollmentFilter>>;
   branchId?: InputMaybe<IdFilterComparison>;
-  classroomId?: InputMaybe<IdFilterComparison>;
   createdAt?: InputMaybe<DateFieldComparison>;
   cycleId?: InputMaybe<IdFilterComparison>;
   details?: InputMaybe<StringFieldComparison>;
@@ -1080,7 +995,6 @@ export type EnrollmentSort = {
 export enum EnrollmentSortFields {
   ActivityId = 'activityId',
   BranchId = 'branchId',
-  ClassroomId = 'classroomId',
   CreatedAt = 'createdAt',
   CycleId = 'cycleId',
   Details = 'details',
@@ -1286,7 +1200,6 @@ export type Mutation = {
   createOneAction: Action;
   createOneActivity: Activity;
   createOneBranch: Branch;
-  createOneClassroom: Classroom;
   createOneCycle: Cycle;
   createOneDebit: Debit;
   createOneDebitDiscount: DebitDiscount;
@@ -1302,7 +1215,6 @@ export type Mutation = {
   deleteOneAction: ActionDeleteResponse;
   deleteOneActivity: ActivityDeleteResponse;
   deleteOneBranch: BranchDeleteResponse;
-  deleteOneClassroom: ClassroomDeleteResponse;
   deleteOneCycle: CycleDeleteResponse;
   deleteOneDebit: DebitDeleteResponse;
   deleteOneDebitDiscount: DebitDiscountDeleteResponse;
@@ -1332,7 +1244,6 @@ export type Mutation = {
   updateOneAction: Action;
   updateOneActivity: Activity;
   updateOneBranch: Branch;
-  updateOneClassroom: Classroom;
   updateOneCycle: Cycle;
   updateOneDebit: Debit;
   updateOneDebitDiscount: DebitDiscount;
@@ -1391,11 +1302,6 @@ export type MutationCreateOneActivityArgs = {
 
 export type MutationCreateOneBranchArgs = {
   input: CreateOneBranchInput;
-};
-
-
-export type MutationCreateOneClassroomArgs = {
-  input: CreateOneClassroomInput;
 };
 
 
@@ -1471,11 +1377,6 @@ export type MutationDeleteOneActivityArgs = {
 
 export type MutationDeleteOneBranchArgs = {
   input: DeleteOneBranchInput;
-};
-
-
-export type MutationDeleteOneClassroomArgs = {
-  input: DeleteOneClassroomInput;
 };
 
 
@@ -1621,11 +1522,6 @@ export type MutationUpdateOneActivityArgs = {
 
 export type MutationUpdateOneBranchArgs = {
   input: UpdateOneBranchInput;
-};
-
-
-export type MutationUpdateOneClassroomArgs = {
-  input: UpdateOneClassroomInput;
 };
 
 
@@ -1793,8 +1689,6 @@ export type Query = {
   activity: Activity;
   branch: Branch;
   branches: BranchConnection;
-  classroom: Classroom;
-  classrooms: ClassroomConnection;
   cycle: Cycle;
   cycles: CycleConnection;
   debit: Debit;
@@ -1855,18 +1749,6 @@ export type QueryBranchesArgs = {
   filter?: BranchFilter;
   paging?: OffsetPaging;
   sorting?: Array<BranchSort>;
-};
-
-
-export type QueryClassroomArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type QueryClassroomsArgs = {
-  filter?: ClassroomFilter;
-  paging?: OffsetPaging;
-  sorting?: Array<ClassroomSort>;
 };
 
 
@@ -2315,7 +2197,6 @@ export type UpdateAction = {
 
 export type UpdateActivity = {
   branchId?: InputMaybe<Scalars['String']['input']>;
-  inPackage?: InputMaybe<Scalars['Boolean']['input']>;
   isPackage?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   order?: InputMaybe<Scalars['Float']['input']>;
@@ -2326,12 +2207,6 @@ export type UpdateActivity = {
 export type UpdateBranch = {
   name?: InputMaybe<Scalars['String']['input']>;
   picture?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type UpdateClassroom = {
-  branchId?: InputMaybe<Scalars['String']['input']>;
-  color?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateCount = {
@@ -2381,7 +2256,6 @@ export type UpdateDocument = {
 export type UpdateEnrollment = {
   activityId?: InputMaybe<Scalars['String']['input']>;
   branchId?: InputMaybe<Scalars['String']['input']>;
-  classroomId?: InputMaybe<Scalars['String']['input']>;
   cycleId?: InputMaybe<Scalars['String']['input']>;
   details?: InputMaybe<Scalars['String']['input']>;
   inPackage?: InputMaybe<Scalars['Boolean']['input']>;
@@ -2440,13 +2314,6 @@ export type UpdateOneBranchInput = {
   id: Scalars['ID']['input'];
   /** The update to apply. */
   update: UpdateBranch;
-};
-
-export type UpdateOneClassroomInput = {
-  /** The id of the record to update */
-  id: Scalars['ID']['input'];
-  /** The update to apply. */
-  update: UpdateClassroom;
 };
 
 export type UpdateOneCycleInput = {
@@ -2605,39 +2472,6 @@ export type UpdateOneUserMutationVariables = Exact<{
 
 export type UpdateOneUserMutation = { __typename?: 'Mutation', updateOneUser: { __typename?: 'User', id: string } };
 
-export type ClassroomPartsFragment = { __typename?: 'Classroom', id: string, name: string, color: string };
-
-export type CreateOneClassroomMutationVariables = Exact<{
-  classroom: CreateClassroom;
-}>;
-
-
-export type CreateOneClassroomMutation = { __typename?: 'Mutation', createOneClassroom: { __typename?: 'Classroom', id: string, name: string, color: string } };
-
-export type GetClassroomsPageQueryVariables = Exact<{
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  filter?: InputMaybe<ClassroomFilter>;
-}>;
-
-
-export type GetClassroomsPageQuery = { __typename?: 'Query', classrooms: { __typename?: 'ClassroomConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Classroom', id: string, name: string, color: string }> } };
-
-export type UpdateOneClassroomMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-  update: UpdateClassroom;
-}>;
-
-
-export type UpdateOneClassroomMutation = { __typename?: 'Mutation', updateOneClassroom: { __typename?: 'Classroom', id: string, name: string, color: string } };
-
-export type DeleteOneClassroomMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type DeleteOneClassroomMutation = { __typename?: 'Mutation', deleteOneClassroom: { __typename?: 'ClassroomDeleteResponse', id?: string | null } };
-
 export type BranchPartsFragment = { __typename?: 'Branch', id: string, name: string, picture: string };
 
 export type CreateOneBranchMutationVariables = Exact<{
@@ -2671,14 +2505,14 @@ export type DeleteOneBranchMutationVariables = Exact<{
 
 export type DeleteOneBranchMutation = { __typename?: 'Mutation', deleteOneBranch: { __typename?: 'BranchDeleteResponse', id?: string | null } };
 
-export type ActivityPartsFragment = { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number };
+export type ActivityPartsFragment = { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, withTax: boolean, order: number };
 
 export type CreateOneActivityMutationVariables = Exact<{
   activity: CreateActivity;
 }>;
 
 
-export type CreateOneActivityMutation = { __typename?: 'Mutation', createOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number } };
+export type CreateOneActivityMutation = { __typename?: 'Mutation', createOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, withTax: boolean, order: number } };
 
 export type GetActivityPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2687,7 +2521,7 @@ export type GetActivityPageQueryVariables = Exact<{
 }>;
 
 
-export type GetActivityPageQuery = { __typename?: 'Query', activities: { __typename?: 'ActivityConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number }> } };
+export type GetActivityPageQuery = { __typename?: 'Query', activities: { __typename?: 'ActivityConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, withTax: boolean, order: number }> } };
 
 export type UpdateOneActivityMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2695,7 +2529,7 @@ export type UpdateOneActivityMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneActivityMutation = { __typename?: 'Mutation', updateOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, inPackage: boolean, withTax: boolean, order: number } };
+export type UpdateOneActivityMutation = { __typename?: 'Mutation', updateOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, withTax: boolean, order: number } };
 
 export type DeleteOneActivityMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2817,14 +2651,14 @@ export type DeleteOneDiscountMutationVariables = Exact<{
 
 export type DeleteOneDiscountMutation = { __typename?: 'Mutation', deleteOneDiscount: { __typename?: 'DiscountDeleteResponse', id?: string | null } };
 
-export type EnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, isPackage: boolean, inPackage: boolean, parentId?: string | null, activity: { __typename?: 'Activity', id: string, name: string, isPackage: boolean, inPackage: boolean, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, classroom: { __typename?: 'Classroom', id: string, name: string, color: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string }, children: { __typename?: 'EnrollmentChildrenConnection', totalCount: number } };
+export type EnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, isPackage: boolean, parentId?: string | null, activity: { __typename?: 'Activity', id: string, name: string, isPackage: boolean, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string }, children: { __typename?: 'EnrollmentChildrenConnection', totalCount: number } };
 
 export type CreateOneEnrollmentMutationVariables = Exact<{
   enrollment: CreateEnrollment;
 }>;
 
 
-export type CreateOneEnrollmentMutation = { __typename?: 'Mutation', createOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, isPackage: boolean, inPackage: boolean, parentId?: string | null, activity: { __typename?: 'Activity', id: string, name: string, isPackage: boolean, inPackage: boolean, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, classroom: { __typename?: 'Classroom', id: string, name: string, color: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string }, children: { __typename?: 'EnrollmentChildrenConnection', totalCount: number } } };
+export type CreateOneEnrollmentMutation = { __typename?: 'Mutation', createOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, isPackage: boolean, parentId?: string | null, activity: { __typename?: 'Activity', id: string, name: string, isPackage: boolean, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string }, children: { __typename?: 'EnrollmentChildrenConnection', totalCount: number } } };
 
 export type GetEnrollmentsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2833,7 +2667,7 @@ export type GetEnrollmentsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, isPackage: boolean, inPackage: boolean, parentId?: string | null, activity: { __typename?: 'Activity', id: string, name: string, isPackage: boolean, inPackage: boolean, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, classroom: { __typename?: 'Classroom', id: string, name: string, color: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string }, children: { __typename?: 'EnrollmentChildrenConnection', totalCount: number } }> } };
+export type GetEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, isPackage: boolean, parentId?: string | null, activity: { __typename?: 'Activity', id: string, name: string, isPackage: boolean, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string }, children: { __typename?: 'EnrollmentChildrenConnection', totalCount: number } }> } };
 
 export type UpdateOneEnrollmentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2841,7 +2675,7 @@ export type UpdateOneEnrollmentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneEnrollmentMutation = { __typename?: 'Mutation', updateOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, isPackage: boolean, inPackage: boolean, parentId?: string | null, activity: { __typename?: 'Activity', id: string, name: string, isPackage: boolean, inPackage: boolean, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, classroom: { __typename?: 'Classroom', id: string, name: string, color: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string }, children: { __typename?: 'EnrollmentChildrenConnection', totalCount: number } } };
+export type UpdateOneEnrollmentMutation = { __typename?: 'Mutation', updateOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, isPackage: boolean, parentId?: string | null, activity: { __typename?: 'Activity', id: string, name: string, isPackage: boolean, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string }, children: { __typename?: 'EnrollmentChildrenConnection', totalCount: number } } };
 
 export type DeleteOneEnrollmentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3008,13 +2842,6 @@ export const SessionPartsFragmentDoc = gql`
   iat
 }
     `;
-export const ClassroomPartsFragmentDoc = gql`
-    fragment ClassroomParts on Classroom {
-  id
-  name
-  color
-}
-    `;
 export const BranchPartsFragmentDoc = gql`
     fragment BranchParts on Branch {
   id
@@ -3028,7 +2855,6 @@ export const ActivityPartsFragmentDoc = gql`
   name
   quantity
   isPackage
-  inPackage
   withTax
   order
 }
@@ -3073,12 +2899,10 @@ export const EnrollmentPartsFragmentDoc = gql`
   details
   state
   isPackage
-  inPackage
   activity {
     id
     name
     isPackage
-    inPackage
     quantity
   }
   cycle {
@@ -3090,11 +2914,6 @@ export const EnrollmentPartsFragmentDoc = gql`
     picture
     fullname
     code
-  }
-  classroom {
-    id
-    name
-    color
   }
   level {
     id
@@ -3186,85 +3005,6 @@ export const UpdateOneUserDocument = gql`
   })
   export class UpdateOneUserGQL extends Apollo.Mutation<UpdateOneUserMutation, UpdateOneUserMutationVariables> {
     document = UpdateOneUserDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const CreateOneClassroomDocument = gql`
-    mutation createOneClassroom($classroom: CreateClassroom!) {
-  createOneClassroom(input: {classroom: $classroom}) {
-    ...ClassroomParts
-  }
-}
-    ${ClassroomPartsFragmentDoc}`;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class CreateOneClassroomGQL extends Apollo.Mutation<CreateOneClassroomMutation, CreateOneClassroomMutationVariables> {
-    document = CreateOneClassroomDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const GetClassroomsPageDocument = gql`
-    query getClassroomsPage($offset: Int = 0, $limit: Int = 10, $filter: ClassroomFilter = {}) {
-  classrooms(paging: {limit: $limit, offset: $offset}, filter: $filter) {
-    totalCount
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-    }
-    nodes {
-      ...ClassroomParts
-    }
-  }
-}
-    ${ClassroomPartsFragmentDoc}`;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class GetClassroomsPageGQL extends Apollo.Query<GetClassroomsPageQuery, GetClassroomsPageQueryVariables> {
-    document = GetClassroomsPageDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const UpdateOneClassroomDocument = gql`
-    mutation updateOneClassroom($id: ID!, $update: UpdateClassroom!) {
-  updateOneClassroom(input: {id: $id, update: $update}) {
-    ...ClassroomParts
-  }
-}
-    ${ClassroomPartsFragmentDoc}`;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class UpdateOneClassroomGQL extends Apollo.Mutation<UpdateOneClassroomMutation, UpdateOneClassroomMutationVariables> {
-    document = UpdateOneClassroomDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const DeleteOneClassroomDocument = gql`
-    mutation deleteOneClassroom($id: ID!) {
-  deleteOneClassroom(input: {id: $id}) {
-    id
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class DeleteOneClassroomGQL extends Apollo.Mutation<DeleteOneClassroomMutation, DeleteOneClassroomMutationVariables> {
-    document = DeleteOneClassroomDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

@@ -24,12 +24,10 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
 import {
-  ClassroomPartsFragment,
   ActivityPartsFragment,
   CreateOneEnrollmentGQL,
   EnrollmentPartsFragment,
   EnrollmentState,
-  GetClassroomsPageGQL,
   GetActivityPageGQL,
   UpdateOneEnrollmentGQL,
   GetLevelsPageGQL,
@@ -79,7 +77,6 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
     ],
     state: [EnrollmentState.Active, [Validators.required]],
     activity: ['' as any, [Validators.required]],
-    classroom: ['' as any, [Validators.required]],
     level: ['' as any, [Validators.required]],
   });
 
@@ -90,10 +87,6 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   public loadingActivities = signal<boolean>(false);
   public activities = signal<ActivityPartsFragment[]>([]);
   private readonly _activitiesPageGQL = inject(GetActivityPageGQL);
-
-  public loadingClassrooms = signal<boolean>(false);
-  public classrooms = signal<ClassroomPartsFragment[]>([]);
-  private readonly _classroomsPageGQL = inject(GetClassroomsPageGQL);
 
   public loadingLevels = signal<boolean>(false);
   public levels = signal<LevelPartsFragment[]>([]);
@@ -110,28 +103,24 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
       this.formGroup.patchValue({
         details: this.data.details,
         activity: this.data.activity,
-        classroom: this.data.classroom,
         level: this.data.level,
       });
     }
     // @todo - Check this event rename details enrollment
     merge(
       this.formGroup.get('activity')!.valueChanges,
-      this.formGroup.get('classroom')!.valueChanges,
       this.formGroup.get('level')!.valueChanges
     )
       .pipe(filter((value) => typeof value === 'object'))
       .subscribe(() => {
         const activityName = this.formGroup.get('activity')?.value?.name ?? '';
-        const classroomName =
-          this.formGroup.get('classroom')?.value?.name ?? '';
         const levelAbbrevation =
           this.formGroup.get('level')?.value?.abbreviation ?? '';
 
         this.formGroup
           .get('details')
           ?.setValue(
-            `${levelAbbrevation} - ${activityName} - ${classroomName}`
+            `${levelAbbrevation} - ${activityName}`
           );
       });
   }
@@ -139,22 +128,12 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.formGroup
       .get('activity')
+
       ?.valueChanges.pipe(debounceTime(300), startWith(''))
       .subscribe({
         next: (value) => {
           if (typeof value === 'string') {
             this._fetchActivities(value);
-          }
-        },
-      });
-
-    this.formGroup
-      .get('classroom')
-      ?.valueChanges.pipe(debounceTime(300), startWith(''))
-      .subscribe({
-        next: (value) => {
-          if (typeof value === 'string') {
-            this._fetchClassroom(value);
           }
         },
       });
@@ -214,7 +193,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   }
 
   public displayFn(
-    value: ActivityPartsFragment | ClassroomPartsFragment
+    value: ActivityPartsFragment
   ): string {
     return value?.name ?? '';
   }
@@ -225,7 +204,6 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
         id: this.data!.id,
         update: {
           activityId: values.activity.id,
-          classroomId: values.classroom.id,
           details: values.details,
           state: values.state,
         },
@@ -241,13 +219,11 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
           branchId: this._globalStateService.branch!.id,
           cycleId: this._globalStateService.cycle!.id,
           activityId: values.activity.id,
-          classroomId: values.classroom.id,
           levelId: values.level.id,
           details: values.details,
           state: values.state,
           order: 1,
           isPackage: values.activity.isPackage,
-          inPackage: values.activity.inPackage,
           parentId: values?.parentId ?? null,
         },
       })
@@ -261,7 +237,6 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
       const filter: ActivityFilter = {
         name: { iLike: `%${value}%` },
         branchId: { eq: this._globalStateService.branch!.id },
-        inPackage: { is: !!this.data?.parentId }
       };
 
       // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
@@ -288,40 +263,6 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
     } else {
       this.loadingActivities.set(false);
       this.activities.set([]);
-    }
-  }
-
-  private _fetchClassroom(value: string): void {
-    if (this._globalStateService.branch!.id) {
-      this.loadingClassrooms.set(true);
-
-      // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
-      this._classroomsPageGQL
-        .watch(
-          {
-            limit: 100,
-            offset: 0,
-            filter: {
-              name: { iLike: `%${value}%` },
-              branchId: { eq: this._globalStateService.branch!.id },
-            },
-          },
-          {
-            fetchPolicy: 'cache-and-network',
-            nextFetchPolicy: 'cache-and-network',
-            notifyOnNetworkStatusChange: true,
-          }
-        )
-        .valueChanges.subscribe({
-          next: ({ loading, data }) => {
-            this.loadingClassrooms.set(loading);
-
-            this.classrooms.set(data?.classrooms.nodes ?? []);
-          },
-        });
-    } else {
-      this.loadingClassrooms.set(false);
-      this.classrooms.set([]);
     }
   }
 
@@ -367,7 +308,6 @@ type FormValues = {
   details: string;
   state: EnrollmentState;
   activity: ActivityPartsFragment;
-  classroom: ClassroomPartsFragment;
-  level: ClassroomPartsFragment;
+  level: LevelPartsFragment;
   parentId: string | null;
 };
