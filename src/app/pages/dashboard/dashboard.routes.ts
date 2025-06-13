@@ -16,7 +16,6 @@ export const DashboardRoutes: Routes = [
     loadComponent: () =>
       import('./enrollments/enrollments.component').then((m) => m.EnrollmentsComponent),
   },
-
   {
     path: 'cycles',
     loadComponent: () =>

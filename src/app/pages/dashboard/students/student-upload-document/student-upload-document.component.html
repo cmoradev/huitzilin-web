@@ -1,0 +1,20 @@
+<div
+  class="relative border-dotted h-36 rounded-lg border-2 border-primary flex justify-center items-center hover:bg-neutral-100 cursor-pointer"
+>
+  <div class="absolute">
+    <div class="flex flex-col items-center">
+      <img src="/images/no-file.png" alt="upload" class="w-24 h-24 mb-2" />
+      <span class="block text-gray-800 font-normal">
+        {{ loading() ? "Cargando..." : "Subir documento" }}
+      </span>
+    </div>
+  </div>
+
+  <input
+    type="file"
+    accept="application/pdf,image/*"
+    class="h-full w-full opacity-0"
+    (change)="onFileSelected($event)"
+    [disabled]="loading()"
+  />
+</div>

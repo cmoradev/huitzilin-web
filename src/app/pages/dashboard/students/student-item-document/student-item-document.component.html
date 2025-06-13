@@ -1,0 +1,20 @@
+<div
+  class="relative h-36 border-dotted border-2 border-primary rounded-lg flex justify-center items-center hover:bg-neutral-100"
+>
+  <a
+    matButton
+    [href]="document.url"
+    target="_blank"
+    class="flex items-center gap-2"
+  >
+    <mat-icon svgIcon="open-in-new" />
+
+    Abrir documento
+  </a>
+
+  <div class="absolute top-1 right-1">
+    <button type="button" mat-icon-button (click)="deleteDocument()">
+      <mat-icon svgIcon="delete" class="!text-red-400" />
+    </button>
+  </div>
+</div>

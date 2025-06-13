@@ -30,6 +30,7 @@ import { debounceTime, merge, startWith } from 'rxjs';
 import { StudentDeleteDialogComponent } from './student-delete-dialog/student-delete-dialog.component';
 import { StudentFormDialogComponent } from './student-form-dialog/student-form-dialog.component';
 import { GlobalStateService } from '@services';
+import { StudentDocumentsDialogComponent } from './student-documents-dialog/student-documents-dialog.component';
 
 @Component({
   selector: 'app-students',
@@ -81,6 +82,13 @@ export class StudentsComponent {
           this.refresh();
         },
       });
+  }
+
+  public openDoucumentsDialog(value: StudentPartsFragment): void {
+    this.dialog.open(StudentDocumentsDialogComponent, {
+      width: '42rem',
+      data: value,
+    });
   }
 
   public openFormDialog(

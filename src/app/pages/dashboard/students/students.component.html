@@ -17,7 +17,6 @@
 
       <button
         mat-icon-button
-        color="primary"
         matTooltip="Refrescar"
         (click)="refresh()"
         [ngClass]="{ 'animate-spin': loading() }"
@@ -26,7 +25,6 @@
       </button>
       <button
         mat-icon-button
-        color="primary"
         matTooltip="Crear nuevo"
         (click)="openFormDialog()"
       >
@@ -69,6 +67,9 @@
             [cdkCopyToClipboard]="element.code"
           >
             <mat-icon svgIcon="clipboard-outline" />
+          </button>
+          <button mat-icon-button matTooltip="Documentación" (click)="openDoucumentsDialog(element)">
+            <mat-icon svgIcon="file-document-multiple" />
           </button>
           <button
             mat-icon-button

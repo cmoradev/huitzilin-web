@@ -93,3 +93,56 @@ mutation removeBranchsFromStudent ($studentId: ID!, $branchIds: [ID!]!) {
     ...StudentParts
   }
 }
+
+fragment DocumentParts on Document {
+  id
+  name
+  key
+  url
+}
+
+query getDocumentPage($studentId: ID!, $offset: Int = 0, $limit: Int = 10) {
+  documents (
+    filter: {students: {id: {  eq: $studentId}}}
+    paging: {offset: $offset, limit: $limit}
+  ) {
+    totalCount
+    nodes {
+      ...DocumentParts
+    }
+  }
+}
+
+
+mutation createOneDocument ($document: CreateDocument!) {
+  createOneDocument (input: {document: $document}) {
+    ...DocumentParts
+  }
+}
+
+
+mutation addStudentsToDocument($id: ID!, $relationIds: [ID!]!) {
+  addStudentsToDocument (
+    input: {id:$id, relationIds: $relationIds}
+  ) {
+    id
+  }
+}
+
+mutation removeStudentsFromDocument ($id: ID!, $relationIds: [ID!]!) {
+  removeStudentsFromDocument (
+        input: {id:$id, relationIds: $relationIds}
+  ) {
+    id
+  }
+}
+
+mutation deleteOneDocument($id: ID!) {
+  deleteOneDocument (
+    input: {
+      id: $id
+    }
+  ) {
+    id
+  }
+}

@@ -1,0 +1,28 @@
+<h2 mat-dialog-title>Adjunta documentos del estudiante</h2>
+<mat-dialog-content>
+  <div class="grid grid-cols-2 gap-4">
+    @for (file of studentDocuments(); track file.value) {
+    <mat-card>
+      <mat-card-header>
+        <h3 class="font-semibold">{{ file.label }}</h3>
+      </mat-card-header>
+      <mat-card-content>
+        @if (!file.document) {
+        <app-student-upload-document
+          [documentKey]="file.value"
+          [documentName]="file.label"
+          [studentId]="data.id"
+          (refresh)="fetchAllDocuments()"
+        />
+        } @else {
+        <app-student-item-document
+          [document]="file.document"
+          [studentId]="data.id"
+          (refresh)="fetchAllDocuments()"
+        />
+        }
+      </mat-card-content>
+    </mat-card>
+    }
+  </div>
+</mat-dialog-content>

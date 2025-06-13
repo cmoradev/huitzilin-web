@@ -71,3 +71,18 @@ export const enrollmentStates = [
     value: EnrollmentState.Paused,
   },
 ];
+// *Acta de nacimiento.
+// *Curp actualizado / pasaporte.
+// *Comprobante de domicilio actualizado.
+// *1 Fotografía a color.
+// *INE madre, padre o tutor.
+// *INE de personas autorizadas a recoger al alumno.
+export const studentDocuments = [
+  { label: 'Acta de nacimiento', value: 'acta_de_nacimiento' },
+  { label: 'CURP', value: 'curp' },
+  { label: 'Pasaporte', value: 'pasaporte' },
+  { label: 'Boleta/Certificado', value: 'certificado' },
+  { label: 'Comprobante de domicilio', value: 'comprobante_de_domicilio' },
+  { label: 'INE madre', value: 'ine1' },
+  { label: 'INE padre', value: 'ine2' },
+];

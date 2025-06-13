@@ -74,6 +74,10 @@ export class FormToolsService {
       if (control.hasError('studentNotFound')) {
         return ERROR_MESSAGES['studentNotFound']();
       }
+      
+      if (control.hasError('dniIsExists')) {
+        return ERROR_MESSAGES['dniIsExists']();
+      }
     }
 
     return '';
@@ -121,7 +125,7 @@ export class FormToolsService {
           map((resp) => {
             const student = resp.data.students.nodes.find((value) => value?.id);
 
-            return student ? { studentNotFound: true } : null;
+            return student ? { dniIsExists: true } : null;
           })
         );
   }

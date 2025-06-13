@@ -295,6 +295,7 @@ export type CreateDiscount = {
 };
 
 export type CreateDocument = {
+  key: Scalars['String']['input'];
   name: Scalars['String']['input'];
   url: Scalars['String']['input'];
 };
@@ -304,7 +305,6 @@ export type CreateEnrollment = {
   branchId: Scalars['String']['input'];
   cycleId: Scalars['String']['input'];
   details: Scalars['String']['input'];
-  inPackage: Scalars['Boolean']['input'];
   isPackage: Scalars['Boolean']['input'];
   levelId: Scalars['String']['input'];
   order: Scalars['Float']['input'];
@@ -826,6 +826,7 @@ export type Document = {
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
+  key: Scalars['String']['output'];
   name: Scalars['String']['output'];
   students: Array<Student>;
   updatedAt: Scalars['DateTime']['output'];
@@ -854,6 +855,7 @@ export type DocumentDeleteResponse = {
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
+  key?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   url?: Maybe<Scalars['String']['output']>;
@@ -864,6 +866,7 @@ export type DocumentFilter = {
   and?: InputMaybe<Array<DocumentFilter>>;
   createdAt?: InputMaybe<DateFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
+  key?: InputMaybe<StringFieldComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<DocumentFilter>>;
   students?: InputMaybe<DocumentFilterStudentFilter>;
@@ -890,6 +893,7 @@ export type DocumentSort = {
 export enum DocumentSortFields {
   CreatedAt = 'createdAt',
   Id = 'id',
+  Key = 'key',
   Name = 'name',
   UpdatedAt = 'updatedAt'
 }
@@ -907,7 +911,6 @@ export type Enrollment = {
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   details: Scalars['String']['output'];
   id: Scalars['ID']['output'];
-  inPackage: Scalars['Boolean']['output'];
   isPackage: Scalars['Boolean']['output'];
   level: Level;
   levelId: Scalars['ID']['output'];
@@ -957,7 +960,6 @@ export type EnrollmentDeleteResponse = {
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   details?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
-  inPackage?: Maybe<Scalars['Boolean']['output']>;
   isPackage?: Maybe<Scalars['Boolean']['output']>;
   levelId?: Maybe<Scalars['ID']['output']>;
   order?: Maybe<Scalars['Float']['output']>;
@@ -976,7 +978,6 @@ export type EnrollmentFilter = {
   cycleId?: InputMaybe<IdFilterComparison>;
   details?: InputMaybe<StringFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
-  inPackage?: InputMaybe<BooleanFieldComparison>;
   isPackage?: InputMaybe<BooleanFieldComparison>;
   levelId?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<EnrollmentFilter>>;
@@ -999,7 +1000,6 @@ export enum EnrollmentSortFields {
   CycleId = 'cycleId',
   Details = 'details',
   Id = 'id',
-  InPackage = 'inPackage',
   IsPackage = 'isPackage',
   LevelId = 'levelId',
   Order = 'order',
@@ -2249,6 +2249,7 @@ export type UpdateDiscount = {
 };
 
 export type UpdateDocument = {
+  key?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   url?: InputMaybe<Scalars['String']['input']>;
 };
@@ -2258,7 +2259,6 @@ export type UpdateEnrollment = {
   branchId?: InputMaybe<Scalars['String']['input']>;
   cycleId?: InputMaybe<Scalars['String']['input']>;
   details?: InputMaybe<Scalars['String']['input']>;
-  inPackage?: InputMaybe<Scalars['Boolean']['input']>;
   isPackage?: InputMaybe<Scalars['Boolean']['input']>;
   levelId?: InputMaybe<Scalars['String']['input']>;
   order?: InputMaybe<Scalars['Float']['input']>;
@@ -2822,6 +2822,47 @@ export type RemoveBranchsFromStudentMutationVariables = Exact<{
 
 export type RemoveBranchsFromStudentMutation = { __typename?: 'Mutation', removeBranchsFromStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string } };
 
+export type DocumentPartsFragment = { __typename?: 'Document', id: string, name: string, key: string, url: string };
+
+export type GetDocumentPageQueryVariables = Exact<{
+  studentId: Scalars['ID']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetDocumentPageQuery = { __typename?: 'Query', documents: { __typename?: 'DocumentConnection', totalCount: number, nodes: Array<{ __typename?: 'Document', id: string, name: string, key: string, url: string }> } };
+
+export type CreateOneDocumentMutationVariables = Exact<{
+  document: CreateDocument;
+}>;
+
+
+export type CreateOneDocumentMutation = { __typename?: 'Mutation', createOneDocument: { __typename?: 'Document', id: string, name: string, key: string, url: string } };
+
+export type AddStudentsToDocumentMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  relationIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+}>;
+
+
+export type AddStudentsToDocumentMutation = { __typename?: 'Mutation', addStudentsToDocument: { __typename?: 'Document', id: string } };
+
+export type RemoveStudentsFromDocumentMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  relationIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
+}>;
+
+
+export type RemoveStudentsFromDocumentMutation = { __typename?: 'Mutation', removeStudentsFromDocument: { __typename?: 'Document', id: string } };
+
+export type DeleteOneDocumentMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneDocumentMutation = { __typename?: 'Mutation', deleteOneDocument: { __typename?: 'DocumentDeleteResponse', id?: string | null } };
+
 export const SessionPartsFragmentDoc = gql`
     fragment SessionParts on Session {
   id
@@ -2954,6 +2995,14 @@ export const StudentPartsFragmentDoc = gql`
   lastname
   dateBirth
   dni
+}
+    `;
+export const DocumentPartsFragmentDoc = gql`
+    fragment DocumentParts on Document {
+  id
+  name
+  key
+  url
 }
     `;
 export const SignInDocument = gql`
@@ -3861,6 +3910,102 @@ export const RemoveBranchsFromStudentDocument = gql`
   })
   export class RemoveBranchsFromStudentGQL extends Apollo.Mutation<RemoveBranchsFromStudentMutation, RemoveBranchsFromStudentMutationVariables> {
     document = RemoveBranchsFromStudentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetDocumentPageDocument = gql`
+    query getDocumentPage($studentId: ID!, $offset: Int = 0, $limit: Int = 10) {
+  documents(
+    filter: {students: {id: {eq: $studentId}}}
+    paging: {offset: $offset, limit: $limit}
+  ) {
+    totalCount
+    nodes {
+      ...DocumentParts
+    }
+  }
+}
+    ${DocumentPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetDocumentPageGQL extends Apollo.Query<GetDocumentPageQuery, GetDocumentPageQueryVariables> {
+    document = GetDocumentPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneDocumentDocument = gql`
+    mutation createOneDocument($document: CreateDocument!) {
+  createOneDocument(input: {document: $document}) {
+    ...DocumentParts
+  }
+}
+    ${DocumentPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneDocumentGQL extends Apollo.Mutation<CreateOneDocumentMutation, CreateOneDocumentMutationVariables> {
+    document = CreateOneDocumentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AddStudentsToDocumentDocument = gql`
+    mutation addStudentsToDocument($id: ID!, $relationIds: [ID!]!) {
+  addStudentsToDocument(input: {id: $id, relationIds: $relationIds}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddStudentsToDocumentGQL extends Apollo.Mutation<AddStudentsToDocumentMutation, AddStudentsToDocumentMutationVariables> {
+    document = AddStudentsToDocumentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const RemoveStudentsFromDocumentDocument = gql`
+    mutation removeStudentsFromDocument($id: ID!, $relationIds: [ID!]!) {
+  removeStudentsFromDocument(input: {id: $id, relationIds: $relationIds}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class RemoveStudentsFromDocumentGQL extends Apollo.Mutation<RemoveStudentsFromDocumentMutation, RemoveStudentsFromDocumentMutationVariables> {
+    document = RemoveStudentsFromDocumentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneDocumentDocument = gql`
+    mutation deleteOneDocument($id: ID!) {
+  deleteOneDocument(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneDocumentGQL extends Apollo.Mutation<DeleteOneDocumentMutation, DeleteOneDocumentMutationVariables> {
+    document = DeleteOneDocumentDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
