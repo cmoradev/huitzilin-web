@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import {
-  ActivityPartsFragment,
+  PackagePartsFragment,
   EnrollmentPartsFragment,
   SessionPartsFragment,
   StudentPartsFragment,
@@ -22,7 +22,7 @@ export class GlobalStateService {
   private readonly _session = signal<SessionPartsFragment | null>(null);
   private readonly _branch = signal<BranchState | null>(null);
   private readonly _cycle = signal<CycleState | null>(null);
-  private readonly _activity = signal<ActivityPartsFragment | null>(null);
+  private readonly _activity = signal<PackagePartsFragment | null>(null);
   private readonly _enrollment = signal<EnrollmentPartsFragment | null>(null);
   private readonly _student = signal<StudentPartsFragment | null>(null);
 
@@ -63,11 +63,11 @@ export class GlobalStateService {
     this._student.set(null);
   }
 
-  get activity(): ActivityPartsFragment | null {
+  get activity(): PackagePartsFragment | null {
     return this._activity();
   }
 
-  set activity(value: ActivityPartsFragment | null) {
+  set activity(value: PackagePartsFragment | null) {
     this._activity.set(value);
     if (!!value) {
       localStorage.setItem(ACTIVITY_KEY, JSON.stringify(value));

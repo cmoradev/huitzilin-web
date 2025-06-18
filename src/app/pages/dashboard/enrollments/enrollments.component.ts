@@ -12,17 +12,12 @@ import {
   DebitPartsFragment,
   EnrollmentPartsFragment,
   GetDebitsPageGQL,
-  SetOrderInput,
-  SetOrderEnrollmentsGQL,
+  GetEnrollmentsPageGQL,
   GetEnrollmentsPageQueryVariables,
 } from '@graphql';
-import {
-  EnrollmentDataSource,
-  EnrollmentFlatTreeService,
-  GlobalStateService,
-} from '@services';
+import { GlobalStateService } from '@services';
 import { NgScrollbar } from 'ngx-scrollbar';
-import { debounceTime, merge } from 'rxjs';
+import { debounceTime, map, merge } from 'rxjs';
 import { DebitDeleteDialogComponent } from './debit-delete-dialog/debit-delete-dialog.component';
 import { DebitFormDialogComponent } from './debit-form-dialog/debit-form-dialog.component';
 import { EnrollmentDeleteDialogComponent } from './enrollment-delete-dialog/enrollment-delete-dialog.component';
@@ -31,14 +26,8 @@ import { EnrollmentItemComponent } from './enrollment-item/enrollment-item.compo
 import { DebitItemComponent } from './debit-item/debit-item.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { DebitFormCatalogDialogComponent } from './debit-form-catalog-dialog/debit-form-catalog-dialog.component';
-import {
-  CdkDragDrop,
-  DragDropModule,
-  moveItemInArray,
-} from '@angular/cdk/drag-drop';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CdkTreeModule } from '@angular/cdk/tree';
 import { FlatNode } from '@models';
 
 @Component({
@@ -56,7 +45,6 @@ import { FlatNode } from '@models';
     DragDropModule,
     MatTooltipModule,
     StudentStateComponent,
-    CdkTreeModule,
     DebitItemComponent,
     EnrollmentItemComponent,
   ],
@@ -66,7 +54,6 @@ import { FlatNode } from '@models';
 export class EnrollmentsComponent implements OnInit {
   private readonly _dialog = inject(MatDialog);
   private readonly _globalStateService = inject(GlobalStateService);
-  private readonly _snackBar = inject(MatSnackBar);
 
   public enrollment = computed(() => this._globalStateService.enrollment);
   public student = computed(() => this._globalStateService.student);
@@ -74,13 +61,11 @@ export class EnrollmentsComponent implements OnInit {
   public cycle = computed(() => this._globalStateService.cycle);
 
   private readonly _debitsPageGQL = inject(GetDebitsPageGQL);
+  private readonly _enrollmentsPageGQL = inject(GetEnrollmentsPageGQL);
 
-  private readonly _enrollmentFlatTree = inject(EnrollmentFlatTreeService);
-  public enrollmentsDataSource = new EnrollmentDataSource(
-    this._enrollmentFlatTree
-  );
   public enrollmentsLoading = signal<boolean>(false);
   public enrollmentsTotalCount = signal<number>(0);
+  public enrollments = signal<EnrollmentPartsFragment[]>([]);
 
   public debits = signal<DebitPartsFragment[]>([]);
   public debitsLoading = signal<boolean>(false);
@@ -110,28 +95,11 @@ export class EnrollmentsComponent implements OnInit {
   }
 
   public openEnrollmentFormDialog(
-    value: FlatNode<EnrollmentPartsFragment> | undefined = undefined
+    value: EnrollmentPartsFragment | undefined = undefined
   ): void {
     const $dialog = this._dialog.open(EnrollmentFormDialogComponent, {
       width: '30rem',
-      data: value?.item,
-    });
-
-    $dialog.afterClosed().subscribe({
-      next: (enrollment) => {
-        if (enrollment) this.refreshEnrollments();
-      },
-    });
-  }
-
-  public createChildEnrollmentFormDialog(
-    value: FlatNode<EnrollmentPartsFragment>
-  ) {
-    const $dialog = this._dialog.open(EnrollmentFormDialogComponent, {
-      width: '30rem',
-      data: {
-        parentId: value?.item.id,
-      },
+      data: value,
     });
 
     $dialog.afterClosed().subscribe({
@@ -142,11 +110,11 @@ export class EnrollmentsComponent implements OnInit {
   }
 
   public openEnrollmentDeleteDialog(
-    value: FlatNode<EnrollmentPartsFragment>
+    value: EnrollmentPartsFragment
   ): void {
     const $dialog = this._dialog.open(EnrollmentDeleteDialogComponent, {
       width: '30rem',
-      data: value.item,
+      data: value,
     });
 
     $dialog.afterClosed().subscribe({
@@ -200,7 +168,7 @@ export class EnrollmentsComponent implements OnInit {
   }
 
   public refreshEnrollments(
-    accumulared: FlatNode<EnrollmentPartsFragment>[] = []
+    accumulared: EnrollmentPartsFragment[] = []
   ): void {
     if (
       !!this._globalStateService.branch?.id &&
@@ -217,31 +185,33 @@ export class EnrollmentsComponent implements OnInit {
           branchId: { eq: this._globalStateService.branch!.id },
           studentId: { eq: this._globalStateService.student!.id },
           cycleId: { eq: this._globalStateService.cycle!.id },
-          parentId: { is: null },
           details: { iLike: `%${this.searchControl.value}%` },
         },
       };
 
       this.enrollmentsLoading.set(true);
 
-      this._enrollmentFlatTree.loadRoots(params).subscribe({
-        next: ({ nodes, totalCount }) => {
-          const allItems = accumulared.concat(nodes);
+      this._enrollmentsPageGQL
+        .watch(params)
+        .valueChanges.pipe(map((resp) => resp.data.enrollments))
+        .subscribe({
+          next: ({ nodes, totalCount }) => {
+            const allItems = accumulared.concat(nodes);
 
-          if (allItems.length >= totalCount) {
-            this.enrollmentsDataSource.data = allItems;
+            if (allItems.length >= totalCount) {
+              this.enrollments.set(allItems);
+              this.enrollmentsLoading.set(false);
+              this.enrollmentsTotalCount.set(totalCount);
+              return; // No more activities to fetch
+            }
+
+            this.refreshEnrollments(allItems);
+          },
+          error: (error) => {
+            console.error('Error fetching activities', error);
             this.enrollmentsLoading.set(false);
-            this.enrollmentsTotalCount.set(totalCount);
-            return; // No more activities to fetch
-          }
-
-          this.refreshEnrollments(allItems);
-        },
-        error: (error) => {
-          console.error('Error fetching activities', error);
-          this.enrollmentsLoading.set(false);
-        },
-      });
+          },
+        });
     }
   }
 

@@ -259,13 +259,13 @@ export class DebitFormCatalogDialogComponent implements OnInit {
   }
 
   private _fetchAllFees(accumulared: FeePartsFragment[] = []): void {
-    if (!!this._globalStateService.enrollment?.activity!.id) {
+    if (!!this._globalStateService.enrollment?.package!.id) {
       const limit = 50;
       const offset = accumulared.length;
 
       const params: GetFeePageQueryVariables = {
         filter: {
-          activityId: { eq: this._globalStateService.enrollment?.activity!.id },
+          packageId: { eq: this._globalStateService.enrollment?.package!.id },
         },
         limit,
         offset,

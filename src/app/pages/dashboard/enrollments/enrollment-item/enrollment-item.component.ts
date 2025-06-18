@@ -1,4 +1,3 @@
-import { CdkTreeNodeToggle } from '@angular/cdk/tree';
 import { NgClass } from '@angular/common';
 import {
   Component,
@@ -26,28 +25,25 @@ import { GlobalStateService } from '@services';
     MatMenuModule,
     MatProgressBarModule,
     EnrollmentStatePipe,
-    CdkTreeNodeToggle,    
   ],
   templateUrl: './enrollment-item.component.html',
   styleUrl: './enrollment-item.component.scss',
 })
 export class EnrollmentItemComponent {
-  @Input({ required: true }) node!: FlatNode<EnrollmentPartsFragment>;
-  @Input({ required: true }) isExpanded!: boolean;
+  @Input({ required: true }) node!: EnrollmentPartsFragment;
   @Input() menuTrigger!: MatMenuTrigger;
 
-  @Output() create = new EventEmitter<FlatNode<EnrollmentPartsFragment>>();
-  @Output() update = new EventEmitter<FlatNode<EnrollmentPartsFragment>>();
-  @Output() remove = new EventEmitter<FlatNode<EnrollmentPartsFragment>>();
+  @Output() update = new EventEmitter<EnrollmentPartsFragment>();
+  @Output() remove = new EventEmitter<EnrollmentPartsFragment>();
 
   private readonly _globalStateService = inject(GlobalStateService);
 
   public isActive = computed(() => {
-    return this._globalStateService.enrollment?.id === this.node.item.id;
+    return this._globalStateService.enrollment?.id === this.node.id;
   });
 
   public selectEnrollment() {
-    this._globalStateService.enrollment = this.node.item;
+    this._globalStateService.enrollment = this.node;
   }
 
   public openMenu(event: MouseEvent) {

@@ -24,15 +24,15 @@ import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatSelect } from '@angular/material/select';
 import {
-  ActivityPartsFragment,
+  PackagePartsFragment,
   CreateOneEnrollmentGQL,
   EnrollmentPartsFragment,
   EnrollmentState,
-  GetActivityPageGQL,
+  GetPackagePageGQL,
   UpdateOneEnrollmentGQL,
   GetLevelsPageGQL,
   LevelPartsFragment,
-  ActivityFilter,
+  PackageFilter,
 } from '@graphql';
 import { FormToolsService, GlobalStateService } from '@services';
 import { enrollmentStates } from '@utils/contains';
@@ -76,7 +76,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
       [Validators.required, Validators.minLength(3), Validators.maxLength(128)],
     ],
     state: [EnrollmentState.Active, [Validators.required]],
-    activity: ['' as any, [Validators.required]],
+    package: ['' as any, [Validators.required]],
     level: ['' as any, [Validators.required]],
   });
 
@@ -85,8 +85,8 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   private readonly _updateOneEnrollment = inject(UpdateOneEnrollmentGQL);
 
   public loadingActivities = signal<boolean>(false);
-  public activities = signal<ActivityPartsFragment[]>([]);
-  private readonly _activitiesPageGQL = inject(GetActivityPageGQL);
+  public activities = signal<PackagePartsFragment[]>([]);
+  private readonly _packagesPageGQL = inject(GetPackagePageGQL);
 
   public loadingLevels = signal<boolean>(false);
   public levels = signal<LevelPartsFragment[]>([]);
@@ -102,25 +102,25 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
     if (!!this.data?.id) {
       this.formGroup.patchValue({
         details: this.data.details,
-        activity: this.data.activity,
+        package: this.data.package,
         level: this.data.level,
       });
     }
     // @todo - Check this event rename details enrollment
     merge(
-      this.formGroup.get('activity')!.valueChanges,
+      this.formGroup.get('Package')!.valueChanges,
       this.formGroup.get('level')!.valueChanges
     )
       .pipe(filter((value) => typeof value === 'object'))
       .subscribe(() => {
-        const activityName = this.formGroup.get('activity')?.value?.name ?? '';
+        const packageName = this.formGroup.get('package')?.value?.name ?? '';
         const levelAbbrevation =
           this.formGroup.get('level')?.value?.abbreviation ?? '';
 
         this.formGroup
           .get('details')
           ?.setValue(
-            `${levelAbbrevation} - ${activityName}`
+            `${levelAbbrevation} - ${packageName}`
           );
       });
   }
@@ -172,11 +172,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
         this._globalStateService.student!.id &&
         this._globalStateService.branch!.id &&
         this._globalStateService.cycle!.id
-      ) {
-        if (!!this.data?.parentId) {
-          values.parentId = this.data?.parentId
-        }
-        
+      ) {        
         this._save(values).subscribe({
           next: (branch) => {
             this._dialogRef.close(branch);
@@ -193,7 +189,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   }
 
   public displayFn(
-    value: ActivityPartsFragment
+    value: PackagePartsFragment
   ): string {
     return value?.name ?? '';
   }
@@ -203,7 +199,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
       .mutate({
         id: this.data!.id,
         update: {
-          activityId: values.activity.id,
+          packageId: values.package.id,
           details: values.details,
           state: values.state,
         },
@@ -218,13 +214,11 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
           studentId: this._globalStateService.student!.id,
           branchId: this._globalStateService.branch!.id,
           cycleId: this._globalStateService.cycle!.id,
-          activityId: values.activity.id,
+          packageId: values.package.id,
           levelId: values.level.id,
           details: values.details,
           state: values.state,
           order: 1,
-          isPackage: values.activity.isPackage,
-          parentId: values?.parentId ?? null,
         },
       })
       .pipe(map((value) => value.data?.createOneEnrollment));
@@ -234,13 +228,13 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
     if (this._globalStateService.branch!.id) {
       this.loadingActivities.set(true);
 
-      const filter: ActivityFilter = {
+      const filter: PackageFilter = {
         name: { iLike: `%${value}%` },
         branchId: { eq: this._globalStateService.branch!.id },
       };
 
       // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
-      this._activitiesPageGQL
+      this._packagesPageGQL
         .watch(
           {
             limit: 100,
@@ -257,7 +251,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
           next: ({ loading, data }) => {
             this.loadingActivities.set(loading);
 
-            this.activities.set(data?.activities.nodes ?? []);
+            this.activities.set(data?.packages.nodes ?? []);
           },
         });
     } else {
@@ -307,7 +301,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
 type FormValues = {
   details: string;
   state: EnrollmentState;
-  activity: ActivityPartsFragment;
+  package: PackagePartsFragment;
   level: LevelPartsFragment;
   parentId: string | null;
 };

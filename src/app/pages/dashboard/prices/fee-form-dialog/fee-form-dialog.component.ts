@@ -125,7 +125,7 @@ export class FeeFormDialogComponent implements OnInit {
       .mutate({
         fee: {
           ...values,
-          activityId: this._globalStateService.activity!.id,
+          packageId: this._globalStateService.activity!.id,
         },
       })
       .pipe(map((value) => value.data?.createOneFee));

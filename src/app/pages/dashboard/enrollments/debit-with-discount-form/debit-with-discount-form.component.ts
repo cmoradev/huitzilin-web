@@ -25,9 +25,8 @@ import { FormToolsService } from '@services';
 import { merge, startWith } from 'rxjs';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
-import { DebitDiscountFormDialogComponent } from '../debit-discount-form-dialog/debit-discount-form-dialog.component';
 import { SelectDebitDiscountFormDialogComponent } from '../select-debit-discount-form-dialog/select-debit-discount-form-dialog.component';
-import { CreateDebitDiscount, DiscountBy } from '@graphql';
+import { CreateDiscount, DiscountBy } from '@graphql';
 import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -43,7 +42,6 @@ import { toObservable } from '@angular/core/rxjs-interop';
     MatCheckboxModule,
     MatInputModule,
     MatChipsModule,
-    MatMenuModule,
     CurrencyPipe,
   ],
   templateUrl: './debit-with-discount-form.component.html',
@@ -124,26 +122,6 @@ export class DebitWithDiscountFormComponent implements OnInit {
     });
   }
 
-  public createDebitDiscount() {
-    const dialog$ = this._dialog.open(DebitDiscountFormDialogComponent, {
-      width: '30rem',
-    });
-
-    dialog$.afterClosed().subscribe({
-      next: (discount) => {
-        if (discount) {
-          const discountName = this.generateDiscountName(discount);
-
-          this.addDebitDiscount({
-            name: discountName,
-            type: discount.type,
-            value: discount.value,
-          });
-        }
-      },
-    });
-  }
-
   public selectDebitDiscount() {
     const dialog$ = this._dialog.open(SelectDebitDiscountFormDialogComponent, {
       width: '30rem',
@@ -154,11 +132,11 @@ export class DebitWithDiscountFormComponent implements OnInit {
         if (discount) {
           const discountName = this.generateDiscountName(discount);
 
-          this.addDebitDiscount({
-            name: discountName,
-            type: discount.type,
-            value: discount.value,
-          });
+          // this.addDebitDiscount({
+          //   name: discountName,
+          //   type: discount.type,
+          //   value: discount.value,
+          // });
         }
       },
     });
@@ -173,7 +151,7 @@ export class DebitWithDiscountFormComponent implements OnInit {
   }
 
   private generateDiscountName(
-    params: Pick<CreateDebitDiscount, 'value' | 'type'>
+    params: Pick<CreateDiscount, 'value' | 'type'>
   ): string {
     const { value, type } = params;
 
@@ -188,7 +166,7 @@ export class DebitWithDiscountFormComponent implements OnInit {
   }
 
   private addDebitDiscount(
-    initialValues: Omit<CreateDebitDiscount, 'debitId'>
+    initialValues: Omit<CreateDiscount, 'debitId'>
   ): void {
     const { name, type, value } = initialValues;
 

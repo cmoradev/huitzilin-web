@@ -1,0 +1,56 @@
+fragment PackageParts on Package {
+  id
+  name
+  quantity
+  kind
+  withTax
+  order
+}
+
+mutation createOnePackage($package: CreatePackage!) {
+  createOnePackage(input: { package: $package }) {
+    ...PackageParts
+  }
+}
+
+query getPackagePage(
+  $offset: Int = 0
+  $limit: Int = 10
+  $filter: PackageFilter = {}
+) {
+  packages(
+    paging: { limit: $limit, offset: $offset }
+    sorting: [
+      { field: order, direction: ASC }
+      { field: createdAt, direction: DESC }
+    ]
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...PackageParts
+    }
+  }
+}
+
+mutation updateOnePackage($id: ID!, $update: UpdatePackage!) {
+  updateOnePackage(input: { id: $id, update: $update }) {
+    ...PackageParts
+  }
+}
+
+mutation deleteOnePackage($id: ID!) {
+  deleteOnePackage(input: { id: $id }) {
+    id
+  }
+}
+
+mutation setOrderActivities($payload: [SetOrderInput!]!) {
+  setOrderPackages(input: $payload) {
+    updatedCount
+  }
+}

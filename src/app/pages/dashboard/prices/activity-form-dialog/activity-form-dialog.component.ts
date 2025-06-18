@@ -10,9 +10,10 @@ import {
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {
-  ActivityPartsFragment,
-  CreateOneActivityGQL,
-  UpdateOneActivityGQL,
+  PackagePartsFragment,
+  CreateOnePackageGQL,
+  UpdateOnePackageGQL,
+  PackageKind,
 } from '@graphql';
 import { FormToolsService, GlobalStateService } from '@services';
 import { map, startWith } from 'rxjs';
@@ -35,7 +36,7 @@ export class ActivityFormDialogComponent implements OnInit {
   public readonly formTools = inject(FormToolsService);
 
   public loading = signal(false);
-  public data: ActivityPartsFragment | null = inject(MAT_DIALOG_DATA);
+  public data: PackagePartsFragment | null = inject(MAT_DIALOG_DATA);
 
   public formGroup = this.formTools.builder.group({
     name: [
@@ -43,13 +44,13 @@ export class ActivityFormDialogComponent implements OnInit {
       [Validators.required, Validators.minLength(3), Validators.maxLength(32)],
     ],
     quantity: [0, [Validators.required]],
-    isPackage: [false],
+    kind: [PackageKind.Hours, [Validators.required]],
     withTax: [true]
   });
 
   private readonly _globalStateService = inject(GlobalStateService);
-  private readonly _createOneActivity = inject(CreateOneActivityGQL);
-  private readonly _updateOneActivity = inject(UpdateOneActivityGQL);
+  private readonly _createOnePackage = inject(CreateOnePackageGQL);
+  private readonly _updateOnePackage = inject(UpdateOnePackageGQL);
 
   private readonly _dialogRef = inject(
     MatDialogRef<ActivityFormDialogComponent>
@@ -60,7 +61,7 @@ export class ActivityFormDialogComponent implements OnInit {
       this.formGroup.patchValue({
         name: this.data.name,
         quantity: this.data.quantity,
-        isPackage: this.data.isPackage,
+        kind: this.data.kind,
         withTax: this.data.withTax,
       });
     }
@@ -78,7 +79,7 @@ export class ActivityFormDialogComponent implements OnInit {
             this._dialogRef.close(branch);
           },
           error: (err) => {
-            console.error('UPDATE BRANCH ERROR: ', err);
+            console.error('UPDATE PACKAGE ERROR: ', err);
           },
           complete: () => {
             this.loading.set(false);
@@ -90,7 +91,7 @@ export class ActivityFormDialogComponent implements OnInit {
             this._dialogRef.close(branch);
           },
           error: (err) => {
-            console.error('CREATE ACTIVITY ERROR: ', err);
+            console.error('CREATE PACKAGE ERROR: ', err);
           },
           complete: () => {
             this.loading.set(false);
@@ -101,30 +102,30 @@ export class ActivityFormDialogComponent implements OnInit {
   }
 
   private _update(values: FormValues) {
-    return this._updateOneActivity
+    return this._updateOnePackage
       .mutate({
         id: this.data!.id,
         update: { ...values } as any,
       })
-      .pipe(map((value) => value.data?.updateOneActivity));
+      .pipe(map((value) => value.data?.updateOnePackage));
   }
 
   private _save(values: FormValues) {
-    return this._createOneActivity
+    return this._createOnePackage
       .mutate({
-        activity: {
+        package: {
           ...values,
           branchId: this._globalStateService.branch!.id,
           order: 1,
         },
       })
-      .pipe(map((value) => value.data?.createOneActivity));
+      .pipe(map((value) => value.data?.createOnePackage));
   }
 }
 
 type FormValues = {
   name: string;
+  kind: PackageKind;
   quantity: number;
-  isPackage: boolean;
   withTax: boolean;
 };

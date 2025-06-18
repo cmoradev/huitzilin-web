@@ -86,86 +86,6 @@ export enum ActionSortFields {
   UpdatedAt = 'updatedAt'
 }
 
-export type Activity = {
-  __typename?: 'Activity';
-  branchId: Scalars['String']['output'];
-  createdAt: Scalars['DateTime']['output'];
-  deletedAt?: Maybe<Scalars['DateTime']['output']>;
-  id: Scalars['ID']['output'];
-  isPackage: Scalars['Boolean']['output'];
-  name: Scalars['String']['output'];
-  order: Scalars['Float']['output'];
-  quantity: Scalars['Float']['output'];
-  updatedAt: Scalars['DateTime']['output'];
-  version: Scalars['Int']['output'];
-  withTax: Scalars['Boolean']['output'];
-};
-
-export type ActivityConnection = {
-  __typename?: 'ActivityConnection';
-  /** Array of nodes. */
-  nodes: Array<Activity>;
-  /** Paging information */
-  pageInfo: OffsetPageInfo;
-  /** Fetch total count of records */
-  totalCount: Scalars['Int']['output'];
-};
-
-export type ActivityDeleteResponse = {
-  __typename?: 'ActivityDeleteResponse';
-  branchId?: Maybe<Scalars['String']['output']>;
-  createdAt?: Maybe<Scalars['DateTime']['output']>;
-  deletedAt?: Maybe<Scalars['DateTime']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
-  isPackage?: Maybe<Scalars['Boolean']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  order?: Maybe<Scalars['Float']['output']>;
-  quantity?: Maybe<Scalars['Float']['output']>;
-  updatedAt?: Maybe<Scalars['DateTime']['output']>;
-  version?: Maybe<Scalars['Int']['output']>;
-  withTax?: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type ActivityFilter = {
-  and?: InputMaybe<Array<ActivityFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  isPackage?: InputMaybe<BooleanFieldComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<ActivityFilter>>;
-  order?: InputMaybe<NumberFieldComparison>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
-export type ActivitySort = {
-  direction: SortDirection;
-  field: ActivitySortFields;
-  nulls?: InputMaybe<SortNulls>;
-};
-
-export enum ActivitySortFields {
-  BranchId = 'branchId',
-  CreatedAt = 'createdAt',
-  Id = 'id',
-  IsPackage = 'isPackage',
-  Name = 'name',
-  Order = 'order',
-  UpdatedAt = 'updatedAt'
-}
-
-export type ActivityUpdateFilter = {
-  and?: InputMaybe<Array<ActivityUpdateFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  isPackage?: InputMaybe<BooleanFieldComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<ActivityUpdateFilter>>;
-  order?: InputMaybe<NumberFieldComparison>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
 export type AddBranchsToStudentInput = {
   /** The id of the record. */
   id: Scalars['ID']['input'];
@@ -178,11 +98,6 @@ export type AddStudentsToDocumentInput = {
   id: Scalars['ID']['input'];
   /** The ids of the relations. */
   relationIds: Array<Scalars['ID']['input']>;
-};
-
-export type BooleanFieldComparison = {
-  is?: InputMaybe<Scalars['Boolean']['input']>;
-  isNot?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type Branch = {
@@ -246,15 +161,6 @@ export type CreateAction = {
   route: Scalars['String']['input'];
 };
 
-export type CreateActivity = {
-  branchId: Scalars['String']['input'];
-  isPackage: Scalars['Boolean']['input'];
-  name: Scalars['String']['input'];
-  order: Scalars['Float']['input'];
-  quantity: Scalars['Float']['input'];
-  withTax: Scalars['Boolean']['input'];
-};
-
 export type CreateBranch = {
   name: Scalars['String']['input'];
   picture: Scalars['String']['input'];
@@ -270,6 +176,7 @@ export type CreateCycle = {
 export type CreateDebit = {
   description: Scalars['String']['input'];
   discount: Scalars['Float']['input'];
+  discounts?: InputMaybe<Array<NestedId>>;
   dueDate: Scalars['String']['input'];
   enrollmentId: Scalars['String']['input'];
   frequency: Frequency;
@@ -280,11 +187,12 @@ export type CreateDebit = {
   withTax: Scalars['Boolean']['input'];
 };
 
-export type CreateDebitDiscount = {
-  debitId: Scalars['ID']['input'];
+export type CreateDiscipline = {
+  branchId: Scalars['ID']['input'];
+  levels?: InputMaybe<Array<NestedId>>;
+  minHours: Scalars['Int']['input'];
   name: Scalars['String']['input'];
-  type: DiscountBy;
-  value: Scalars['Float']['input'];
+  packages?: InputMaybe<Array<NestedId>>;
 };
 
 export type CreateDiscount = {
@@ -301,22 +209,20 @@ export type CreateDocument = {
 };
 
 export type CreateEnrollment = {
-  activityId: Scalars['String']['input'];
   branchId: Scalars['String']['input'];
   cycleId: Scalars['String']['input'];
   details: Scalars['String']['input'];
-  isPackage: Scalars['Boolean']['input'];
   levelId: Scalars['String']['input'];
   order: Scalars['Float']['input'];
-  parentId?: InputMaybe<Scalars['ID']['input']>;
+  packageId: Scalars['String']['input'];
   state: EnrollmentState;
   studentId: Scalars['String']['input'];
 };
 
 export type CreateFee = {
-  activityId: Scalars['String']['input'];
   frequency: Frequency;
   name: Scalars['String']['input'];
+  packageId: Scalars['String']['input'];
   price: Scalars['Float']['input'];
   withTax: Scalars['Boolean']['input'];
 };
@@ -326,11 +232,6 @@ export type CreateLevel = {
   branchId: Scalars['String']['input'];
   name: Scalars['String']['input'];
   order: Scalars['Float']['input'];
-};
-
-export type CreateManyDebitDiscountsInput = {
-  /** Array of records to create */
-  debitDiscounts: Array<CreateDebitDiscount>;
 };
 
 export type CreateManyDebitsInput = {
@@ -353,11 +254,6 @@ export type CreateOneActionInput = {
   action: CreateAction;
 };
 
-export type CreateOneActivityInput = {
-  /** The record to create */
-  activity: CreateActivity;
-};
-
 export type CreateOneBranchInput = {
   /** The record to create */
   branch: CreateBranch;
@@ -368,14 +264,14 @@ export type CreateOneCycleInput = {
   cycle: CreateCycle;
 };
 
-export type CreateOneDebitDiscountInput = {
-  /** The record to create */
-  debitDiscount: CreateDebitDiscount;
-};
-
 export type CreateOneDebitInput = {
   /** The record to create */
   debit: CreateDebit;
+};
+
+export type CreateOneDisciplineInput = {
+  /** The record to create */
+  discipline: CreateDiscipline;
 };
 
 export type CreateOneDiscountInput = {
@@ -403,9 +299,24 @@ export type CreateOneLevelInput = {
   level: CreateLevel;
 };
 
+export type CreateOnePackageInput = {
+  /** The record to create */
+  package: CreatePackage;
+};
+
+export type CreateOnePeriodInput = {
+  /** The record to create */
+  period: CreatePeriod;
+};
+
 export type CreateOnePolicyInput = {
   /** The record to create */
   policy: CreatePolicy;
+};
+
+export type CreateOneScheduleInput = {
+  /** The record to create */
+  schedule: CreateSchedule;
 };
 
 export type CreateOneStudentInput = {
@@ -423,9 +334,34 @@ export type CreateOneTutorInput = {
   tutor: CreateTutor;
 };
 
+export type CreatePackage = {
+  branchId: Scalars['String']['input'];
+  kind: PackageKind;
+  name: Scalars['String']['input'];
+  order: Scalars['Float']['input'];
+  quantity: Scalars['Float']['input'];
+  withTax: Scalars['Boolean']['input'];
+};
+
+export type CreatePeriod = {
+  branchId: Scalars['String']['input'];
+  end: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  start: Scalars['String']['input'];
+};
+
 export type CreatePolicy = {
   branchId: Scalars['String']['input'];
   name: Scalars['String']['input'];
+};
+
+export type CreateSchedule = {
+  branchId: Scalars['ID']['input'];
+  day: Scalars['Int']['input'];
+  disciplineId: Scalars['ID']['input'];
+  end: Scalars['String']['input'];
+  periodId: Scalars['ID']['input'];
+  start: Scalars['String']['input'];
 };
 
 export type CreateStudent = {
@@ -538,6 +474,7 @@ export type Debit = {
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   description: Scalars['String']['output'];
   discount: Scalars['Float']['output'];
+  discounts: Array<Discount>;
   dueDate: Scalars['String']['output'];
   enrollmentId: Scalars['String']['output'];
   frequency: Frequency;
@@ -552,6 +489,12 @@ export type Debit = {
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
   withTax: Scalars['Boolean']['output'];
+};
+
+
+export type DebitDiscountsArgs = {
+  filter?: DiscountFilter;
+  sorting?: Array<DiscountSort>;
 };
 
 export type DebitConnection = {
@@ -586,66 +529,6 @@ export type DebitDeleteResponse = {
   version?: Maybe<Scalars['Int']['output']>;
   withTax?: Maybe<Scalars['Boolean']['output']>;
 };
-
-export type DebitDiscount = {
-  __typename?: 'DebitDiscount';
-  createdAt: Scalars['DateTime']['output'];
-  debitId: Scalars['ID']['output'];
-  deletedAt?: Maybe<Scalars['DateTime']['output']>;
-  id: Scalars['ID']['output'];
-  name: Scalars['String']['output'];
-  type: DiscountBy;
-  updatedAt: Scalars['DateTime']['output'];
-  value: Scalars['Float']['output'];
-  version: Scalars['Int']['output'];
-};
-
-export type DebitDiscountConnection = {
-  __typename?: 'DebitDiscountConnection';
-  /** Array of nodes. */
-  nodes: Array<DebitDiscount>;
-  /** Paging information */
-  pageInfo: OffsetPageInfo;
-  /** Fetch total count of records */
-  totalCount: Scalars['Int']['output'];
-};
-
-export type DebitDiscountDeleteResponse = {
-  __typename?: 'DebitDiscountDeleteResponse';
-  createdAt?: Maybe<Scalars['DateTime']['output']>;
-  debitId?: Maybe<Scalars['ID']['output']>;
-  deletedAt?: Maybe<Scalars['DateTime']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  type?: Maybe<DiscountBy>;
-  updatedAt?: Maybe<Scalars['DateTime']['output']>;
-  value?: Maybe<Scalars['Float']['output']>;
-  version?: Maybe<Scalars['Int']['output']>;
-};
-
-export type DebitDiscountFilter = {
-  and?: InputMaybe<Array<DebitDiscountFilter>>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  debitId?: InputMaybe<IdFilterComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<DebitDiscountFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
-export type DebitDiscountSort = {
-  direction: SortDirection;
-  field: DebitDiscountSortFields;
-  nulls?: InputMaybe<SortNulls>;
-};
-
-export enum DebitDiscountSortFields {
-  CreatedAt = 'createdAt',
-  DebitId = 'debitId',
-  Id = 'id',
-  Name = 'name',
-  UpdatedAt = 'updatedAt'
-}
 
 export type DebitFilter = {
   and?: InputMaybe<Array<DebitFilter>>;
@@ -686,11 +569,6 @@ export type DeleteOneActionInput = {
   id: Scalars['ID']['input'];
 };
 
-export type DeleteOneActivityInput = {
-  /** The id of the record to delete. */
-  id: Scalars['ID']['input'];
-};
-
 export type DeleteOneBranchInput = {
   /** The id of the record to delete. */
   id: Scalars['ID']['input'];
@@ -701,12 +579,12 @@ export type DeleteOneCycleInput = {
   id: Scalars['ID']['input'];
 };
 
-export type DeleteOneDebitDiscountInput = {
+export type DeleteOneDebitInput = {
   /** The id of the record to delete. */
   id: Scalars['ID']['input'];
 };
 
-export type DeleteOneDebitInput = {
+export type DeleteOneDisciplineInput = {
   /** The id of the record to delete. */
   id: Scalars['ID']['input'];
 };
@@ -736,7 +614,22 @@ export type DeleteOneLevelInput = {
   id: Scalars['ID']['input'];
 };
 
+export type DeleteOnePackageInput = {
+  /** The id of the record to delete. */
+  id: Scalars['ID']['input'];
+};
+
+export type DeleteOnePeriodInput = {
+  /** The id of the record to delete. */
+  id: Scalars['ID']['input'];
+};
+
 export type DeleteOnePolicyInput = {
+  /** The id of the record to delete. */
+  id: Scalars['ID']['input'];
+};
+
+export type DeleteOneScheduleInput = {
   /** The id of the record to delete. */
   id: Scalars['ID']['input'];
 };
@@ -755,6 +648,101 @@ export type DeleteOneTutorInput = {
   /** The id of the record to delete. */
   id: Scalars['ID']['input'];
 };
+
+export type Discipline = {
+  __typename?: 'Discipline';
+  branchId: Scalars['ID']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  levels: Array<Level>;
+  minHours: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  packages: Array<Package>;
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
+};
+
+
+export type DisciplineLevelsArgs = {
+  filter?: LevelFilter;
+  sorting?: Array<LevelSort>;
+};
+
+
+export type DisciplinePackagesArgs = {
+  filter?: PackageFilter;
+  sorting?: Array<PackageSort>;
+};
+
+export type DisciplineConnection = {
+  __typename?: 'DisciplineConnection';
+  /** Array of nodes. */
+  nodes: Array<Discipline>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type DisciplineDeleteResponse = {
+  __typename?: 'DisciplineDeleteResponse';
+  branchId?: Maybe<Scalars['ID']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  minHours?: Maybe<Scalars['Int']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type DisciplineFilter = {
+  and?: InputMaybe<Array<DisciplineFilter>>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  levels?: InputMaybe<DisciplineFilterLevelFilter>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<DisciplineFilter>>;
+  packages?: InputMaybe<DisciplineFilterPackageFilter>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type DisciplineFilterLevelFilter = {
+  abbreviation?: InputMaybe<StringFieldComparison>;
+  and?: InputMaybe<Array<DisciplineFilterLevelFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<DisciplineFilterLevelFilter>>;
+  order?: InputMaybe<IntFieldComparison>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type DisciplineFilterPackageFilter = {
+  and?: InputMaybe<Array<DisciplineFilterPackageFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<DisciplineFilterPackageFilter>>;
+  order?: InputMaybe<NumberFieldComparison>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type DisciplineSort = {
+  direction: SortDirection;
+  field: DisciplineSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum DisciplineSortFields {
+  CreatedAt = 'createdAt',
+  Id = 'id',
+  Name = 'name',
+  UpdatedAt = 'updatedAt'
+}
 
 export type Discount = {
   __typename?: 'Discount';
@@ -900,45 +888,26 @@ export enum DocumentSortFields {
 
 export type Enrollment = {
   __typename?: 'Enrollment';
-  activity: Activity;
-  activityId: Scalars['ID']['output'];
   branch: Branch;
   branchId: Scalars['ID']['output'];
-  children: EnrollmentChildrenConnection;
   createdAt: Scalars['DateTime']['output'];
   cycle: Cycle;
   cycleId: Scalars['ID']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   details: Scalars['String']['output'];
+  diciplines: Scalars['Float']['output'];
+  hours: Scalars['Float']['output'];
   id: Scalars['ID']['output'];
-  isPackage: Scalars['Boolean']['output'];
   level: Level;
   levelId: Scalars['ID']['output'];
   order: Scalars['Float']['output'];
-  parent?: Maybe<Enrollment>;
-  parentId?: Maybe<Scalars['ID']['output']>;
+  package: Package;
+  packageId: Package;
   state: EnrollmentState;
   student: Student;
   studentId: Scalars['ID']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
-};
-
-
-export type EnrollmentChildrenArgs = {
-  filter?: EnrollmentFilter;
-  paging?: OffsetPaging;
-  sorting?: Array<EnrollmentSort>;
-};
-
-export type EnrollmentChildrenConnection = {
-  __typename?: 'EnrollmentChildrenConnection';
-  /** Array of nodes. */
-  nodes: Array<Enrollment>;
-  /** Paging information */
-  pageInfo: OffsetPageInfo;
-  /** Fetch total count of records */
-  totalCount: Scalars['Int']['output'];
 };
 
 export type EnrollmentConnection = {
@@ -953,17 +922,17 @@ export type EnrollmentConnection = {
 
 export type EnrollmentDeleteResponse = {
   __typename?: 'EnrollmentDeleteResponse';
-  activityId?: Maybe<Scalars['ID']['output']>;
   branchId?: Maybe<Scalars['ID']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   cycleId?: Maybe<Scalars['ID']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   details?: Maybe<Scalars['String']['output']>;
+  diciplines?: Maybe<Scalars['Float']['output']>;
+  hours?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
-  isPackage?: Maybe<Scalars['Boolean']['output']>;
   levelId?: Maybe<Scalars['ID']['output']>;
   order?: Maybe<Scalars['Float']['output']>;
-  parentId?: Maybe<Scalars['ID']['output']>;
+  packageId?: Maybe<Scalars['ID']['output']>;
   state?: Maybe<EnrollmentState>;
   studentId?: Maybe<Scalars['ID']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -971,18 +940,18 @@ export type EnrollmentDeleteResponse = {
 };
 
 export type EnrollmentFilter = {
-  activityId?: InputMaybe<IdFilterComparison>;
   and?: InputMaybe<Array<EnrollmentFilter>>;
   branchId?: InputMaybe<IdFilterComparison>;
   createdAt?: InputMaybe<DateFieldComparison>;
   cycleId?: InputMaybe<IdFilterComparison>;
   details?: InputMaybe<StringFieldComparison>;
+  diciplines?: InputMaybe<NumberFieldComparison>;
+  hours?: InputMaybe<NumberFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
-  isPackage?: InputMaybe<BooleanFieldComparison>;
   levelId?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<EnrollmentFilter>>;
   order?: InputMaybe<NumberFieldComparison>;
-  parentId?: InputMaybe<IdFilterComparison>;
+  packageId?: InputMaybe<IdFilterComparison>;
   studentId?: InputMaybe<IdFilterComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
@@ -994,16 +963,16 @@ export type EnrollmentSort = {
 };
 
 export enum EnrollmentSortFields {
-  ActivityId = 'activityId',
   BranchId = 'branchId',
   CreatedAt = 'createdAt',
   CycleId = 'cycleId',
   Details = 'details',
+  Diciplines = 'diciplines',
+  Hours = 'hours',
   Id = 'id',
-  IsPackage = 'isPackage',
   LevelId = 'levelId',
   Order = 'order',
-  ParentId = 'parentId',
+  PackageId = 'packageId',
   StudentId = 'studentId',
   UpdatedAt = 'updatedAt'
 }
@@ -1016,13 +985,13 @@ export enum EnrollmentState {
 
 export type Fee = {
   __typename?: 'Fee';
-  activityId: Scalars['String']['output'];
   amount: Scalars['Float']['output'];
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   frequency: Frequency;
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  packageId: Scalars['String']['output'];
   price: Scalars['Float']['output'];
   taxes: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
@@ -1042,13 +1011,13 @@ export type FeeConnection = {
 
 export type FeeDeleteResponse = {
   __typename?: 'FeeDeleteResponse';
-  activityId?: Maybe<Scalars['String']['output']>;
   amount?: Maybe<Scalars['Float']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   frequency?: Maybe<Frequency>;
   id?: Maybe<Scalars['ID']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  packageId?: Maybe<Scalars['String']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
   taxes?: Maybe<Scalars['Float']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -1057,12 +1026,12 @@ export type FeeDeleteResponse = {
 };
 
 export type FeeFilter = {
-  activityId?: InputMaybe<StringFieldComparison>;
   and?: InputMaybe<Array<FeeFilter>>;
   createdAt?: InputMaybe<DateFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<FeeFilter>>;
+  packageId?: InputMaybe<StringFieldComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -1073,10 +1042,10 @@ export type FeeSort = {
 };
 
 export enum FeeSortFields {
-  ActivityId = 'activityId',
   CreatedAt = 'createdAt',
   Id = 'id',
   Name = 'name',
+  PackageId = 'packageId',
   UpdatedAt = 'updatedAt'
 }
 
@@ -1193,66 +1162,101 @@ export type Mutation = {
   __typename?: 'Mutation';
   addBranchsToStudent: Student;
   addStudentsToDocument: Document;
-  createManyDebitDiscounts: Array<DebitDiscount>;
   createManyDebits: Array<Debit>;
   createManyDiscounts: Array<Discount>;
   createManyDocuments: Array<Document>;
   createOneAction: Action;
-  createOneActivity: Activity;
   createOneBranch: Branch;
   createOneCycle: Cycle;
   createOneDebit: Debit;
-  createOneDebitDiscount: DebitDiscount;
+  createOneDiscipline: Discipline;
   createOneDiscount: Discount;
   createOneDocument: Document;
   createOneEnrollment: Enrollment;
   createOneFee: Fee;
   createOneLevel: Level;
+  createOnePackage: Package;
+  createOnePeriod: Period;
   createOnePolicy: Policy;
+  createOneSchedule: Schedule;
   createOneStudent: Student;
   createOneTeacher: Teacher;
   createOneTutor: Tutor;
   deleteOneAction: ActionDeleteResponse;
-  deleteOneActivity: ActivityDeleteResponse;
   deleteOneBranch: BranchDeleteResponse;
   deleteOneCycle: CycleDeleteResponse;
   deleteOneDebit: DebitDeleteResponse;
-  deleteOneDebitDiscount: DebitDiscountDeleteResponse;
+  deleteOneDiscipline: DisciplineDeleteResponse;
   deleteOneDiscount: DiscountDeleteResponse;
   deleteOneDocument: DocumentDeleteResponse;
   deleteOneEnrollment: EnrollmentDeleteResponse;
   deleteOneFee: FeeDeleteResponse;
   deleteOneLevel: LevelDeleteResponse;
+  deleteOnePackage: PackageDeleteResponse;
+  deleteOnePeriod: PeriodDeleteResponse;
   deleteOnePolicy: PolicyDeleteResponse;
+  deleteOneSchedule: ScheduleDeleteResponse;
   deleteOneStudent: StudentDeleteResponse;
   deleteOneTeacher: TeacherDeleteResponse;
   deleteOneTutor: TutorDeleteResponse;
   removeBranchsFromStudent: Student;
   removeStudentsFromDocument: Document;
-  restoreManyActivities: UpdateManyResponse;
-  restoreManyVideos: UpdateManyResponse;
-  restoreOneActivity: Activity;
-  restoreOneVideo: Discount;
+  restoreManyActions: UpdateManyResponse;
+  restoreManyBranchs: UpdateManyResponse;
+  restoreManyCycles: UpdateManyResponse;
+  restoreManyDebits: UpdateManyResponse;
+  restoreManyDisciplines: UpdateManyResponse;
+  restoreManyDiscounts: UpdateManyResponse;
+  restoreManyDocuments: UpdateManyResponse;
+  restoreManyEnrollments: UpdateManyResponse;
+  restoreManyFees: UpdateManyResponse;
+  restoreManyLevels: UpdateManyResponse;
+  restoreManyPackages: UpdateManyResponse;
+  restoreManyPeriods: UpdateManyResponse;
+  restoreManyPolicies: UpdateManyResponse;
+  restoreManySchedules: UpdateManyResponse;
+  restoreManyStudents: UpdateManyResponse;
+  restoreManyTeachers: UpdateManyResponse;
+  restoreManyTutors: UpdateManyResponse;
+  restoreOneAction: Action;
+  restoreOneBranch: Branch;
+  restoreOneCycle: Cycle;
+  restoreOneDebit: Debit;
+  restoreOneDiscipline: Discipline;
+  restoreOneDiscount: Discount;
+  restoreOneDocument: Document;
+  restoreOneEnrollment: Enrollment;
+  restoreOneFee: Fee;
+  restoreOneLevel: Level;
+  restoreOnePackage: Package;
+  restoreOnePeriod: Period;
+  restoreOnePolicy: Policy;
+  restoreOneSchedule: Schedule;
+  restoreOneStudent: Student;
+  restoreOneTeacher: Teacher;
+  restoreOneTutor: Tutor;
   setBranchsOnStudent: Student;
-  setOrderActivities: UpdateCount;
   setOrderEnrollments: UpdateCount;
   setOrderLevels: UpdateCount;
+  setOrderPackages: UpdateCount;
   setStudentsOnDocument: Document;
   signIn: Session;
   signUp: Session;
-  updateManyActivities: UpdateManyResponse;
+  updateManyPackages: UpdateManyResponse;
   updateOneAction: Action;
-  updateOneActivity: Activity;
   updateOneBranch: Branch;
   updateOneCycle: Cycle;
   updateOneDebit: Debit;
-  updateOneDebitDiscount: DebitDiscount;
+  updateOneDiscipline: Discipline;
   updateOneDiscount: Discount;
   updateOneDocument: Document;
   updateOneEnrollment: Enrollment;
   updateOneFee: Fee;
   updateOneLevel: Level;
+  updateOnePackage: Package;
+  updateOnePeriod: Period;
   updateOnePolicy: Policy;
+  updateOneSchedule: Schedule;
   updateOneStudent: Student;
   updateOneTeacher: Teacher;
   updateOneTutor: Tutor;
@@ -1267,11 +1271,6 @@ export type MutationAddBranchsToStudentArgs = {
 
 export type MutationAddStudentsToDocumentArgs = {
   input: AddStudentsToDocumentInput;
-};
-
-
-export type MutationCreateManyDebitDiscountsArgs = {
-  input: CreateManyDebitDiscountsInput;
 };
 
 
@@ -1295,11 +1294,6 @@ export type MutationCreateOneActionArgs = {
 };
 
 
-export type MutationCreateOneActivityArgs = {
-  input: CreateOneActivityInput;
-};
-
-
 export type MutationCreateOneBranchArgs = {
   input: CreateOneBranchInput;
 };
@@ -1315,8 +1309,8 @@ export type MutationCreateOneDebitArgs = {
 };
 
 
-export type MutationCreateOneDebitDiscountArgs = {
-  input: CreateOneDebitDiscountInput;
+export type MutationCreateOneDisciplineArgs = {
+  input: CreateOneDisciplineInput;
 };
 
 
@@ -1345,8 +1339,23 @@ export type MutationCreateOneLevelArgs = {
 };
 
 
+export type MutationCreateOnePackageArgs = {
+  input: CreateOnePackageInput;
+};
+
+
+export type MutationCreateOnePeriodArgs = {
+  input: CreateOnePeriodInput;
+};
+
+
 export type MutationCreateOnePolicyArgs = {
   input: CreateOnePolicyInput;
+};
+
+
+export type MutationCreateOneScheduleArgs = {
+  input: CreateOneScheduleInput;
 };
 
 
@@ -1370,11 +1379,6 @@ export type MutationDeleteOneActionArgs = {
 };
 
 
-export type MutationDeleteOneActivityArgs = {
-  input: DeleteOneActivityInput;
-};
-
-
 export type MutationDeleteOneBranchArgs = {
   input: DeleteOneBranchInput;
 };
@@ -1390,8 +1394,8 @@ export type MutationDeleteOneDebitArgs = {
 };
 
 
-export type MutationDeleteOneDebitDiscountArgs = {
-  input: DeleteOneDebitDiscountInput;
+export type MutationDeleteOneDisciplineArgs = {
+  input: DeleteOneDisciplineInput;
 };
 
 
@@ -1420,8 +1424,23 @@ export type MutationDeleteOneLevelArgs = {
 };
 
 
+export type MutationDeleteOnePackageArgs = {
+  input: DeleteOnePackageInput;
+};
+
+
+export type MutationDeleteOnePeriodArgs = {
+  input: DeleteOnePeriodInput;
+};
+
+
 export type MutationDeleteOnePolicyArgs = {
   input: DeleteOnePolicyInput;
+};
+
+
+export type MutationDeleteOneScheduleArgs = {
+  input: DeleteOneScheduleInput;
 };
 
 
@@ -1450,22 +1469,172 @@ export type MutationRemoveStudentsFromDocumentArgs = {
 };
 
 
-export type MutationRestoreManyActivitiesArgs = {
-  input: ActivityFilter;
+export type MutationRestoreManyActionsArgs = {
+  input: ActionFilter;
 };
 
 
-export type MutationRestoreManyVideosArgs = {
+export type MutationRestoreManyBranchsArgs = {
+  input: BranchFilter;
+};
+
+
+export type MutationRestoreManyCyclesArgs = {
+  input: CycleFilter;
+};
+
+
+export type MutationRestoreManyDebitsArgs = {
+  input: DebitFilter;
+};
+
+
+export type MutationRestoreManyDisciplinesArgs = {
+  input: DisciplineFilter;
+};
+
+
+export type MutationRestoreManyDiscountsArgs = {
   input: DiscountFilter;
 };
 
 
-export type MutationRestoreOneActivityArgs = {
+export type MutationRestoreManyDocumentsArgs = {
+  input: DocumentFilter;
+};
+
+
+export type MutationRestoreManyEnrollmentsArgs = {
+  input: EnrollmentFilter;
+};
+
+
+export type MutationRestoreManyFeesArgs = {
+  input: FeeFilter;
+};
+
+
+export type MutationRestoreManyLevelsArgs = {
+  input: LevelFilter;
+};
+
+
+export type MutationRestoreManyPackagesArgs = {
+  input: PackageFilter;
+};
+
+
+export type MutationRestoreManyPeriodsArgs = {
+  input: PeriodFilter;
+};
+
+
+export type MutationRestoreManyPoliciesArgs = {
+  input: PolicyFilter;
+};
+
+
+export type MutationRestoreManySchedulesArgs = {
+  input: ScheduleFilter;
+};
+
+
+export type MutationRestoreManyStudentsArgs = {
+  input: StudentFilter;
+};
+
+
+export type MutationRestoreManyTeachersArgs = {
+  input: TeacherFilter;
+};
+
+
+export type MutationRestoreManyTutorsArgs = {
+  input: TutorFilter;
+};
+
+
+export type MutationRestoreOneActionArgs = {
   input: Scalars['ID']['input'];
 };
 
 
-export type MutationRestoreOneVideoArgs = {
+export type MutationRestoreOneBranchArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOneCycleArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOneDebitArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOneDisciplineArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOneDiscountArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOneDocumentArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOneEnrollmentArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOneFeeArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOneLevelArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOnePackageArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOnePeriodArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOnePolicyArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOneScheduleArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOneStudentArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOneTeacherArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOneTutorArgs = {
   input: Scalars['ID']['input'];
 };
 
@@ -1475,17 +1644,17 @@ export type MutationSetBranchsOnStudentArgs = {
 };
 
 
-export type MutationSetOrderActivitiesArgs = {
-  input: Array<SetOrderInput>;
-};
-
-
 export type MutationSetOrderEnrollmentsArgs = {
   input: Array<SetOrderInput>;
 };
 
 
 export type MutationSetOrderLevelsArgs = {
+  input: Array<SetOrderInput>;
+};
+
+
+export type MutationSetOrderPackagesArgs = {
   input: Array<SetOrderInput>;
 };
 
@@ -1505,18 +1674,13 @@ export type MutationSignUpArgs = {
 };
 
 
-export type MutationUpdateManyActivitiesArgs = {
-  input: UpdateManyActivitiesInput;
+export type MutationUpdateManyPackagesArgs = {
+  input: UpdateManyPackagesInput;
 };
 
 
 export type MutationUpdateOneActionArgs = {
   input: UpdateOneActionInput;
-};
-
-
-export type MutationUpdateOneActivityArgs = {
-  input: UpdateOneActivityInput;
 };
 
 
@@ -1535,8 +1699,8 @@ export type MutationUpdateOneDebitArgs = {
 };
 
 
-export type MutationUpdateOneDebitDiscountArgs = {
-  input: UpdateOneDebitDiscountInput;
+export type MutationUpdateOneDisciplineArgs = {
+  input: UpdateOneDisciplineInput;
 };
 
 
@@ -1565,8 +1729,23 @@ export type MutationUpdateOneLevelArgs = {
 };
 
 
+export type MutationUpdateOnePackageArgs = {
+  input: UpdateOnePackageInput;
+};
+
+
+export type MutationUpdateOnePeriodArgs = {
+  input: UpdateOnePeriodInput;
+};
+
+
 export type MutationUpdateOnePolicyArgs = {
   input: UpdateOnePolicyInput;
+};
+
+
+export type MutationUpdateOneScheduleArgs = {
+  input: UpdateOneScheduleInput;
 };
 
 
@@ -1588,6 +1767,10 @@ export type MutationUpdateOneTutorArgs = {
 export type MutationUpdateOneUserArgs = {
   id: Scalars['ID']['input'];
   update: UpdateUser;
+};
+
+export type NestedId = {
+  id: Scalars['ID']['input'];
 };
 
 export type NumberFieldComparison = {
@@ -1624,6 +1807,148 @@ export type OffsetPaging = {
   /** Offset to start returning records from */
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
+
+export type Package = {
+  __typename?: 'Package';
+  branchId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id: Scalars['ID']['output'];
+  kind: PackageKind;
+  name: Scalars['String']['output'];
+  order: Scalars['Float']['output'];
+  quantity: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
+  withTax: Scalars['Boolean']['output'];
+};
+
+export type PackageConnection = {
+  __typename?: 'PackageConnection';
+  /** Array of nodes. */
+  nodes: Array<Package>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PackageDeleteResponse = {
+  __typename?: 'PackageDeleteResponse';
+  branchId?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  kind?: Maybe<PackageKind>;
+  name?: Maybe<Scalars['String']['output']>;
+  order?: Maybe<Scalars['Float']['output']>;
+  quantity?: Maybe<Scalars['Float']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+  withTax?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type PackageFilter = {
+  and?: InputMaybe<Array<PackageFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<PackageFilter>>;
+  order?: InputMaybe<NumberFieldComparison>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export enum PackageKind {
+  Hours = 'HOURS',
+  Quantity = 'QUANTITY'
+}
+
+export type PackageSort = {
+  direction: SortDirection;
+  field: PackageSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum PackageSortFields {
+  BranchId = 'branchId',
+  CreatedAt = 'createdAt',
+  Id = 'id',
+  Name = 'name',
+  Order = 'order',
+  UpdatedAt = 'updatedAt'
+}
+
+export type PackageUpdateFilter = {
+  and?: InputMaybe<Array<PackageUpdateFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<PackageUpdateFilter>>;
+  order?: InputMaybe<NumberFieldComparison>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type Period = {
+  __typename?: 'Period';
+  branchId: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  end: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+  start: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
+};
+
+export type PeriodConnection = {
+  __typename?: 'PeriodConnection';
+  /** Array of nodes. */
+  nodes: Array<Period>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PeriodDeleteResponse = {
+  __typename?: 'PeriodDeleteResponse';
+  branchId?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  end?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  start?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type PeriodFilter = {
+  and?: InputMaybe<Array<PeriodFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<PeriodFilter>>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type PeriodSort = {
+  direction: SortDirection;
+  field: PeriodSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum PeriodSortFields {
+  BranchId = 'branchId',
+  CreatedAt = 'createdAt',
+  Id = 'id',
+  Name = 'name',
+  UpdatedAt = 'updatedAt'
+}
 
 export type Policy = {
   __typename?: 'Policy';
@@ -1685,16 +2010,14 @@ export type Query = {
   __typename?: 'Query';
   action: Action;
   actions: ActionConnection;
-  activities: ActivityConnection;
-  activity: Activity;
   branch: Branch;
   branches: BranchConnection;
   cycle: Cycle;
   cycles: CycleConnection;
   debit: Debit;
-  debitDiscount: DebitDiscount;
-  debitDiscounts: DebitDiscountConnection;
   debits: DebitConnection;
+  discipline: Discipline;
+  disciplines: DisciplineConnection;
   discount: Discount;
   discounts: DiscountConnection;
   document: Document;
@@ -1705,8 +2028,14 @@ export type Query = {
   fees: FeeConnection;
   level: Level;
   levels: LevelConnection;
+  package: Package;
+  packages: PackageConnection;
+  period: Period;
+  periods: PeriodConnection;
   policies: PolicyConnection;
   policy: Policy;
+  schedule: Schedule;
+  schedules: ScheduleConnection;
   student: Student;
   students: StudentConnection;
   teacher: Teacher;
@@ -1725,18 +2054,6 @@ export type QueryActionsArgs = {
   filter?: ActionFilter;
   paging?: OffsetPaging;
   sorting?: Array<ActionSort>;
-};
-
-
-export type QueryActivitiesArgs = {
-  filter?: ActivityFilter;
-  paging?: OffsetPaging;
-  sorting?: Array<ActivitySort>;
-};
-
-
-export type QueryActivityArgs = {
-  id: Scalars['ID']['input'];
 };
 
 
@@ -1769,22 +2086,22 @@ export type QueryDebitArgs = {
 };
 
 
-export type QueryDebitDiscountArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type QueryDebitDiscountsArgs = {
-  filter?: DebitDiscountFilter;
-  paging?: OffsetPaging;
-  sorting?: Array<DebitDiscountSort>;
-};
-
-
 export type QueryDebitsArgs = {
   filter?: DebitFilter;
   paging?: OffsetPaging;
   sorting?: Array<DebitSort>;
+};
+
+
+export type QueryDisciplineArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryDisciplinesArgs = {
+  filter?: DisciplineFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<DisciplineSort>;
 };
 
 
@@ -1848,6 +2165,30 @@ export type QueryLevelsArgs = {
 };
 
 
+export type QueryPackageArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryPackagesArgs = {
+  filter?: PackageFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<PackageSort>;
+};
+
+
+export type QueryPeriodArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryPeriodsArgs = {
+  filter?: PeriodFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<PeriodSort>;
+};
+
+
 export type QueryPoliciesArgs = {
   filter?: PolicyFilter;
   paging?: OffsetPaging;
@@ -1857,6 +2198,18 @@ export type QueryPoliciesArgs = {
 
 export type QueryPolicyArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type QueryScheduleArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QuerySchedulesArgs = {
+  filter?: ScheduleFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<ScheduleSort>;
 };
 
 
@@ -1908,6 +2261,74 @@ export type RemoveStudentsFromDocumentInput = {
   /** The ids of the relations. */
   relationIds: Array<Scalars['ID']['input']>;
 };
+
+export type Schedule = {
+  __typename?: 'Schedule';
+  branchId: Scalars['ID']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  day: Scalars['Int']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  disciplineId: Scalars['ID']['output'];
+  end: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  periodId: Scalars['ID']['output'];
+  start: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
+};
+
+export type ScheduleConnection = {
+  __typename?: 'ScheduleConnection';
+  /** Array of nodes. */
+  nodes: Array<Schedule>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ScheduleDeleteResponse = {
+  __typename?: 'ScheduleDeleteResponse';
+  branchId?: Maybe<Scalars['ID']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  day?: Maybe<Scalars['Int']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  disciplineId?: Maybe<Scalars['ID']['output']>;
+  end?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  periodId?: Maybe<Scalars['ID']['output']>;
+  start?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type ScheduleFilter = {
+  and?: InputMaybe<Array<ScheduleFilter>>;
+  branchId?: InputMaybe<IdFilterComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  day?: InputMaybe<IntFieldComparison>;
+  disciplineId?: InputMaybe<IdFilterComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  or?: InputMaybe<Array<ScheduleFilter>>;
+  periodId?: InputMaybe<IdFilterComparison>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type ScheduleSort = {
+  direction: SortDirection;
+  field: ScheduleSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum ScheduleSortFields {
+  BranchId = 'branchId',
+  CreatedAt = 'createdAt',
+  Day = 'day',
+  DisciplineId = 'disciplineId',
+  Id = 'id',
+  PeriodId = 'periodId',
+  UpdatedAt = 'updatedAt'
+}
 
 export type Session = {
   __typename?: 'Session';
@@ -2195,15 +2616,6 @@ export type UpdateAction = {
   route?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type UpdateActivity = {
-  branchId?: InputMaybe<Scalars['String']['input']>;
-  isPackage?: InputMaybe<Scalars['Boolean']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  order?: InputMaybe<Scalars['Float']['input']>;
-  quantity?: InputMaybe<Scalars['Float']['input']>;
-  withTax?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
 export type UpdateBranch = {
   name?: InputMaybe<Scalars['String']['input']>;
   picture?: InputMaybe<Scalars['String']['input']>;
@@ -2224,6 +2636,7 @@ export type UpdateCycle = {
 export type UpdateDebit = {
   description?: InputMaybe<Scalars['String']['input']>;
   discount?: InputMaybe<Scalars['Float']['input']>;
+  discounts?: InputMaybe<Array<NestedId>>;
   dueDate?: InputMaybe<Scalars['String']['input']>;
   enrollmentId?: InputMaybe<Scalars['String']['input']>;
   frequency?: InputMaybe<Frequency>;
@@ -2234,11 +2647,12 @@ export type UpdateDebit = {
   withTax?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type UpdateDebitDiscount = {
-  debitId?: InputMaybe<Scalars['ID']['input']>;
+export type UpdateDiscipline = {
+  branchId?: InputMaybe<Scalars['ID']['input']>;
+  levels?: InputMaybe<Array<NestedId>>;
+  minHours?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
-  type?: InputMaybe<DiscountBy>;
-  value?: InputMaybe<Scalars['Float']['input']>;
+  packages?: InputMaybe<Array<NestedId>>;
 };
 
 export type UpdateDiscount = {
@@ -2255,22 +2669,20 @@ export type UpdateDocument = {
 };
 
 export type UpdateEnrollment = {
-  activityId?: InputMaybe<Scalars['String']['input']>;
   branchId?: InputMaybe<Scalars['String']['input']>;
   cycleId?: InputMaybe<Scalars['String']['input']>;
   details?: InputMaybe<Scalars['String']['input']>;
-  isPackage?: InputMaybe<Scalars['Boolean']['input']>;
   levelId?: InputMaybe<Scalars['String']['input']>;
   order?: InputMaybe<Scalars['Float']['input']>;
-  parentId?: InputMaybe<Scalars['ID']['input']>;
+  packageId?: InputMaybe<Scalars['String']['input']>;
   state?: InputMaybe<EnrollmentState>;
   studentId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateFee = {
-  activityId?: InputMaybe<Scalars['String']['input']>;
   frequency?: InputMaybe<Frequency>;
   name?: InputMaybe<Scalars['String']['input']>;
+  packageId?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
   withTax?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -2282,11 +2694,11 @@ export type UpdateLevel = {
   order?: InputMaybe<Scalars['Float']['input']>;
 };
 
-export type UpdateManyActivitiesInput = {
+export type UpdateManyPackagesInput = {
   /** Filter used to find fields to update */
-  filter: ActivityUpdateFilter;
+  filter: PackageUpdateFilter;
   /** The update to apply to all records found using the filter */
-  update: UpdateActivity;
+  update: UpdatePackage;
 };
 
 export type UpdateManyResponse = {
@@ -2300,13 +2712,6 @@ export type UpdateOneActionInput = {
   id: Scalars['ID']['input'];
   /** The update to apply. */
   update: UpdateAction;
-};
-
-export type UpdateOneActivityInput = {
-  /** The id of the record to update */
-  id: Scalars['ID']['input'];
-  /** The update to apply. */
-  update: UpdateActivity;
 };
 
 export type UpdateOneBranchInput = {
@@ -2323,18 +2728,18 @@ export type UpdateOneCycleInput = {
   update: UpdateCycle;
 };
 
-export type UpdateOneDebitDiscountInput = {
-  /** The id of the record to update */
-  id: Scalars['ID']['input'];
-  /** The update to apply. */
-  update: UpdateDebitDiscount;
-};
-
 export type UpdateOneDebitInput = {
   /** The id of the record to update */
   id: Scalars['ID']['input'];
   /** The update to apply. */
   update: UpdateDebit;
+};
+
+export type UpdateOneDisciplineInput = {
+  /** The id of the record to update */
+  id: Scalars['ID']['input'];
+  /** The update to apply. */
+  update: UpdateDiscipline;
 };
 
 export type UpdateOneDiscountInput = {
@@ -2372,11 +2777,32 @@ export type UpdateOneLevelInput = {
   update: UpdateLevel;
 };
 
+export type UpdateOnePackageInput = {
+  /** The id of the record to update */
+  id: Scalars['ID']['input'];
+  /** The update to apply. */
+  update: UpdatePackage;
+};
+
+export type UpdateOnePeriodInput = {
+  /** The id of the record to update */
+  id: Scalars['ID']['input'];
+  /** The update to apply. */
+  update: UpdatePeriod;
+};
+
 export type UpdateOnePolicyInput = {
   /** The id of the record to update */
   id: Scalars['ID']['input'];
   /** The update to apply. */
   update: UpdatePolicy;
+};
+
+export type UpdateOneScheduleInput = {
+  /** The id of the record to update */
+  id: Scalars['ID']['input'];
+  /** The update to apply. */
+  update: UpdateSchedule;
 };
 
 export type UpdateOneStudentInput = {
@@ -2400,9 +2826,34 @@ export type UpdateOneTutorInput = {
   update: UpdateTutor;
 };
 
+export type UpdatePackage = {
+  branchId?: InputMaybe<Scalars['String']['input']>;
+  kind?: InputMaybe<PackageKind>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  order?: InputMaybe<Scalars['Float']['input']>;
+  quantity?: InputMaybe<Scalars['Float']['input']>;
+  withTax?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type UpdatePeriod = {
+  branchId?: InputMaybe<Scalars['String']['input']>;
+  end?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  start?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type UpdatePolicy = {
   branchId?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateSchedule = {
+  branchId?: InputMaybe<Scalars['ID']['input']>;
+  day?: InputMaybe<Scalars['Int']['input']>;
+  disciplineId?: InputMaybe<Scalars['ID']['input']>;
+  end?: InputMaybe<Scalars['String']['input']>;
+  periodId?: InputMaybe<Scalars['ID']['input']>;
+  start?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateStudent = {
@@ -2504,46 +2955,6 @@ export type DeleteOneBranchMutationVariables = Exact<{
 
 
 export type DeleteOneBranchMutation = { __typename?: 'Mutation', deleteOneBranch: { __typename?: 'BranchDeleteResponse', id?: string | null } };
-
-export type ActivityPartsFragment = { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, withTax: boolean, order: number };
-
-export type CreateOneActivityMutationVariables = Exact<{
-  activity: CreateActivity;
-}>;
-
-
-export type CreateOneActivityMutation = { __typename?: 'Mutation', createOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, withTax: boolean, order: number } };
-
-export type GetActivityPageQueryVariables = Exact<{
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  filter?: InputMaybe<ActivityFilter>;
-}>;
-
-
-export type GetActivityPageQuery = { __typename?: 'Query', activities: { __typename?: 'ActivityConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, withTax: boolean, order: number }> } };
-
-export type UpdateOneActivityMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-  update: UpdateActivity;
-}>;
-
-
-export type UpdateOneActivityMutation = { __typename?: 'Mutation', updateOneActivity: { __typename?: 'Activity', id: string, name: string, quantity: number, isPackage: boolean, withTax: boolean, order: number } };
-
-export type DeleteOneActivityMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type DeleteOneActivityMutation = { __typename?: 'Mutation', deleteOneActivity: { __typename?: 'ActivityDeleteResponse', id?: string | null } };
-
-export type SetOrderActivitiesMutationVariables = Exact<{
-  payload: Array<SetOrderInput> | SetOrderInput;
-}>;
-
-
-export type SetOrderActivitiesMutation = { __typename?: 'Mutation', setOrderActivities: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
 export type CyclePartsFragment = { __typename?: 'Cycle', id: string, name: string, start: string, end: string };
 
@@ -2651,14 +3062,14 @@ export type DeleteOneDiscountMutationVariables = Exact<{
 
 export type DeleteOneDiscountMutation = { __typename?: 'Mutation', deleteOneDiscount: { __typename?: 'DiscountDeleteResponse', id?: string | null } };
 
-export type EnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, isPackage: boolean, parentId?: string | null, activity: { __typename?: 'Activity', id: string, name: string, isPackage: boolean, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string }, children: { __typename?: 'EnrollmentChildrenConnection', totalCount: number } };
+export type EnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } };
 
 export type CreateOneEnrollmentMutationVariables = Exact<{
   enrollment: CreateEnrollment;
 }>;
 
 
-export type CreateOneEnrollmentMutation = { __typename?: 'Mutation', createOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, isPackage: boolean, parentId?: string | null, activity: { __typename?: 'Activity', id: string, name: string, isPackage: boolean, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string }, children: { __typename?: 'EnrollmentChildrenConnection', totalCount: number } } };
+export type CreateOneEnrollmentMutation = { __typename?: 'Mutation', createOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } } };
 
 export type GetEnrollmentsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -2667,7 +3078,7 @@ export type GetEnrollmentsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, isPackage: boolean, parentId?: string | null, activity: { __typename?: 'Activity', id: string, name: string, isPackage: boolean, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string }, children: { __typename?: 'EnrollmentChildrenConnection', totalCount: number } }> } };
+export type GetEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } }> } };
 
 export type UpdateOneEnrollmentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2675,7 +3086,7 @@ export type UpdateOneEnrollmentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneEnrollmentMutation = { __typename?: 'Mutation', updateOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, isPackage: boolean, parentId?: string | null, activity: { __typename?: 'Activity', id: string, name: string, isPackage: boolean, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string }, children: { __typename?: 'EnrollmentChildrenConnection', totalCount: number } } };
+export type UpdateOneEnrollmentMutation = { __typename?: 'Mutation', updateOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } } };
 
 export type DeleteOneEnrollmentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -2763,6 +3174,46 @@ export type SetOrderLevelsMutationVariables = Exact<{
 
 
 export type SetOrderLevelsMutation = { __typename?: 'Mutation', setOrderLevels: { __typename?: 'UpdateCount', updatedCount?: number | null } };
+
+export type PackagePartsFragment = { __typename?: 'Package', id: string, name: string, quantity: number, kind: PackageKind, withTax: boolean, order: number };
+
+export type CreateOnePackageMutationVariables = Exact<{
+  package: CreatePackage;
+}>;
+
+
+export type CreateOnePackageMutation = { __typename?: 'Mutation', createOnePackage: { __typename?: 'Package', id: string, name: string, quantity: number, kind: PackageKind, withTax: boolean, order: number } };
+
+export type GetPackagePageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<PackageFilter>;
+}>;
+
+
+export type GetPackagePageQuery = { __typename?: 'Query', packages: { __typename?: 'PackageConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Package', id: string, name: string, quantity: number, kind: PackageKind, withTax: boolean, order: number }> } };
+
+export type UpdateOnePackageMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdatePackage;
+}>;
+
+
+export type UpdateOnePackageMutation = { __typename?: 'Mutation', updateOnePackage: { __typename?: 'Package', id: string, name: string, quantity: number, kind: PackageKind, withTax: boolean, order: number } };
+
+export type DeleteOnePackageMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOnePackageMutation = { __typename?: 'Mutation', deleteOnePackage: { __typename?: 'PackageDeleteResponse', id?: string | null } };
+
+export type SetOrderActivitiesMutationVariables = Exact<{
+  payload: Array<SetOrderInput> | SetOrderInput;
+}>;
+
+
+export type SetOrderActivitiesMutation = { __typename?: 'Mutation', setOrderPackages: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
 export type StudentPartsFragment = { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string };
 
@@ -2890,16 +3341,6 @@ export const BranchPartsFragmentDoc = gql`
   picture
 }
     `;
-export const ActivityPartsFragmentDoc = gql`
-    fragment ActivityParts on Activity {
-  id
-  name
-  quantity
-  isPackage
-  withTax
-  order
-}
-    `;
 export const CyclePartsFragmentDoc = gql`
     fragment CycleParts on Cycle {
   id
@@ -2939,11 +3380,12 @@ export const EnrollmentPartsFragmentDoc = gql`
   id
   details
   state
-  isPackage
-  activity {
+  hours
+  diciplines
+  package {
     id
     name
-    isPackage
+    kind
     quantity
   }
   cycle {
@@ -2960,10 +3402,6 @@ export const EnrollmentPartsFragmentDoc = gql`
     id
     name
     abbreviation
-  }
-  parentId
-  children {
-    totalCount
   }
 }
     `;
@@ -2982,6 +3420,16 @@ export const LevelPartsFragmentDoc = gql`
   id
   name
   abbreviation
+  order
+}
+    `;
+export const PackagePartsFragmentDoc = gql`
+    fragment PackageParts on Package {
+  id
+  name
+  quantity
+  kind
+  withTax
   order
 }
     `;
@@ -3133,107 +3581,6 @@ export const DeleteOneBranchDocument = gql`
   })
   export class DeleteOneBranchGQL extends Apollo.Mutation<DeleteOneBranchMutation, DeleteOneBranchMutationVariables> {
     document = DeleteOneBranchDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const CreateOneActivityDocument = gql`
-    mutation createOneActivity($activity: CreateActivity!) {
-  createOneActivity(input: {activity: $activity}) {
-    ...ActivityParts
-  }
-}
-    ${ActivityPartsFragmentDoc}`;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class CreateOneActivityGQL extends Apollo.Mutation<CreateOneActivityMutation, CreateOneActivityMutationVariables> {
-    document = CreateOneActivityDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const GetActivityPageDocument = gql`
-    query getActivityPage($offset: Int = 0, $limit: Int = 10, $filter: ActivityFilter = {}) {
-  activities(
-    paging: {limit: $limit, offset: $offset}
-    sorting: [{field: order, direction: ASC}, {field: createdAt, direction: DESC}]
-    filter: $filter
-  ) {
-    totalCount
-    pageInfo {
-      hasNextPage
-      hasPreviousPage
-    }
-    nodes {
-      ...ActivityParts
-    }
-  }
-}
-    ${ActivityPartsFragmentDoc}`;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class GetActivityPageGQL extends Apollo.Query<GetActivityPageQuery, GetActivityPageQueryVariables> {
-    document = GetActivityPageDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const UpdateOneActivityDocument = gql`
-    mutation updateOneActivity($id: ID!, $update: UpdateActivity!) {
-  updateOneActivity(input: {id: $id, update: $update}) {
-    ...ActivityParts
-  }
-}
-    ${ActivityPartsFragmentDoc}`;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class UpdateOneActivityGQL extends Apollo.Mutation<UpdateOneActivityMutation, UpdateOneActivityMutationVariables> {
-    document = UpdateOneActivityDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const DeleteOneActivityDocument = gql`
-    mutation deleteOneActivity($id: ID!) {
-  deleteOneActivity(input: {id: $id}) {
-    id
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class DeleteOneActivityGQL extends Apollo.Mutation<DeleteOneActivityMutation, DeleteOneActivityMutationVariables> {
-    document = DeleteOneActivityDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const SetOrderActivitiesDocument = gql`
-    mutation setOrderActivities($payload: [SetOrderInput!]!) {
-  setOrderActivities(input: $payload) {
-    updatedCount
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class SetOrderActivitiesGQL extends Apollo.Mutation<SetOrderActivitiesMutation, SetOrderActivitiesMutationVariables> {
-    document = SetOrderActivitiesDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -3770,6 +4117,107 @@ export const SetOrderLevelsDocument = gql`
   })
   export class SetOrderLevelsGQL extends Apollo.Mutation<SetOrderLevelsMutation, SetOrderLevelsMutationVariables> {
     document = SetOrderLevelsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOnePackageDocument = gql`
+    mutation createOnePackage($package: CreatePackage!) {
+  createOnePackage(input: {package: $package}) {
+    ...PackageParts
+  }
+}
+    ${PackagePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOnePackageGQL extends Apollo.Mutation<CreateOnePackageMutation, CreateOnePackageMutationVariables> {
+    document = CreateOnePackageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetPackagePageDocument = gql`
+    query getPackagePage($offset: Int = 0, $limit: Int = 10, $filter: PackageFilter = {}) {
+  packages(
+    paging: {limit: $limit, offset: $offset}
+    sorting: [{field: order, direction: ASC}, {field: createdAt, direction: DESC}]
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...PackageParts
+    }
+  }
+}
+    ${PackagePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetPackagePageGQL extends Apollo.Query<GetPackagePageQuery, GetPackagePageQueryVariables> {
+    document = GetPackagePageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOnePackageDocument = gql`
+    mutation updateOnePackage($id: ID!, $update: UpdatePackage!) {
+  updateOnePackage(input: {id: $id, update: $update}) {
+    ...PackageParts
+  }
+}
+    ${PackagePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOnePackageGQL extends Apollo.Mutation<UpdateOnePackageMutation, UpdateOnePackageMutationVariables> {
+    document = UpdateOnePackageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOnePackageDocument = gql`
+    mutation deleteOnePackage($id: ID!) {
+  deleteOnePackage(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOnePackageGQL extends Apollo.Mutation<DeleteOnePackageMutation, DeleteOnePackageMutationVariables> {
+    document = DeleteOnePackageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const SetOrderActivitiesDocument = gql`
+    mutation setOrderActivities($payload: [SetOrderInput!]!) {
+  setOrderPackages(input: $payload) {
+    updatedCount
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class SetOrderActivitiesGQL extends Apollo.Mutation<SetOrderActivitiesMutation, SetOrderActivitiesMutationVariables> {
+    document = SetOrderActivitiesDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

@@ -1,59 +1,30 @@
-<div [style.paddingLeft.px]="node.level * 24">
-  <div
-    class="item"
-    (click)="selectEnrollment()"
-    [ngClass]="{ active: isActive() }"
-  >
-    @if (node.expandable) {
-    <mat-icon
-      cdkTreeNodeToggle
-      [svgIcon]="isExpanded ? 'chevron-down' : 'chevron-right'"
-    />
-    } @else {
-    <span class="w-6 h-6"></span>
-    }
-
-    <div>
-      <p class="font-medium">{{ node.item.details }}</p>
-      <div
-        matListItemLine
-        class="text-xs"
-        [ngClass]="{
-    'text-red-800': node.item.state === 'INACTIVE',
-    'text-green-800': node.item.state === 'ACTIVE',
-    'text-yellow-800': node.item.state === 'PAUSED',
+<div
+  class="item"
+  (click)="selectEnrollment()"
+  [ngClass]="{ active: isActive() }"
+>
+  <div>
+    <p class="font-medium">{{ node.details }}</p>
+    <div
+      matListItemLine
+      class="text-xs"
+      [ngClass]="{
+    'text-red-800': node.state === 'INACTIVE',
+    'text-green-800': node.state === 'ACTIVE',
+    'text-yellow-800': node.state === 'PAUSED',
   }"
-      >
-        {{ node.item.state | enrollmentState }}
-      </div>
-    </div>
-    <span class="flex-1"></span>
-
-    <button
-      mat-icon-button
-      [matMenuTriggerFor]="menu"
-      (click)="openMenu($event)"
     >
-      <mat-icon svgIcon="dots-vertical"></mat-icon>
-    </button>
+      {{ node.state | enrollmentState }}
+    </div>
   </div>
+  <span class="flex-1"></span>
+
+  <button mat-icon-button [matMenuTriggerFor]="menu" (click)="openMenu($event)">
+    <mat-icon svgIcon="dots-vertical"></mat-icon>
+  </button>
 </div>
 
-<!-- <pre>
-  {{ node.item | json }}
-</pre> -->
-
-@if (node.isLoading()) {
-<mat-progress-bar mode="indeterminate" class="w-full" />
-}
-
 <mat-menu #menu="matMenu">
-  @if (node.item.activity.isPackage && node.item.activity.quantity > node.item.children.totalCount) {
-  <button mat-menu-item (click)="create.emit(node)">
-    <mat-icon svgIcon="plus" />
-    <span>Agregar inscrición</span>
-  </button>
-  }
   <button mat-menu-item (click)="update.emit(node)">
     <mat-icon svgIcon="pencil" />
     <span>Editar</span>

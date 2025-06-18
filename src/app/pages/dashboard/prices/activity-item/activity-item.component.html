@@ -7,12 +7,14 @@
   <mat-icon svgIcon="drag" class="cursor-move" cdkDragHandle></mat-icon>
   <div>
     <p class="font-medium">{{ activity.name }}</p>
-    @if (activity.isPackage) {
+    @if (activity.kind === 'HOURS') {
     <p class="text-xs">
-      Paquete: <span class="font-medium">{{ activity.quantity }}</span>
+      Horas: <span class="font-medium">{{ activity.quantity }}</span>
     </p>
-    } @else {
-    <p class="text-xs">Disciplina</p>
+    } @else if (activity.kind === 'QUANTITY') {
+    <p class="text-xs">
+      Disciplinas: <span class="font-medium">{{ activity.quantity }}</span>
+    </p>
     }
   </div>
   <span class="flex-1"></span>

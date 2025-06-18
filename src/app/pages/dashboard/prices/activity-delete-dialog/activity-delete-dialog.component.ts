@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogClose, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
-import { ActivityPartsFragment, DeleteOneActivityGQL } from '@graphql';
+import { PackagePartsFragment, DeleteOnePackageGQL } from '@graphql';
 
 @Component({
   selector: 'app-activity-delete-dialog',
@@ -18,9 +18,9 @@ import { ActivityPartsFragment, DeleteOneActivityGQL } from '@graphql';
 export class ActivityDeleteDialogComponent {
   public loading = signal(false);
 
-  public data: ActivityPartsFragment = inject(MAT_DIALOG_DATA);
+  public data: PackagePartsFragment = inject(MAT_DIALOG_DATA);
 
-  private readonly _deleteOneActivity = inject(DeleteOneActivityGQL);
+  private readonly _deleteOnePackage = inject(DeleteOnePackageGQL);
   private readonly _dialogRef = inject(
     MatDialogRef<ActivityDeleteDialogComponent>
   );
@@ -29,9 +29,9 @@ export class ActivityDeleteDialogComponent {
     if (!!this.data.id) {
       this.loading.set(true);
 
-      this._deleteOneActivity.mutate({ id: this.data.id }).subscribe({
+      this._deleteOnePackage.mutate({ id: this.data.id }).subscribe({
         next: (branch) => {
-          this._dialogRef.close(branch.data?.deleteOneActivity);
+          this._dialogRef.close(branch.data?.deleteOnePackage);
         },
         error: (err) => {
           console.error('DELETE BRANCH ERROR: ', err);

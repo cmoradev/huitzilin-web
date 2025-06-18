@@ -42,18 +42,18 @@
           type="text"
           placeholder="Ej. Paquete 1, Nacional"
           matInput
-          formControlName="activity"
+          formControlName="package"
           [matAutocomplete]="autoStudents"
         />
         <mat-hint>Seleccione una lista de precios para la inscripción</mat-hint>
         <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("activity")) }}
+          {{ formTools.checkForErrorsIn(formGroup.get("package")) }}
         </mat-error>
-        @if (formGroup.get("activity")?.value) {
+        @if (formGroup.get("package")?.value) {
         <button
           mat-icon-button
           matSuffix
-          (click)="formGroup.get('activity')?.setValue('')"
+          (click)="formGroup.get('package')?.setValue('')"
         >
           <mat-icon svgIcon="close" />
         </button>

@@ -84,7 +84,7 @@
         </mat-chip>
         }
 
-        <mat-chip [matMenuTriggerFor]="menu"> Agregar descuento </mat-chip>
+        <mat-chip (click)="selectDebitDiscount()"> Agregar descuento </mat-chip>
       </mat-chip-set>
 
       <div class="w-60 flex flex-col gap-2 ml-auto">
@@ -115,13 +115,3 @@
   </form>
 </mat-expansion-panel>
 
-<mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="createDebitDiscount()">
-    <mat-icon svgIcon="plus" />
-    <span>Crear un descuento</span>
-  </button>
-  <button mat-menu-item (click)="selectDebitDiscount()">
-    <mat-icon svgIcon="plus" />
-    <span>Seleccionar un descuento</span>
-  </button>
-</mat-menu>

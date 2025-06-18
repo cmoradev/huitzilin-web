@@ -5,7 +5,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
-import { ActivityPartsFragment } from '@graphql';
+import { PackagePartsFragment } from '@graphql';
 import { GlobalStateService } from '@services';
 
 @Component({
@@ -21,11 +21,11 @@ import { GlobalStateService } from '@services';
   styleUrl: `./activity-item.component.scss`,
 })
 export class ActivityItemComponent {
-  @Input({ required: true }) activity!: ActivityPartsFragment;
+  @Input({ required: true }) activity!: PackagePartsFragment;
   @Input() menuTrigger!: MatMenuTrigger;
 
-  @Output() update = new EventEmitter<ActivityPartsFragment>();
-  @Output() delete = new EventEmitter<ActivityPartsFragment>();
+  @Output() update = new EventEmitter<PackagePartsFragment>();
+  @Output() delete = new EventEmitter<PackagePartsFragment>();
 
   private readonly _globalStateService = inject(GlobalStateService);
 

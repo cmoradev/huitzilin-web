@@ -14,11 +14,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatDivider, MatListModule } from '@angular/material/list';
 import {
-  ActivityFilter,
-  ActivityPartsFragment,
+  PackagePartsFragment,
   FeePartsFragment,
-  GetActivityPageGQL,
-  GetActivityPageQueryVariables,
+  GetPackagePageGQL,
+  GetPackagePageQueryVariables,
   GetFeePageGQL,
   GetFeePageQueryVariables,
   SetOrderActivitiesGQL,
@@ -64,11 +63,11 @@ export class PricesComponent implements OnInit {
 
   public activity = computed(() => this._globalStateService.activity);
 
-  private readonly _activitiesPageGQL = inject(GetActivityPageGQL);
+  private readonly _packagesPageGQL = inject(GetPackagePageGQL);
   private readonly _setOrderActivitiesGQL = inject(SetOrderActivitiesGQL);
   private readonly _feesPageGQL = inject(GetFeePageGQL);
 
-  public activities = signal<ActivityPartsFragment[]>([]);
+  public activities = signal<PackagePartsFragment[]>([]);
   public activitiesLoading = signal<boolean>(false);
   public activitiesTotalCount = signal<number>(0);
 
@@ -95,7 +94,7 @@ export class PricesComponent implements OnInit {
   }
 
   public openActivityFormDialog(
-    value: ActivityPartsFragment | undefined = undefined
+    value: PackagePartsFragment | undefined = undefined
   ): void {
     const $dialog = this._dialog.open(ActivityFormDialogComponent, {
       width: '30rem',
@@ -109,7 +108,7 @@ export class PricesComponent implements OnInit {
     });
   }
 
-  public openActivityDeleteDialog(value: ActivityPartsFragment): void {
+  public openActivityDeleteDialog(value: PackagePartsFragment): void {
     const $dialog = this._dialog.open(ActivityDeleteDialogComponent, {
       width: '30rem',
       data: value,
@@ -150,12 +149,12 @@ export class PricesComponent implements OnInit {
     });
   }
 
-  public refreshActivities(accumulared: ActivityPartsFragment[] = []): void {
+  public refreshActivities(accumulared: PackagePartsFragment[] = []): void {
     if (!!this._globalStateService.branch?.id) {
       const limit = 50;
       const offset = accumulared.length;
 
-      const params: GetActivityPageQueryVariables = {
+      const params: GetPackagePageQueryVariables = {
         limit,
         offset,
         filter: {
@@ -166,13 +165,13 @@ export class PricesComponent implements OnInit {
 
       this.activitiesLoading.set(true);
 
-      const getActivities$ = this._activitiesPageGQL.watch(params, {
+      const getActivities$ = this._packagesPageGQL.watch(params, {
         fetchPolicy: 'cache-and-network',
         nextFetchPolicy: 'cache-and-network',
         notifyOnNetworkStatusChange: true,
       }).valueChanges;
 
-      getActivities$.pipe(map((resp) => resp.data.activities)).subscribe({
+      getActivities$.pipe(map((resp) => resp.data.packages)).subscribe({
         next: ({ nodes, totalCount }) => {
           const allItems = accumulared.concat(nodes);
 
@@ -204,7 +203,7 @@ export class PricesComponent implements OnInit {
 
       const params: GetFeePageQueryVariables = {
         filter: {
-          activityId: { eq: this._globalStateService.activity!.id },
+          packageId: { eq: this._globalStateService.activity!.id },
         },
         limit,
         offset,
@@ -243,7 +242,7 @@ export class PricesComponent implements OnInit {
     }
   }
 
-  public dropActivity(event: CdkDragDrop<ActivityPartsFragment[]>) {
+  public dropActivity(event: CdkDragDrop<PackagePartsFragment[]>) {
     this.activities.update((previous) => {
       const values = [...previous];
       moveItemInArray(values, event.previousIndex, event.currentIndex);

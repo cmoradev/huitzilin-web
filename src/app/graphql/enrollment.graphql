@@ -2,11 +2,12 @@ fragment EnrollmentParts on Enrollment {
   id
   details
   state
-  isPackage
-  activity {
+  hours
+  diciplines
+  package {
     id
     name
-    isPackage
+    kind
     quantity
   }
   cycle {
@@ -23,10 +24,6 @@ fragment EnrollmentParts on Enrollment {
     id, 
     name,
     abbreviation
-  }
-  parentId
-  children {
-    totalCount
   }
 }
 

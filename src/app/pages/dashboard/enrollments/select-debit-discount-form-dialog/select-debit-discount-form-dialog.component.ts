@@ -9,9 +9,8 @@ import {
   GetDiscountsPageQueryVariables,
 } from '@graphql';
 import { FormToolsService, GlobalStateService } from '@services';
-import { DebitDiscountFormDialogComponent } from '../debit-discount-form-dialog/debit-discount-form-dialog.component';
 import { map } from 'rxjs';
-import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { CurrencyPipe } from '@angular/common';
 
 @Component({
@@ -32,7 +31,7 @@ export class SelectDebitDiscountFormDialogComponent {
   public readonly formTools = inject(FormToolsService);
 
   private readonly _dialogRef = inject(
-    MatDialogRef<DebitDiscountFormDialogComponent>
+    MatDialogRef<SelectDebitDiscountFormDialogComponent>
   );
 
   private readonly _discountsPageGQL = inject(GetDiscountsPageGQL);

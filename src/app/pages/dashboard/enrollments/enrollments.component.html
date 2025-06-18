@@ -32,27 +32,13 @@
         <mat-divider />
 
         <ng-scrollbar class="relative flex-1 mt-2">
-          <cdk-tree
-            #tree="cdkTree"
-            [dataSource]="enrollmentsDataSource"
-            [levelAccessor]="enrollmentsDataSource.levelAccessor"
-            [trackBy]="enrollmentsDataSource.trackBy"
-          >
-            <cdk-tree-node
-              *cdkTreeNodeDef="let node"
-              [isExpandable]="node.expandable"
-              [cdkTreeNodeTypeaheadLabel]="node.item.id"
-              (expandedChange)="enrollmentsDataSource.toggleNode(node, $event)"
-            >
-              <app-enrollment-item
-                [node]="node"
-                [isExpanded]="tree.isExpanded(node)"
-                (create)="createChildEnrollmentFormDialog($event)"
-                (update)="openEnrollmentFormDialog($event)"
-                (remove)="openEnrollmentDeleteDialog($event)"
-              />
-            </cdk-tree-node>
-          </cdk-tree>
+          @for (enrollment of enrollments(); track $index) {
+          <app-enrollment-item
+            [node]="enrollment"
+            (update)="openEnrollmentFormDialog($event)"
+            (remove)="openEnrollmentDeleteDialog($event)"
+          />
+          }
         </ng-scrollbar>
       </div>
       <!-- Debits Area -->
