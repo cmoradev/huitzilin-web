@@ -1,0 +1,61 @@
+fragment DisciplineParts on Discipline {
+  id,
+  name,
+  minHours
+  levels {
+    id,
+    abbreviation
+  }
+  packages {
+    id,
+    name
+    kind
+  }
+}
+
+mutation createOneDiscipline ($discipline: CreateDiscipline!) {
+  createOneDiscipline (
+    input: {
+      discipline: $discipline
+    }
+  ) {
+    ...DisciplineParts
+  }
+}
+
+query getDisciplinesPage ($offset: Int = 0, $limit: Int = 10, $filter: DisciplineFilter = {})  {
+  disciplines (
+    paging: { limit: $limit, offset: $offset },
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...DisciplineParts
+    }
+  }
+}
+
+mutation updateOneDiscipline ($id: ID!, $update: UpdateDiscipline!) {
+  updateOneDiscipline (
+    input: {
+      id: $id,
+      update: $update
+    }
+  ) {
+    ...DisciplineParts
+  }
+}
+
+mutation deleteOneDiscipline ($id: ID!) {
+	deleteOneDiscipline (
+    input: {
+      id: $id
+    }
+  ) {
+    id
+  }
+}

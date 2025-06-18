@@ -13,8 +13,7 @@ export const DashboardRoutes: Routes = [
   },
   {
     path: 'enrollments',
-    loadComponent: () =>
-      import('./enrollments/enrollments.component').then((m) => m.EnrollmentsComponent),
+    loadComponent: () => import('./enrollments/enrollments.component').then((m) => m.EnrollmentsComponent),
   },
   {
     path: 'cycles',
@@ -31,10 +30,13 @@ export const DashboardRoutes: Routes = [
     loadComponent: () =>
       import('./prices/prices.component').then((m) => m.PricesComponent),
   },
-    {
+  {
+    path: 'disciplines',
+    loadComponent: () => import('./disciplines/disciplines.component').then((m) => m.DisciplinesComponent),
+  },
+  {
     path: 'discounts',
-    loadComponent: () =>
-      import('./discounts/discounts.component').then((m) => m.DiscountsComponent),
+    loadComponent: () => import('./discounts/discounts.component').then((m) => m.DiscountsComponent),
   },
   {
     path: 'branches',

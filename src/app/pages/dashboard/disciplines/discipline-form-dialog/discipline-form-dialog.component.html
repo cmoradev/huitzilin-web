@@ -1,0 +1,67 @@
+<h2 mat-dialog-title>{{ !!data?.id ? "Actualizar" : "Crear" }} disciplina</h2>
+<mat-dialog-content>
+  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
+    <div class="flex flex-col gap-3">
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Ej: Taekwondo" formControlName="name" />
+        <mat-hint>Ingrese el nombre de la disciplina</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("name")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Minimo de horas</mat-label>
+        <input
+          matInput
+          placeholder="Ej: Taekwondo"
+          formControlName="minHours"
+        />
+        <mat-hint>Ingrese el nombre de la disciplina</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("minHours")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Niveles permitidos</mat-label>
+        <mat-select formControlName="levels" multiple>
+          @for (level of levels(); track $index) {
+          <mat-option [value]="level.id">{{ level.abbreviation }}</mat-option>
+          }
+        </mat-select>
+        <mat-hint>
+          Seleccione los niveles que pueden tomar esta disciplina
+        </mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("levels")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Paquete</mat-label>
+        <mat-select formControlName="packages" multiple>
+          @for (level of packages(); track $index) {
+          <mat-option [value]="level.id">
+            <h4 mat-line>{{ level.name }}</h4>
+            <p mat-line class="text-sm text-gray-500">
+              {{ level.kind| packageKind }}
+            </p>
+          </mat-option>
+          }
+        </mat-select>
+        <mat-hint> Seleccione ; </mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("packages")) }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
+  <button mat-button cdkFocusInitial form="dataForm" [disabled]="loading()">
+    {{ loading() ? "Guardando..." : "Guardar" }}
+  </button>
+</mat-dialog-actions>

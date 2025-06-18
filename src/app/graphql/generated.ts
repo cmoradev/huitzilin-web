@@ -699,6 +699,7 @@ export type DisciplineDeleteResponse = {
 
 export type DisciplineFilter = {
   and?: InputMaybe<Array<DisciplineFilter>>;
+  branchId?: InputMaybe<IdFilterComparison>;
   createdAt?: InputMaybe<DateFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
   levels?: InputMaybe<DisciplineFilterLevelFilter>;
@@ -738,6 +739,7 @@ export type DisciplineSort = {
 };
 
 export enum DisciplineSortFields {
+  BranchId = 'branchId',
   CreatedAt = 'createdAt',
   Id = 'id',
   Name = 'name',
@@ -3030,6 +3032,39 @@ export type DeleteOneDebitMutationVariables = Exact<{
 
 export type DeleteOneDebitMutation = { __typename?: 'Mutation', deleteOneDebit: { __typename?: 'DebitDeleteResponse', id?: string | null } };
 
+export type DisciplinePartsFragment = { __typename?: 'Discipline', id: string, name: string, minHours: number, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, packages: Array<{ __typename?: 'Package', id: string, name: string, kind: PackageKind }> };
+
+export type CreateOneDisciplineMutationVariables = Exact<{
+  discipline: CreateDiscipline;
+}>;
+
+
+export type CreateOneDisciplineMutation = { __typename?: 'Mutation', createOneDiscipline: { __typename?: 'Discipline', id: string, name: string, minHours: number, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, packages: Array<{ __typename?: 'Package', id: string, name: string, kind: PackageKind }> } };
+
+export type GetDisciplinesPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<DisciplineFilter>;
+}>;
+
+
+export type GetDisciplinesPageQuery = { __typename?: 'Query', disciplines: { __typename?: 'DisciplineConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Discipline', id: string, name: string, minHours: number, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, packages: Array<{ __typename?: 'Package', id: string, name: string, kind: PackageKind }> }> } };
+
+export type UpdateOneDisciplineMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateDiscipline;
+}>;
+
+
+export type UpdateOneDisciplineMutation = { __typename?: 'Mutation', updateOneDiscipline: { __typename?: 'Discipline', id: string, name: string, minHours: number, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, packages: Array<{ __typename?: 'Package', id: string, name: string, kind: PackageKind }> } };
+
+export type DeleteOneDisciplineMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneDisciplineMutation = { __typename?: 'Mutation', deleteOneDiscipline: { __typename?: 'DisciplineDeleteResponse', id?: string | null } };
+
 export type DiscountPartsFragment = { __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy };
 
 export type CreateOneDiscountMutationVariables = Exact<{
@@ -3366,6 +3401,22 @@ export const DebitPartsFragmentDoc = gql`
   frequency
   dueDate
   paymentDate
+}
+    `;
+export const DisciplinePartsFragmentDoc = gql`
+    fragment DisciplineParts on Discipline {
+  id
+  name
+  minHours
+  levels {
+    id
+    abbreviation
+  }
+  packages {
+    id
+    name
+    kind
+  }
 }
     `;
 export const DiscountPartsFragmentDoc = gql`
@@ -3758,6 +3809,85 @@ export const DeleteOneDebitDocument = gql`
   })
   export class DeleteOneDebitGQL extends Apollo.Mutation<DeleteOneDebitMutation, DeleteOneDebitMutationVariables> {
     document = DeleteOneDebitDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneDisciplineDocument = gql`
+    mutation createOneDiscipline($discipline: CreateDiscipline!) {
+  createOneDiscipline(input: {discipline: $discipline}) {
+    ...DisciplineParts
+  }
+}
+    ${DisciplinePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneDisciplineGQL extends Apollo.Mutation<CreateOneDisciplineMutation, CreateOneDisciplineMutationVariables> {
+    document = CreateOneDisciplineDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetDisciplinesPageDocument = gql`
+    query getDisciplinesPage($offset: Int = 0, $limit: Int = 10, $filter: DisciplineFilter = {}) {
+  disciplines(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...DisciplineParts
+    }
+  }
+}
+    ${DisciplinePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetDisciplinesPageGQL extends Apollo.Query<GetDisciplinesPageQuery, GetDisciplinesPageQueryVariables> {
+    document = GetDisciplinesPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneDisciplineDocument = gql`
+    mutation updateOneDiscipline($id: ID!, $update: UpdateDiscipline!) {
+  updateOneDiscipline(input: {id: $id, update: $update}) {
+    ...DisciplineParts
+  }
+}
+    ${DisciplinePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneDisciplineGQL extends Apollo.Mutation<UpdateOneDisciplineMutation, UpdateOneDisciplineMutationVariables> {
+    document = UpdateOneDisciplineDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneDisciplineDocument = gql`
+    mutation deleteOneDiscipline($id: ID!) {
+  deleteOneDiscipline(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneDisciplineGQL extends Apollo.Mutation<DeleteOneDisciplineMutation, DeleteOneDisciplineMutationVariables> {
+    document = DeleteOneDisciplineDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

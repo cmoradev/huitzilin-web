@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>¿Deseas eliminar este registro?</h2>
+<mat-dialog-content>
+  <p class="font-semibold">
+    {{ data.name }}
+  </p>
+
+  <p class="text-sm text-gray-500">{{ data.minHours }} horas mínimas</p>
+
+  @if (!!data.levels.length) {
+  <p class="font-semibold">Niveles permitidos:</p>
+  }
+
+  <ul class="list-inside list-disc">
+    @for (level of data.levels; track $index) {
+    <li>
+      {{ level.abbreviation }}
+    </li>
+    }
+  </ul>
+
+  @if (!!data.packages.length) {
+  <p class="font-semibold">Paquetes asociados:</p>
+  }
+
+  <ul class="list-inside list-disc">
+    @for (package of data.packages; track $index) {
+    <li>{{ package.name }} - {{ package.kind | packageKind }}</li>
+    }
+  </ul>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancel</button>
+  <button mat-button cdkFocusInitial (click)="delete()" [disabled]="loading()">
+    {{ loading() ? "Eliminando..." : "Eliminar" }}
+  </button>
+</mat-dialog-actions>

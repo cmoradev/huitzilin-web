@@ -42,6 +42,12 @@ export const navItems: RouteItem[] = [
     section: NavigationEnum.ADMINISTRATION,
   },
   {
+    displayName: 'Disciplinas',
+    iconName: 'basketball',
+    route: '/disciplines',
+    section: NavigationEnum.ADMINISTRATION,
+  },
+  {
     displayName: 'Descuentos',
     iconName: 'percent',
     route: '/discounts',

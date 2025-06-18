@@ -1,11 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
+  MatDialogModule,
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
@@ -23,11 +24,8 @@ import { map } from 'rxjs';
 @Component({
   selector: 'app-cycle-form-dialog',
   imports: [
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
-    MatButton,
+    MatDialogModule,
+    MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
     MatDatepickerModule,
