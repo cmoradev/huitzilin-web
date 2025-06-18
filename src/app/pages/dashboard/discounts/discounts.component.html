@@ -46,9 +46,8 @@
               </p>
             } @else {
               <p class="text-sm text-gray-500">
-                ${{ element.value }}
+                {{ element.value | currency }}
               </p>
-
             }
           </td>
         </ng-container>
