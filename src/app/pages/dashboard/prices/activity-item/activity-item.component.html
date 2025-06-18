@@ -8,13 +8,11 @@
   <div>
     <p class="font-medium">{{ activity.name }}</p>
     @if (activity.kind === 'HOURS') {
-    <p class="text-xs">
-      Horas: <span class="font-medium">{{ activity.quantity }}</span>
-    </p>
+    <p class="text-xs font-medium">{{ activity.quantity }} horas</p>
     } @else if (activity.kind === 'QUANTITY') {
-    <p class="text-xs">
-      Disciplinas: <span class="font-medium">{{ activity.quantity }}</span>
-    </p>
+    <p class="text-xs font-medium">{{ activity.quantity }} disciplinas</p>
+    } @else if (activity.kind === 'UNLIMITED') {
+    <p class="text-xs font-medium">Ilimitado</p>
     }
   </div>
   <span class="flex-1"></span>

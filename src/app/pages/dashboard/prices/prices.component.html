@@ -10,13 +10,13 @@
           <mat-form-field subscriptSizing="dynamic" class="w-full">
             <input
               matInput
-              placeholder="Ej. Actividad 1,Paquete 1"
+              placeholder="Ej. Paquete 1, Actividad 1"
               [formControl]="searchControl"
             />
           </mat-form-field>
           <button
             mat-icon-button
-            matTooltip="Agregar actividad/paquete"
+            matTooltip="Agregar lista de precios"
             (click)="openActivityFormDialog()"
           >
             <mat-icon svgIcon="plus" />
@@ -32,9 +32,7 @@
         >
           @if(activitiesLoading()) {
           <mat-progress-bar mode="query"></mat-progress-bar>
-          } 
-          
-          @for (activity of activities(); track activity.id) {
+          } @for (activity of activities(); track activity.id) {
           <app-activity-item
             [activity]="activity"
             (update)="openActivityFormDialog($event)"

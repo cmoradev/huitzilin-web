@@ -1861,7 +1861,8 @@ export type PackageFilter = {
 
 export enum PackageKind {
   Hours = 'HOURS',
-  Quantity = 'QUANTITY'
+  Quantity = 'QUANTITY',
+  Unlimited = 'UNLIMITED'
 }
 
 export type PackageSort = {

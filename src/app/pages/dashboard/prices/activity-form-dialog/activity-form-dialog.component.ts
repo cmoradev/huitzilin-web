@@ -9,6 +9,7 @@ import {
 } from '@angular/material/dialog';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import {
   PackagePartsFragment,
   CreateOnePackageGQL,
@@ -16,6 +17,7 @@ import {
   PackageKind,
 } from '@graphql';
 import { FormToolsService, GlobalStateService } from '@services';
+import { packageKinds } from '@utils/contains';
 import { map, startWith } from 'rxjs';
 
 @Component({
@@ -27,6 +29,7 @@ import { map, startWith } from 'rxjs';
     MatFormFieldModule,
     MatCheckboxModule,
     MatInputModule,
+    MatSelectModule,
     ReactiveFormsModule,
   ],
   templateUrl: './activity-form-dialog.component.html',
@@ -39,14 +42,25 @@ export class ActivityFormDialogComponent implements OnInit {
   public data: PackagePartsFragment | null = inject(MAT_DIALOG_DATA);
 
   public formGroup = this.formTools.builder.group({
-    name: [
-      '',
-      [Validators.required, Validators.minLength(3), Validators.maxLength(32)],
-    ],
-    quantity: [0, [Validators.required]],
-    kind: [PackageKind.Hours, [Validators.required]],
-    withTax: [true]
+    name: this.formTools.builder.control('', {
+      validators: [Validators.required,Validators.minLength(3),Validators.maxLength(32)],
+      nonNullable: true,
+    }),
+    quantity: this.formTools.builder.control(0, {
+      validators: [Validators.required, Validators.min(0)],
+      nonNullable: true,
+    }),
+    kind: this.formTools.builder.control(PackageKind.Hours, {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    withTax: this.formTools.builder.control(false, {
+      validators: [],
+      nonNullable: true,
+    }),
   });
+
+  public kinds = packageKinds;
 
   private readonly _globalStateService = inject(GlobalStateService);
   private readonly _createOnePackage = inject(CreateOnePackageGQL);

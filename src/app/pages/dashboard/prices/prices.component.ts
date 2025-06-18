@@ -202,9 +202,7 @@ export class PricesComponent implements OnInit {
       const offset = accumulared.length;
 
       const params: GetFeePageQueryVariables = {
-        filter: {
-          packageId: { eq: this._globalStateService.activity!.id },
-        },
+        filter: { packageId: { eq: this._globalStateService.activity!.id } },
         limit,
         offset,
       };

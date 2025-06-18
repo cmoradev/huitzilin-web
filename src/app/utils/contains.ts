@@ -1,4 +1,4 @@
-import { Frequency, EnrollmentState, DebitState, DiscountBy } from '@graphql';
+import { Frequency, EnrollmentState, DebitState, DiscountBy, PackageKind } from '@graphql';
 
 export const discountTypes = [
   {
@@ -71,12 +71,22 @@ export const enrollmentStates = [
     value: EnrollmentState.Paused,
   },
 ];
-// *Acta de nacimiento.
-// *Curp actualizado / pasaporte.
-// *Comprobante de domicilio actualizado.
-// *1 Fotografía a color.
-// *INE madre, padre o tutor.
-// *INE de personas autorizadas a recoger al alumno.
+
+export const packageKinds = [
+  {
+    label: 'Por horas',
+    value: PackageKind.Hours,
+  },
+  {
+    label: 'Por cantidad',
+    value: PackageKind.Quantity,
+  },
+  {
+    label: 'Ilimitado',
+    value: PackageKind.Unlimited,
+  }
+];
+
 export const studentDocuments = [
   { label: 'Acta de nacimiento', value: 'acta_de_nacimiento' },
   { label: 'CURP', value: 'curp' },
