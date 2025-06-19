@@ -1,6 +1,6 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Listas de precios</mat-card-title>
+    <mat-card-title>Calendarios de actividades</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <div class="h-[calc(100vh-10rem)] grid grid-cols-4 gap-2">
@@ -10,45 +10,45 @@
           <mat-form-field subscriptSizing="dynamic" class="w-full">
             <input
               matInput
-              placeholder="Ej. Paquete 1, Actividad 1"
+              placeholder="Ej. Enero 2025"
               [formControl]="searchControl"
             />
           </mat-form-field>
           <button
             mat-icon-button
-            matTooltip="Agregar lista de precios"
-            (click)="openActivityFormDialog()"
+            matTooltip="Agregar nueva programación"
+            (click)="openPeriodFormDialog()"
           >
             <mat-icon svgIcon="plus" />
           </button>
         </div>
-  
+
         <mat-divider />
-  
+
         <ng-scrollbar
           cdkDropList
           class="relative flex-1 mt-2"
-          (cdkDropListDropped)="dropActivity($event)"
+          (cdkDropListDropped)="dropPeriod($event)"
         >
-          @if(activitiesLoading()) {
+          @if(periodsLoading()) {
           <mat-progress-bar mode="query"></mat-progress-bar>
-          } @for (activity of activities(); track activity.id) {
-          <app-activity-item
-            [activity]="activity"
-            (update)="openActivityFormDialog($event)"
-            (delete)="openActivityDeleteDialog($event)"
-          ></app-activity-item>
+          } @for (period of periods(); track period.id) {
+          <app-period-item
+            [period]="period"
+            (update)="openPeriodFormDialog($event)"
+            (delete)="openPeriodDeleteDialog($event)"
+          ></app-period-item>
           }
         </ng-scrollbar>
       </div>
       <!-- Fees Area -->
       <div class="col-span-3 flex flex-col">
         <div class="flex items-center gap-2 p-2">
-          @if (!!activity()?.id) {
+          <!-- @if (!!activity()?.id) {
           <h4 class="font-medium text-lg">{{ activity()!.name }}</h4>
           }
           <span class="flex-1 h-[52px]"></span>
-  
+
           <button
             mat-icon-button
             (click)="openFeeFormDialog()"
@@ -56,13 +56,13 @@
             matTooltip="Agregar cuota"
           >
             <mat-icon svgIcon="plus" />
-          </button>
+          </button> -->
         </div>
-  
+
         <mat-divider />
-  
+
         <ng-scrollbar class="relative flex-1 mt-2">
-          <mat-nav-list>
+          <!-- <mat-nav-list>
             @for (fee of fees(); track $index) {
             <app-fee-item
               [fee]="fee"
@@ -70,7 +70,7 @@
               (delete)="openFeeDeleteDialog($event)"
             />
             }
-          </mat-nav-list>
+          </mat-nav-list> -->
         </ng-scrollbar>
       </div>
     </div>

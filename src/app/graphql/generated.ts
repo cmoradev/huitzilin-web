@@ -345,8 +345,12 @@ export type CreatePackage = {
 
 export type CreatePeriod = {
   branchId: Scalars['String']['input'];
+  days: Scalars['String']['input'];
   end: Scalars['String']['input'];
+  firstHour: Scalars['String']['input'];
+  lastHour: Scalars['String']['input'];
   name: Scalars['String']['input'];
+  order: Scalars['Float']['input'];
   start: Scalars['String']['input'];
 };
 
@@ -1241,6 +1245,7 @@ export type Mutation = {
   setOrderEnrollments: UpdateCount;
   setOrderLevels: UpdateCount;
   setOrderPackages: UpdateCount;
+  setOrderPeriods: UpdateCount;
   setStudentsOnDocument: Document;
   signIn: Session;
   signUp: Session;
@@ -1661,6 +1666,11 @@ export type MutationSetOrderPackagesArgs = {
 };
 
 
+export type MutationSetOrderPeriodsArgs = {
+  input: Array<SetOrderInput>;
+};
+
+
 export type MutationSetStudentsOnDocumentArgs = {
   input: SetStudentsOnDocumentInput;
 };
@@ -1897,10 +1907,14 @@ export type Period = {
   __typename?: 'Period';
   branchId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
+  days: Scalars['String']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   end: Scalars['String']['output'];
+  firstHour: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  lastHour: Scalars['String']['output'];
   name: Scalars['String']['output'];
+  order: Scalars['Float']['output'];
   start: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
@@ -1920,10 +1934,14 @@ export type PeriodDeleteResponse = {
   __typename?: 'PeriodDeleteResponse';
   branchId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
+  days?: Maybe<Scalars['String']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   end?: Maybe<Scalars['String']['output']>;
+  firstHour?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
+  lastHour?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  order?: Maybe<Scalars['Float']['output']>;
   start?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   version?: Maybe<Scalars['Int']['output']>;
@@ -1936,6 +1954,7 @@ export type PeriodFilter = {
   id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<PeriodFilter>>;
+  order?: InputMaybe<NumberFieldComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -1950,6 +1969,7 @@ export enum PeriodSortFields {
   CreatedAt = 'createdAt',
   Id = 'id',
   Name = 'name',
+  Order = 'order',
   UpdatedAt = 'updatedAt'
 }
 
@@ -2267,13 +2287,16 @@ export type RemoveStudentsFromDocumentInput = {
 
 export type Schedule = {
   __typename?: 'Schedule';
+  branch: Branch;
   branchId: Scalars['ID']['output'];
   createdAt: Scalars['DateTime']['output'];
   day: Scalars['Int']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  discipline: Discipline;
   disciplineId: Scalars['ID']['output'];
   end: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  period: Period;
   periodId: Scalars['ID']['output'];
   start: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
@@ -2840,8 +2863,12 @@ export type UpdatePackage = {
 
 export type UpdatePeriod = {
   branchId?: InputMaybe<Scalars['String']['input']>;
+  days?: InputMaybe<Scalars['String']['input']>;
   end?: InputMaybe<Scalars['String']['input']>;
+  firstHour?: InputMaybe<Scalars['String']['input']>;
+  lastHour?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  order?: InputMaybe<Scalars['Float']['input']>;
   start?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -3251,6 +3278,79 @@ export type SetOrderActivitiesMutationVariables = Exact<{
 
 export type SetOrderActivitiesMutation = { __typename?: 'Mutation', setOrderPackages: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
+export type PeriodPartsFragment = { __typename?: 'Period', id: string, name: string, days: string, start: string, end: string, firstHour: string, lastHour: string };
+
+export type CreateOnePeriodMutationVariables = Exact<{
+  period: CreatePeriod;
+}>;
+
+
+export type CreateOnePeriodMutation = { __typename?: 'Mutation', createOnePeriod: { __typename?: 'Period', id: string, name: string, days: string, start: string, end: string, firstHour: string, lastHour: string } };
+
+export type GetPeriodsPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<PeriodFilter>;
+}>;
+
+
+export type GetPeriodsPageQuery = { __typename?: 'Query', periods: { __typename?: 'PeriodConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Period', id: string, name: string, days: string, start: string, end: string, firstHour: string, lastHour: string }> } };
+
+export type UpdateOnePeriodMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdatePeriod;
+}>;
+
+
+export type UpdateOnePeriodMutation = { __typename?: 'Mutation', updateOnePeriod: { __typename?: 'Period', id: string, name: string, days: string, start: string, end: string, firstHour: string, lastHour: string } };
+
+export type DeleteOnePeriodMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOnePeriodMutation = { __typename?: 'Mutation', deleteOnePeriod: { __typename?: 'PeriodDeleteResponse', id?: string | null } };
+
+export type SetOrderPeriodsMutationVariables = Exact<{
+  payload: Array<SetOrderInput> | SetOrderInput;
+}>;
+
+
+export type SetOrderPeriodsMutation = { __typename?: 'Mutation', setOrderPeriods: { __typename?: 'UpdateCount', updatedCount?: number | null } };
+
+export type SchedulePartsFragment = { __typename?: 'Schedule', id: string, day: number, start: string, end: string, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number } };
+
+export type CreateOneScheduleMutationVariables = Exact<{
+  schedule: CreateSchedule;
+}>;
+
+
+export type CreateOneScheduleMutation = { __typename?: 'Mutation', createOneSchedule: { __typename?: 'Schedule', id: string, day: number, start: string, end: string, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number } } };
+
+export type GetSchedulesPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<ScheduleFilter>;
+}>;
+
+
+export type GetSchedulesPageQuery = { __typename?: 'Query', schedules: { __typename?: 'ScheduleConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Schedule', id: string, day: number, start: string, end: string, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number } }> } };
+
+export type UpdateOneScheduleMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateSchedule;
+}>;
+
+
+export type UpdateOneScheduleMutation = { __typename?: 'Mutation', updateOneSchedule: { __typename?: 'Schedule', id: string, day: number, start: string, end: string, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number } } };
+
+export type DeleteOneScheduleMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneScheduleMutation = { __typename?: 'Mutation', deleteOneSchedule: { __typename?: 'ScheduleDeleteResponse', id?: string | null } };
+
 export type StudentPartsFragment = { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string };
 
 export type CreateOneStudentMutationVariables = Exact<{
@@ -3483,6 +3583,30 @@ export const PackagePartsFragmentDoc = gql`
   kind
   withTax
   order
+}
+    `;
+export const PeriodPartsFragmentDoc = gql`
+    fragment PeriodParts on Period {
+  id
+  name
+  days
+  start
+  end
+  firstHour
+  lastHour
+}
+    `;
+export const SchedulePartsFragmentDoc = gql`
+    fragment ScheduleParts on Schedule {
+  id
+  day
+  start
+  end
+  discipline {
+    id
+    name
+    minHours
+  }
 }
     `;
 export const StudentPartsFragmentDoc = gql`
@@ -4349,6 +4473,186 @@ export const SetOrderActivitiesDocument = gql`
   })
   export class SetOrderActivitiesGQL extends Apollo.Mutation<SetOrderActivitiesMutation, SetOrderActivitiesMutationVariables> {
     document = SetOrderActivitiesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOnePeriodDocument = gql`
+    mutation createOnePeriod($period: CreatePeriod!) {
+  createOnePeriod(input: {period: $period}) {
+    ...PeriodParts
+  }
+}
+    ${PeriodPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOnePeriodGQL extends Apollo.Mutation<CreateOnePeriodMutation, CreateOnePeriodMutationVariables> {
+    document = CreateOnePeriodDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetPeriodsPageDocument = gql`
+    query getPeriodsPage($offset: Int = 0, $limit: Int = 10, $filter: PeriodFilter = {}) {
+  periods(
+    paging: {limit: $limit, offset: $offset}
+    sorting: [{field: order, direction: ASC}, {field: createdAt, direction: DESC}]
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...PeriodParts
+    }
+  }
+}
+    ${PeriodPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetPeriodsPageGQL extends Apollo.Query<GetPeriodsPageQuery, GetPeriodsPageQueryVariables> {
+    document = GetPeriodsPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOnePeriodDocument = gql`
+    mutation updateOnePeriod($id: ID!, $update: UpdatePeriod!) {
+  updateOnePeriod(input: {id: $id, update: $update}) {
+    ...PeriodParts
+  }
+}
+    ${PeriodPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOnePeriodGQL extends Apollo.Mutation<UpdateOnePeriodMutation, UpdateOnePeriodMutationVariables> {
+    document = UpdateOnePeriodDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOnePeriodDocument = gql`
+    mutation deleteOnePeriod($id: ID!) {
+  deleteOnePeriod(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOnePeriodGQL extends Apollo.Mutation<DeleteOnePeriodMutation, DeleteOnePeriodMutationVariables> {
+    document = DeleteOnePeriodDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const SetOrderPeriodsDocument = gql`
+    mutation setOrderPeriods($payload: [SetOrderInput!]!) {
+  setOrderPeriods(input: $payload) {
+    updatedCount
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class SetOrderPeriodsGQL extends Apollo.Mutation<SetOrderPeriodsMutation, SetOrderPeriodsMutationVariables> {
+    document = SetOrderPeriodsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneScheduleDocument = gql`
+    mutation createOneSchedule($schedule: CreateSchedule!) {
+  createOneSchedule(input: {schedule: $schedule}) {
+    ...ScheduleParts
+  }
+}
+    ${SchedulePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneScheduleGQL extends Apollo.Mutation<CreateOneScheduleMutation, CreateOneScheduleMutationVariables> {
+    document = CreateOneScheduleDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetSchedulesPageDocument = gql`
+    query getSchedulesPage($offset: Int = 0, $limit: Int = 10, $filter: ScheduleFilter = {}) {
+  schedules(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...ScheduleParts
+    }
+  }
+}
+    ${SchedulePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetSchedulesPageGQL extends Apollo.Query<GetSchedulesPageQuery, GetSchedulesPageQueryVariables> {
+    document = GetSchedulesPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneScheduleDocument = gql`
+    mutation updateOneSchedule($id: ID!, $update: UpdateSchedule!) {
+  updateOneSchedule(input: {id: $id, update: $update}) {
+    ...ScheduleParts
+  }
+}
+    ${SchedulePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneScheduleGQL extends Apollo.Mutation<UpdateOneScheduleMutation, UpdateOneScheduleMutationVariables> {
+    document = UpdateOneScheduleDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneScheduleDocument = gql`
+    mutation deleteOneSchedule($id: ID!) {
+  deleteOneSchedule(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneScheduleGQL extends Apollo.Mutation<DeleteOneScheduleMutation, DeleteOneScheduleMutationVariables> {
+    document = DeleteOneScheduleDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

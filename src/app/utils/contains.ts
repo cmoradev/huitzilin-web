@@ -1,4 +1,10 @@
-import { Frequency, EnrollmentState, DebitState, DiscountBy, PackageKind } from '@graphql';
+import {
+  Frequency,
+  EnrollmentState,
+  DebitState,
+  DiscountBy,
+  PackageKind,
+} from '@graphql';
 
 export const discountTypes = [
   {
@@ -84,7 +90,17 @@ export const packageKinds = [
   {
     label: 'Ilimitado',
     value: PackageKind.Unlimited,
-  }
+  },
+];
+
+export const daysOfWeek = [
+  { label: 'Domingo', value: '0' },
+  { label: 'Lunes', value: '1' },
+  { label: 'Martes', value: '2' },
+  { label: 'Miércoles', value: '3' },
+  { label: 'Jueves', value: '4' },
+  { label: 'Viernes', value: '5' },
+  { label: 'Sábado', value: '6' },
 ];
 
 export const studentDocuments = [

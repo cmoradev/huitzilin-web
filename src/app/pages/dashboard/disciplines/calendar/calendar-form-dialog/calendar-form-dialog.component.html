@@ -1,0 +1,98 @@
+<h2 mat-dialog-title>
+  {{ !!data?.id ? "Actualizar" : "Crear" }} programación de actividades
+</h2>
+<mat-dialog-content>
+  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
+    <div class="flex flex-col gap-3">
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Ej: Taekwondo" formControlName="name" />
+        <mat-hint>Ingrese el nombre de la disciplina</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("name")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label> Selecciona una vigencia </mat-label>
+        <mat-date-range-input [rangePicker]="datePicker">
+          <input
+            matStartDate
+            placeholder="Fecha de inicio"
+            formControlName="start"
+          />
+          <input matEndDate placeholder="Fecha de fin" formControlName="end" />
+        </mat-date-range-input>
+        <mat-hint>Seleccione un rango de fechas</mat-hint>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="datePicker"
+        ></mat-datepicker-toggle>
+        <mat-date-range-picker #datePicker></mat-date-range-picker>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("start")) }}
+        </mat-error>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("end")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Días con actividades</mat-label>
+        <mat-select formControlName="days" multiple>
+          @for (day of days; track $index) {
+          <mat-option [value]="day.value">{{ day.label }}</mat-option>
+          }
+        </mat-select>
+        <mat-hint> Seleccione los días de la semana con actividades </mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("days")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Hora de inicio</mat-label>
+        <input
+          matInput
+          [matTimepicker]="timePicker1"
+          formControlName="firstHour"
+          matTimepickerMin="08:00"
+          matTimepickerMax="20:00"
+        />
+        <mat-timepicker-toggle matIconSuffix [for]="timePicker1">
+          <mat-icon matTimepickerToggleIcon>keyboard_arrow_down</mat-icon>
+        </mat-timepicker-toggle>
+        <mat-timepicker #timePicker1 interval="30min" />
+        <mat-hint> Seleccione la hora de inicio de las actividades </mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("firstHour")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Hora de cierre</mat-label>
+        <input
+          matInput
+          [matTimepicker]="timePicker2"
+          formControlName="lastHour"
+          matTimepickerMin="08:00"
+          matTimepickerMax="20:00"
+        />
+        <mat-timepicker-toggle matIconSuffix [for]="timePicker2">
+          <mat-icon matTimepickerToggleIcon>keyboard_arrow_down</mat-icon>
+        </mat-timepicker-toggle>
+        <mat-timepicker #timePicker2 interval="30min" />
+        <mat-hint> Seleccione la hora de cierre de las actividades </mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("lastHour")) }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
+  <button mat-button cdkFocusInitial form="dataForm" [disabled]="loading()">
+    {{ loading() ? "Guardando..." : "Guardar" }}
+  </button>
+</mat-dialog-actions>

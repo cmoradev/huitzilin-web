@@ -1,0 +1,56 @@
+fragment ScheduleParts on Schedule {
+  id,
+  day
+  start
+  end
+  discipline {
+    id, name, minHours
+  }
+}
+
+mutation createOneSchedule ($schedule: CreateSchedule!) {
+  createOneSchedule (
+    input: {
+      schedule: $schedule
+    }
+  ) {
+    ...ScheduleParts
+  }
+}
+
+query getSchedulesPage ($offset: Int = 0, $limit: Int = 10, $filter: ScheduleFilter = {})  {
+  schedules (
+    paging: { limit: $limit, offset: $offset },
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...ScheduleParts
+    }
+  }
+}
+
+mutation updateOneSchedule ($id: ID!, $update: UpdateSchedule!) {
+  updateOneSchedule (
+    input: {
+      id: $id,
+      update: $update
+    }
+  ) {
+    ...ScheduleParts
+  }
+}
+
+mutation deleteOneSchedule ($id: ID!) {
+	deleteOneSchedule (
+    input: {
+      id: $id
+    }
+  ) {
+    id
+  }
+}

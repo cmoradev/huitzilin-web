@@ -1,0 +1,66 @@
+fragment PeriodParts on Period {
+  id,
+  name,
+  days
+  start
+  end
+  firstHour
+  lastHour
+}
+
+mutation createOnePeriod ($period: CreatePeriod!) {
+  createOnePeriod (
+    input: {
+      period: $period
+    }
+  ) {
+    ...PeriodParts
+  }
+}
+
+query getPeriodsPage ($offset: Int = 0, $limit: Int = 10, $filter: PeriodFilter = {})  {
+  periods (
+    paging: { limit: $limit, offset: $offset },
+    sorting: [
+      { field: order, direction: ASC }
+      { field: createdAt, direction: DESC }
+    ]
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...PeriodParts
+    }
+  }
+}
+
+mutation updateOnePeriod ($id: ID!, $update: UpdatePeriod!) {
+  updateOnePeriod (
+    input: {
+      id: $id,
+      update: $update
+    }
+  ) {
+    ...PeriodParts
+  }
+}
+
+mutation deleteOnePeriod ($id: ID!) {
+	deleteOnePeriod (
+    input: {
+      id: $id
+    }
+  ) {
+    id
+  }
+}
+
+mutation setOrderPeriods($payload: [SetOrderInput!]!) {
+  setOrderPeriods(input: $payload) {
+    updatedCount
+  }
+}

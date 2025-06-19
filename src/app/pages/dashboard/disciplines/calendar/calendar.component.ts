@@ -1,0 +1,268 @@
+import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Component, computed, inject, signal } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import {
+  GetPeriodsPageGQL,
+  GetPeriodsPageQueryVariables,
+  GetSchedulesPageGQL,
+  GetSchedulesPageQueryVariables,
+  PeriodPartsFragment,
+  Schedule,
+  SchedulePartsFragment,
+  SetOrderInput,
+  SetOrderPeriodsGQL,
+} from '@graphql';
+import { GlobalStateService } from '@services';
+import { NgScrollbar } from 'ngx-scrollbar';
+import { debounceTime, map, merge } from 'rxjs';
+import { CalendarFormDialogComponent } from './calendar-form-dialog/calendar-form-dialog.component';
+import { CalendarDeleteDialogComponent } from './calendar-delete-dialog/calendar-delete-dialog.component';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { PeriodItemComponent } from './period-item/period-item.component';
+
+@Component({
+  selector: 'app-calendar',
+  imports: [
+    MatCardModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDividerModule,
+    ReactiveFormsModule,
+    MatTooltipModule,
+    DragDropModule,
+    MatProgressBarModule,
+    PeriodItemComponent,
+    NgScrollbar,
+  ],
+  templateUrl: './calendar.component.html',
+  styles: ``,
+})
+export class CalendarComponent {
+  private readonly _dialog = inject(MatDialog);
+  private readonly _globalStateService = inject(GlobalStateService);
+  private readonly _snackBar = inject(MatSnackBar);
+
+  public period = computed(() => this._globalStateService.period);
+
+  private readonly _periodsPageGQL = inject(GetPeriodsPageGQL);
+  private readonly _setOrderPeriodsGQL = inject(SetOrderPeriodsGQL);
+  private readonly _schedulesPageGQL = inject(GetSchedulesPageGQL);
+
+  public periods = signal<PeriodPartsFragment[]>([]);
+  public periodsLoading = signal<boolean>(false);
+  public periodsTotalCount = signal<number>(0);
+
+  public schedules = signal<SchedulePartsFragment[]>([]);
+  public schedulesLoading = signal<boolean>(false);
+  public schedulesTotalCount = signal<number>(0);
+
+  public searchControl = new FormControl('');
+
+  ngOnInit(): void {
+    merge(this._globalStateService.branch$, this.searchControl.valueChanges)
+      .pipe(debounceTime(300))
+      .subscribe({
+        next: () => {
+          this.refreshPeriods();
+        },
+      });
+
+    this._globalStateService.period$.subscribe({
+      next: () => {
+        this.refreshSchedules();
+      },
+    });
+  }
+
+  public openPeriodFormDialog(
+    value: PeriodPartsFragment | undefined = undefined
+  ): void {
+    const $dialog = this._dialog.open(CalendarFormDialogComponent, {
+      width: '30rem',
+      data: value,
+    });
+
+    $dialog.afterClosed().subscribe({
+      next: (period) => {
+        if (period) this.refreshPeriods();
+      },
+    });
+  }
+
+  public openPeriodDeleteDialog(value: PeriodPartsFragment): void {
+    const $dialog = this._dialog.open(CalendarDeleteDialogComponent, {
+      width: '30rem',
+      data: value,
+    });
+
+    $dialog.afterClosed().subscribe({
+      next: (period) => {
+        if (period) this.refreshPeriods();
+      },
+    });
+  }
+
+  // public openFeeFormDialog(
+  //   value: FeePartsFragment | undefined = undefined
+  // ): void {
+  //   const $dialog = this._dialog.open(FeeFormDialogComponent, {
+  //     width: '30rem',
+  //     data: value,
+  //   });
+
+  //   $dialog.afterClosed().subscribe({
+  //     next: (fee) => {
+  //       if (fee) this.refreshFees();
+  //     },
+  //   });
+  // }
+
+  // public openFeeDeleteDialog(value: FeePartsFragment): void {
+  //   const $dialog = this._dialog.open(FeeDeleteDialogComponent, {
+  //     width: '30rem',
+  //     data: value,
+  //   });
+
+  //   $dialog.afterClosed().subscribe({
+  //     next: (fee) => {
+  //       if (fee) this.refreshFees();
+  //     },
+  //   });
+  // }
+
+  public refreshPeriods(accumulared: PeriodPartsFragment[] = []): void {
+    if (!!this._globalStateService.branch?.id) {
+      const limit = 50;
+      const offset = accumulared.length;
+
+      const params: GetPeriodsPageQueryVariables = {
+        limit,
+        offset,
+        filter: {
+          branchId: { eq: this._globalStateService.branch!.id },
+          name: { iLike: `%${this.searchControl.value}%` },
+        },
+      };
+
+      this.periodsLoading.set(true);
+
+      const getPeriods$ = this._periodsPageGQL.watch(params, {
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-and-network',
+        notifyOnNetworkStatusChange: true,
+      }).valueChanges;
+
+      getPeriods$.pipe(map((resp) => resp.data.periods)).subscribe({
+        next: ({ nodes, totalCount }) => {
+          const allItems = accumulared.concat(nodes);
+
+          if (allItems.length >= totalCount) {
+            this.periods.set(allItems);
+            this.periodsLoading.set(false);
+            this.periodsTotalCount.set(totalCount);
+            return; // No more activities to fetch
+          }
+
+          this.refreshPeriods(allItems);
+        },
+        error: (error) => {
+          console.error('Error fetching activities', error);
+          this.periodsLoading.set(false);
+        },
+      });
+    } else {
+      this.periods.set([]);
+      this.periodsLoading.set(false);
+      this.periodsTotalCount.set(0);
+    }
+  }
+
+  public refreshSchedules(accumulared: SchedulePartsFragment[] = []): void {
+    if (!!this._globalStateService.period?.id) {
+      const limit = 50;
+      const offset = accumulared.length;
+
+      const params: GetSchedulesPageQueryVariables = {
+        filter: { periodId: { eq: this._globalStateService.period!.id } },
+        limit,
+        offset,
+      };
+
+      this.schedulesLoading.set(true);
+
+      const getSchedules$ = this._schedulesPageGQL.watch(params, {
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-and-network',
+        notifyOnNetworkStatusChange: true,
+      }).valueChanges;
+
+      getSchedules$.pipe(map((resp) => resp.data.schedules)).subscribe({
+        next: ({ nodes, totalCount }) => {
+          const allItems = accumulared.concat(nodes);
+
+          if (allItems.length >= totalCount) {
+            this.schedules.set(allItems);
+            this.schedulesLoading.set(false);
+            this.schedulesTotalCount.set(totalCount);
+            return; // No more fees to fetch
+          }
+
+          this.refreshSchedules(allItems);
+        },
+        error: (error) => {
+          console.error('Error fetching fees', error);
+          this.schedulesLoading.set(false);
+        },
+      });
+    } else {
+      this.schedules.set([]);
+      this.schedulesLoading.set(false);
+      this.schedulesTotalCount.set(0);
+    }
+  }
+
+  public dropPeriod(event: CdkDragDrop<PeriodPartsFragment[]>) {
+    this.periods.update((previous) => {
+      const values = [...previous];
+      moveItemInArray(values, event.previousIndex, event.currentIndex);
+      return values;
+    });
+
+    this.updateOrderPeriods();
+  }
+
+  private updateOrderPeriods(): void {
+    const payload: SetOrderInput[] = this.periods().map((item, index) => ({
+      id: item.id,
+      order: index + 1,
+    }));
+
+    this._setOrderPeriodsGQL.mutate({ payload }).subscribe({
+      next: () => {
+        this._snackBar.open(
+          'Se ha actualizado el orden correctamente',
+          'Cerrar',
+          {
+            duration: 1000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+          }
+        );
+      },
+      error: (error) => {
+        console.error('Error updating order activities', error);
+      },
+    });
+  }
+}

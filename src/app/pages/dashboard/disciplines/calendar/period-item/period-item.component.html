@@ -1,0 +1,28 @@
+<div
+  class="item"
+  (click)="selectPeriod()"
+  [ngClass]="{ active: isActive() }"
+  cdkDrag
+>
+  <mat-icon svgIcon="drag" class="cursor-move" cdkDragHandle></mat-icon>
+  <div>
+    <p class="font-medium">{{ period.name }}</p>
+  </div>
+  <span class="flex-1"></span>
+  <button mat-icon-button [matMenuTriggerFor]="menu" (click)="openMenu($event)">
+    <mat-icon svgIcon="dots-vertical"></mat-icon>
+  </button>
+
+  <div class="item-placeholder" *cdkDragPlaceholder></div>
+</div>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="update.emit(period)">
+    <mat-icon svgIcon="pencil" />
+    <span>Editar</span>
+  </button>
+  <button mat-menu-item (click)="delete.emit(period)">
+    <mat-icon svgIcon="delete" class="!text-red-400" />
+    <span>Eliminar</span>
+  </button>
+</mat-menu>

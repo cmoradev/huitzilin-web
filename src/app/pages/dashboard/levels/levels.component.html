@@ -17,7 +17,6 @@
 
       <button
         mat-icon-button
-        color="primary"
         matTooltip="Refrescar"
         (click)="refresh()"
         [ngClass]="{ 'animate-spin': loading() }"
@@ -26,7 +25,6 @@
       </button>
       <button
         mat-icon-button
-        color="primary"
         matTooltip="Crear nuevo"
         (click)="openFormDialog()"
       >
@@ -71,7 +69,6 @@
           <div class="w-full text-right">
             <button
               mat-icon-button
-              color="primary"
               matTooltip="Editar"
               (click)="openFormDialog(element)"
             >
@@ -79,7 +76,6 @@
             </button>
             <button
               mat-icon-button
-              color="warn"
               matTooltip="Eliminar"
               (click)="openDeleteDialog(element)"
             >

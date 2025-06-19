@@ -32,7 +32,7 @@ export const DashboardRoutes: Routes = [
   },
   {
     path: 'disciplines',
-    loadComponent: () => import('./disciplines/disciplines.component').then((m) => m.DisciplinesComponent),
+    loadChildren: () => import('./disciplines/disciplines.routes').then((m) => m.DisciplinesRoutes),
   },
   {
     path: 'discounts',

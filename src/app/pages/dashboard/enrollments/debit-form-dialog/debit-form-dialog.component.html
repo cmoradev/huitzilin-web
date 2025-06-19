@@ -2,7 +2,7 @@
 <mat-dialog-content>
   <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
     <div class="flex flex-col gap-3">
-      <mat-checkbox color="primary" formControlName="withTax" matTooltip="El IVA se aplica despues de los descuentos">
+      <mat-checkbox formControlName="withTax" matTooltip="El IVA se aplica despues de los descuentos">
         ¿Incluye IVA?
       </mat-checkbox>
 
