@@ -11,7 +11,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
-  CreateDiscipline,
   CreateOneDisciplineGQL,
   DisciplinePartsFragment,
   GetLevelsPageGQL,
@@ -20,7 +19,6 @@ import {
   GetPackagePageQueryVariables,
   LevelPartsFragment,
   PackagePartsFragment,
-  UpdateDiscipline,
   UpdateOneDisciplineGQL,
 } from '@graphql';
 import { PackageKindPipe } from '@pipes';

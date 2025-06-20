@@ -44,12 +44,18 @@
       <!-- Fees Area -->
       <div class="col-span-3 flex flex-col">
         <div class="flex items-center gap-2 p-2">
-          <!-- @if (!!activity()?.id) {
-          <h4 class="font-medium text-lg">{{ activity()!.name }}</h4>
+          @if (!!period()?.id) {
+          <h4 class="font-medium text-lg">{{ period()!.name }}</h4>
           }
           <span class="flex-1 h-[52px]"></span>
 
-          <button
+          <a [routerLink]="['/disciplines']">
+            <button mat-icon-button matTooltip="Regresar a disciplinas">
+              <mat-icon svgIcon="basketball" />
+            </button>
+          </a>
+
+          <!-- <button
             mat-icon-button
             (click)="openFeeFormDialog()"
             [disabled]="!activity()?.id"
@@ -61,17 +67,16 @@
 
         <mat-divider />
 
-        <ng-scrollbar class="relative flex-1 mt-2">
-          <!-- <mat-nav-list>
-            @for (fee of fees(); track $index) {
-            <app-fee-item
-              [fee]="fee"
-              (update)="openFeeFormDialog($event)"
-              (delete)="openFeeDeleteDialog($event)"
-            />
-            }
-          </mat-nav-list> -->
-        </ng-scrollbar>
+        @if (period()?.id) {
+        <app-calendar
+          [id]="period()!.id"
+          [days]="period()!.days"
+          [firstHour]="period()!.firstHour"
+          [lastHour]="period()!.lastHour"
+          (select)="openAddScheduleDialog($event)"
+          [schedules]="schedules()"
+        />
+        }
       </div>
     </div>
   </mat-card-content>

@@ -1,0 +1,42 @@
+.schedule-table {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.schedule-table td,
+.schedule-table th {
+  padding: 0.5rem;
+  text-align: center;
+  word-wrap: break-word;
+
+  &:first-child {
+    width: 4rem;
+    font-weight: 600;
+  }
+}
+
+.schedule-table th {
+  font-weight: 600;
+  color: var(--mat-sys-on-primary-container);
+  background-color: var(--mat-sys-primary-container);
+
+  &:last-child {
+    border-radius: 0 var(--mat-sys-corner-medium) var(--mat-sys-corner-medium) 0;
+  }
+  &:first-child {
+    border-radius: var(--mat-sys-corner-medium) 0 0 var(--mat-sys-corner-medium);
+  }
+}
+
+.schedule-table .schedule-cell {
+  cursor: pointer;
+  height: 80px;
+  vertical-align: top;
+  transition: background-color 0.3s;
+  border-radius: var(--mat-sys-corner-medium);
+
+  &:hover {
+    background-color: var(--mat-sys-surface-container);
+  }
+}

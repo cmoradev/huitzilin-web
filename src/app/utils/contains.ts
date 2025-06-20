@@ -103,6 +103,16 @@ export const daysOfWeek = [
   { label: 'Sábado', value: '6' },
 ];
 
+export const daysOfWeekMap = new Map<string, string>([
+  ['0', 'Domingo'],
+  ['1', 'Lunes'],
+  ['2', 'Martes'],
+  ['3', 'Miércoles'],
+  ['4', 'Jueves'],
+  ['5', 'Viernes'],
+  ['6', 'Sábado'],
+]);
+
 export const studentDocuments = [
   { label: 'Acta de nacimiento', value: 'acta_de_nacimiento' },
   { label: 'CURP', value: 'curp' },

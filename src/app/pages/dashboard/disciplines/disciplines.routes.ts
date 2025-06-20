@@ -7,6 +7,6 @@ export const DisciplinesRoutes = [
   {
     path: 'calendar',
     loadComponent: () =>
-      import('./calendar/calendar.component').then((m) => m.CalendarComponent),
+      import('./calendar-page/calendar-page.component').then((m) => m.CalendarPageComponent),
   },
 ];

@@ -1,0 +1,47 @@
+<table class="schedule-table">
+  <thead>
+    <tr>
+      <th>Hora</th>
+      @for (day of days(); track day + $index) {
+      <th>
+        {{ day | dayOfWeek }}
+      </th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for (hour of hours(); track hour + $index) {
+    <tr>
+      <td>{{ hour }}</td>
+      @for (day of days(); track day + $index) {
+      <td class="schedule-cell" (click)="selectSlot(day, hour)">
+        <div>
+          @for (schedule of filteredSchedules(day, hour); track schedule.id) {
+          <span>{{ schedule.discipline.name }}</span>
+          }
+        </div>
+      </td>
+      }
+    </tr>
+    }
+  </tbody>
+</table>
+
+<!-- <div
+  class="grid"
+  [style]="{
+    gridTemplateColumns: 'repeat(' + (days.length + 1) + ', minmax(0, 1fr))'
+  }"
+>
+  <div class="col-span-1">
+    <h3 class="font-medium">Horarios</h3>
+  </div>
+
+  @for (day of days; track day + $index) {
+  <div class="col-span-1">
+    <h3 class="font-medium">
+      {{ day | dayOfWeek }}
+    </h3>
+  </div>
+  }
+</div> -->

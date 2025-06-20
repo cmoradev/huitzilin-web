@@ -1,0 +1,84 @@
+<h2 mat-dialog-title>{{ !!data?.id ? "Actualizar" : "Crear" }} horario</h2>
+<mat-dialog-content>
+  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
+    <div class="flex flex-col gap-3">
+      <mat-form-field>
+        <mat-label>Disciplina</mat-label>
+        <mat-select formControlName="disciplineId">
+          @for (discipline of disciplines(); track discipline.id) {
+          <mat-option [value]="discipline.id">
+            <h4 mat-line>{{ discipline.name }}</h4>
+            <p mat-line class="text-sm text-gray-500">
+              (@for (level of discipline.levels; track level.id) {
+              {{ level.abbreviation }}, })
+            </p>
+          </mat-option>
+          }
+        </mat-select>
+        <mat-hint> Seleccione una disciplina </mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("disciplineId")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Día</mat-label>
+        <mat-select formControlName="day">
+          @for (day of days; track $index) {
+          <mat-option [value]="day.value">{{ day.label }}</mat-option>
+          }
+        </mat-select>
+        <mat-hint> Seleccione el día de la semana con actividad </mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("day")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <div class="grid grid-cols-2 gap-3">
+        <mat-form-field>
+          <mat-label>Hora de inicio</mat-label>
+          <input
+            matInput
+            [matTimepicker]="timePicker1"
+            formControlName="start"
+            matTimepickerMin="08:00"
+            matTimepickerMax="20:00"
+          />
+          <mat-timepicker-toggle matIconSuffix [for]="timePicker1">
+            <mat-icon matTimepickerToggleIcon>keyboard_arrow_down</mat-icon>
+          </mat-timepicker-toggle>
+          <mat-timepicker #timePicker1 interval="30min" />
+          <mat-hint> Inicio de las actividades </mat-hint>
+          <mat-error>
+            {{ formTools.checkForErrorsIn(formGroup.get("start")) }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Hora de cierre</mat-label>
+          <input
+            matInput
+            [matTimepicker]="timePicker2"
+            formControlName="end"
+            matTimepickerMin="08:00"
+            matTimepickerMax="20:00"
+          />
+          <mat-timepicker-toggle matIconSuffix [for]="timePicker2">
+            <mat-icon matTimepickerToggleIcon>keyboard_arrow_down</mat-icon>
+          </mat-timepicker-toggle>
+          <mat-timepicker #timePicker2 interval="30min" />
+          <mat-hint> Cierre de las actividades </mat-hint>
+          <mat-error>
+            {{ formTools.checkForErrorsIn(formGroup.get("end")) }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
+  <button mat-button cdkFocusInitial form="dataForm" [disabled]="loading()">
+    {{ loading() ? "Guardando..." : "Guardar" }}
+  </button>
+</mat-dialog-actions>

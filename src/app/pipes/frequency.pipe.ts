@@ -5,7 +5,7 @@ import { Frequency } from '@graphql';
   name: 'frequency',
 })
 export class FrequencyPipe implements PipeTransform {
-  transform(value: string | Frequency): unknown {
+  transform(value: string | Frequency): string {
     switch (value) {
       case Frequency.Monthly:
         return 'Mensualidad';

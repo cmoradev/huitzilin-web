@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTimepickerModule } from '@angular/material/timepicker';
@@ -54,6 +54,8 @@ export class CalendarFormDialogComponent implements OnInit {
   );
 
   public days = daysOfWeek;
+  public minHour = computed(() => this._globalStateService.period?.firstHour || '08:00');
+  public maxHour = computed(() => this._globalStateService.period?.lastHour || '20:00');
 
   public formGroup = this.formTools.builder.group({
     name: this.formTools.builder.control<string>(

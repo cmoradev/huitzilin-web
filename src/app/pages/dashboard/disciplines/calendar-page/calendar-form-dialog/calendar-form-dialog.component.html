@@ -56,13 +56,13 @@
           matInput
           [matTimepicker]="timePicker1"
           formControlName="firstHour"
-          matTimepickerMin="08:00"
-          matTimepickerMax="20:00"
+          [matTimepickerMin]="maxHour"
+          [matTimepickerMax]="minHour"
         />
         <mat-timepicker-toggle matIconSuffix [for]="timePicker1">
           <mat-icon matTimepickerToggleIcon>keyboard_arrow_down</mat-icon>
         </mat-timepicker-toggle>
-        <mat-timepicker #timePicker1 interval="30min" />
+        <mat-timepicker #timePicker1 interval="1h" />
         <mat-hint> Seleccione la hora de inicio de las actividades </mat-hint>
         <mat-error>
           {{ formTools.checkForErrorsIn(formGroup.get("firstHour")) }}
@@ -75,13 +75,13 @@
           matInput
           [matTimepicker]="timePicker2"
           formControlName="lastHour"
-          matTimepickerMin="08:00"
-          matTimepickerMax="20:00"
+          [matTimepickerMin]="maxHour"
+          [matTimepickerMax]="minHour"
         />
         <mat-timepicker-toggle matIconSuffix [for]="timePicker2">
           <mat-icon matTimepickerToggleIcon>keyboard_arrow_down</mat-icon>
         </mat-timepicker-toggle>
-        <mat-timepicker #timePicker2 interval="30min" />
+        <mat-timepicker #timePicker2 interval="1h" />
         <mat-hint> Seleccione la hora de cierre de las actividades </mat-hint>
         <mat-error>
           {{ formTools.checkForErrorsIn(formGroup.get("lastHour")) }}

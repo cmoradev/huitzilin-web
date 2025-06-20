@@ -1,4 +1,8 @@
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,9 +32,17 @@ import { CalendarFormDialogComponent } from './calendar-form-dialog/calendar-for
 import { CalendarDeleteDialogComponent } from './calendar-delete-dialog/calendar-delete-dialog.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PeriodItemComponent } from './period-item/period-item.component';
+import { RouterLink } from '@angular/router';
+import {
+  CalendarComponent,
+  CalendarSlot,
+} from '@components/calendar/calendar.component';
+import { DisciplineFormDialogComponent } from '../discipline-form-dialog/discipline-form-dialog.component';
+import { ScheduleFormDialogComponent } from './schedule-form-dialog/schedule-form-dialog.component';
+import { addHours } from 'date-fns';
 
 @Component({
-  selector: 'app-calendar',
+  selector: 'app-calendar-page',
   imports: [
     MatCardModule,
     MatInputModule,
@@ -42,13 +54,15 @@ import { PeriodItemComponent } from './period-item/period-item.component';
     MatTooltipModule,
     DragDropModule,
     MatProgressBarModule,
+    RouterLink,
     PeriodItemComponent,
+    CalendarComponent,
     NgScrollbar,
   ],
-  templateUrl: './calendar.component.html',
+  templateUrl: './calendar-page.component.html',
   styles: ``,
 })
-export class CalendarComponent {
+export class CalendarPageComponent {
   private readonly _dialog = inject(MatDialog);
   private readonly _globalStateService = inject(GlobalStateService);
   private readonly _snackBar = inject(MatSnackBar);
@@ -95,7 +109,10 @@ export class CalendarComponent {
 
     $dialog.afterClosed().subscribe({
       next: (period) => {
-        if (period) this.refreshPeriods();
+        if (period) {
+          this._globalStateService.period = period;
+          this.refreshPeriods();
+        }
       },
     });
   }
@@ -109,6 +126,28 @@ export class CalendarComponent {
     $dialog.afterClosed().subscribe({
       next: (period) => {
         if (period) this.refreshPeriods();
+      },
+    });
+  }
+
+  public openAddScheduleDialog(event: CalendarSlot) {
+    const firstHour = new Date(`2025-06-15T${event.hour}`);
+    const lastHour = addHours(firstHour, 1);
+
+    const schedule: Partial<SchedulePartsFragment> = {
+      day: parseInt(event.day, 10),
+      start: firstHour.toISOString(),
+      end: lastHour.toISOString(),
+    };
+
+    const $dialog = this._dialog.open(ScheduleFormDialogComponent, {
+      width: '30rem',
+      data: schedule,
+    });
+
+    $dialog.afterClosed().subscribe({
+      next: (period) => {
+        if (period) this.refreshSchedules();
       },
     });
   }

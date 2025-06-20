@@ -5,7 +5,7 @@ import { DebitState } from '@graphql';
   name: 'debitState',
 })
 export class DebitStatePipe implements PipeTransform {
-  transform(value: string | DebitState): unknown {
+  transform(value: string | DebitState): string {
     switch (value) {
       case DebitState.Canceled:
         return 'Cancelado (no pagado)';

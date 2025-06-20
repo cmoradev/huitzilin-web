@@ -5,7 +5,7 @@ import { EnrollmentState } from '@graphql';
   name: 'enrollmentState',
 })
 export class EnrollmentStatePipe implements PipeTransform {
-  transform(value: string | EnrollmentState): unknown {
+  transform(value: string | EnrollmentState): string {
     switch (value) {
       case EnrollmentState.Active:
         return 'Activo';
