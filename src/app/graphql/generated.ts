@@ -220,10 +220,10 @@ export type CreateEnrollment = {
 };
 
 export type CreateFee = {
+  amount: Scalars['Float']['input'];
   frequency: Frequency;
   name: Scalars['String']['input'];
   packageId: Scalars['String']['input'];
-  price: Scalars['Float']['input'];
   withTax: Scalars['Boolean']['input'];
 };
 
@@ -2706,10 +2706,10 @@ export type UpdateEnrollment = {
 };
 
 export type UpdateFee = {
+  amount?: InputMaybe<Scalars['Float']['input']>;
   frequency?: InputMaybe<Frequency>;
   name?: InputMaybe<Scalars['String']['input']>;
   packageId?: InputMaybe<Scalars['String']['input']>;
-  price?: InputMaybe<Scalars['Float']['input']>;
   withTax?: InputMaybe<Scalars['Boolean']['input']>;
 };
 

@@ -31,23 +31,25 @@
         </mat-error>
       </mat-form-field>
       <mat-form-field>
-        <mat-label>Precio de la tarifa</mat-label>
+        <mat-label>Precio base</mat-label>
         <input
           matInput
           placeholder="Ej: 4500"
-          formControlName="price"
+          formControlName="amount"
           type="number"
         />
         <span matTextPrefix>$&nbsp;</span>
         <span matTextSuffix>.00</span>
-        <mat-hint>Ingrese el precio correspondiente a la tarifa</mat-hint>
+        <mat-hint>
+          Ingrese el precio base de la tarifa sin IVA.
+        </mat-hint>
         <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("price")) }}
+          {{ formTools.checkForErrorsIn(formGroup.get("amount")) }}
         </mat-error>
       </mat-form-field>
 
       <mat-checkbox formControlName="withTax">
-        ¿Incluye IVA?
+        ¿Agregar IVA al precio base?
       </mat-checkbox>
     </div>
   </form>

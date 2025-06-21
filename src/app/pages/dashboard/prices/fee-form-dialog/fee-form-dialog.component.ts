@@ -47,7 +47,7 @@ export class FeeFormDialogComponent implements OnInit {
 
   public formGroup = this.formTools.builder.group({
     name: ['', [Validators.required, Validators.maxLength(64)]],
-    price: [0, [Validators.required, Validators.min(1)]],
+    amount: [0, [Validators.required, Validators.min(1)]],
     frequency: ['', [Validators.required]],
     withTax: [this._globalState.activity?.withTax ?? true],
   });
@@ -62,7 +62,7 @@ export class FeeFormDialogComponent implements OnInit {
     if (!!this.data?.id) {
       this.formGroup.patchValue({
         name: this.data.name,
-        price: this.data.price,
+        amount: this.data.amount,
         frequency: this.data.frequency,
         withTax: this.data.withTax,
       });
@@ -151,7 +151,7 @@ export class FeeFormDialogComponent implements OnInit {
 
 type FormValues = {
   name: string;
-  price: number;
+  amount: number;
   frequency: Frequency;
   withTax: boolean;
 };
