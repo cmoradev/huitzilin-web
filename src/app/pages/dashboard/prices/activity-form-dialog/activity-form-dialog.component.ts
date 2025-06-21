@@ -54,7 +54,7 @@ export class ActivityFormDialogComponent implements OnInit {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    withTax: this.formTools.builder.control(false, {
+    withTax: this.formTools.builder.control(true, {
       validators: [],
       nonNullable: true,
     }),
