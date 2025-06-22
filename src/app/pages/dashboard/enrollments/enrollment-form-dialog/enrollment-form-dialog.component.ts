@@ -2,15 +2,21 @@ import { AfterViewInit, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   MatAutocomplete,
+  MatAutocompleteModule,
   MatAutocompleteTrigger,
   MatOption,
 } from '@angular/material/autocomplete';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import {
+  MatButton,
+  MatButtonModule,
+  MatIconButton,
+} from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogClose,
   MatDialogContent,
+  MatDialogModule,
   MatDialogRef,
   MatDialogTitle,
 } from '@angular/material/dialog';
@@ -19,10 +25,11 @@ import {
   MatHint,
   MatError,
   MatLabel,
+  MatFormFieldModule,
 } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
-import { MatSelect } from '@angular/material/select';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
 import {
   PackagePartsFragment,
   CreateOneEnrollmentGQL,
@@ -34,7 +41,13 @@ import {
   LevelPartsFragment,
   PackageFilter,
 } from '@graphql';
-import { FormToolsService, GlobalStateService } from '@services';
+import { PackageKindPipe } from '@pipes';
+import {
+  FormToolsService,
+  GlobalStateService,
+  LevelToolsService,
+  PackageToolsService,
+} from '@services';
 import { enrollmentStates } from '@utils/contains';
 import { debounceTime, filter, map, merge, startWith } from 'rxjs';
 
@@ -43,23 +56,15 @@ type EnrollmentFormDialogData = EnrollmentPartsFragment | null;
 @Component({
   selector: 'app-enrollment-form-dialog',
   imports: [
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
-    MatButton,
-    MatFormField,
-    MatInput,
-    MatHint,
-    MatError,
-    MatLabel,
-    MatOption,
-    MatAutocompleteTrigger,
-    MatAutocomplete,
-    MatIconButton,
-    MatIcon,
-    MatSelect,
+    MatDialogModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatIconModule,
     ReactiveFormsModule,
+    PackageKindPipe,
   ],
   templateUrl: './enrollment-form-dialog.component.html',
   styles: ``,
@@ -84,13 +89,8 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   private readonly _createOneEnrollment = inject(CreateOneEnrollmentGQL);
   private readonly _updateOneEnrollment = inject(UpdateOneEnrollmentGQL);
 
-  public loadingActivities = signal<boolean>(false);
-  public activities = signal<PackagePartsFragment[]>([]);
-  private readonly _packagesPageGQL = inject(GetPackagePageGQL);
-
-  public loadingLevels = signal<boolean>(false);
-  public levels = signal<LevelPartsFragment[]>([]);
-  private readonly _levelsPageGQL = inject(GetLevelsPageGQL);
+  public levelTools = inject(LevelToolsService);
+  public packagesTools = inject(PackageToolsService);
 
   public enrollmentStates = enrollmentStates;
 
@@ -108,7 +108,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
     }
     // @todo - Check this event rename details enrollment
     merge(
-      this.formGroup.get('Package')!.valueChanges,
+      this.formGroup.get('package')!.valueChanges,
       this.formGroup.get('level')!.valueChanges
     )
       .pipe(filter((value) => typeof value === 'object'))
@@ -119,34 +119,31 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
 
         this.formGroup
           .get('details')
-          ?.setValue(
-            `${levelAbbrevation} - ${packageName}`
-          );
+          ?.setValue(`${levelAbbrevation} - ${packageName}`);
       });
   }
 
   ngAfterViewInit(): void {
     this.formGroup
-      .get('activity')
-
-      ?.valueChanges.pipe(debounceTime(300), startWith(''))
+      .get('package')
+      ?.valueChanges.pipe(
+        filter((value) => typeof value === 'string'),
+        debounceTime(300),
+        startWith('')
+      )
       .subscribe({
-        next: (value) => {
-          if (typeof value === 'string') {
-            this._fetchActivities(value);
-          }
-        },
+        next: (value) => this.packagesTools.fetch(value),
       });
 
     this.formGroup
       .get('level')
-      ?.valueChanges.pipe(debounceTime(300), startWith(''))
+      ?.valueChanges.pipe(
+        filter((value) => typeof value === 'string'),
+        debounceTime(300),
+        startWith('')
+      )
       .subscribe({
-        next: (value) => {
-          if (typeof value === 'string') {
-            this._fetchLevels(value);
-          }
-        },
+        next: (value) => this.levelTools.fetch(value),
       });
   }
 
@@ -172,7 +169,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
         this._globalStateService.student!.id &&
         this._globalStateService.branch!.id &&
         this._globalStateService.cycle!.id
-      ) {        
+      ) {
         this._save(values).subscribe({
           next: (branch) => {
             this._dialogRef.close(branch);
@@ -188,9 +185,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
     }
   }
 
-  public displayFn(
-    value: PackagePartsFragment
-  ): string {
+  public displayFn(value: PackagePartsFragment): string {
     return value?.name ?? '';
   }
 
@@ -222,79 +217,6 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
         },
       })
       .pipe(map((value) => value.data?.createOneEnrollment));
-  }
-
-  private _fetchActivities(value: string): void {
-    if (this._globalStateService.branch!.id) {
-      this.loadingActivities.set(true);
-
-      const filter: PackageFilter = {
-        name: { iLike: `%${value}%` },
-        branchId: { eq: this._globalStateService.branch!.id },
-      };
-
-      // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
-      this._packagesPageGQL
-        .watch(
-          {
-            limit: 100,
-            offset: 0,
-            filter,
-          },
-          {
-            fetchPolicy: 'cache-and-network',
-            nextFetchPolicy: 'cache-and-network',
-            notifyOnNetworkStatusChange: true,
-          }
-        )
-        .valueChanges.subscribe({
-          next: ({ loading, data }) => {
-            this.loadingActivities.set(loading);
-
-            this.activities.set(data?.packages.nodes ?? []);
-          },
-        });
-    } else {
-      this.loadingActivities.set(false);
-      this.activities.set([]);
-    }
-  }
-
-  private _fetchLevels(value: string): void {
-    if (this._globalStateService.branch!.id) {
-      this.loadingLevels.set(true);
-
-      // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
-      this._levelsPageGQL
-        .watch(
-          {
-            limit: 100,
-            offset: 0,
-            filter: {
-              or: [
-                { name: { iLike: `%${value}%` } },
-                { abbreviation: { iLike: `%${value}%` } },
-              ],
-              branchId: { eq: this._globalStateService.branch!.id },
-            },
-          },
-          {
-            fetchPolicy: 'cache-and-network',
-            nextFetchPolicy: 'cache-and-network',
-            notifyOnNetworkStatusChange: true,
-          }
-        )
-        .valueChanges.subscribe({
-          next: ({ loading, data }) => {
-            this.loadingLevels.set(loading);
-
-            this.levels.set(data?.levels.nodes ?? []);
-          },
-        });
-    } else {
-      this.loadingLevels.set(false);
-      this.levels.set([]);
-    }
   }
 }
 

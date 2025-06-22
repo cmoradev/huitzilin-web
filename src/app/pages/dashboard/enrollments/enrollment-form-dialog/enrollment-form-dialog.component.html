@@ -26,9 +26,9 @@
         }
         <mat-autocomplete
           #autoLevels="matAutocomplete"
-          [displayWith]="displayFn"
+          [displayWith]="levelTools.displayFn"
         >
-          @for (level of levels(); track level.id) {
+          @for (level of levelTools.options(); track level.id) {
           <mat-option [value]="level">
             <p>{{ level.name }}</p>
           </mat-option>
@@ -62,9 +62,12 @@
           #autoStudents="matAutocomplete"
           [displayWith]="displayFn"
         >
-          @for (activity of activities(); track activity.id) {
-          <mat-option [value]="activity">
-            {{ activity.name }}
+          @for (package of packagesTools.options(); track package.id) {
+          <mat-option [value]="package">
+            <h4 mat-line>{{ package.name }}</h4>
+            <p mat-line class="text-sm text-gray-500">
+              {{ package.kind | packageKind }}
+            </p>
           </mat-option>
           }
         </mat-autocomplete>
