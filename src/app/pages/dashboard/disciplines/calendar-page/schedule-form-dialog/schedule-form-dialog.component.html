@@ -2,22 +2,52 @@
 <mat-dialog-content>
   <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
     <div class="flex flex-col gap-3">
-      <mat-form-field>
+      <mat-form-field class="w-full">
         <mat-label>Disciplina</mat-label>
-        <mat-select formControlName="disciplineId">
-          @for (discipline of disciplines(); track discipline.id) {
-          <mat-option [value]="discipline.id">
-            <h4 mat-line>{{ discipline.name }}</h4>
-            <p mat-line class="text-sm text-gray-500">
-              (@for (level of discipline.levels; track level.id) {
-              {{ level.abbreviation }}, })
-            </p>
+        <input
+          type="text"
+          placeholder="Ej. Taekwondo"
+          matInput
+          formControlName="discipline"
+          [matAutocomplete]="autoDisciplines"
+        />
+        <mat-hint>Seleccione una disciplina </mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("discipline")) }}
+        </mat-error>
+        @if (formGroup.get("discipline")?.value) {
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="formGroup.get('discipline')?.setValue(null)"
+        >
+          <mat-icon svgIcon="close" />
+        </button>
+        }
+        <mat-autocomplete
+          #autoDisciplines="matAutocomplete"
+          [displayWith]="disciplineTools.displayFn"
+        >
+          @for (discipline of disciplineTools.options(); track discipline.id) {
+          <mat-option [value]="discipline">
+            <p>{{ discipline.name }}</p>
           </mat-option>
           }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Niveles permitidos</mat-label>
+        <mat-select formControlName="levels" multiple>
+          @for (level of levelTools.options(); track $index) {
+          <mat-option [value]="level.id">{{ level.abbreviation }}</mat-option>
+          }
         </mat-select>
-        <mat-hint> Seleccione una disciplina </mat-hint>
+        <mat-hint>
+          Seleccione los niveles que pueden tomar esta disciplina
+        </mat-hint>
         <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("disciplineId")) }}
+          {{ formTools.checkForErrorsIn(formGroup.get("levels")) }}
         </mat-error>
       </mat-form-field>
 
@@ -77,7 +107,11 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <div class="flex justify-between w-full">
+  <div class="flex w-full" [ngClass]="{
+    'justify-between': !!data?.id,
+    'justify-end': !data?.id,
+  }">
+    @if (!!data?.id) {
     <button
       mat-button
       [disabled]="removeLoading()"
@@ -86,6 +120,7 @@
     >
       {{ removeLoading() ? "Eliminando..." : "Eliminar" }}
     </button>
+    }
 
     <div>
       <button mat-button mat-dialog-close [disabled]="loading()">

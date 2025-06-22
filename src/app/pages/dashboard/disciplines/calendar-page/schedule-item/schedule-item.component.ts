@@ -1,11 +1,10 @@
 import { Component, input, output } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { MatRippleModule } from '@angular/material/core';
 import { SchedulePartsFragment } from '@graphql';
 
 @Component({
   selector: 'app-schedule-item',
-  imports: [MatButtonModule, MatIconModule],
+  imports: [MatRippleModule],
   templateUrl: './schedule-item.component.html',
   styles: ``,
 })

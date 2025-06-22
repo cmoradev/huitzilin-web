@@ -48,14 +48,12 @@ export class DisciplineFormDialogComponent {
   private readonly _globalStateService = inject(GlobalStateService);
   private readonly _createOneDiscipline = inject(CreateOneDisciplineGQL);
   private readonly _updateOneDiscipline = inject(UpdateOneDisciplineGQL);
-  private readonly _getLevelsPage = inject(GetLevelsPageGQL);
   private readonly _getPackagesPage = inject(GetPackagePageGQL);
   private readonly _snackBar = inject(MatSnackBar);
   private readonly _dialogRef = inject(
     MatDialogRef<DisciplineFormDialogComponent>
   );
 
-  public levels = signal<LevelPartsFragment[]>([]);
   public packages = signal<PackagePartsFragment[]>([]);
 
   public formGroup = this.formTools.builder.group({
@@ -67,10 +65,6 @@ export class DisciplineFormDialogComponent {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    levels: this.formTools.builder.control<string[]>([], {
-      validators: [],
-      nonNullable: true,
-    }),
     packages: this.formTools.builder.control<string[]>([], {
       validators: [],
       nonNullable: true,
@@ -78,14 +72,12 @@ export class DisciplineFormDialogComponent {
   });
 
   ngOnInit(): void {
-    this._fetchAllLevels();
     this._fetchAllPackages();
 
     if (!!this.data?.id) {
       this.formGroup.patchValue({
         name: this.data.name,
         minHours: this.data.minHours,
-        levels: this.data.levels.map((level) => level.id),
         packages: this.data.packages.map((pkg) => pkg.id),
       });
     }
@@ -142,7 +134,6 @@ export class DisciplineFormDialogComponent {
         update: {
           name: values.name,
           minHours: values.minHours,
-          levels: values.levels!.map((id) => ({ id })),
           packages: values.packages!.map((id) => ({ id })),
         },
       })
@@ -155,49 +146,11 @@ export class DisciplineFormDialogComponent {
         discipline: {
           name: values.name,
           minHours: values.minHours,
-          levels: values.levels!.map((id) => ({ id })),
           packages: values.packages!.map((id) => ({ id })),
           branchId: this._globalStateService.branch!.id,
         },
       })
       .pipe(map((value) => value.data?.createOneDiscipline));
-  }
-
-  private _fetchAllLevels(accumulared: LevelPartsFragment[] = []): void {
-    if (!!this._globalStateService.branch?.id) {
-      const limit = 50;
-      const offset = accumulared.length;
-
-      const params: GetLevelsPageQueryVariables = {
-        filter: { branchId: { eq: this._globalStateService.branch!.id } },
-        limit,
-        offset,
-      };
-
-      const getLevels$ = this._getLevelsPage.watch(params, {
-        fetchPolicy: 'cache-first', // Usa cache primero, solo pide a la API si no hay datos en cache
-        nextFetchPolicy: 'cache-first', // Mantiene la política de cache en siguientes peticiones
-        notifyOnNetworkStatusChange: false, // No notifica cambios de red para evitar refetch innecesario
-      }).valueChanges;
-
-      getLevels$.pipe(map((resp) => resp.data.levels)).subscribe({
-        next: ({ nodes, totalCount }) => {
-          const allItems = accumulared.concat(nodes);
-
-          if (allItems.length >= totalCount) {
-            this.levels.set(allItems);
-            return; // No more fees to fetch
-          }
-
-          this._fetchAllLevels(allItems);
-        },
-        error: (error) => {
-          console.error('Error fetching fees', error);
-        },
-      });
-    } else {
-      this.levels.set([]);
-    }
   }
 
   private _fetchAllPackages(accumulared: PackagePartsFragment[] = []): void {
@@ -241,6 +194,5 @@ export class DisciplineFormDialogComponent {
 type FormValues = {
   name: string;
   minHours: number;
-  levels: string[];
   packages: string[];
 };

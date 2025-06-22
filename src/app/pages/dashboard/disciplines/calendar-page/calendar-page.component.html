@@ -54,34 +54,30 @@
               <mat-icon svgIcon="basketball" />
             </button>
           </a>
-
-          <!-- <button
-            mat-icon-button
-            (click)="openFeeFormDialog()"
-            [disabled]="!activity()?.id"
-            matTooltip="Agregar cuota"
-          >
-            <mat-icon svgIcon="plus" />
-          </button> -->
         </div>
 
         <mat-divider />
 
-        @if (period()?.id) {
-        <app-calendar
-          [id]="period()!.id"
-          [days]="period()!.days"
-          [firstHour]="period()!.firstHour"
-          [lastHour]="period()!.lastHour"
-          (select)="openAddScheduleDialog($event)"
-          [schedules]="schedules()"
-          class="mt-2"
-        >
-          <ng-template #schedule let-schedule>
-            <app-schedule-item [schedule]="schedule" (selected)="openFormScheduleDialog($event)" />
-          </ng-template>
-        </app-calendar>
-        }
+        <ng-scrollbar class="relative flex-1 mt-2">
+          @if (period()?.id) {
+          <app-calendar
+            [id]="period()!.id"
+            [days]="period()!.days"
+            [firstHour]="period()!.firstHour"
+            [lastHour]="period()!.lastHour"
+            (select)="openAddScheduleDialog($event)"
+            [schedules]="schedules()"
+            class="mt-2"
+          >
+            <ng-template #schedule let-schedule>
+              <app-schedule-item
+                [schedule]="schedule"
+                (selected)="openFormScheduleDialog($event)"
+              />
+            </ng-template>
+          </app-calendar>
+          }
+        </ng-scrollbar>
       </div>
     </div>
   </mat-card-content>

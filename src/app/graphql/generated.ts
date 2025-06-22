@@ -189,7 +189,6 @@ export type CreateDebit = {
 
 export type CreateDiscipline = {
   branchId: Scalars['ID']['input'];
-  levels?: InputMaybe<Array<NestedId>>;
   minHours: Scalars['Int']['input'];
   name: Scalars['String']['input'];
   packages?: InputMaybe<Array<NestedId>>;
@@ -364,6 +363,7 @@ export type CreateSchedule = {
   day: Scalars['Int']['input'];
   disciplineId: Scalars['ID']['input'];
   end: Scalars['String']['input'];
+  levels?: InputMaybe<Array<NestedId>>;
   periodId: Scalars['ID']['input'];
   start: Scalars['String']['input'];
 };
@@ -659,18 +659,11 @@ export type Discipline = {
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
-  levels: Array<Level>;
   minHours: Scalars['Int']['output'];
   name: Scalars['String']['output'];
   packages: Array<Package>;
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
-};
-
-
-export type DisciplineLevelsArgs = {
-  filter?: LevelFilter;
-  sorting?: Array<LevelSort>;
 };
 
 
@@ -706,22 +699,9 @@ export type DisciplineFilter = {
   branchId?: InputMaybe<IdFilterComparison>;
   createdAt?: InputMaybe<DateFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
-  levels?: InputMaybe<DisciplineFilterLevelFilter>;
   name?: InputMaybe<StringFieldComparison>;
   or?: InputMaybe<Array<DisciplineFilter>>;
   packages?: InputMaybe<DisciplineFilterPackageFilter>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
-export type DisciplineFilterLevelFilter = {
-  abbreviation?: InputMaybe<StringFieldComparison>;
-  and?: InputMaybe<Array<DisciplineFilterLevelFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  name?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<DisciplineFilterLevelFilter>>;
-  order?: InputMaybe<IntFieldComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -2296,11 +2276,18 @@ export type Schedule = {
   disciplineId: Scalars['ID']['output'];
   end: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  levels: Array<Level>;
   period: Period;
   periodId: Scalars['ID']['output'];
   start: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
+};
+
+
+export type ScheduleLevelsArgs = {
+  filter?: LevelFilter;
+  sorting?: Array<LevelSort>;
 };
 
 export type ScheduleConnection = {
@@ -2335,8 +2322,21 @@ export type ScheduleFilter = {
   day?: InputMaybe<IntFieldComparison>;
   disciplineId?: InputMaybe<IdFilterComparison>;
   id?: InputMaybe<IdFilterComparison>;
+  levels?: InputMaybe<ScheduleFilterLevelFilter>;
   or?: InputMaybe<Array<ScheduleFilter>>;
   periodId?: InputMaybe<IdFilterComparison>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type ScheduleFilterLevelFilter = {
+  abbreviation?: InputMaybe<StringFieldComparison>;
+  and?: InputMaybe<Array<ScheduleFilterLevelFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<ScheduleFilterLevelFilter>>;
+  order?: InputMaybe<IntFieldComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -2675,7 +2675,6 @@ export type UpdateDebit = {
 
 export type UpdateDiscipline = {
   branchId?: InputMaybe<Scalars['ID']['input']>;
-  levels?: InputMaybe<Array<NestedId>>;
   minHours?: InputMaybe<Scalars['Int']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   packages?: InputMaybe<Array<NestedId>>;
@@ -2882,6 +2881,7 @@ export type UpdateSchedule = {
   day?: InputMaybe<Scalars['Int']['input']>;
   disciplineId?: InputMaybe<Scalars['ID']['input']>;
   end?: InputMaybe<Scalars['String']['input']>;
+  levels?: InputMaybe<Array<NestedId>>;
   periodId?: InputMaybe<Scalars['ID']['input']>;
   start?: InputMaybe<Scalars['String']['input']>;
 };
@@ -3059,14 +3059,14 @@ export type DeleteOneDebitMutationVariables = Exact<{
 
 export type DeleteOneDebitMutation = { __typename?: 'Mutation', deleteOneDebit: { __typename?: 'DebitDeleteResponse', id?: string | null } };
 
-export type DisciplinePartsFragment = { __typename?: 'Discipline', id: string, name: string, minHours: number, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, packages: Array<{ __typename?: 'Package', id: string, name: string, kind: PackageKind }> };
+export type DisciplinePartsFragment = { __typename?: 'Discipline', id: string, name: string, minHours: number, packages: Array<{ __typename?: 'Package', id: string, name: string, kind: PackageKind }> };
 
 export type CreateOneDisciplineMutationVariables = Exact<{
   discipline: CreateDiscipline;
 }>;
 
 
-export type CreateOneDisciplineMutation = { __typename?: 'Mutation', createOneDiscipline: { __typename?: 'Discipline', id: string, name: string, minHours: number, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, packages: Array<{ __typename?: 'Package', id: string, name: string, kind: PackageKind }> } };
+export type CreateOneDisciplineMutation = { __typename?: 'Mutation', createOneDiscipline: { __typename?: 'Discipline', id: string, name: string, minHours: number, packages: Array<{ __typename?: 'Package', id: string, name: string, kind: PackageKind }> } };
 
 export type GetDisciplinesPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -3075,7 +3075,7 @@ export type GetDisciplinesPageQueryVariables = Exact<{
 }>;
 
 
-export type GetDisciplinesPageQuery = { __typename?: 'Query', disciplines: { __typename?: 'DisciplineConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Discipline', id: string, name: string, minHours: number, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, packages: Array<{ __typename?: 'Package', id: string, name: string, kind: PackageKind }> }> } };
+export type GetDisciplinesPageQuery = { __typename?: 'Query', disciplines: { __typename?: 'DisciplineConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Discipline', id: string, name: string, minHours: number, packages: Array<{ __typename?: 'Package', id: string, name: string, kind: PackageKind }> }> } };
 
 export type UpdateOneDisciplineMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3083,7 +3083,7 @@ export type UpdateOneDisciplineMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneDisciplineMutation = { __typename?: 'Mutation', updateOneDiscipline: { __typename?: 'Discipline', id: string, name: string, minHours: number, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, packages: Array<{ __typename?: 'Package', id: string, name: string, kind: PackageKind }> } };
+export type UpdateOneDisciplineMutation = { __typename?: 'Mutation', updateOneDiscipline: { __typename?: 'Discipline', id: string, name: string, minHours: number, packages: Array<{ __typename?: 'Package', id: string, name: string, kind: PackageKind }> } };
 
 export type DeleteOneDisciplineMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3318,14 +3318,14 @@ export type SetOrderPeriodsMutationVariables = Exact<{
 
 export type SetOrderPeriodsMutation = { __typename?: 'Mutation', setOrderPeriods: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
-export type SchedulePartsFragment = { __typename?: 'Schedule', id: string, day: number, start: string, end: string, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number } };
+export type SchedulePartsFragment = { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number } };
 
 export type CreateOneScheduleMutationVariables = Exact<{
   schedule: CreateSchedule;
 }>;
 
 
-export type CreateOneScheduleMutation = { __typename?: 'Mutation', createOneSchedule: { __typename?: 'Schedule', id: string, day: number, start: string, end: string, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number } } };
+export type CreateOneScheduleMutation = { __typename?: 'Mutation', createOneSchedule: { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number } } };
 
 export type GetSchedulesPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -3334,7 +3334,7 @@ export type GetSchedulesPageQueryVariables = Exact<{
 }>;
 
 
-export type GetSchedulesPageQuery = { __typename?: 'Query', schedules: { __typename?: 'ScheduleConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Schedule', id: string, day: number, start: string, end: string, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number } }> } };
+export type GetSchedulesPageQuery = { __typename?: 'Query', schedules: { __typename?: 'ScheduleConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number } }> } };
 
 export type UpdateOneScheduleMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3342,7 +3342,7 @@ export type UpdateOneScheduleMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneScheduleMutation = { __typename?: 'Mutation', updateOneSchedule: { __typename?: 'Schedule', id: string, day: number, start: string, end: string, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number } } };
+export type UpdateOneScheduleMutation = { __typename?: 'Mutation', updateOneSchedule: { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number } } };
 
 export type DeleteOneScheduleMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3508,10 +3508,6 @@ export const DisciplinePartsFragmentDoc = gql`
   id
   name
   minHours
-  levels {
-    id
-    abbreviation
-  }
   packages {
     id
     name
@@ -3602,6 +3598,10 @@ export const SchedulePartsFragmentDoc = gql`
   day
   start
   end
+  levels {
+    id
+    abbreviation
+  }
   discipline {
     id
     name

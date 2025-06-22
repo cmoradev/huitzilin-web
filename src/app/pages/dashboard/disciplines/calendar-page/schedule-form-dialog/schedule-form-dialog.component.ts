@@ -1,5 +1,7 @@
+import { NgClass } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
@@ -21,9 +23,15 @@ import {
   SchedulePartsFragment,
   UpdateOneScheduleGQL,
 } from '@graphql';
-import { FormToolsService, GlobalStateService } from '@services';
+import {
+  DisciplineToolsService,
+  FormToolsService,
+  GlobalStateService,
+  LevelToolsService,
+} from '@services';
 import { daysOfWeek } from '@utils/contains';
-import { map } from 'rxjs';
+import { isUUID } from '@utils/helpers';
+import { filter, map } from 'rxjs';
 
 @Component({
   selector: 'app-schedule-form-dialog',
@@ -36,6 +44,8 @@ import { map } from 'rxjs';
     MatSelectModule,
     MatTimepickerModule,
     ReactiveFormsModule,
+    MatAutocompleteModule,
+    NgClass
   ],
   templateUrl: './schedule-form-dialog.component.html',
   styles: ``,
@@ -52,7 +62,6 @@ export class ScheduleFormDialogComponent {
   private readonly _globalStateService = inject(GlobalStateService);
   private readonly _createOneSchedule = inject(CreateOneScheduleGQL);
   private readonly _updateOneSchedule = inject(UpdateOneScheduleGQL);
-  private readonly _getDisciplinesPage = inject(GetDisciplinesPageGQL);
   private readonly _deleteOneSchedule = inject(DeleteOneScheduleGQL);
 
   private readonly _snackBar = inject(MatSnackBar);
@@ -60,7 +69,8 @@ export class ScheduleFormDialogComponent {
     MatDialogRef<ScheduleFormDialogComponent>
   );
 
-  public disciplines = signal<DisciplinePartsFragment[]>([]);
+  public levelTools = inject(LevelToolsService);
+  public disciplineTools = inject(DisciplineToolsService);
 
   public formGroup = this.formTools.builder.group({
     day: this.formTools.builder.control<string>('', {
@@ -75,14 +85,22 @@ export class ScheduleFormDialogComponent {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    disciplineId: this.formTools.builder.control<string>('', {
-      validators: [Validators.required],
+    levels: this.formTools.builder.control<string[]>([], {
+      validators: [],
       nonNullable: true,
     }),
+    discipline: this.formTools.builder.control<DisciplinePartsFragment | null>(
+      null,
+      {
+        validators: [Validators.required],
+        nonNullable: true,
+      }
+    ),
   });
 
   ngOnInit(): void {
-    this._fetchAllDisciplines();
+    this.levelTools.fetchAll();
+    this.disciplineTools.fetchAll();
 
     if (!!this.data?.day)
       this.formGroup.patchValue({ day: this.data.day.toFixed() });
@@ -93,9 +111,20 @@ export class ScheduleFormDialogComponent {
 
     if (!!this.data?.id) {
       this.formGroup.patchValue({
-        disciplineId: this.data.discipline.id,
+        discipline: this.data.discipline as any,
+        levels: this.data.levels.map((level) => level.id),
       });
     }
+
+    this.formGroup
+      .get('discipline')
+      ?.valueChanges.pipe(
+        filter((value) => typeof value === 'string'),
+        filter((value) => !isUUID(value))
+      )
+      .subscribe({
+        next: (value) => this.disciplineTools.fetch(value),
+      });
   }
 
   public async submit(): Promise<void> {
@@ -177,7 +206,8 @@ export class ScheduleFormDialogComponent {
           day: parseInt(values.day, 10),
           start: values.start.toTimeString().slice(0, 5),
           end: values.end.toTimeString().slice(0, 5),
-          disciplineId: values.disciplineId,
+          levels: values.levels!.map((id) => ({ id })),
+          disciplineId: values.discipline!.id,
         },
       })
       .pipe(map((value) => value.data?.updateOneSchedule));
@@ -190,51 +220,13 @@ export class ScheduleFormDialogComponent {
           day: parseInt(values.day, 10),
           start: values.start.toTimeString().slice(0, 5),
           end: values.end.toTimeString().slice(0, 5),
-          disciplineId: values.disciplineId,
+          disciplineId: values.discipline!.id,
           periodId: this._globalStateService.period!.id,
           branchId: this._globalStateService.branch!.id,
+          levels: values.levels!.map((id) => ({ id })),
         },
       })
       .pipe(map((value) => value.data?.createOneSchedule));
-  }
-
-  private _fetchAllDisciplines(
-    accumulared: DisciplinePartsFragment[] = []
-  ): void {
-    if (!!this._globalStateService.branch?.id) {
-      const limit = 50;
-      const offset = accumulared.length;
-
-      const params: GetDisciplinesPageQueryVariables = {
-        filter: { branchId: { eq: this._globalStateService.branch!.id } },
-        limit,
-        offset,
-      };
-
-      const getDiscipline$ = this._getDisciplinesPage.watch(params, {
-        fetchPolicy: 'cache-first', // Usa cache primero, solo pide a la API si no hay datos en cache
-        nextFetchPolicy: 'cache-first', // Mantiene la política de cache en siguientes peticiones
-        notifyOnNetworkStatusChange: false, // No notifica cambios de red para evitar refetch innecesario
-      }).valueChanges;
-
-      getDiscipline$.pipe(map((resp) => resp.data.disciplines)).subscribe({
-        next: ({ nodes, totalCount }) => {
-          const allItems = accumulared.concat(nodes);
-
-          if (allItems.length >= totalCount) {
-            this.disciplines.set(allItems);
-            return; // No more fees to fetch
-          }
-
-          this._fetchAllDisciplines(allItems);
-        },
-        error: (error) => {
-          console.error('Error fetching disciplines', error);
-        },
-      });
-    } else {
-      this.disciplines.set([]);
-    }
   }
 }
 
@@ -242,5 +234,6 @@ type FormValues = {
   day: string;
   start: Date;
   end: Date;
-  disciplineId: string;
+  discipline: DisciplinePartsFragment | null;
+  levels: string[];
 };

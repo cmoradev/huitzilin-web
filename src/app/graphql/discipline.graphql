@@ -2,10 +2,6 @@ fragment DisciplineParts on Discipline {
   id,
   name,
   minHours
-  levels {
-    id,
-    abbreviation
-  }
   packages {
     id,
     name

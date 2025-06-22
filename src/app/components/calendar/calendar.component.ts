@@ -44,7 +44,11 @@ export class CalendarComponent implements OnChanges {
   }
 
   public filteredSchedules(day: string, hour: Date): SchedulePartsFragment[] {
-    return this.schedules().filter((schedule) => {
+    const schedules = this.schedules().sort((a, b) => {
+      return a.discipline.name.localeCompare(b.discipline.name);
+    });
+
+    return schedules.filter((schedule) => {
       const isDay = schedule.day === parseInt(day, 10);
 
       const scheduleStart = new Date(`${defaultDate}T${schedule.start}`);
@@ -59,8 +63,8 @@ export class CalendarComponent implements OnChanges {
 
   public getContextSchedule(schedule: SchedulePartsFragment) {
     return {
-      $implicit: schedule
-    }
+      $implicit: schedule,
+    };
   }
 
   private _generateHours(first: Date, last: Date) {

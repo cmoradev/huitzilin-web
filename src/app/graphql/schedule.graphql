@@ -3,6 +3,10 @@ fragment ScheduleParts on Schedule {
   day
   start
   end
+  levels {
+    id,
+    abbreviation
+  }
   discipline {
     id, name, minHours
   }

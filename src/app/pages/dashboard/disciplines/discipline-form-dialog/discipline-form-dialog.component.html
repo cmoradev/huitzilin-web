@@ -26,21 +26,6 @@
       </mat-form-field>
 
       <mat-form-field>
-        <mat-label>Niveles permitidos</mat-label>
-        <mat-select formControlName="levels" multiple>
-          @for (level of levels(); track $index) {
-          <mat-option [value]="level.id">{{ level.abbreviation }}</mat-option>
-          }
-        </mat-select>
-        <mat-hint>
-          Seleccione los niveles que pueden tomar esta disciplina
-        </mat-hint>
-        <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("levels")) }}
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field>
         <mat-label>Paquete</mat-label>
         <mat-select formControlName="packages" multiple>
           @for (level of packages(); track $index) {

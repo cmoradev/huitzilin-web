@@ -3,4 +3,4 @@ export * from './storage.service';
 export * from './form-tools.service';
 export * from './global-state.service';
 
-// export * from './tree';
+export * from './tools';
