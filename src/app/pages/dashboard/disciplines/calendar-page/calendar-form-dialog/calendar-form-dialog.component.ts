@@ -78,14 +78,14 @@ export class CalendarFormDialogComponent implements OnInit {
       nonNullable: true,
     }),
     firstHour: this.formTools.builder.control<Date>(
-      new Date(2025, 5, 15, 8, 0),
+      new Date(2025, 5, 15, 10, 0),
       {
         validators: [Validators.required],
         nonNullable: true,
       }
     ),
     lastHour: this.formTools.builder.control<Date>(
-      new Date(2025, 5, 15, 20, 0),
+      new Date(2025, 5, 15, 18, 0),
       {
         validators: [Validators.required],
         nonNullable: true,

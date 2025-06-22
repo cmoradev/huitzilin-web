@@ -11,7 +11,7 @@
   word-wrap: break-word;
 
   &:first-child {
-    width: 4rem;
+    width: 6rem;
     font-weight: 600;
   }
 }
@@ -29,9 +29,18 @@
   }
 }
 
+.schedule-table tbody tr {
+  border-bottom: 1px solid var(--mat-sys-outline);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
 .schedule-table .schedule-cell {
+  z-index: 10;
   cursor: pointer;
-  height: 80px;
+  height: 8rem;
   vertical-align: top;
   transition: background-color 0.3s;
   border-radius: var(--mat-sys-corner-medium);

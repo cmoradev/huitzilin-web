@@ -122,3 +122,5 @@ export const studentDocuments = [
   { label: 'INE madre', value: 'ine1' },
   { label: 'INE padre', value: 'ine2' },
 ];
+
+export const defaultDate = '2025-06-15';

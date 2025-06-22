@@ -1,8 +1,17 @@
-import { Component, input, OnChanges, output, signal } from '@angular/core';
+import { DatePipe, NgTemplateOutlet } from '@angular/common';
+import {
+  Component,
+  ContentChild,
+  input,
+  OnChanges,
+  output,
+  signal,
+  TemplateRef,
+} from '@angular/core';
 import { SchedulePartsFragment } from '@graphql';
 import { DayOfWeekPipe } from '@pipes';
-import { addHours, isAfter } from 'date-fns';
-import { filter } from 'rxjs';
+import { defaultDate } from '@utils/contains';
+import { addHours, isAfter, isEqual } from 'date-fns';
 
 export type CalendarSlot = {
   day: string;
@@ -11,57 +20,64 @@ export type CalendarSlot = {
 
 @Component({
   selector: 'app-calendar',
-  imports: [DayOfWeekPipe],
+  imports: [DayOfWeekPipe, DatePipe, NgTemplateOutlet],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss',
 })
 export class CalendarComponent implements OnChanges {
+  @ContentChild('schedule') scheduleTemplate!: TemplateRef<any>;
+
   public days = input.required<string[], string>({ transform: transformDays });
   public firstHour = input.required<string>();
   public lastHour = input.required<string>();
   public schedules = input.required<SchedulePartsFragment[]>();
 
-  public hours = signal<string[]>([]);
+  public hours = signal<Date[]>([]);
 
   public select = output<CalendarSlot>();
 
   ngOnChanges(): void {
     this._generateHours(
-      new Date(`2025-06-15T${this.firstHour()}`),
-      new Date(`2025-06-15T${this.lastHour()}`)
+      new Date(`${defaultDate}T${this.firstHour()}`),
+      new Date(`${defaultDate}T${this.lastHour()}`)
     );
-
-    console.log('CalendarComponent inputs changed:', {
-      schedules: this.schedules(),
-    });
   }
 
-  public filteredSchedules(day: string, hour: string): SchedulePartsFragment[] {
+  public filteredSchedules(day: string, hour: Date): SchedulePartsFragment[] {
     return this.schedules().filter((schedule) => {
       const isDay = schedule.day === parseInt(day, 10);
 
-      const isStart = schedule.start.slice(0, 5) === hour;
-      const isEnd = schedule.end.slice(0, 5) === hour;
+      const scheduleStart = new Date(`${defaultDate}T${schedule.start}`);
+      const isStart = isEqual(scheduleStart, hour);
 
-      return isDay && isStart;
+      const scheduleEnd = new Date(`${defaultDate}T${schedule.end}`);
+      const isEnd = isEqual(scheduleEnd, addHours(hour, 1));
+
+      return isDay && (isStart || isEnd);
     });
   }
 
+  public getContextSchedule(schedule: SchedulePartsFragment) {
+    return {
+      $implicit: schedule
+    }
+  }
+
   private _generateHours(first: Date, last: Date) {
-    const hours: string[] = [];
+    const hours: Date[] = [];
 
     let current = new Date(first);
 
     while (!isAfter(current, last)) {
-      hours.push(current.toTimeString().slice(0, 5));
+      hours.push(current);
       current = addHours(current, 1);
     }
 
     this.hours = signal(hours);
   }
 
-  public selectSlot(day: string, hour: string) {
-    this.select.emit({ day, hour });
+  public selectSlot(day: string, hour: Date) {
+    this.select.emit({ day, hour: hour.toTimeString().slice(0, 5) });
   }
 }
 

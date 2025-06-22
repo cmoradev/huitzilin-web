@@ -14,6 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import {
   CreateOneScheduleGQL,
+  DeleteOneScheduleGQL,
   DisciplinePartsFragment,
   GetDisciplinesPageGQL,
   GetDisciplinesPageQueryVariables,
@@ -43,6 +44,7 @@ export class ScheduleFormDialogComponent {
   public readonly formTools = inject(FormToolsService);
 
   public loading = signal<boolean>(false);
+  public removeLoading = signal<boolean>(false);
   public data: SchedulePartsFragment | null = inject(MAT_DIALOG_DATA);
 
   public days = daysOfWeek;
@@ -51,6 +53,7 @@ export class ScheduleFormDialogComponent {
   private readonly _createOneSchedule = inject(CreateOneScheduleGQL);
   private readonly _updateOneSchedule = inject(UpdateOneScheduleGQL);
   private readonly _getDisciplinesPage = inject(GetDisciplinesPageGQL);
+  private readonly _deleteOneSchedule = inject(DeleteOneScheduleGQL);
 
   private readonly _snackBar = inject(MatSnackBar);
   private readonly _dialogRef = inject(
@@ -139,11 +142,43 @@ export class ScheduleFormDialogComponent {
     }
   }
 
+  public remove() {
+    if (!!this.data?.id) {
+      this.removeLoading.set(true);
+
+      this._deleteOneSchedule
+        .mutate({
+          id: this.data!.id,
+        })
+        .subscribe({
+          next: () => {
+            this._snackBar.open('Se ha eliminado correctamente', 'Cerrar', {
+              duration: 1000,
+              horizontalPosition: 'center',
+              verticalPosition: 'bottom',
+            });
+            this._dialogRef.close(true);
+          },
+          error: (err) => {
+            console.error('DELETE SCHEDULE ERROR: ', err);
+          },
+          complete: () => {
+            this.removeLoading.set(false);
+          },
+        });
+    }
+  }
+
   private _update(values: FormValues) {
     return this._updateOneSchedule
       .mutate({
         id: this.data!.id,
-        update: {},
+        update: {
+          day: parseInt(values.day, 10),
+          start: values.start.toTimeString().slice(0, 5),
+          end: values.end.toTimeString().slice(0, 5),
+          disciplineId: values.disciplineId,
+        },
       })
       .pipe(map((value) => value.data?.updateOneSchedule));
   }

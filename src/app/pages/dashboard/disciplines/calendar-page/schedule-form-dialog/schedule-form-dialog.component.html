@@ -76,9 +76,24 @@
     </div>
   </form>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
-  <button mat-button cdkFocusInitial form="dataForm" [disabled]="loading()">
-    {{ loading() ? "Guardando..." : "Guardar" }}
-  </button>
+<mat-dialog-actions>
+  <div class="flex justify-between w-full">
+    <button
+      mat-button
+      [disabled]="removeLoading()"
+      color="warn"
+      (click)="remove()"
+    >
+      {{ removeLoading() ? "Eliminando..." : "Eliminar" }}
+    </button>
+
+    <div>
+      <button mat-button mat-dialog-close [disabled]="loading()">
+        Cancelar
+      </button>
+      <button mat-button cdkFocusInitial form="dataForm" [disabled]="loading()">
+        {{ loading() ? "Guardando..." : "Guardar" }}
+      </button>
+    </div>
+  </div>
 </mat-dialog-actions>

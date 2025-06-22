@@ -62,7 +62,7 @@
         <mat-timepicker-toggle matIconSuffix [for]="timePicker1">
           <mat-icon matTimepickerToggleIcon>keyboard_arrow_down</mat-icon>
         </mat-timepicker-toggle>
-        <mat-timepicker #timePicker1 interval="1h" />
+        <mat-timepicker #timePicker1 interval="30min" />
         <mat-hint> Seleccione la hora de inicio de las actividades </mat-hint>
         <mat-error>
           {{ formTools.checkForErrorsIn(formGroup.get("firstHour")) }}
@@ -81,7 +81,7 @@
         <mat-timepicker-toggle matIconSuffix [for]="timePicker2">
           <mat-icon matTimepickerToggleIcon>keyboard_arrow_down</mat-icon>
         </mat-timepicker-toggle>
-        <mat-timepicker #timePicker2 interval="1h" />
+        <mat-timepicker #timePicker2 interval="30min" />
         <mat-hint> Seleccione la hora de cierre de las actividades </mat-hint>
         <mat-error>
           {{ formTools.checkForErrorsIn(formGroup.get("lastHour")) }}

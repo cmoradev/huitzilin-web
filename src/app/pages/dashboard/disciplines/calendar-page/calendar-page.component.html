@@ -75,7 +75,12 @@
           [lastHour]="period()!.lastHour"
           (select)="openAddScheduleDialog($event)"
           [schedules]="schedules()"
-        />
+          class="mt-2"
+        >
+          <ng-template #schedule let-schedule>
+            <app-schedule-item [schedule]="schedule" (selected)="openFormScheduleDialog($event)" />
+          </ng-template>
+        </app-calendar>
         }
       </div>
     </div>

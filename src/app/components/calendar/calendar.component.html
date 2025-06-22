@@ -10,15 +10,20 @@
     </tr>
   </thead>
   <tbody>
-    @for (hour of hours(); track hour + $index) {
+    @for (hour of hours(); track hour.getTime() + $index) {
     <tr>
-      <td>{{ hour }}</td>
+      <td class="text-xs">{{ hour | date:'h:mm a' }}</td>
       @for (day of days(); track day + $index) {
       <td class="schedule-cell" (click)="selectSlot(day, hour)">
-        <div>
+        <div class="flex flex-col gap-1">
           @for (schedule of filteredSchedules(day, hour); track schedule.id) {
-          <span>{{ schedule.discipline.name }}</span>
-          }
+          @if (scheduleTemplate) {
+          <ng-container
+            [ngTemplateOutlet]="scheduleTemplate"
+            [ngTemplateOutletContext]="getContextSchedule(schedule)"
+          >
+          </ng-container>
+          } }
         </div>
       </td>
       }

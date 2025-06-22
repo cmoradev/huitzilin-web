@@ -20,7 +20,6 @@ import {
   GetSchedulesPageGQL,
   GetSchedulesPageQueryVariables,
   PeriodPartsFragment,
-  Schedule,
   SchedulePartsFragment,
   SetOrderInput,
   SetOrderPeriodsGQL,
@@ -40,6 +39,8 @@ import {
 import { DisciplineFormDialogComponent } from '../discipline-form-dialog/discipline-form-dialog.component';
 import { ScheduleFormDialogComponent } from './schedule-form-dialog/schedule-form-dialog.component';
 import { addHours } from 'date-fns';
+import { ScheduleItemComponent } from './schedule-item/schedule-item.component';
+import { defaultDate } from '@utils/contains';
 
 @Component({
   selector: 'app-calendar-page',
@@ -58,6 +59,7 @@ import { addHours } from 'date-fns';
     PeriodItemComponent,
     CalendarComponent,
     NgScrollbar,
+    ScheduleItemComponent,
   ],
   templateUrl: './calendar-page.component.html',
   styles: ``,
@@ -131,7 +133,7 @@ export class CalendarPageComponent {
   }
 
   public openAddScheduleDialog(event: CalendarSlot) {
-    const firstHour = new Date(`2025-06-15T${event.hour}`);
+    const firstHour = new Date(`${defaultDate}T${event.hour}`);
     const lastHour = addHours(firstHour, 1);
 
     const schedule: Partial<SchedulePartsFragment> = {
@@ -143,6 +145,23 @@ export class CalendarPageComponent {
     const $dialog = this._dialog.open(ScheduleFormDialogComponent, {
       width: '30rem',
       data: schedule,
+    });
+
+    $dialog.afterClosed().subscribe({
+      next: (period) => {
+        if (period) this.refreshSchedules();
+      },
+    });
+  }
+
+  public openFormScheduleDialog(schedule: SchedulePartsFragment) {
+    const $dialog = this._dialog.open(ScheduleFormDialogComponent, {
+      width: '30rem',
+      data: {
+        ...schedule,
+        start: new Date(`${defaultDate}T${schedule.start}`).toISOString(),
+        end: new Date(`${defaultDate}T${schedule.end}`).toISOString(),
+      },
     });
 
     $dialog.afterClosed().subscribe({
