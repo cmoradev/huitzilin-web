@@ -1,7 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipListboxChange, MatChipsModule } from '@angular/material/chips';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { CalendarComponent } from '@components/calendar/calendar.component';
 import {
   GetSchedulesPageGQL,
@@ -11,7 +15,7 @@ import {
   SchedulePartsFragment,
 } from '@graphql';
 import { GlobalStateService } from '@services';
-import { map } from 'rxjs';
+import { concatMapTo, map } from 'rxjs';
 
 type Params = {
   period?: PeriodPartsFragment;
@@ -34,34 +38,46 @@ export class CalendarWithScheduleSelectDialogComponent implements OnInit {
   private readonly _globalState = inject(GlobalStateService);
   private readonly _gettSchedulesPage = inject(GetSchedulesPageGQL);
 
-  private readonly _dialogRef = inject(MatDialogRef<CalendarWithScheduleSelectDialogComponent>)
+  private readonly _dialogRef = inject(
+    MatDialogRef<CalendarWithScheduleSelectDialogComponent>
+  );
 
   public params: Params = inject(MAT_DIALOG_DATA);
   public schedules = signal<SchedulePartsFragment[]>([]);
   public loading = signal<boolean>(false);
 
-  private _selected = signal<SchedulePartsFragment[]>([]);
+  private _selected = new Map<string, SchedulePartsFragment>();
 
   ngOnInit(): void {
     this._fetchAllSchedules();
-
-    if (this.params.selected) this._selected.set(this.params.selected);
+    this._setSchedules();
   }
 
-  public isScheduleSelected(scheduleId: string): boolean {
-    return this._selected().some(
-      (schedule) => schedule.id === scheduleId
-    );
+  public isScheduleSelected(index: string, scheduleId: string): boolean {
+    if (this._selected.has(index)) {
+      return this._selected.get(index)?.id === scheduleId;
+    }
+
+    return false;
   }
 
-  public onDaySelection(event: MatChipListboxChange) {
-    this._selected.update(prev => {
-      return [...prev, event.value]
-    });
+  public onDaySelection(index: string, event: MatChipListboxChange) {
+    this._selected.set(index, event.value);
   }
 
   public submit() {
-    this._dialogRef.close(this._selected());
+    this._dialogRef.close(Array.from(this._selected.values()));
+  }
+
+  private _setSchedules() {
+    if (this.params.selected) {
+      this.params.selected.forEach((schedule) => {
+        const day = schedule.day;
+        const hour = schedule.start.slice(0, 5);
+
+        this._selected.set(`${day}-${hour}`, schedule);
+      });
+    }
   }
 
   private _fetchAllSchedules(accumulared: SchedulePartsFragment[] = []): void {

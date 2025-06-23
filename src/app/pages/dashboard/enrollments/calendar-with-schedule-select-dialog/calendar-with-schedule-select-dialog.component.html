@@ -12,12 +12,12 @@
       <mat-chip-listbox
         class="flex flex-col gap-1"
         [multiple]="false"
-        (change)="onDaySelection($event)"
+        (change)="onDaySelection(index, $event)"
       >
         @for (schedule of events; track schedule.id) {
         <mat-chip-option
           [value]="schedule"
-          [selected]="isScheduleSelected(schedule.id)"
+          [selected]="isScheduleSelected(index, schedule.id)"
         >
           {{ schedule.discipline.name }}
         </mat-chip-option>
