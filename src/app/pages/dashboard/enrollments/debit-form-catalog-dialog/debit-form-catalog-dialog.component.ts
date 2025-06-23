@@ -169,6 +169,8 @@ export class DebitFormCatalogDialogComponent implements OnInit {
     if (this.formGroup.valid) {
       const values = this.formGroup.getRawValue();
 
+      console.log('Form Values:', values);
+
       this.loading.set(true);
 
       if (!!this._globalStateService.enrollment?.id) {
@@ -177,7 +179,6 @@ export class DebitFormCatalogDialogComponent implements OnInit {
             debits: values.debits.map((debit: any) => ({
               description: debit.description,
               unitPrice: debit.unitPrice,
-
               discount: debit.discount,
               dueDate: debit.dueDate,
               quantity: debit.quantity,
@@ -185,13 +186,15 @@ export class DebitFormCatalogDialogComponent implements OnInit {
               withTax: debit.withTax,
               frequency: debit.frequency,
               paymentDate: null,
+              discounts: debit.discounts.map((discount: any) => ({
+                id: discount.id,
+              })),
               enrollmentId: this._globalStateService.enrollment!.id,
             })),
           })
           .pipe(map((resp) => resp.data?.createManyDebits))
           .subscribe({
             next: (resp) => {
-              console.log(resp);
               this.loading.set(false);
               this._dialogRef.close(resp);
             },

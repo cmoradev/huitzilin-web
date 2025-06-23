@@ -1,10 +1,10 @@
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
+import { MatButtonModule, MatIconButton } from '@angular/material/button';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { MatTooltip } from '@angular/material/tooltip';
+import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DebitPartsFragment, DebitState } from '@graphql';
 import { DebitStatePipe } from '@pipes';
 
@@ -12,13 +12,11 @@ import { DebitStatePipe } from '@pipes';
   selector: 'app-debit-item',
   imports: [
     NgClass,
-    MatIcon,
-    MatIconButton,
     MatListModule,
-    MatMenu,
-    MatMenuItem,
-    MatTooltip,
-    MatMenuTrigger,
+    MatTooltipModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
     DebitStatePipe,
     CurrencyPipe,
   ],
