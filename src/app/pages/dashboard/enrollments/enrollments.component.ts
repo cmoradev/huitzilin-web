@@ -189,7 +189,11 @@ export class EnrollmentsComponent implements OnInit {
       this.enrollmentsLoading.set(true);
 
       this._enrollmentsPageGQL
-        .watch(params)
+        .watch(params, {
+          fetchPolicy: 'cache-and-network',
+          nextFetchPolicy: 'cache-and-network',
+          notifyOnNetworkStatusChange: true,
+        })
         .valueChanges.pipe(map((resp) => resp.data.enrollments))
         .subscribe({
           next: ({ nodes, totalCount }) => {
