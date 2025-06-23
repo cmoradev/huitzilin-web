@@ -70,11 +70,17 @@
             selectable
             class="mt-2"
           >
-            <ng-template #schedule let-schedule>
-              <app-schedule-item
-                [schedule]="schedule"
-                (selected)="openFormScheduleDialog($event)"
-              />
+            <ng-template #schedule let-schedules>
+              <div class="flex flex-col gap-1">
+                @for (schedule of schedules; track schedule.id) {
+                <mat-chip
+                  (click)="openFormScheduleDialog($event, schedule)"
+                  class="w-full"
+                >
+                  {{ schedule.discipline.name }}
+                </mat-chip>
+                }
+              </div>
             </ng-template>
           </app-calendar>
           }

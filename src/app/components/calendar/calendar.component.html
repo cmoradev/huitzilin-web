@@ -16,19 +16,18 @@
       @for (day of days(); track day + $index) {
       <td
         class="schedule-cell"
-        [ngClass]="{ selectable: selectable() }"
+        [ngClass]="{ selectable: selectable(), 'cursor-pointer': selectable() }"
         (click)="selectSlot(day, hour)"
       >
-        <div class="flex flex-col gap-1">
-          @for (schedule of filteredSchedules(day, hour); track schedule.id) {
-          @if (scheduleTemplate) {
-          <ng-container
-            [ngTemplateOutlet]="scheduleTemplate"
-            [ngTemplateOutletContext]="getContextSchedule(schedule)"
-          >
-          </ng-container>
-          } }
-        </div>
+        @if (scheduleTemplate) {
+        <ng-container
+          [ngTemplateOutlet]="scheduleTemplate"
+          [ngTemplateOutletContext]="{
+            $implicit: filteredSchedules(day, hour)
+          }"
+        >
+        </ng-container>
+        }
       </td>
       }
     </tr>

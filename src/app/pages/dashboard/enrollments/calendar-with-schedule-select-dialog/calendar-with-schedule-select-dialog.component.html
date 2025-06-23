@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Calendario de actividades</h2>
+<mat-dialog-content>
+  @if (!!params.period?.id) {
+  <app-calendar
+    [id]="params!.period!.id"
+    [days]="params!.period!.days"
+    [firstHour]="params!.period!.firstHour"
+    [lastHour]="params!.period!.lastHour"
+    [schedules]="schedules()"
+  >
+    <ng-template #schedule let-schedules>
+        
+      @for (schedule of schedules; track schedule.id) {
+      <mat-chip-option>{{ schedule.discipline.name }}</mat-chip-option>
+      }
+    </ng-template>
+  </app-calendar>
+  }
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button mat-button cdkFocusInitial>Guardar</button>
+</mat-dialog-actions>

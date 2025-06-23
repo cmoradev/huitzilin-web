@@ -2,41 +2,6 @@
 <mat-dialog-content>
   <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
     <div class="flex flex-col gap-3">
-      <mat-form-field>
-        <mat-label>Periodo</mat-label>
-        <mat-select
-          formControlName="period"
-          [compareWith]="periodTools.compareFn"
-        >
-          @for (period of periodTools.options(); track $index) {
-          <mat-option [value]="period">
-            {{ period.name }}
-          </mat-option>
-          }
-        </mat-select>
-        <mat-hint> Seleccione un periodo </mat-hint>
-        <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("period")) }}
-        </mat-error>
-      </mat-form-field>
-
-      @if (!!formGroup.get('period')?.value) {
-      <app-calendar
-        [id]="formGroup.get('period')!.value!.id"
-        [days]="formGroup.get('period')!.value!.days"
-        [firstHour]="formGroup.get('period')!.value!.firstHour"
-        [lastHour]="formGroup.get('period')!.value!.lastHour"
-        [schedules]="[]"
-      >
-        <!-- <ng-template #schedule let-schedule>
-          <app-schedule-item
-            [schedule]="schedule"
-            (selected)="openFormScheduleDialog($event)"
-          />
-        </ng-template> -->
-      </app-calendar>
-      }
-
       <mat-form-field class="w-full">
         <mat-label>Seleccione un nivel</mat-label>
         <input
@@ -70,6 +35,28 @@
           }
         </mat-autocomplete>
       </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Periodo</mat-label>
+        <mat-select
+          formControlName="period"
+          [compareWith]="periodTools.compareFn"
+        >
+          @for (period of periodTools.options(); track $index) {
+          <mat-option [value]="period">
+            {{ period.name }}
+          </mat-option>
+          }
+        </mat-select>
+        <mat-hint> Seleccione un periodo </mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("period")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <div class="flex gap-2">
+        <mat-chip (click)="openCalendar()"> Abrir calendario </mat-chip>
+      </div>
 
       <mat-form-field class="w-full">
         <mat-label>Seleccionar lista de precios</mat-label>

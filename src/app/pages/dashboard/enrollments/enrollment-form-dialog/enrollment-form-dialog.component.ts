@@ -3,8 +3,10 @@ import { AfterViewInit, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 import {
   MAT_DIALOG_DATA,
+  MatDialog,
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
@@ -31,6 +33,7 @@ import {
 } from '@services';
 import { enrollmentStates } from '@utils/contains';
 import { debounceTime, filter, map, merge, startWith } from 'rxjs';
+import { CalendarWithScheduleSelectDialogComponent } from '../calendar-with-schedule-select-dialog/calendar-with-schedule-select-dialog.component';
 
 type EnrollmentFormDialogData = EnrollmentPartsFragment | null;
 
@@ -45,13 +48,14 @@ type EnrollmentFormDialogData = EnrollmentPartsFragment | null;
     MatSelectModule,
     MatIconModule,
     ReactiveFormsModule,
-    CalendarComponent,
+    MatChipsModule,
   ],
   templateUrl: './enrollment-form-dialog.component.html',
   styles: ``,
 })
 export class EnrollmentFormDialogComponent implements AfterViewInit {
   public readonly formTools = inject(FormToolsService);
+  private readonly _dialog = inject(MatDialog);
 
   public loading = signal(false);
   public data: EnrollmentFormDialogData = inject(MAT_DIALOG_DATA);
@@ -170,6 +174,28 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
           },
         });
       }
+    }
+  }
+
+  public openCalendar() {
+    const period = this.formGroup.get('period')?.value;
+    const level = this.formGroup.get('level')?.value;
+
+    if (!!period?.id && !!level?.id) {
+      const $dialog = this._dialog.open(
+        CalendarWithScheduleSelectDialogComponent,
+        {
+          width: '56rem',
+          maxWidth: '95vw',
+          data: { period, level },
+        }
+      );
+
+      $dialog.afterClosed().subscribe({
+        next: (schedules) => {
+          console.log('SCHEDULES: ', schedules);
+        },
+      });
     }
   }
 

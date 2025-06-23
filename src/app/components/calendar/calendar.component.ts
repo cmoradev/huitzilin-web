@@ -63,12 +63,6 @@ export class CalendarComponent implements OnChanges {
     });
   }
 
-  public getContextSchedule(schedule: SchedulePartsFragment) {
-    return {
-      $implicit: schedule,
-    };
-  }
-
   private _generateHours(first: Date, last: Date) {
     const hours: Date[] = [];
 

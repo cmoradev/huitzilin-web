@@ -36,11 +36,10 @@ import {
   CalendarComponent,
   CalendarSlot,
 } from '@components/calendar/calendar.component';
-import { DisciplineFormDialogComponent } from '../discipline-form-dialog/discipline-form-dialog.component';
 import { ScheduleFormDialogComponent } from './schedule-form-dialog/schedule-form-dialog.component';
 import { addHours } from 'date-fns';
-import { ScheduleItemComponent } from './schedule-item/schedule-item.component';
 import { defaultDate } from '@utils/contains';
+import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-calendar-page',
@@ -55,11 +54,11 @@ import { defaultDate } from '@utils/contains';
     MatTooltipModule,
     DragDropModule,
     MatProgressBarModule,
+    MatChipsModule,
     RouterLink,
     PeriodItemComponent,
     CalendarComponent,
     NgScrollbar,
-    ScheduleItemComponent,
   ],
   templateUrl: './calendar-page.component.html',
   styles: ``,
@@ -154,7 +153,12 @@ export class CalendarPageComponent {
     });
   }
 
-  public openFormScheduleDialog(schedule: SchedulePartsFragment) {
+  public openFormScheduleDialog(
+    event: MouseEvent,
+    schedule: SchedulePartsFragment
+  ) {
+    event.stopPropagation();
+
     const $dialog = this._dialog.open(ScheduleFormDialogComponent, {
       width: '30rem',
       data: {
