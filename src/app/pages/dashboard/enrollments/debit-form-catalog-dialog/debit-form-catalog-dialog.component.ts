@@ -38,6 +38,7 @@ import { DebitWithDiscountFormComponent } from '../debit-with-discount-form/debi
 import {
   calculateAmountFromTotalAndTax,
   calculateAmountFromUnitPriceAndQuantity,
+  calculateTotalFromBaseAndTax,
   TaxEnum,
 } from '@calculations';
 
@@ -176,7 +177,7 @@ export class DebitFormCatalogDialogComponent implements OnInit {
             debits: values.debits.map((debit: any) => ({
               description: debit.description,
               unitPrice: debit.unitPrice,
-  
+
               discount: debit.discount,
               dueDate: debit.dueDate,
               quantity: debit.quantity,
@@ -202,25 +203,22 @@ export class DebitFormCatalogDialogComponent implements OnInit {
   private generateDebits(value: FeePartsFragment) {
     this.formGroup.get('fee')!.setValue(null);
 
-    const { amount, taxes } = calculateAmountFromTotalAndTax(
-      value.price,
-      value.withTax ? TaxEnum.Sixteen : TaxEnum.Zero
-    );
-
     switch (value.frequency) {
       case Frequency.Monthly:
         if (
-          !!this._globalStateService?.cycle?.start &&
-          !!this._globalStateService?.cycle?.end
+          !!this._globalStateService!.enrollment!.period!.start &&
+          !!this._globalStateService!.enrollment!.period!.end
         ) {
-          const startCycle = startOfMonth(
-            this._globalStateService!.cycle!.start
+          const startPeriod = startOfMonth(
+            `${this._globalStateService!.enrollment!.period!.start}T12:00:00`
           );
-          const endCycle = endOfMonth(this._globalStateService!.cycle!.end);
+          const endPeriod = endOfMonth(
+            `${this._globalStateService!.enrollment!.period!.end}T12:00:00`
+          );
 
-          let currentDate = startCycle;
+          let currentDate = startPeriod;
 
-          while (isBefore(currentDate, endCycle)) {
+          while (isBefore(currentDate, endPeriod)) {
             currentDate = setDate(currentDate, 5);
 
             const description = `${value.name} - ${format(
@@ -229,12 +227,12 @@ export class DebitFormCatalogDialogComponent implements OnInit {
             )}`;
 
             this.addDebit({
-              description,
-              unitPrice: amount,
               quantity: 1,
-              state: DebitState.Debt,
               dueDate: format(currentDate, 'yyyy-MM-dd') + 'T12:00:00',
+              description,
               withTax: value.withTax,
+              unitPrice: value.amount,
+              state: DebitState.Debt,
               frequency: Frequency.Single,
             });
 
@@ -247,7 +245,7 @@ export class DebitFormCatalogDialogComponent implements OnInit {
       default:
         this.addDebit({
           description: value.name,
-          unitPrice: amount,
+          unitPrice: value.amount,
           quantity: 1,
           state: DebitState.Debt,
           dueDate: defaultDueDate,

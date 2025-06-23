@@ -8,7 +8,7 @@
         <mat-option [value]="fee">
           <h4 mat-line>{{ fee.name }}</h4>
           <p mat-line class="text-sm text-gray-500">
-            {{ fee.amount| currency }} - {{ fee.frequency | frequency }}
+            {{ fee.amount| currency:'MXN' }} - {{ fee.frequency | frequency }}
           </p>
         </mat-option>
         }

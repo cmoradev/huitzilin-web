@@ -23,10 +23,9 @@ import {
 } from '@calculations';
 import { FormToolsService } from '@services';
 import { merge, startWith } from 'rxjs';
-import { MatMenuModule } from '@angular/material/menu';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectDebitDiscountFormDialogComponent } from '../select-debit-discount-form-dialog/select-debit-discount-form-dialog.component';
-import { CreateDiscount, DiscountBy } from '@graphql';
+import { DiscountBy, DiscountPartsFragment } from '@graphql';
 import { toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -130,13 +129,7 @@ export class DebitWithDiscountFormComponent implements OnInit {
     dialog$.afterClosed().subscribe({
       next: (discount) => {
         if (discount) {
-          const discountName = this.generateDiscountName(discount);
-
-          // this.addDebitDiscount({
-          //   name: discountName,
-          //   type: discount.type,
-          //   value: discount.value,
-          // });
+          this.addDebitDiscount(discount);
         }
       },
     });
@@ -150,27 +143,14 @@ export class DebitWithDiscountFormComponent implements OnInit {
     this.discounts.removeAt(index);
   }
 
-  private generateDiscountName(
-    params: Pick<CreateDiscount, 'value' | 'type'>
-  ): string {
-    const { value, type } = params;
-
-    switch (type) {
-      case DiscountBy.Percentage:
-        return `${value}%`;
-      case DiscountBy.Fixed:
-        return `$ ${value.toString()}`;
-      default:
-        return '';
-    }
-  }
-
-  private addDebitDiscount(
-    initialValues: Omit<CreateDiscount, 'debitId'>
-  ): void {
-    const { name, type, value } = initialValues;
+  private addDebitDiscount(initialValues: DiscountPartsFragment): void {
+    const { name, type, value, id } = initialValues;
 
     const debitDiscountFormGroup = this._formTools.builder.group({
+      id: this._formTools.builder.control<string>(id, {
+        validators: [Validators.required],
+        nonNullable: true,
+      }),
       name: this._formTools.builder.control<string>(name, {
         validators: [Validators.required],
         nonNullable: true,

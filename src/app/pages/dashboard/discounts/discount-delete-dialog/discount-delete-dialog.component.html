@@ -8,7 +8,7 @@
     <p class="text-sm text-gray-500">{{ data.value }}%</p>
     } @else if (data.type === 'FIXED') {
     <p class="text-sm text-gray-500">
-      {{ data.value | currency }}
+      {{ data.value | currency:'MXN' }}
     </p>
     }
   </div>

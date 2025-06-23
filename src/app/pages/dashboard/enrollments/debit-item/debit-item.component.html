@@ -11,7 +11,7 @@
 
   <div>
     <p>{{ debit.dueDate }} - {{ debit.description }}</p>
-    <p class="text-xs">Cobranza: {{ debit.total | currency }}</p>
+    <p class="text-xs">Cobranza: {{ debit.total | currency:'MXN' }}</p>
   </div>
 
    <span class="flex-1"></span>

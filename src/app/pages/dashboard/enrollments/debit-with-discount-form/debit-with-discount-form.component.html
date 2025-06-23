@@ -1,11 +1,9 @@
 <mat-expansion-panel>
   <mat-expansion-panel-header>
     <mat-panel-title>
+      {{ total() | currency:'MXN' }} -
       {{ formGroup.get("description")?.value || "No description provided" }}
     </mat-panel-title>
-    <mat-panel-description> 
-      {{ total() | currency }}
-    </mat-panel-description>
   </mat-expansion-panel-header>
 
   <form id="dataForm" [formGroup]="formGroup">
@@ -28,15 +26,7 @@
             {{ formTools.checkForErrorsIn(formGroup.get("dueDate")) }}
           </mat-error>
         </mat-form-field>
-        <mat-checkbox
-          formControlName="withTax"
-          matTooltip="El IVA se aplica despues de los descuentos"
-        >
-          ¿Incluye IVA?
-        </mat-checkbox>
-      </div>
 
-      <div class="grid grid-cols-2 gap-3">
         <mat-form-field>
           <mat-label>Precio unitario</mat-label>
           <input
@@ -50,67 +40,80 @@
             {{ formTools.checkForErrorsIn(formGroup.get("unitPrice")) }}
           </mat-error>
         </mat-form-field>
-
-        <mat-form-field>
-          <mat-label>Cantidad de unidades</mat-label>
-          <input
-            matInput
-            placeholder="Ej: 2"
-            formControlName="quantity"
-            type="number"
-          />
-          <mat-hint>Ingrese la cantidad de unidades</mat-hint>
-          <mat-error>
-            {{ formTools.checkForErrorsIn(formGroup.get("quantity")) }}
-          </mat-error>
-        </mat-form-field>
       </div>
 
-      <mat-chip-set formArrayName="discounts">
-        @for (discountFormGroup of discounts.controls; track $index +
-        discountFormGroup.get('value')?.value) {
+      @if (formGroup.get("frequency")?.value === 'HOURLY') {
+      <mat-form-field>
+        <mat-label>Horas</mat-label>
+        <input
+          matInput
+          placeholder="Ej: 2"
+          formControlName="quantity"
+          type="number"
+        />
+        <mat-hint>Ingrese la cantidad de horas</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("quantity")) }}
+        </mat-error>
+      </mat-form-field>
+      }
 
-        <mat-chip>
-          @if (discountFormGroup.get('type')?.value === 'PERCENTAGE') {
-          <span>- {{ discountFormGroup.get("value")?.value }} %</span>
-          } @else if (discountFormGroup.get('type')?.value === 'FIXED') {
-          <span>- {{ discountFormGroup.get("value")?.value | currency }}</span>
+      <div class="grid grid-cols-2 gap-3">
+        <mat-chip-set formArrayName="discounts">
+          @for (discountFormGroup of discounts.controls; track $index +
+          discountFormGroup.get('value')?.value) {
+          <mat-chip>
+            @if (discountFormGroup.get('type')?.value === 'PERCENTAGE') {
+            <span>- {{ discountFormGroup.get("value")?.value }} %</span>
+            } @else if (discountFormGroup.get('type')?.value === 'FIXED') {
+            <span
+              >- {{ discountFormGroup.get("value")?.value | currency:'MXN' }}</span
+            >
+            }
+
+            <button matChipRemove (click)="removeDiscount($index)">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
           }
 
-          <button matChipRemove (click)="removeDiscount($index)">
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </mat-chip>
-        }
+          <mat-chip (click)="selectDebitDiscount()">
+            Agregar descuento
+          </mat-chip>
+        </mat-chip-set>
 
-        <mat-chip (click)="selectDebitDiscount()"> Agregar descuento </mat-chip>
-      </mat-chip-set>
+        <mat-checkbox
+          formControlName="withTax"
+          matTooltip="El IVA se aplica despues de los descuentos"
+        >
+          ¿Incluye IVA?
+        </mat-checkbox>
+      </div>
 
       <div class="w-60 flex flex-col gap-2 ml-auto">
         <div class="flex gap-2 w-full">
           <p class="w-full text-right font-semibold">Importe</p>
-          <p class="w-full text-right">{{ amount() | currency }}</p>
+          <p class="w-full text-right">{{ amount() | currency:'MXN' }}</p>
         </div>
         <div class="flex gap-2 w-full">
           <p class="w-full text-right font-semibold">Descuentos</p>
           <p class="w-full text-right">
-            {{ this.formGroup.get("discount")?.value ?? 0 | currency }}
+            {{ this.formGroup.get("discount")?.value ?? 0 | currency:'MXN' }}
           </p>
         </div>
         <div class="flex gap-2 w-full">
           <p class="w-full text-right font-semibold">Subtotal</p>
-          <p class="w-full text-right">{{ subtotal() | currency }}</p>
+          <p class="w-full text-right">{{ subtotal() | currency:'MXN' }}</p>
         </div>
         <div class="flex gap-2 w-full">
           <p class="w-full text-right font-semibold">IVA</p>
-          <p class="w-full text-right">{{ taxes() | currency }}</p>
+          <p class="w-full text-right">{{ taxes() | currency:'MXN' }}</p>
         </div>
         <div class="flex gap-2 w-full">
           <p class="w-full text-right font-semibold">Total</p>
-          <p class="w-full text-right">{{ total() | currency }}</p>
+          <p class="w-full text-right">{{ total() | currency:'MXN' }}</p>
         </div>
       </div>
     </div>
   </form>
 </mat-expansion-panel>
-
