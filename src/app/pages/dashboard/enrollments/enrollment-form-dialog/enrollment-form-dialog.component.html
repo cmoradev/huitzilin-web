@@ -54,8 +54,13 @@
         </mat-error>
       </mat-form-field>
 
-      <div class="flex gap-2">
-        <mat-chip (click)="openCalendar()"> Abrir calendario </mat-chip>
+      <div class="flex items-center gap-2">
+        <mat-chip> {{ hoursCount() }} horas </mat-chip>
+        <mat-chip> {{ disciplineCount() }} disciplinas </mat-chip>
+
+        <button mat-icon-button (click)="openCalendar()" type="button" matTooltip="Calendario">
+          <mat-icon svgIcon="calendar" />
+        </button>
       </div>
 
       <mat-form-field class="w-full">

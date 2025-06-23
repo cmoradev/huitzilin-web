@@ -2306,6 +2306,7 @@ export type Schedule = {
   discipline: Discipline;
   disciplineId: Scalars['ID']['output'];
   end: Scalars['String']['output'];
+  enrollments: Array<Enrollment>;
   id: Scalars['ID']['output'];
   levels: Array<Level>;
   period: Period;
@@ -2313,6 +2314,12 @@ export type Schedule = {
   start: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
+};
+
+
+export type ScheduleEnrollmentsArgs = {
+  filter?: EnrollmentFilter;
+  sorting?: Array<EnrollmentSort>;
 };
 
 
@@ -2352,10 +2359,28 @@ export type ScheduleFilter = {
   createdAt?: InputMaybe<DateFieldComparison>;
   day?: InputMaybe<IntFieldComparison>;
   disciplineId?: InputMaybe<IdFilterComparison>;
+  enrollments?: InputMaybe<ScheduleFilterEnrollmentFilter>;
   id?: InputMaybe<IdFilterComparison>;
   levels?: InputMaybe<ScheduleFilterLevelFilter>;
   or?: InputMaybe<Array<ScheduleFilter>>;
   periodId?: InputMaybe<IdFilterComparison>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type ScheduleFilterEnrollmentFilter = {
+  and?: InputMaybe<Array<ScheduleFilterEnrollmentFilter>>;
+  branchId?: InputMaybe<IdFilterComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  cycleId?: InputMaybe<IdFilterComparison>;
+  details?: InputMaybe<StringFieldComparison>;
+  diciplines?: InputMaybe<NumberFieldComparison>;
+  hours?: InputMaybe<NumberFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  levelId?: InputMaybe<IdFilterComparison>;
+  or?: InputMaybe<Array<ScheduleFilterEnrollmentFilter>>;
+  order?: InputMaybe<NumberFieldComparison>;
+  packageId?: InputMaybe<IdFilterComparison>;
+  studentId?: InputMaybe<IdFilterComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 

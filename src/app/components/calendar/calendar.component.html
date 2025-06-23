@@ -23,7 +23,8 @@
         <ng-container
           [ngTemplateOutlet]="scheduleTemplate"
           [ngTemplateOutletContext]="{
-            $implicit: filteredSchedules(day, hour)
+            events: filteredSchedules(day, hour),
+            index: createIndex(day, hour),
           }"
         >
         </ng-container>
@@ -34,22 +35,3 @@
     }
   </tbody>
 </table>
-
-<!-- <div
-  class="grid"
-  [style]="{
-    gridTemplateColumns: 'repeat(' + (days.length + 1) + ', minmax(0, 1fr))'
-  }"
->
-  <div class="col-span-1">
-    <h3 class="font-medium">Horarios</h3>
-  </div>
-
-  @for (day of days; track day + $index) {
-  <div class="col-span-1">
-    <h3 class="font-medium">
-      {{ day | dayOfWeek }}
-    </h3>
-  </div>
-  }
-</div> -->

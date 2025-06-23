@@ -23,6 +23,9 @@ import {
   UpdateOneEnrollmentGQL,
   LevelPartsFragment,
   PeriodPartsFragment,
+  SchedulePartsFragment,
+  GetSchedulesPageQueryVariables,
+  GetSchedulesPageGQL,
 } from '@graphql';
 import {
   FormToolsService,
@@ -31,9 +34,12 @@ import {
   PackageToolsService,
   PeriodToolsService,
 } from '@services';
-import { enrollmentStates } from '@utils/contains';
+import { defaultDate, enrollmentStates } from '@utils/contains';
 import { debounceTime, filter, map, merge, startWith } from 'rxjs';
 import { CalendarWithScheduleSelectDialogComponent } from '../calendar-with-schedule-select-dialog/calendar-with-schedule-select-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { differenceInHours } from 'date-fns';
+import { Discipline } from '../../../../graphql/generated';
 
 type EnrollmentFormDialogData = EnrollmentPartsFragment | null;
 
@@ -49,6 +55,7 @@ type EnrollmentFormDialogData = EnrollmentPartsFragment | null;
     MatIconModule,
     ReactiveFormsModule,
     MatChipsModule,
+    MatTooltipModule,
   ],
   templateUrl: './enrollment-form-dialog.component.html',
   styles: ``,
@@ -59,6 +66,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
 
   public loading = signal(false);
   public data: EnrollmentFormDialogData = inject(MAT_DIALOG_DATA);
+  public schedules = signal<SchedulePartsFragment[]>([]);
 
   public formGroup = this.formTools.builder.group({
     details: [
@@ -77,10 +85,14 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   private readonly _globalStateService = inject(GlobalStateService);
   private readonly _createOneEnrollment = inject(CreateOneEnrollmentGQL);
   private readonly _updateOneEnrollment = inject(UpdateOneEnrollmentGQL);
+  private readonly _gettSchedulesPage = inject(GetSchedulesPageGQL);
 
   public levelTools = inject(LevelToolsService);
   public packageTools = inject(PackageToolsService);
   public periodTools = inject(PeriodToolsService);
+
+  public disciplineCount = signal<number>(0);
+  public hoursCount = signal<number>(0);
 
   public enrollmentStates = enrollmentStates;
 
@@ -98,6 +110,8 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
         period: this.data.period,
         level: this.data.level,
       });
+
+      this._fetchAllSchedules();
     }
 
     merge(
@@ -187,16 +201,34 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
         {
           width: '56rem',
           maxWidth: '95vw',
-          data: { period, level },
+          data: { period, level, selected: this.schedules() },
         }
       );
 
       $dialog.afterClosed().subscribe({
         next: (schedules) => {
-          console.log('SCHEDULES: ', schedules);
+          this.schedules.set(Array.from(schedules));
+          this._updateCountSchedules();
         },
       });
     }
+  }
+
+  private _updateCountSchedules() {
+    const disciplineIds = this.schedules().map(
+      (schedule) => schedule.discipline.id
+    );
+    const disciplines = new Set<string>(disciplineIds);
+
+    const hours = this.schedules().reduce((acc, schedule) => {
+      const start = new Date(`${defaultDate}T${schedule.start}`);
+      const end = new Date(`${defaultDate}T${schedule.end}`);
+
+      return acc + differenceInHours(end, start);
+    }, 0);
+
+    this.disciplineCount.set(disciplines.size);
+    this.hoursCount.set(hours);
   }
 
   private _update(values: FormValues) {
@@ -204,9 +236,14 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
       .mutate({
         id: this.data!.id,
         update: {
-          packageId: values.package.id,
           details: values.details,
           state: values.state,
+          packageId: values.package.id,
+          levelId: values.level.id,
+          periodId: values.period.id,
+          hours: this.hoursCount(),
+          diciplines: this.disciplineCount(),
+          schedules: this.schedules().map((schedule) => ({ id: schedule.id })),
         },
       })
       .pipe(map((value) => value.data?.updateOneEnrollment));
@@ -226,12 +263,48 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
           end: values.period.end,
           details: values.details,
           state: values.state,
-          hours: 0,
-          diciplines: 0,
+          hours: this.hoursCount(),
+          diciplines: this.disciplineCount(),
+          schedules: this.schedules().map((schedule) => ({ id: schedule.id })),
           order: 0,
         },
       })
       .pipe(map((value) => value.data?.createOneEnrollment));
+  }
+
+  private _fetchAllSchedules(accumulared: SchedulePartsFragment[] = []): void {
+    if (!!this.data?.id) {
+      const limit = 50;
+      const offset = accumulared.length;
+
+      const variables: GetSchedulesPageQueryVariables = {
+        filter: { enrollments: { id: { eq: this.data.id } } },
+        limit,
+        offset,
+      };
+
+      const fetch$ = this._gettSchedulesPage.watch(variables, {
+        fetchPolicy: 'cache-and-network', // Usa cache primero, solo pide a la API si no hay datos en cache
+        nextFetchPolicy: 'cache-and-network', // Mantiene la política de cache en siguientes peticiones
+        notifyOnNetworkStatusChange: false, // No notifica cambios de red para evitar refetch innecesario
+      }).valueChanges;
+
+      fetch$.pipe(map((resp) => resp.data.schedules)).subscribe({
+        next: ({ nodes, totalCount }) => {
+          const allItems = accumulared.concat(nodes);
+          if (allItems.length >= totalCount) {
+            this.schedules.set(allItems);
+            this.loading.set(false);
+            this._updateCountSchedules();
+            return; // No more fees to fetch
+          }
+          this._fetchAllSchedules(allItems);
+        },
+        error: (error) => {
+          console.error('Error fetching disciplines', error);
+        },
+      });
+    }
   }
 }
 

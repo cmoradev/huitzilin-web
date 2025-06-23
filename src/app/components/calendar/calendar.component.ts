@@ -63,6 +63,10 @@ export class CalendarComponent implements OnChanges {
     });
   }
 
+  public createIndex(day: string, hour: Date): string {
+    return `${day}-${hour.toTimeString().slice(0, 5)}`;
+  }
+
   private _generateHours(first: Date, last: Date) {
     const hours: Date[] = [];
 

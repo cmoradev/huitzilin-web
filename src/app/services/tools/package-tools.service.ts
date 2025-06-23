@@ -29,8 +29,8 @@ export class PackageToolsService {
       };
 
       const fetch$ = this._fetch.watch(variables, {
-        fetchPolicy: 'cache-first',
-        nextFetchPolicy: 'cache-first',
+        fetchPolicy: 'cache-and-network',
+        nextFetchPolicy: 'cache-and-network',
         notifyOnNetworkStatusChange: true,
       }).valueChanges;
 
@@ -64,8 +64,8 @@ export class PackageToolsService {
       };
 
       const fetch$ = this._fetch.watch(variables, {
-        fetchPolicy: 'cache-first', // Usa cache primero, solo pide a la API si no hay datos en cache
-        nextFetchPolicy: 'cache-first', // Mantiene la política de cache en siguientes peticiones
+        fetchPolicy: 'cache-and-network', // Usa cache primero, solo pide a la API si no hay datos en cache
+        nextFetchPolicy: 'cache-and-network', // Mantiene la política de cache en siguientes peticiones
         notifyOnNetworkStatusChange: false, // No notifica cambios de red para evitar refetch innecesario
       }).valueChanges;
 
