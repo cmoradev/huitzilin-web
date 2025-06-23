@@ -1,3 +1,3 @@
-<div class="w-full p-1 bg-primary rounded-[var(--mat-sys-corner-small)] text-white" (click)="selectedSchedule($event)" matRipple>
-    <p class="text-xs">{{ schedule().discipline.name }}</p>
-</div>
+<mat-chip (click)="selectedSchedule($event)" class="w-full">
+  {{ schedule().discipline.name }}
+</mat-chip>

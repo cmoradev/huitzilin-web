@@ -1,52 +1,33 @@
+import { DatePipe, JsonPipe } from '@angular/common';
 import { AfterViewInit, Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  MatAutocomplete,
-  MatAutocompleteModule,
-  MatAutocompleteTrigger,
-  MatOption,
-} from '@angular/material/autocomplete';
-import {
-  MatButton,
-  MatButtonModule,
-  MatIconButton,
-} from '@angular/material/button';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
   MatDialogModule,
   MatDialogRef,
-  MatDialogTitle,
 } from '@angular/material/dialog';
-import {
-  MatFormField,
-  MatHint,
-  MatError,
-  MatLabel,
-  MatFormFieldModule,
-} from '@angular/material/form-field';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
-import { MatInput, MatInputModule } from '@angular/material/input';
-import { MatSelect, MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { CalendarComponent } from '@components/calendar/calendar.component';
 import {
   PackagePartsFragment,
   CreateOneEnrollmentGQL,
   EnrollmentPartsFragment,
   EnrollmentState,
-  GetPackagePageGQL,
   UpdateOneEnrollmentGQL,
-  GetLevelsPageGQL,
   LevelPartsFragment,
-  PackageFilter,
+  PeriodPartsFragment,
 } from '@graphql';
-import { PackageKindPipe } from '@pipes';
 import {
   FormToolsService,
   GlobalStateService,
   LevelToolsService,
   PackageToolsService,
+  PeriodToolsService,
 } from '@services';
 import { enrollmentStates } from '@utils/contains';
 import { debounceTime, filter, map, merge, startWith } from 'rxjs';
@@ -64,7 +45,7 @@ type EnrollmentFormDialogData = EnrollmentPartsFragment | null;
     MatSelectModule,
     MatIconModule,
     ReactiveFormsModule,
-    PackageKindPipe,
+    CalendarComponent,
   ],
   templateUrl: './enrollment-form-dialog.component.html',
   styles: ``,
@@ -83,6 +64,10 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
     state: [EnrollmentState.Active, [Validators.required]],
     package: ['' as any, [Validators.required]],
     level: ['' as any, [Validators.required]],
+    period: this.formTools.builder.control<PeriodPartsFragment | null>(null, {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
   });
 
   private readonly _globalStateService = inject(GlobalStateService);
@@ -90,7 +75,8 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   private readonly _updateOneEnrollment = inject(UpdateOneEnrollmentGQL);
 
   public levelTools = inject(LevelToolsService);
-  public packagesTools = inject(PackageToolsService);
+  public packageTools = inject(PackageToolsService);
+  public periodTools = inject(PeriodToolsService);
 
   public enrollmentStates = enrollmentStates;
 
@@ -99,27 +85,29 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   );
 
   ngOnInit(): void {
+    this.periodTools.fetchAll();
+
     if (!!this.data?.id) {
       this.formGroup.patchValue({
         details: this.data.details,
         package: this.data.package,
+        period: this.data.period,
         level: this.data.level,
       });
     }
-    // @todo - Check this event rename details enrollment
+
     merge(
       this.formGroup.get('package')!.valueChanges,
-      this.formGroup.get('level')!.valueChanges
+      this.formGroup.get('period')!.valueChanges
     )
       .pipe(filter((value) => typeof value === 'object'))
       .subscribe(() => {
         const packageName = this.formGroup.get('package')?.value?.name ?? '';
-        const levelAbbrevation =
-          this.formGroup.get('level')?.value?.abbreviation ?? '';
+        const periodName = this.formGroup.get('period')?.value?.name ?? '';
 
         this.formGroup
           .get('details')
-          ?.setValue(`${levelAbbrevation} - ${packageName}`);
+          ?.setValue(`${periodName} - ${packageName}`);
       });
   }
 
@@ -132,7 +120,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
         startWith('')
       )
       .subscribe({
-        next: (value) => this.packagesTools.fetch(value),
+        next: (value) => this.packageTools.fetch(value),
       });
 
     this.formGroup
@@ -185,10 +173,6 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
     }
   }
 
-  public displayFn(value: PackagePartsFragment): string {
-    return value?.name ?? '';
-  }
-
   private _update(values: FormValues) {
     return this._updateOneEnrollment
       .mutate({
@@ -211,9 +195,14 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
           cycleId: this._globalStateService.cycle!.id,
           packageId: values.package.id,
           levelId: values.level.id,
+          periodId: values.period.id,
+          start: values.period.start,
+          end: values.period.end,
           details: values.details,
           state: values.state,
-          order: 1,
+          hours: 0,
+          diciplines: 0,
+          order: 0,
         },
       })
       .pipe(map((value) => value.data?.createOneEnrollment));
@@ -225,5 +214,6 @@ type FormValues = {
   state: EnrollmentState;
   package: PackagePartsFragment;
   level: LevelPartsFragment;
+  period: PeriodPartsFragment;
   parentId: string | null;
 };

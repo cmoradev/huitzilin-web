@@ -67,6 +67,7 @@
             [lastHour]="period()!.lastHour"
             (select)="openAddScheduleDialog($event)"
             [schedules]="schedules()"
+            selectable
             class="mt-2"
           >
             <ng-template #schedule let-schedule>

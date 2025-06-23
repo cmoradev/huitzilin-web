@@ -4,6 +4,9 @@
   "newProjectRoot": "projects",
   "projects": {
     "huitzilin-web": {
+      "i18n": {
+        "sourceLocale": "es"
+      },
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {

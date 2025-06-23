@@ -43,9 +43,10 @@
   height: 6rem;
   vertical-align: top;
   transition: background-color 0.3s;
+  padding-bottom: 1.5rem;
   border-radius: var(--mat-sys-corner-medium);
+}
 
-  &:hover {
-    background-color: var(--mat-sys-surface-container);
-  }
+.schedule-table .selectable:hover {
+  background-color: var(--mat-sys-surface-container);
 }

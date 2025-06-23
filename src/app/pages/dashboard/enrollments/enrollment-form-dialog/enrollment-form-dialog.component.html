@@ -2,6 +2,41 @@
 <mat-dialog-content>
   <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
     <div class="flex flex-col gap-3">
+      <mat-form-field>
+        <mat-label>Periodo</mat-label>
+        <mat-select
+          formControlName="period"
+          [compareWith]="periodTools.compareFn"
+        >
+          @for (period of periodTools.options(); track $index) {
+          <mat-option [value]="period">
+            {{ period.name }}
+          </mat-option>
+          }
+        </mat-select>
+        <mat-hint> Seleccione un periodo </mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("period")) }}
+        </mat-error>
+      </mat-form-field>
+
+      @if (!!formGroup.get('period')?.value) {
+      <app-calendar
+        [id]="formGroup.get('period')!.value!.id"
+        [days]="formGroup.get('period')!.value!.days"
+        [firstHour]="formGroup.get('period')!.value!.firstHour"
+        [lastHour]="formGroup.get('period')!.value!.lastHour"
+        [schedules]="[]"
+      >
+        <!-- <ng-template #schedule let-schedule>
+          <app-schedule-item
+            [schedule]="schedule"
+            (selected)="openFormScheduleDialog($event)"
+          />
+        </ng-template> -->
+      </app-calendar>
+      }
+
       <mat-form-field class="w-full">
         <mat-label>Seleccione un nivel</mat-label>
         <input
@@ -60,14 +95,22 @@
         }
         <mat-autocomplete
           #autoStudents="matAutocomplete"
-          [displayWith]="displayFn"
+          [displayWith]="packageTools.displayFn"
         >
-          @for (package of packagesTools.options(); track package.id) {
+          @for (package of packageTools.options(); track package.id) {
           <mat-option [value]="package">
             <h4 mat-line>{{ package.name }}</h4>
+            @if (package.kind === 'HOURS') {
             <p mat-line class="text-sm text-gray-500">
-              {{ package.kind | packageKind }}
+              {{ package.quantity }} horas
             </p>
+            } @else if (package.kind === 'QUANTITY') {
+            <p mat-line class="text-sm text-gray-500">
+              {{ package.quantity }} disciplinas
+            </p>
+            } @else if (package.kind === 'UNLIMITED') {
+            <p mat-line class="text-sm text-gray-500">Ilimitado</p>
+            }
           </mat-option>
           }
         </mat-autocomplete>

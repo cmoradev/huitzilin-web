@@ -99,6 +99,7 @@ export class EnrollmentsComponent implements OnInit {
   ): void {
     const $dialog = this._dialog.open(EnrollmentFormDialogComponent, {
       width: '30rem',
+      maxWidth: '95vw',
       data: value,
     });
 
@@ -109,9 +110,7 @@ export class EnrollmentsComponent implements OnInit {
     });
   }
 
-  public openEnrollmentDeleteDialog(
-    value: EnrollmentPartsFragment
-  ): void {
+  public openEnrollmentDeleteDialog(value: EnrollmentPartsFragment): void {
     const $dialog = this._dialog.open(EnrollmentDeleteDialogComponent, {
       width: '30rem',
       data: value,
@@ -167,9 +166,7 @@ export class EnrollmentsComponent implements OnInit {
     });
   }
 
-  public refreshEnrollments(
-    accumulared: EnrollmentPartsFragment[] = []
-  ): void {
+  public refreshEnrollments(accumulared: EnrollmentPartsFragment[] = []): void {
     if (
       !!this._globalStateService.branch?.id &&
       !!this._globalStateService.cycle?.id &&

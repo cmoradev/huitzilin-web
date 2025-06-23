@@ -6,18 +6,6 @@
 
   <p class="text-sm text-gray-500">{{ data.minHours }} horas mínimas</p>
 
-  @if (!!data.levels.length) {
-  <p class="font-semibold">Niveles permitidos:</p>
-  }
-
-  <ul class="list-inside list-disc">
-    @for (level of data.levels; track $index) {
-    <li>
-      {{ level.abbreviation }}
-    </li>
-    }
-  </ul>
-
   @if (!!data.packages.length) {
   <p class="font-semibold">Paquetes asociados:</p>
   }

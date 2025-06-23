@@ -1,10 +1,10 @@
 import { Component, input, output } from '@angular/core';
-import { MatRippleModule } from '@angular/material/core';
+import { MatChipsModule } from '@angular/material/chips';
 import { SchedulePartsFragment } from '@graphql';
 
 @Component({
   selector: 'app-schedule-item',
-  imports: [MatRippleModule],
+  imports: [MatChipsModule],
   templateUrl: './schedule-item.component.html',
   styles: ``,
 })

@@ -1,5 +1,6 @@
-import { DatePipe, NgTemplateOutlet } from '@angular/common';
+import { DatePipe, NgClass, NgTemplateOutlet } from '@angular/common';
 import {
+  booleanAttribute,
   Component,
   ContentChild,
   input,
@@ -20,13 +21,14 @@ export type CalendarSlot = {
 
 @Component({
   selector: 'app-calendar',
-  imports: [DayOfWeekPipe, DatePipe, NgTemplateOutlet],
+  imports: [DayOfWeekPipe, DatePipe, NgClass, NgTemplateOutlet],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss',
 })
 export class CalendarComponent implements OnChanges {
   @ContentChild('schedule') scheduleTemplate!: TemplateRef<any>;
 
+  public selectable = input(false, { transform: booleanAttribute });
   public days = input.required<string[], string>({ transform: transformDays });
   public firstHour = input.required<string>();
   public lastHour = input.required<string>();
@@ -81,7 +83,9 @@ export class CalendarComponent implements OnChanges {
   }
 
   public selectSlot(day: string, hour: Date) {
-    this.select.emit({ day, hour: hour.toTimeString().slice(0, 5) });
+    if (this.selectable()) {
+      this.select.emit({ day, hour: hour.toTimeString().slice(0, 5) });
+    }
   }
 }
 

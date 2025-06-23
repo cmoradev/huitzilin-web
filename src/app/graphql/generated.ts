@@ -211,9 +211,15 @@ export type CreateEnrollment = {
   branchId: Scalars['String']['input'];
   cycleId: Scalars['String']['input'];
   details: Scalars['String']['input'];
+  diciplines: Scalars['Int']['input'];
+  end: Scalars['String']['input'];
+  hours: Scalars['Int']['input'];
   levelId: Scalars['String']['input'];
   order: Scalars['Float']['input'];
   packageId: Scalars['String']['input'];
+  periodId: Scalars['String']['input'];
+  schedules?: InputMaybe<Array<NestedId>>;
+  start: Scalars['String']['input'];
   state: EnrollmentState;
   studentId: Scalars['String']['input'];
 };
@@ -882,6 +888,7 @@ export type Enrollment = {
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   details: Scalars['String']['output'];
   diciplines: Scalars['Float']['output'];
+  end: Scalars['String']['output'];
   hours: Scalars['Float']['output'];
   id: Scalars['ID']['output'];
   level: Level;
@@ -889,11 +896,20 @@ export type Enrollment = {
   order: Scalars['Float']['output'];
   package: Package;
   packageId: Package;
+  period: Period;
+  schedules: Array<Schedule>;
+  start: Scalars['String']['output'];
   state: EnrollmentState;
   student: Student;
   studentId: Scalars['ID']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
+};
+
+
+export type EnrollmentSchedulesArgs = {
+  filter?: ScheduleFilter;
+  sorting?: Array<ScheduleSort>;
 };
 
 export type EnrollmentConnection = {
@@ -914,11 +930,13 @@ export type EnrollmentDeleteResponse = {
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   details?: Maybe<Scalars['String']['output']>;
   diciplines?: Maybe<Scalars['Float']['output']>;
+  end?: Maybe<Scalars['String']['output']>;
   hours?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   levelId?: Maybe<Scalars['ID']['output']>;
   order?: Maybe<Scalars['Float']['output']>;
   packageId?: Maybe<Scalars['ID']['output']>;
+  start?: Maybe<Scalars['String']['output']>;
   state?: Maybe<EnrollmentState>;
   studentId?: Maybe<Scalars['ID']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -938,7 +956,20 @@ export type EnrollmentFilter = {
   or?: InputMaybe<Array<EnrollmentFilter>>;
   order?: InputMaybe<NumberFieldComparison>;
   packageId?: InputMaybe<IdFilterComparison>;
+  schedules?: InputMaybe<EnrollmentFilterScheduleFilter>;
   studentId?: InputMaybe<IdFilterComparison>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type EnrollmentFilterScheduleFilter = {
+  and?: InputMaybe<Array<EnrollmentFilterScheduleFilter>>;
+  branchId?: InputMaybe<IdFilterComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  day?: InputMaybe<IntFieldComparison>;
+  disciplineId?: InputMaybe<IdFilterComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  or?: InputMaybe<Array<EnrollmentFilterScheduleFilter>>;
+  periodId?: InputMaybe<IdFilterComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -2697,9 +2728,15 @@ export type UpdateEnrollment = {
   branchId?: InputMaybe<Scalars['String']['input']>;
   cycleId?: InputMaybe<Scalars['String']['input']>;
   details?: InputMaybe<Scalars['String']['input']>;
+  diciplines?: InputMaybe<Scalars['Int']['input']>;
+  end?: InputMaybe<Scalars['String']['input']>;
+  hours?: InputMaybe<Scalars['Int']['input']>;
   levelId?: InputMaybe<Scalars['String']['input']>;
   order?: InputMaybe<Scalars['Float']['input']>;
   packageId?: InputMaybe<Scalars['String']['input']>;
+  periodId?: InputMaybe<Scalars['String']['input']>;
+  schedules?: InputMaybe<Array<NestedId>>;
+  start?: InputMaybe<Scalars['String']['input']>;
   state?: InputMaybe<EnrollmentState>;
   studentId?: InputMaybe<Scalars['String']['input']>;
 };
@@ -3125,14 +3162,14 @@ export type DeleteOneDiscountMutationVariables = Exact<{
 
 export type DeleteOneDiscountMutation = { __typename?: 'Mutation', deleteOneDiscount: { __typename?: 'DiscountDeleteResponse', id?: string | null } };
 
-export type EnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } };
+export type EnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } };
 
 export type CreateOneEnrollmentMutationVariables = Exact<{
   enrollment: CreateEnrollment;
 }>;
 
 
-export type CreateOneEnrollmentMutation = { __typename?: 'Mutation', createOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } } };
+export type CreateOneEnrollmentMutation = { __typename?: 'Mutation', createOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } } };
 
 export type GetEnrollmentsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -3141,7 +3178,7 @@ export type GetEnrollmentsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } }> } };
+export type GetEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } }> } };
 
 export type UpdateOneEnrollmentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3149,7 +3186,7 @@ export type UpdateOneEnrollmentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneEnrollmentMutation = { __typename?: 'Mutation', updateOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } } };
+export type UpdateOneEnrollmentMutation = { __typename?: 'Mutation', updateOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } } };
 
 export type DeleteOneEnrollmentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3545,6 +3582,15 @@ export const EnrollmentPartsFragmentDoc = gql`
     picture
     fullname
     code
+  }
+  period {
+    id
+    name
+    start
+    end
+    firstHour
+    lastHour
+    days
   }
   level {
     id

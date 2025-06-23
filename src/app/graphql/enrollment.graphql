@@ -20,6 +20,15 @@ fragment EnrollmentParts on Enrollment {
     fullname
     code
   }
+  period {
+    id
+    name
+    start
+    end
+    firstHour
+    lastHour
+    days
+  }
   level {
     id, 
     name,
