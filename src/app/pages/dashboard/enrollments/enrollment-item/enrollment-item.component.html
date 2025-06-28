@@ -2,7 +2,10 @@
   class="item"
   (click)="selectEnrollment()"
   [ngClass]="{ active: isActive() }"
+  cdkDrag
 >
+  <mat-icon svgIcon="drag" class="cursor-move" cdkDragHandle></mat-icon>
+
   <div>
     <p class="font-medium">{{ node.details }}</p>
     <div
@@ -17,11 +20,14 @@
       {{ node.state | enrollmentState }}
     </div>
   </div>
+
   <span class="flex-1"></span>
 
   <button mat-icon-button [matMenuTriggerFor]="menu" (click)="openMenu($event)">
     <mat-icon svgIcon="dots-vertical"></mat-icon>
   </button>
+
+  <div class="item-placeholder" *cdkDragPlaceholder></div>
 </div>
 
 <mat-menu #menu="matMenu">

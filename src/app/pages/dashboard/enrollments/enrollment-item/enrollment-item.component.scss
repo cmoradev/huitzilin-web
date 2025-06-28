@@ -15,3 +15,11 @@
     background-color: var(--mat-sys-primary-fixed);
   }
 }
+
+.item-placeholder {
+  border: dotted 3px #999;
+  background: #ccc;
+  min-height: 56px;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  border-radius: 1rem;
+}

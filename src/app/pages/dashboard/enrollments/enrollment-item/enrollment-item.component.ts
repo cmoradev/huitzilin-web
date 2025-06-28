@@ -1,3 +1,4 @@
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { NgClass } from '@angular/common';
 import {
   Component,
@@ -8,11 +9,10 @@ import {
   Output,
 } from '@angular/core';
 import { MatIconButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { EnrollmentPartsFragment } from '@graphql';
-import { FlatNode } from '@models';
 import { EnrollmentStatePipe } from '@pipes';
 import { GlobalStateService } from '@services';
 
@@ -20,11 +20,12 @@ import { GlobalStateService } from '@services';
   selector: 'app-enrollment-item',
   imports: [
     NgClass,
-    MatIcon,
+    MatIconModule,
     MatIconButton,
     MatMenuModule,
     MatProgressBarModule,
     EnrollmentStatePipe,
+    DragDropModule,
   ],
   templateUrl: './enrollment-item.component.html',
   styleUrl: './enrollment-item.component.scss',

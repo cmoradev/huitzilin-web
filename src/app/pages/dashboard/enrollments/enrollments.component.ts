@@ -1,12 +1,19 @@
+import {
+  CdkDragDrop,
+  DragDropModule,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
-import { MatFormField } from '@angular/material/form-field';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatDivider } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { StudentStateComponent } from '@components/student-state/student-state.component';
 import {
   DebitPartsFragment,
@@ -14,30 +21,29 @@ import {
   GetDebitsPageGQL,
   GetEnrollmentsPageGQL,
   GetEnrollmentsPageQueryVariables,
+  SetOrderEnrollmentsGQL,
+  SetOrderInput,
 } from '@graphql';
 import { GlobalStateService } from '@services';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { debounceTime, map, merge } from 'rxjs';
 import { DebitDeleteDialogComponent } from './debit-delete-dialog/debit-delete-dialog.component';
+import { DebitFormCatalogDialogComponent } from './debit-form-catalog-dialog/debit-form-catalog-dialog.component';
 import { DebitFormDialogComponent } from './debit-form-dialog/debit-form-dialog.component';
+import { DebitItemComponent } from './debit-item/debit-item.component';
 import { EnrollmentDeleteDialogComponent } from './enrollment-delete-dialog/enrollment-delete-dialog.component';
 import { EnrollmentFormDialogComponent } from './enrollment-form-dialog/enrollment-form-dialog.component';
 import { EnrollmentItemComponent } from './enrollment-item/enrollment-item.component';
-import { DebitItemComponent } from './debit-item/debit-item.component';
-import { MatMenuModule } from '@angular/material/menu';
-import { DebitFormCatalogDialogComponent } from './debit-form-catalog-dialog/debit-form-catalog-dialog.component';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { FlatNode } from '@models';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-enrollments',
   imports: [
     MatIconModule,
     MatCardModule,
-    MatDivider,
+    MatDividerModule,
     NgScrollbar,
-    MatFormField,
+    MatFormFieldModule,
     MatButtonModule,
     MatInputModule,
     ReactiveFormsModule,
@@ -54,6 +60,7 @@ import { FlatNode } from '@models';
 export class EnrollmentsComponent implements OnInit {
   private readonly _dialog = inject(MatDialog);
   private readonly _globalStateService = inject(GlobalStateService);
+  private readonly _snackBar = inject(MatSnackBar);
 
   public enrollment = computed(() => this._globalStateService.enrollment);
   public student = computed(() => this._globalStateService.student);
@@ -62,6 +69,7 @@ export class EnrollmentsComponent implements OnInit {
 
   private readonly _debitsPageGQL = inject(GetDebitsPageGQL);
   private readonly _enrollmentsPageGQL = inject(GetEnrollmentsPageGQL);
+  private readonly _setOrderEnrollmentGQL = inject(SetOrderEnrollmentsGQL);
 
   public enrollmentsLoading = signal<boolean>(false);
   public enrollmentsTotalCount = signal<number>(0);
@@ -251,5 +259,39 @@ export class EnrollmentsComponent implements OnInit {
       this.debitsLoading.set(false);
       this.debitsTotalCount.set(0);
     }
+  }
+
+  public dropEnrollment(event: CdkDragDrop<EnrollmentPartsFragment[]>) {
+    this.enrollments.update((previous) => {
+      const values = [...previous];
+      moveItemInArray(values, event.previousIndex, event.currentIndex);
+      return values;
+    });
+
+    this.updateOrderEnrollments();
+  }
+
+  private updateOrderEnrollments(): void {
+    const payload: SetOrderInput[] = this.enrollments().map((item, index) => ({
+      id: item.id,
+      order: index + 1,
+    }));
+
+    this._setOrderEnrollmentGQL.mutate({ payload }).subscribe({
+      next: () => {
+        this._snackBar.open(
+          'Se ha actualizado el orden correctamente',
+          'Cerrar',
+          {
+            duration: 1000,
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+          }
+        );
+      },
+      error: (error) => {
+        console.error('Error updating order activities', error);
+      },
+    });
   }
 }

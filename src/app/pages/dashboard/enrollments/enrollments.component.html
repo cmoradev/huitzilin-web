@@ -31,7 +31,11 @@
 
         <mat-divider />
 
-        <ng-scrollbar class="relative flex-1 mt-2">
+        <ng-scrollbar
+          cdkDropList
+          class="relative flex-1 mt-2"
+          (cdkDropListDropped)="dropEnrollment($event)"
+        >
           @for (enrollment of enrollments(); track $index) {
           <app-enrollment-item
             [node]="enrollment"
