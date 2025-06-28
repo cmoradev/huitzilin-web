@@ -1,0 +1,43 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Cobranza</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div class="my-2">
+      <app-student-state />
+    </div>
+  </mat-card-content>
+  <mat-card-content>
+    <div class="h-[calc(100vh-10rem)] grid grid-cols-5 gap-2">
+      <!-- Sidebar (Chats List) -->
+      <div class="col-span-2 flex flex-col">
+        <mat-divider />
+
+        <ng-scrollbar class="relative flex-1 mt-2">
+          <!-- @for (enrollment of enrollments(); track $index) {
+          <app-enrollment-item
+            [node]="enrollment"
+            (update)="openEnrollmentFormDialog($event)"
+            (remove)="openEnrollmentDeleteDialog($event)"
+          />
+          } -->
+        </ng-scrollbar>
+      </div>
+      <!-- Debits Area -->
+      <div class="col-span-3 flex flex-col">
+        <mat-divider />
+
+        <ng-scrollbar class="relative flex-1 mt-2">
+          <!-- @for (debit of debits(); track $index) {
+          <app-debit-item
+            [debit]="debit"
+            (update)="openDebitFormDialog($event)"
+            (delete)="openDebitDeleteDialog($event)"
+          />
+          } -->
+        </ng-scrollbar>
+      </div>
+    </div>
+  </mat-card-content>
+
+</mat-card>

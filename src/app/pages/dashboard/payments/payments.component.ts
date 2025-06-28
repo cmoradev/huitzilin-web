@@ -1,0 +1,71 @@
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { StudentStateComponent } from '@components/student-state/student-state.component';
+import { EnrollmentPartsFragment, GetEnrollmentsPageGQL, GetEnrollmentsPageQueryVariables } from '@graphql';
+import { GlobalStateService } from '@services';
+import { NgScrollbar } from 'ngx-scrollbar';
+import { map } from 'rxjs';
+
+@Component({
+  selector: 'app-payments',
+  imports: [
+    NgScrollbar,
+    MatIconModule,
+    MatCardModule,
+    MatDividerModule,
+    StudentStateComponent,
+  ],
+  templateUrl: './payments.component.html',
+  styles: ``,
+})
+export class PaymentsComponent implements OnInit {
+  private readonly _globalState = inject(GlobalStateService);
+  private readonly _getEnrollmentsPage = inject(GetEnrollmentsPageGQL);
+
+  public enrollments = signal<EnrollmentPartsFragment[]>([]);
+
+  ngOnInit(): void {
+    this._globalState.student$.subscribe({
+      next: () => this._fetchAllEnrollments(),
+    });
+  }
+
+  private _fetchAllEnrollments(
+    accumulared: EnrollmentPartsFragment[] = []
+  ): void {
+    if (!!this._globalState.student?.id) {
+      const limit = 50;
+      const offset = accumulared.length;
+
+      const params: GetEnrollmentsPageQueryVariables = {
+        filter: { studentId: { eq: this._globalState.student!.id } },
+        limit,
+        offset,
+      };
+
+      const getEnrollments$ = this._getEnrollmentsPage.watch(params, {
+        fetchPolicy: 'cache-and-network', // Usa cache primero, solo pide a la API si no hay datos en cache
+        nextFetchPolicy: 'cache-and-network', // Mantiene la política de cache en siguientes peticiones
+        notifyOnNetworkStatusChange: false, // No notifica cambios de red para evitar refetch innecesario
+      }).valueChanges;
+
+      getEnrollments$.pipe(map((resp) => resp.data.enrollments)).subscribe({
+        next: ({ nodes, totalCount }) => {
+          const allItems = accumulared.concat(nodes);
+
+          if (allItems.length >= totalCount) {
+            this.enrollments.set(allItems);
+            return; // No more enrollments to fetch
+          }
+
+          this._fetchAllEnrollments(allItems);
+        },
+        error: (error) => {
+          console.error('Error fetching enrollments', error);
+        },
+      });
+    }
+  }
+}

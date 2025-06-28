@@ -24,6 +24,12 @@ export const navItems: RouteItem[] = [
     section: NavigationEnum.OPERATIONS,
   },
   {
+    displayName: 'Cobranza',
+    iconName: 'point-of-sale',
+    route: '/payments',
+    section: NavigationEnum.OPERATIONS,
+  },
+  {
     displayName: 'Ciclos',
     iconName: 'calendar-blank-outline',
     route: '/cycles',

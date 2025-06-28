@@ -12,8 +12,16 @@ export const DashboardRoutes: Routes = [
       import('./students/students.component').then((m) => m.StudentsComponent),
   },
   {
+    path: 'payments',
+    loadComponent: () =>
+      import('./payments/payments.component').then((m) => m.PaymentsComponent),
+  },
+  {
     path: 'enrollments',
-    loadComponent: () => import('./enrollments/enrollments.component').then((m) => m.EnrollmentsComponent),
+    loadComponent: () =>
+      import('./enrollments/enrollments.component').then(
+        (m) => m.EnrollmentsComponent
+      ),
   },
   {
     path: 'cycles',
@@ -32,11 +40,17 @@ export const DashboardRoutes: Routes = [
   },
   {
     path: 'disciplines',
-    loadChildren: () => import('./disciplines/disciplines.routes').then((m) => m.DisciplinesRoutes),
+    loadChildren: () =>
+      import('./disciplines/disciplines.routes').then(
+        (m) => m.DisciplinesRoutes
+      ),
   },
   {
     path: 'discounts',
-    loadComponent: () => import('./discounts/discounts.component').then((m) => m.DiscountsComponent),
+    loadComponent: () =>
+      import('./discounts/discounts.component').then(
+        (m) => m.DiscountsComponent
+      ),
   },
   {
     path: 'branches',
