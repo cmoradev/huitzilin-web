@@ -32,6 +32,7 @@ import {
 } from '@graphql';
 import { BranchState, CycleState, GlobalStateService } from '@services';
 import { debounceTime, merge, startWith } from 'rxjs';
+import { isAfter, isBefore } from 'date-fns';
 
 @Component({
   selector: 'app-global-state-settings',
@@ -141,9 +142,9 @@ export class GlobalStateSettingsComponent implements AfterViewInit, OnInit {
         )
         .valueChanges.subscribe({
           next: ({ loading, data }) => {
+            const nodes = data.cycles.nodes ?? [];
             this.loadingCycles.set(loading);
-
-            this.cycles.set(data?.cycles.nodes ?? []);
+            this.cycles.set(nodes);
           },
         });
     }
