@@ -1,6 +1,10 @@
 @if (!!currentBranch()) {
 <mat-toolbar>
-  <div class="flex items-center gap-2 py-1 px-2 w-full">
+  <div
+    matRipple
+    class="flex items-center gap-2 py-1 px-2 w-full rounded-[var(--mat-sys-corner-medium)] cursor-pointer"
+    (click)="toggleSidenavRight.emit()"
+  >
     <img
       [src]="currentBranch()?.picture"
       class="rounded-[var(--mat-sys-corner-medium)] w-10 h-10"

@@ -11,12 +11,11 @@ import { MatToolbar } from '@angular/material/toolbar';
 import {
   MatButton,
   MatIconButton,
-  MatMiniFabButton,
 } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatBadge } from '@angular/material/badge';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService, GlobalStateService } from '@services';
 
 @Component({

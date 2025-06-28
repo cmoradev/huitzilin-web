@@ -6,7 +6,7 @@
     class="sidebar"
   >
     <div class="flex flex-col h-full">
-      <app-sidebar></app-sidebar>
+      <app-sidebar (toggleSidenavRight)="rightsidenav.toggle()" />
 
       <ng-scrollbar class="relative flex-1">
         <mat-nav-list class="sidebar-list">
