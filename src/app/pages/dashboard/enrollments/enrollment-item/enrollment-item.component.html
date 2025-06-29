@@ -31,6 +31,10 @@
 </div>
 
 <mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="calendar.emit(node)">
+    <mat-icon svgIcon="calendar" />
+    <span>Calendario</span>
+  </button>
   <button mat-menu-item (click)="update.emit(node)">
     <mat-icon svgIcon="pencil" />
     <span>Editar</span>

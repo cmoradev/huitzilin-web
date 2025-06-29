@@ -35,6 +35,7 @@ import { EnrollmentDeleteDialogComponent } from './enrollment-delete-dialog/enro
 import { EnrollmentFormDialogComponent } from './enrollment-form-dialog/enrollment-form-dialog.component';
 import { EnrollmentItemComponent } from './enrollment-item/enrollment-item.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { EnrollmentCalendarComponent } from './enrollment-calendar/enrollment-calendar.component';
 
 @Component({
   selector: 'app-enrollments',
@@ -99,6 +100,14 @@ export class EnrollmentsComponent implements OnInit {
       next: () => {
         this.refreshDebits();
       },
+    });
+  }
+
+  public openEnrollmentCalendarDialog(value: EnrollmentPartsFragment): void {
+    this._dialog.open(EnrollmentCalendarComponent, {
+      width: '56rem',
+      maxWidth: '95vw',
+      data: value
     });
   }
 

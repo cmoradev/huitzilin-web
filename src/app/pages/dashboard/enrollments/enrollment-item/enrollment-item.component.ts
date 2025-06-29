@@ -34,6 +34,7 @@ export class EnrollmentItemComponent {
   @Input({ required: true }) node!: EnrollmentPartsFragment;
   @Input() menuTrigger!: MatMenuTrigger;
 
+  @Output() calendar = new EventEmitter<EnrollmentPartsFragment>();
   @Output() update = new EventEmitter<EnrollmentPartsFragment>();
   @Output() remove = new EventEmitter<EnrollmentPartsFragment>();
 
