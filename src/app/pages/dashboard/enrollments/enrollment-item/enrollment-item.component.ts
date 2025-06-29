@@ -12,6 +12,7 @@ import { MatIconButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule, MatMenuTrigger } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { EnrollmentPartsFragment } from '@graphql';
 import { EnrollmentStatePipe } from '@pipes';
 import { GlobalStateService } from '@services';
@@ -19,13 +20,13 @@ import { GlobalStateService } from '@services';
 @Component({
   selector: 'app-enrollment-item',
   imports: [
-    NgClass,
     MatIconModule,
     MatIconButton,
     MatMenuModule,
     MatProgressBarModule,
-    EnrollmentStatePipe,
+    MatTooltipModule,
     DragDropModule,
+    NgClass
   ],
   templateUrl: './enrollment-item.component.html',
   styleUrl: './enrollment-item.component.scss',

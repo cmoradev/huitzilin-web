@@ -107,6 +107,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
       this.formGroup.patchValue({
         details: this.data.details,
         package: this.data.package,
+        state: this.data.state,
         period: this.data.period,
         level: this.data.level,
       });
@@ -228,7 +229,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
     }, 0);
 
     this.disciplineCount.set(disciplines.size);
-    this.hoursCount.set(hours);
+    this.hoursCount.set(hours * 4);
   }
 
   private _update(values: FormValues) {
