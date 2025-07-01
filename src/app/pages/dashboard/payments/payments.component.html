@@ -14,13 +14,9 @@
         <mat-divider />
 
         <ng-scrollbar class="relative flex-1 mt-2">
-          <!-- @for (enrollment of enrollments(); track $index) {
-          <app-enrollment-item
-            [node]="enrollment"
-            (update)="openEnrollmentFormDialog($event)"
-            (remove)="openEnrollmentDeleteDialog($event)"
-          />
-          } -->
+          @for (enrollment of enrollments(); track enrollment.id) {
+          <app-enrollment-with-debits [enrollment]="enrollment" />
+          }
         </ng-scrollbar>
       </div>
       <!-- Debits Area -->
@@ -39,5 +35,4 @@
       </div>
     </div>
   </mat-card-content>
-
 </mat-card>

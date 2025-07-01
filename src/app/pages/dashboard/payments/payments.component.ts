@@ -3,10 +3,16 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { StudentStateComponent } from '@components/student-state/student-state.component';
-import { EnrollmentPartsFragment, GetEnrollmentsPageGQL, GetEnrollmentsPageQueryVariables } from '@graphql';
+import {
+  EnrollmentPartsFragment,
+  EnrollmentState,
+  GetEnrollmentsPageGQL,
+  GetEnrollmentsPageQueryVariables,
+} from '@graphql';
 import { GlobalStateService } from '@services';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { map } from 'rxjs';
+import { EnrollmentWithDebitsComponent } from './enrollment-with-debits/enrollment-with-debits.component';
 
 @Component({
   selector: 'app-payments',
@@ -16,6 +22,7 @@ import { map } from 'rxjs';
     MatCardModule,
     MatDividerModule,
     StudentStateComponent,
+    EnrollmentWithDebitsComponent,
   ],
   templateUrl: './payments.component.html',
   styles: ``,
@@ -25,6 +32,7 @@ export class PaymentsComponent implements OnInit {
   private readonly _getEnrollmentsPage = inject(GetEnrollmentsPageGQL);
 
   public enrollments = signal<EnrollmentPartsFragment[]>([]);
+  public loading = signal<boolean>(true);
 
   ngOnInit(): void {
     this._globalState.student$.subscribe({
@@ -36,11 +44,16 @@ export class PaymentsComponent implements OnInit {
     accumulared: EnrollmentPartsFragment[] = []
   ): void {
     if (!!this._globalState.student?.id) {
+      this.loading.set(true);
+
       const limit = 50;
       const offset = accumulared.length;
 
       const params: GetEnrollmentsPageQueryVariables = {
-        filter: { studentId: { eq: this._globalState.student!.id } },
+        filter: {
+          studentId: { eq: this._globalState.student!.id },
+          state: { eq: EnrollmentState.Active },
+        },
         limit,
         offset,
       };
@@ -57,6 +70,7 @@ export class PaymentsComponent implements OnInit {
 
           if (allItems.length >= totalCount) {
             this.enrollments.set(allItems);
+            this.loading.set(false);
             return; // No more enrollments to fetch
           }
 

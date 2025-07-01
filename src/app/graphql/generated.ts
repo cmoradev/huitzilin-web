@@ -957,6 +957,7 @@ export type EnrollmentFilter = {
   order?: InputMaybe<NumberFieldComparison>;
   packageId?: InputMaybe<IdFilterComparison>;
   schedules?: InputMaybe<EnrollmentFilterScheduleFilter>;
+  state?: InputMaybe<EnrollmentStateFilterComparison>;
   studentId?: InputMaybe<IdFilterComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
@@ -990,6 +991,7 @@ export enum EnrollmentSortFields {
   LevelId = 'levelId',
   Order = 'order',
   PackageId = 'packageId',
+  State = 'state',
   StudentId = 'studentId',
   UpdatedAt = 'updatedAt'
 }
@@ -999,6 +1001,23 @@ export enum EnrollmentState {
   Inactive = 'INACTIVE',
   Paused = 'PAUSED'
 }
+
+export type EnrollmentStateFilterComparison = {
+  eq?: InputMaybe<EnrollmentState>;
+  gt?: InputMaybe<EnrollmentState>;
+  gte?: InputMaybe<EnrollmentState>;
+  iLike?: InputMaybe<EnrollmentState>;
+  in?: InputMaybe<Array<EnrollmentState>>;
+  is?: InputMaybe<Scalars['Boolean']['input']>;
+  isNot?: InputMaybe<Scalars['Boolean']['input']>;
+  like?: InputMaybe<EnrollmentState>;
+  lt?: InputMaybe<EnrollmentState>;
+  lte?: InputMaybe<EnrollmentState>;
+  neq?: InputMaybe<EnrollmentState>;
+  notILike?: InputMaybe<EnrollmentState>;
+  notIn?: InputMaybe<Array<EnrollmentState>>;
+  notLike?: InputMaybe<EnrollmentState>;
+};
 
 export type Fee = {
   __typename?: 'Fee';
@@ -2380,6 +2399,7 @@ export type ScheduleFilterEnrollmentFilter = {
   or?: InputMaybe<Array<ScheduleFilterEnrollmentFilter>>;
   order?: InputMaybe<NumberFieldComparison>;
   packageId?: InputMaybe<IdFilterComparison>;
+  state?: InputMaybe<EnrollmentStateFilterComparison>;
   studentId?: InputMaybe<IdFilterComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };

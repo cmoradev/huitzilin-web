@@ -1,0 +1,45 @@
+<div class="item">
+  @if (enrollment().state === 'INACTIVE') {
+  <mat-icon
+    svgIcon="circle-medium"
+    class="text-red-800!"
+    matTooltip="Inactivo"
+  />
+  } @else if (enrollment().state === 'PAUSED') {
+  <mat-icon
+    svgIcon="circle-medium"
+    class="text-yellow-600!"
+    matTooltip="Pausado"
+  />
+  } @else if (enrollment().state === 'ACTIVE') {
+  <mat-icon
+    svgIcon="circle-medium"
+    class="text-green-600!"
+    matTooltip="Activo"
+  />
+  }
+  <div>
+    <p class="font-medium">{{ enrollment().details }}</p>
+    <p class="text-xs text-gray-500">
+      {{ enrollment().level.name }}
+    </p>
+  </div>
+
+  <span class="flex-1"></span>
+
+  <button mat-icon-button (click)="openEnrollmentCalendarDialog()">
+    <mat-icon svgIcon="calendar" />
+  </button>
+
+  <button mat-icon-button (click)="toggleExpanded()">
+    <mat-icon [svgIcon]="expanded() ? 'chevron-up' : 'chevron-down'" />
+  </button>
+</div>
+
+@if (expanded()) {
+<div class="pl-8">
+  @for (debit of debits(); track debit.id) {
+    <app-concept-option />
+  }
+</div>
+}
