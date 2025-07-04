@@ -16,6 +16,8 @@
         <ng-scrollbar class="relative flex-1 mt-2">
           @for (enrollment of enrollments(); track enrollment.id) {
           <app-enrollment-with-debits [enrollment]="enrollment" />
+          <app-enrollment-with-debits [enrollment]="enrollment" />
+          <app-enrollment-with-debits [enrollment]="enrollment" />
           }
         </ng-scrollbar>
       </div>
@@ -24,13 +26,7 @@
         <mat-divider />
 
         <ng-scrollbar class="relative flex-1 mt-2">
-          <!-- @for (debit of debits(); track $index) {
-          <app-debit-item
-            [debit]="debit"
-            (update)="openDebitFormDialog($event)"
-            (delete)="openDebitDeleteDialog($event)"
-          />
-          } -->
+          <app-sale-details />
         </ng-scrollbar>
       </div>
     </div>

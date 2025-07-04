@@ -13,6 +13,7 @@ import { GlobalStateService } from '@services';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { map } from 'rxjs';
 import { EnrollmentWithDebitsComponent } from './enrollment-with-debits/enrollment-with-debits.component';
+import { SaleDetailsComponent } from './sale-details/sale-details.component';
 
 @Component({
   selector: 'app-payments',
@@ -21,6 +22,7 @@ import { EnrollmentWithDebitsComponent } from './enrollment-with-debits/enrollme
     MatIconModule,
     MatCardModule,
     MatDividerModule,
+    SaleDetailsComponent,
     StudentStateComponent,
     EnrollmentWithDebitsComponent,
   ],

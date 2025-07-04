@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { DebitPartsFragment, EnrollmentPartsFragment, GetDebitsPageGQL, GetDebitsPageQueryVariables } from '@graphql';
+import { DebitPartsFragment, DebitState, EnrollmentPartsFragment, GetDebitsPageGQL, GetDebitsPageQueryVariables } from '@graphql';
 import { EnrollmentCalendarComponent } from '../../enrollments/enrollment-calendar/enrollment-calendar.component';
 import { map } from 'rxjs';
 import { ConceptOptionComponent } from '../concept-option/concept-option.component';
@@ -28,7 +28,9 @@ export class EnrollmentWithDebitsComponent implements OnInit {
     this._fetchAllDebits();
   }
 
-  public openEnrollmentCalendarDialog(): void {
+  public openEnrollmentCalendarDialog(evet: MouseEvent): void {
+    evet.stopPropagation();
+
     this._dialog.open(EnrollmentCalendarComponent, {
       width: '56rem',
       maxWidth: '95vw',
@@ -52,7 +54,7 @@ export class EnrollmentWithDebitsComponent implements OnInit {
       const params: GetDebitsPageQueryVariables = {
         filter: {
           enrollmentId: { eq: this.enrollment().id  },
-
+          state: { in: [DebitState.Debt, DebitState.PartiallyPaid] }
         },
         limit,
         offset,

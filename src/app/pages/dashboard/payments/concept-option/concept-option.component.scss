@@ -10,4 +10,8 @@
   &:hover {
     background-color: var(--mat-sys-surface-container);
   }
+
+  &.active {
+    background-color: var(--mat-sys-primary-fixed);
+  }
 }

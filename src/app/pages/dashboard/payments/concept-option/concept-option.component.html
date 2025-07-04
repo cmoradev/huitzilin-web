@@ -1,4 +1,28 @@
-<div class="item" matRipple (click)="checkbox.">
-   <mat-checkbox #checkbox></mat-checkbox>
-</div>
+<div
+  class="item"
+  matRipple
+  (click)="select($event)"
+  [class.active]="optionControl.value"
+>
+  <mat-checkbox [formControl]="optionControl"></mat-checkbox>
 
+  <div>
+    <p class="font-medium">{{ debit().description }}</p>
+    <p class="text-xs text-gray-500">
+       <span matTooltip="Fecha limite de pago">{{ debit().dueDate }}</span>,  
+      <span matTooltip="Cantidad a pagar ">{{ debit().total | currency : "MXN" }}</span>
+    </p>
+  </div>
+
+  <span class="flex-1"></span>
+
+  <!-- matTooltip="{{ debit().state | debitState }}" -->
+  <mat-icon
+    svgIcon="circle-medium"
+    [ngClass]="{
+    '!text-yellow-600': debit().state === 'CANCELED' || debit().state === 'DEBT' || debit().state === 'CONDONED',
+    '!text-purple-800': debit().state === 'PARTIALLY_PAID',
+    '!text-green-800': debit().state === 'PAID',
+}"
+  ></mat-icon>
+</div>

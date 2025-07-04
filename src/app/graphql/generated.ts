@@ -548,6 +548,7 @@ export type DebitFilter = {
   enrollmentId?: InputMaybe<StringFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<DebitFilter>>;
+  state?: InputMaybe<DebitStateFilterComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -563,6 +564,7 @@ export enum DebitSortFields {
   DueDate = 'dueDate',
   EnrollmentId = 'enrollmentId',
   Id = 'id',
+  State = 'state',
   UpdatedAt = 'updatedAt'
 }
 
@@ -573,6 +575,23 @@ export enum DebitState {
   Paid = 'PAID',
   PartiallyPaid = 'PARTIALLY_PAID'
 }
+
+export type DebitStateFilterComparison = {
+  eq?: InputMaybe<DebitState>;
+  gt?: InputMaybe<DebitState>;
+  gte?: InputMaybe<DebitState>;
+  iLike?: InputMaybe<DebitState>;
+  in?: InputMaybe<Array<DebitState>>;
+  is?: InputMaybe<Scalars['Boolean']['input']>;
+  isNot?: InputMaybe<Scalars['Boolean']['input']>;
+  like?: InputMaybe<DebitState>;
+  lt?: InputMaybe<DebitState>;
+  lte?: InputMaybe<DebitState>;
+  neq?: InputMaybe<DebitState>;
+  notILike?: InputMaybe<DebitState>;
+  notIn?: InputMaybe<Array<DebitState>>;
+  notLike?: InputMaybe<DebitState>;
+};
 
 export type DeleteOneActionInput = {
   /** The id of the record to delete. */
