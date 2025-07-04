@@ -3,14 +3,12 @@
     <mat-card-title>Inscripciones</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <div class="my-2">
-      <app-student-state />
-    </div>
+    <app-student-state />
   </mat-card-content>
   <mat-card-content>
-    <div class="h-[calc(100vh-10rem)] grid grid-cols-4 gap-2">
+    <div class="grid grid-cols-4 gap-2">
       <!-- Sidebar (Chats List) -->
-      <div class="col-span-1 flex flex-col">
+      <div class="col-span-1 flex flex-col h-[calc(100vh-14rem)]">
         <div class="flex items-center gap-2 p-2">
           <mat-form-field subscriptSizing="dynamic" class="w-full">
             <input
@@ -47,12 +45,12 @@
         </ng-scrollbar>
       </div>
       <!-- Debits Area -->
-      <div class="col-span-3 flex flex-col">
+      <div class="col-span-3 flex flex-col h-[calc(100vh-14rem)]">
         <div class="flex items-center gap-2 p-2">
           @if (!!enrollment()?.id) {
           <h4 class="font-medium text-lg">{{ enrollment()!.details }}</h4>
           }
-          <span class="flex-1 h-[52px]"></span>
+          <span class="flex-1 h-[56px]"></span>
           <button
             mat-icon-button
             [disabled]="!enrollment()?.id"
@@ -77,15 +75,15 @@
       </div>
     </div>
   </mat-card-content>
-
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="openDebitCatalogDialog()">
-      <mat-icon svgIcon="plus" />
-      <span>Usar catálogo</span>
-    </button>
-    <button mat-menu-item (click)="openDebitFormDialog()">
-      <mat-icon svgIcon="plus" />
-      <span>Creación manual</span>
-    </button>
-  </mat-menu>
 </mat-card>
+
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="openDebitCatalogDialog()">
+    <mat-icon svgIcon="plus" />
+    <span>Usar catálogo</span>
+  </button>
+  <button mat-menu-item (click)="openDebitFormDialog()">
+    <mat-icon svgIcon="plus" />
+    <span>Creación manual</span>
+  </button>
+</mat-menu>
