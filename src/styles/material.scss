@@ -36,11 +36,7 @@ html {
 
   @include mat.table-overrides(
     (
-      background-color:
-        var(
-          --mdc-elevated-card-container-color,
-          var(--mat-sys-surface-container-low)
-        ),
+      background-color: transparent,
     )
   );
 
@@ -62,16 +58,6 @@ html {
   );
 
   @include mat.form-field-density(-1);
-
-  $theme: mat.define-theme((
-          color: (
-        theme-type: light,
-        primary: vars.$primary-palette,
-        tertiary: vars.$tertiary-palette,
-      ),
-  ));
-  @include mat.all-component-themes($theme);
-  @include mat.color-variants-backwards-compatibility($theme);
 }
 
 html,

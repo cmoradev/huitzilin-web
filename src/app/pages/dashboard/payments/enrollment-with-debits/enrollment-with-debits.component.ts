@@ -1,20 +1,40 @@
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  inject,
+  input,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { DebitPartsFragment, DebitState, EnrollmentPartsFragment, GetDebitsPageGQL, GetDebitsPageQueryVariables } from '@graphql';
+import {
+  DebitPartsFragment,
+  DebitState,
+  EnrollmentPartsFragment,
+  GetDebitsPageGQL,
+  GetDebitsPageQueryVariables,
+} from '@graphql';
 import { EnrollmentCalendarComponent } from '../../enrollments/enrollment-calendar/enrollment-calendar.component';
 import { map } from 'rxjs';
 import { ConceptOptionComponent } from '../concept-option/concept-option.component';
+import { PosService } from '@services';
 
 @Component({
   selector: 'app-enrollment-with-debits',
-  imports: [MatIconModule, MatButtonModule, MatTooltipModule, ConceptOptionComponent],
+  imports: [
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    ConceptOptionComponent,
+  ],
   templateUrl: './enrollment-with-debits.component.html',
   styleUrls: ['./enrollment-with-debits.component.scss'],
 })
 export class EnrollmentWithDebitsComponent implements OnInit {
+  private readonly _pos = inject(PosService);
   private readonly _dialog = inject(MatDialog);
   private readonly _getDebitsPage = inject(GetDebitsPageGQL);
 
@@ -42,9 +62,7 @@ export class EnrollmentWithDebitsComponent implements OnInit {
     this.expanded.update((current) => !current);
   }
 
-  private _fetchAllDebits(
-    accumulared: DebitPartsFragment[] = []
-  ): void {
+  private _fetchAllDebits(accumulared: DebitPartsFragment[] = []): void {
     if (!!this.enrollment().id) {
       this.loading.set(true);
 
@@ -53,8 +71,8 @@ export class EnrollmentWithDebitsComponent implements OnInit {
 
       const params: GetDebitsPageQueryVariables = {
         filter: {
-          enrollmentId: { eq: this.enrollment().id  },
-          state: { in: [DebitState.Debt, DebitState.PartiallyPaid] }
+          enrollmentId: { eq: this.enrollment().id },
+          state: { in: [DebitState.Debt, DebitState.PartiallyPaid] },
         },
         limit,
         offset,
@@ -73,6 +91,7 @@ export class EnrollmentWithDebitsComponent implements OnInit {
           if (allItems.length >= totalCount) {
             this.debits.set(allItems);
             this.loading.set(false);
+            this._checkIsExpanded(allItems);
             return; // No more enrollments to fetch
           }
 
@@ -83,5 +102,13 @@ export class EnrollmentWithDebitsComponent implements OnInit {
         },
       });
     }
+  }
+
+  private _checkIsExpanded(debits: DebitPartsFragment[]) {
+    const withSelections = debits.some((debit) =>
+      this._pos.checkIsSelected(debit)
+    );
+
+    this.expanded.set(withSelections);
   }
 }

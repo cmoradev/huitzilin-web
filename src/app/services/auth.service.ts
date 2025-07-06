@@ -10,6 +10,7 @@ import {
   GlobalStateService,
   STUDENT_KEY,
 } from './global-state.service';
+import { PosService } from './pos.service';
 
 export const USERNAME_KEY = 'username';
 

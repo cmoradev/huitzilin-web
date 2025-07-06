@@ -6,11 +6,9 @@
     <app-student-state />
   </mat-card-content>
   <mat-card-content>
-    <div class="grid grid-cols-5 gap-2">
+    <div class="grid grid-cols-3 gap-2">
       <!-- Sidebar (Chats List) -->
-      <div class="col-span-2 flex flex-col h-[calc(100vh-14rem)]">
-        <mat-divider />
-
+      <div class="flex flex-col h-[calc(100vh-14rem)]">
         <ng-scrollbar class="relative flex-1 mt-2">
           @for (enrollment of enrollments(); track enrollment.id) {
           <app-enrollment-with-debits [enrollment]="enrollment" />
@@ -18,12 +16,8 @@
         </ng-scrollbar>
       </div>
       <!-- Debits Area -->
-      <div class="col-span-3 flex flex-col h-[calc(100vh-14rem)]">
-        <mat-divider />
-
-        <ng-scrollbar class="relative flex-1 mt-2">
-          <app-sale-details />
-        </ng-scrollbar>
+      <div class="col-span-2">
+        <app-sale-details />
       </div>
     </div>
   </mat-card-content>

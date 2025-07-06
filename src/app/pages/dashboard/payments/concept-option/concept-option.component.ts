@@ -47,21 +47,24 @@ export class ConceptOptionComponent implements OnInit {
   });
 
   ngOnInit(): void {
+    this.optionControl.setValue(this.pos.checkIsSelected(this.debit()));
+
     this.optionControl.valueChanges.subscribe({
-      next: (value) => {
-        this.toggleDebit(!!value)
-      }
+      next: (value) => this.toggleDebit(!!value)
     });
   }
 
   public select(event: MouseEvent): void {
     event.stopPropagation();
+
     this.optionControl.setValue(!this.optionControl.value);
   }
 
   public toggleDebit(active: boolean): void {
     if (active) {
-      this.pos.addDebit(this.debit());
+      const added = this.pos.addDebit(this.debit());
+
+      if (!added) this.optionControl.setValue(false);
     } else {
       this.pos.removeDebit(this.debit());
     }
