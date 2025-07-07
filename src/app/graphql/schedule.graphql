@@ -10,6 +10,9 @@ fragment ScheduleParts on Schedule {
   discipline {
     id, name, minHours
   }
+  enrollments {
+    totalCount
+  }
 }
 
 mutation createOneSchedule ($schedule: CreateSchedule!) {

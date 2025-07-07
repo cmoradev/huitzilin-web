@@ -19,7 +19,9 @@
           [value]="schedule"
           [selected]="isScheduleSelected(index, schedule.id)"
         >
-          {{ schedule.discipline.name }}
+          <span class="text-xs">
+            ({{ schedule.enrollments.totalCount }}) - {{ schedule.discipline.name }}
+          </span>
         </mat-chip-option>
         }
       </mat-chip-listbox>
