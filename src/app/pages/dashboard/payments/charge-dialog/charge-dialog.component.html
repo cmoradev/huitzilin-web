@@ -1,14 +1,33 @@
-<h2 mat-dialog-title>
-  Recibir Pago
-</h2>
+<h2 mat-dialog-title>Recibir Pago</h2>
 <mat-dialog-content>
+  <div class="mb-4 flex justify-between gap-2">
+    <p>
+      <span class="font-bold">Deuda total:</span>
+      {{ total() | currency : "MXN" }}
+    </p>
+    <p>
+      <span class="font-bold">Restante: </span
+      >{{ remainingAmount() | currency : "MXN" }}
+    </p>
+  </div>
+
   <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon svgIcon="bank-transfer-in" />
+        Transferencia
+      </ng-template>
+      
+      <app-charge-form />
+    </mat-tab>
+
     <mat-tab>
       <ng-template mat-tab-label>
         <mat-icon svgIcon="credit-card" />
         Tarjeta
       </ng-template>
-      Content 1
+      
+      <app-charge-form />
     </mat-tab>
 
     <mat-tab>
@@ -16,16 +35,8 @@
         <mat-icon svgIcon="cash" />
         Efectivo
       </ng-template>
-      Content 2
-    </mat-tab>
-
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon svgIcon="link" />
-        Clip
-      </ng-template>
-
-      Content 3
+      
+      <app-charge-form />
     </mat-tab>
   </mat-tab-group>
 </mat-dialog-content>

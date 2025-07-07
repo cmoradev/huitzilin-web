@@ -75,37 +75,46 @@
       ></tr>
     </table>
   </ng-scrollbar>
-  <div class="w-60 flex flex-col gap-2 ml-auto">
-    <div class="flex gap-2 w-full">
-      <p class="w-full text-left font-semibold">Importe</p>
-      <p class="w-full text-right">{{ amount() | currency : "MXN" }}</p>
-    </div>
-    <div class="flex gap-2 w-full">
-      <p class="w-full text-left font-semibold">Descuentos</p>
-      <p class="w-full text-right">{{ discount() | currency : "MXN" }}</p>
-    </div>
-    <div class="flex gap-2 w-full">
-      <p class="w-full text-left font-semibold">Subtotal</p>
-      <p class="w-full text-right">{{ subtotal() | currency : "MXN" }}</p>
-    </div>
-    <div class="flex gap-2 w-full">
-      <p class="w-full text-left font-semibold">IVA</p>
-      <p class="w-full text-right">{{ taxes() | currency : "MXN" }}</p>
-    </div>
-    <div class="flex gap-2 w-full">
-      <p class="w-full text-left font-semibold">Total</p>
-      <p class="w-full text-right">{{ total() | currency : "MXN" }}</p>
-    </div>
 
-    <div class="col-span-2">
+  <div class="flex justify-end items-end gap-2">
       <button
-        mat-flat-button
-        class="w-full"
-        [disabled]="!total()"
-        (click)="openChargeDialog()"
+        mat-button
+        disabled
       >
-        Cobrar
+        Generar un link de cobro
       </button>
-    </div>
+      <div class="w-60 flex flex-col gap-2">
+        <div class="flex gap-2 w-full">
+          <p class="w-full text-left font-semibold">Importe</p>
+          <p class="w-full text-right">{{ amount() | currency : "MXN" }}</p>
+        </div>
+        <div class="flex gap-2 w-full">
+          <p class="w-full text-left font-semibold">Descuentos</p>
+          <p class="w-full text-right">{{ discount() | currency : "MXN" }}</p>
+        </div>
+        <div class="flex gap-2 w-full">
+          <p class="w-full text-left font-semibold">Subtotal</p>
+          <p class="w-full text-right">{{ subtotal() | currency : "MXN" }}</p>
+        </div>
+        <div class="flex gap-2 w-full">
+          <p class="w-full text-left font-semibold">IVA</p>
+          <p class="w-full text-right">{{ taxes() | currency : "MXN" }}</p>
+        </div>
+        <div class="flex gap-2 w-full">
+          <p class="w-full text-left font-semibold">Total</p>
+          <p class="w-full text-right">{{ total() | currency : "MXN" }}</p>
+        </div>
+    
+        <div class="col-span-2">
+          <button
+            mat-flat-button
+            class="w-full"
+            [disabled]="!total()"
+            (click)="openChargeDialog()"
+          >
+            Cobrar
+          </button>
+        </div>
+      </div>
   </div>
 </div>

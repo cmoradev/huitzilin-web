@@ -1,0 +1,37 @@
+<div class="flex flex-col gap-2 mt-2">
+  <mat-form-field>
+    <mat-label>Monto</mat-label>
+    <input type="number" matInput />
+    <mat-hint> Monto a cobrar (MXN) </mat-hint>
+  </mat-form-field>
+
+  <div class="flex gap-2">
+    <mat-form-field>
+      <mat-label>Fecha</mat-label>
+      <input matInput [matDatepicker]="datepicker" />
+      <mat-datepicker #datepicker />
+      <mat-datepicker-toggle [for]="datepicker" matSuffix />
+      <mat-hint> Fecha de cobro </mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Hora</mat-label>
+      <input matInput [matTimepicker]="timepicker" />
+      <mat-timepicker #timepicker />
+      <mat-timepicker-toggle [for]="timepicker" matSuffix />
+      <mat-hint> Hora de cobro </mat-hint>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field>
+    <mat-label>Transacción</mat-label>
+    <input matInput />
+    <mat-hint> Referencia de la transacción (opcional) </mat-hint>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Nombre del banco </mat-label>
+    <input matInput />
+    <mat-hint> Nombre del banco (opcional) </mat-hint>
+  </mat-form-field>
+</div>
