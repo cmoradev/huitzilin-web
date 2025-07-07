@@ -4,9 +4,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { StudentStateComponent } from '@components/student-state/student-state.component';
 import {
+  CurrentEnrollmentPartsFragment,
   EnrollmentPartsFragment,
   EnrollmentState,
-  GetEnrollmentsPageGQL,
+  GetCurrentEnrollmentsPageGQL,
   GetEnrollmentsPageQueryVariables,
 } from '@graphql';
 import { GlobalStateService } from '@services';
@@ -31,9 +32,9 @@ import { SaleDetailsComponent } from './sale-details/sale-details.component';
 })
 export class PaymentsComponent implements OnInit {
   private readonly _globalState = inject(GlobalStateService);
-  private readonly _getEnrollmentsPage = inject(GetEnrollmentsPageGQL);
+  private readonly _getEnrollmentsPage = inject(GetCurrentEnrollmentsPageGQL);
 
-  public enrollments = signal<EnrollmentPartsFragment[]>([]);
+  public enrollments = signal<CurrentEnrollmentPartsFragment[]>([]);
   public loading = signal<boolean>(true);
 
   ngOnInit(): void {
@@ -43,7 +44,7 @@ export class PaymentsComponent implements OnInit {
   }
 
   private _fetchAllEnrollments(
-    accumulared: EnrollmentPartsFragment[] = []
+    accumulared: CurrentEnrollmentPartsFragment[] = []
   ): void {
     if (!!this._globalState.student?.id) {
       this.loading.set(true);

@@ -1,23 +1,8 @@
 <div class="item" (click)="toggleExpanded()">
-  @if (enrollment().state === 'INACTIVE') {
-  <mat-icon
-    svgIcon="circle-medium"
-    class="text-red-800!"
-    matTooltip="Inactivo"
-  />
-  } @else if (enrollment().state === 'PAUSED') {
-  <mat-icon
-    svgIcon="circle-medium"
-    class="text-yellow-600!"
-    matTooltip="Pausado"
-  />
-  } @else if (enrollment().state === 'ACTIVE') {
-  <mat-icon
-    svgIcon="circle-medium"
-    class="text-green-600!"
-    matTooltip="Activo"
-  />
-  }
+  <app-avatar
+    [imageSource]="enrollment().branch.picture"
+    [matTooltip]="enrollment().branch.name"
+  ></app-avatar>
   <div>
     <p class="font-medium">{{ enrollment().details }}</p>
     <p class="text-xs text-gray-500">
@@ -39,7 +24,7 @@
 @if (expanded()) {
 <div class="flex flex-col gap-1 pl-8 mt-1">
   @for (debit of debits(); track debit.id) {
-    <app-concept-option [debit]="debit" />
+  <app-concept-option [debit]="debit" />
   }
 </div>
 }

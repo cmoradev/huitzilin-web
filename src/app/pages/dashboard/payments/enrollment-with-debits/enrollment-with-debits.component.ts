@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {
+  CurrentEnrollmentPartsFragment,
   DebitPartsFragment,
   DebitState,
   EnrollmentPartsFragment,
@@ -21,6 +22,7 @@ import { EnrollmentCalendarComponent } from '../../enrollments/enrollment-calend
 import { map } from 'rxjs';
 import { ConceptOptionComponent } from '../concept-option/concept-option.component';
 import { PosService } from '@services';
+import { AvatarComponent } from '@components/avatar/avatar.component';
 
 @Component({
   selector: 'app-enrollment-with-debits',
@@ -28,6 +30,7 @@ import { PosService } from '@services';
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
+    AvatarComponent,
     ConceptOptionComponent,
   ],
   templateUrl: './enrollment-with-debits.component.html',
@@ -38,7 +41,7 @@ export class EnrollmentWithDebitsComponent implements OnInit {
   private readonly _dialog = inject(MatDialog);
   private readonly _getDebitsPage = inject(GetDebitsPageGQL);
 
-  public enrollment = input.required<EnrollmentPartsFragment>();
+  public enrollment = input.required<CurrentEnrollmentPartsFragment>();
 
   public expanded = signal<boolean>(false);
   public loading = signal<boolean>(false);

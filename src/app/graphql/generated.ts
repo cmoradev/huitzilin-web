@@ -3660,6 +3660,17 @@ export type SetOrderEnrollmentsMutationVariables = Exact<{
 
 export type SetOrderEnrollmentsMutation = { __typename?: 'Mutation', setOrderEnrollments: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
+export type CurrentEnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, branch: { __typename?: 'Branch', id: string, name: string, picture: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } };
+
+export type GetCurrentEnrollmentsPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<EnrollmentFilter>;
+}>;
+
+
+export type GetCurrentEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, branch: { __typename?: 'Branch', id: string, name: string, picture: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } }> } };
+
 export type FeePartsFragment = { __typename?: 'Fee', id: string, name: string, price: number, amount: number, frequency: Frequency, withTax: boolean };
 
 export type CreateOneFeeMutationVariables = Exact<{
@@ -4040,6 +4051,34 @@ export const EnrollmentPartsFragmentDoc = gql`
     picture
     fullname
     code
+  }
+  period {
+    id
+    name
+    start
+    end
+    firstHour
+    lastHour
+    days
+  }
+  level {
+    id
+    name
+    abbreviation
+  }
+}
+    `;
+export const CurrentEnrollmentPartsFragmentDoc = gql`
+    fragment CurrentEnrollmentParts on Enrollment {
+  id
+  details
+  state
+  hours
+  diciplines
+  branch {
+    id
+    name
+    picture
   }
   period {
     id
@@ -4699,6 +4738,35 @@ export const SetOrderEnrollmentsDocument = gql`
   })
   export class SetOrderEnrollmentsGQL extends Apollo.Mutation<SetOrderEnrollmentsMutation, SetOrderEnrollmentsMutationVariables> {
     document = SetOrderEnrollmentsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetCurrentEnrollmentsPageDocument = gql`
+    query getCurrentEnrollmentsPage($offset: Int = 0, $limit: Int = 10, $filter: EnrollmentFilter = {}) {
+  enrollments(
+    paging: {limit: $limit, offset: $offset}
+    filter: $filter
+    sorting: [{field: order, direction: ASC}, {field: createdAt, direction: DESC}]
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...CurrentEnrollmentParts
+    }
+  }
+}
+    ${CurrentEnrollmentPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetCurrentEnrollmentsPageGQL extends Apollo.Query<GetCurrentEnrollmentsPageQuery, GetCurrentEnrollmentsPageQueryVariables> {
+    document = GetCurrentEnrollmentsPageDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

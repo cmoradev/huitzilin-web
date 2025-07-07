@@ -83,3 +83,54 @@ mutation setOrderEnrollments($payload: [SetOrderInput!]!) {
     updatedCount
   }
 }
+
+fragment CurrentEnrollmentParts on Enrollment {
+  id
+  details
+  state
+  hours
+  diciplines
+  branch {
+    id, 
+    name, 
+    picture
+  }
+  period {
+    id
+    name
+    start
+    end
+    firstHour
+    lastHour
+    days
+  }
+  level {
+    id, 
+    name,
+    abbreviation
+  }
+}
+
+query getCurrentEnrollmentsPage(
+  $offset: Int = 0
+  $limit: Int = 10
+  $filter: EnrollmentFilter = {}
+) {
+  enrollments(
+    paging: { limit: $limit, offset: $offset }, 
+    filter: $filter,
+    sorting: [
+      { field: order, direction: ASC }
+      { field: createdAt, direction: DESC }
+    ]
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...CurrentEnrollmentParts
+    }
+  }
+}
