@@ -49,7 +49,7 @@ export class SaleDetailsComponent {
 
   public openChargeDialog() {
     this._dialog.open(ChargeDialogComponent, {
-      width: '30rem',
+      width: '38rem',
     });
   }
 

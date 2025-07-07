@@ -1,8 +1,33 @@
 <h2 mat-dialog-title>
-
+  Recibir Pago
 </h2>
 <mat-dialog-content>
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon svgIcon="credit-card" />
+        Tarjeta
+      </ng-template>
+      Content 1
+    </mat-tab>
 
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon svgIcon="cash" />
+        Efectivo
+      </ng-template>
+      Content 2
+    </mat-tab>
+
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon svgIcon="link" />
+        Clip
+      </ng-template>
+
+      Content 3
+    </mat-tab>
+  </mat-tab-group>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
