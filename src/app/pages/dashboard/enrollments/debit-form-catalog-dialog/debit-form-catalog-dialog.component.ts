@@ -99,7 +99,7 @@ export class DebitFormCatalogDialogComponent implements OnInit {
   public addDebit(
     initialValues: Omit<
       CreateDebit,
-      'enrollmentId' | 'paymentDate' | 'discount'
+      'enrollmentId' | 'studentId' | 'paymentDate' | 'discount'
     >
   ): void {
     const {
@@ -163,11 +163,9 @@ export class DebitFormCatalogDialogComponent implements OnInit {
     if (this.formGroup.valid) {
       const values = this.formGroup.getRawValue();
 
-      console.log('Form Values:', values);
-
       this.loading.set(true);
 
-      if (!!this._globalStateService.enrollment?.id) {
+      if (!!this._globalStateService.enrollment?.id && this._globalStateService.student?.id) {
         this._createManyDebits
           .mutate({
             debits: values.debits.map((debit: any) => ({
@@ -180,6 +178,7 @@ export class DebitFormCatalogDialogComponent implements OnInit {
               withTax: debit.withTax,
               frequency: debit.frequency,
               paymentDate: null,
+              studentId: this._globalStateService.student!.id,
               discounts: debit.discounts.map((discount: any) => ({
                 id: discount.id,
               })),
@@ -203,8 +202,8 @@ export class DebitFormCatalogDialogComponent implements OnInit {
     switch (value.frequency) {
       case Frequency.Monthly:
         if (
-          !!this._globalStateService!.enrollment!.period!.start &&
-          !!this._globalStateService!.enrollment!.period!.end
+          !!this._globalStateService!.enrollment!.period?.start &&
+          !!this._globalStateService!.enrollment!.period?.end
         ) {
           const startPeriod = startOfMonth(
             `${this._globalStateService!.enrollment!.period!.start}T12:00:00`

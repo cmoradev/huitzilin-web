@@ -178,7 +178,7 @@ export class DebitFormDialogComponent {
             this.loading.set(false);
           },
         });
-      } else if (this._globalStateService.activity!.id) {
+      } else if (this._globalStateService.activity!.id && this._globalStateService.student!.id) {
         this._save(payload).subscribe({
           next: (debit) => {
             this._snackBar.open(
@@ -215,7 +215,7 @@ export class DebitFormDialogComponent {
   private _save(
     values: Omit<
       CreateDebit,
-      'frequency' | 'enrollmentId' | 'discount' | 'paymentDate'
+      'frequency' | 'enrollmentId' | 'studentId' | 'discount' | 'paymentDate'
     >
   ) {
     return this._createOneDebit
@@ -225,6 +225,7 @@ export class DebitFormDialogComponent {
           discount: 0,
           paymentDate: null,
           frequency: Frequency.Single,
+          studentId: this._globalStateService.student!.id,
           enrollmentId: this._globalStateService.enrollment!.id,
         },
       })

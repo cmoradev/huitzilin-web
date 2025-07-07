@@ -154,6 +154,92 @@ export enum BranchSortFields {
   UpdatedAt = 'updatedAt'
 }
 
+export type Concept = {
+  __typename?: 'Concept';
+  amount: Scalars['Float']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  debits: Array<Debit>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  description: Scalars['String']['output'];
+  discount: Scalars['Float']['output'];
+  discounts: Array<Discount>;
+  id: Scalars['ID']['output'];
+  incomeId: Scalars['String']['output'];
+  quantity: Scalars['Float']['output'];
+  subtotal: Scalars['Float']['output'];
+  taxes: Scalars['Float']['output'];
+  total: Scalars['Float']['output'];
+  unitPrice: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
+  withTax: Scalars['Boolean']['output'];
+};
+
+
+export type ConceptDebitsArgs = {
+  filter?: DebitFilter;
+  sorting?: Array<DebitSort>;
+};
+
+
+export type ConceptDiscountsArgs = {
+  filter?: DiscountFilter;
+  sorting?: Array<DiscountSort>;
+};
+
+export type ConceptConnection = {
+  __typename?: 'ConceptConnection';
+  /** Array of nodes. */
+  nodes: Array<Concept>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ConceptDeleteResponse = {
+  __typename?: 'ConceptDeleteResponse';
+  amount?: Maybe<Scalars['Float']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  discount?: Maybe<Scalars['Float']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  incomeId?: Maybe<Scalars['String']['output']>;
+  quantity?: Maybe<Scalars['Float']['output']>;
+  subtotal?: Maybe<Scalars['Float']['output']>;
+  taxes?: Maybe<Scalars['Float']['output']>;
+  total?: Maybe<Scalars['Float']['output']>;
+  unitPrice?: Maybe<Scalars['Float']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+  withTax?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type ConceptFilter = {
+  and?: InputMaybe<Array<ConceptFilter>>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  description?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  incomeId?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<ConceptFilter>>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type ConceptSort = {
+  direction: SortDirection;
+  field: ConceptSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum ConceptSortFields {
+  CreatedAt = 'createdAt',
+  Description = 'description',
+  Id = 'id',
+  IncomeId = 'incomeId',
+  UpdatedAt = 'updatedAt'
+}
+
 export type CreateAction = {
   action: Scalars['String']['input'];
   effect: ActionEffect;
@@ -164,6 +250,21 @@ export type CreateAction = {
 export type CreateBranch = {
   name: Scalars['String']['input'];
   picture: Scalars['String']['input'];
+};
+
+export type CreateConcept = {
+  amount: Scalars['Float']['input'];
+  debits?: InputMaybe<Array<NestedId>>;
+  description: Scalars['String']['input'];
+  discount: Scalars['Float']['input'];
+  discounts?: InputMaybe<Array<NestedId>>;
+  incomeId: Scalars['String']['input'];
+  quantity: Scalars['Float']['input'];
+  subtotal: Scalars['Float']['input'];
+  taxes: Scalars['Float']['input'];
+  total: Scalars['Float']['input'];
+  unitPrice: Scalars['Float']['input'];
+  withTax: Scalars['Boolean']['input'];
 };
 
 export type CreateCycle = {
@@ -183,6 +284,7 @@ export type CreateDebit = {
   paymentDate?: InputMaybe<Scalars['DateTime']['input']>;
   quantity: Scalars['Float']['input'];
   state: DebitState;
+  studentId: Scalars['String']['input'];
   unitPrice: Scalars['Float']['input'];
   withTax: Scalars['Boolean']['input'];
 };
@@ -239,6 +341,11 @@ export type CreateLevel = {
   order: Scalars['Float']['input'];
 };
 
+export type CreateManyConceptsInput = {
+  /** Array of records to create */
+  concepts: Array<CreateConcept>;
+};
+
 export type CreateManyDebitsInput = {
   /** Array of records to create */
   debits: Array<CreateDebit>;
@@ -262,6 +369,11 @@ export type CreateOneActionInput = {
 export type CreateOneBranchInput = {
   /** The record to create */
   branch: CreateBranch;
+};
+
+export type CreateOneConceptInput = {
+  /** The record to create */
+  concept: CreateConcept;
 };
 
 export type CreateOneCycleInput = {
@@ -490,8 +602,10 @@ export type Debit = {
   frequency: Frequency;
   id: Scalars['ID']['output'];
   paymentDate?: Maybe<Scalars['DateTime']['output']>;
+  pendingPayment: Scalars['Float']['output'];
   quantity: Scalars['Float']['output'];
   state: DebitState;
+  studentId: Scalars['String']['output'];
   subtotal: Scalars['Float']['output'];
   taxes: Scalars['Float']['output'];
   total: Scalars['Float']['output'];
@@ -529,8 +643,10 @@ export type DebitDeleteResponse = {
   frequency?: Maybe<Frequency>;
   id?: Maybe<Scalars['ID']['output']>;
   paymentDate?: Maybe<Scalars['DateTime']['output']>;
+  pendingPayment?: Maybe<Scalars['Float']['output']>;
   quantity?: Maybe<Scalars['Float']['output']>;
   state?: Maybe<DebitState>;
+  studentId?: Maybe<Scalars['String']['output']>;
   subtotal?: Maybe<Scalars['Float']['output']>;
   taxes?: Maybe<Scalars['Float']['output']>;
   total?: Maybe<Scalars['Float']['output']>;
@@ -549,6 +665,7 @@ export type DebitFilter = {
   id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<DebitFilter>>;
   state?: InputMaybe<DebitStateFilterComparison>;
+  studentId?: InputMaybe<StringFieldComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -565,6 +682,7 @@ export enum DebitSortFields {
   EnrollmentId = 'enrollmentId',
   Id = 'id',
   State = 'state',
+  StudentId = 'studentId',
   UpdatedAt = 'updatedAt'
 }
 
@@ -599,6 +717,11 @@ export type DeleteOneActionInput = {
 };
 
 export type DeleteOneBranchInput = {
+  /** The id of the record to delete. */
+  id: Scalars['ID']['input'];
+};
+
+export type DeleteOneConceptInput = {
   /** The id of the record to delete. */
   id: Scalars['ID']['input'];
 };
@@ -1129,6 +1252,82 @@ export type IdFilterComparison = {
   notLike?: InputMaybe<Scalars['ID']['input']>;
 };
 
+export type Income = {
+  __typename?: 'Income';
+  branchId: Scalars['String']['output'];
+  clipLink?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  folio: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  pendingPayment: Scalars['Float']['output'];
+  state: IncomeState;
+  students: Array<Student>;
+  subtotal: Scalars['Float']['output'];
+  taxes: Scalars['Float']['output'];
+  total: Scalars['Float']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
+};
+
+
+export type IncomeStudentsArgs = {
+  filter?: StudentFilter;
+  sorting?: Array<StudentSort>;
+};
+
+export type IncomeConnection = {
+  __typename?: 'IncomeConnection';
+  /** Array of nodes. */
+  nodes: Array<Income>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type IncomeFilter = {
+  and?: InputMaybe<Array<IncomeFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  folio?: InputMaybe<IntFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  or?: InputMaybe<Array<IncomeFilter>>;
+  students?: InputMaybe<IncomeFilterStudentFilter>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type IncomeFilterStudentFilter = {
+  and?: InputMaybe<Array<IncomeFilterStudentFilter>>;
+  code?: InputMaybe<StringFieldComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  dni?: InputMaybe<StringFieldComparison>;
+  fullname?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  or?: InputMaybe<Array<IncomeFilterStudentFilter>>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type IncomeSort = {
+  direction: SortDirection;
+  field: IncomeSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum IncomeSortFields {
+  BranchId = 'branchId',
+  CreatedAt = 'createdAt',
+  Folio = 'folio',
+  Id = 'id',
+  UpdatedAt = 'updatedAt'
+}
+
+export enum IncomeState {
+  Cancelled = 'CANCELLED',
+  Paid = 'PAID',
+  Pending = 'PENDING'
+}
+
 export type IntFieldComparison = {
   between?: InputMaybe<IntFieldComparisonBetween>;
   eq?: InputMaybe<Scalars['Int']['input']>;
@@ -1217,11 +1416,13 @@ export type Mutation = {
   __typename?: 'Mutation';
   addBranchsToStudent: Student;
   addStudentsToDocument: Document;
+  createManyConcepts: Array<Concept>;
   createManyDebits: Array<Debit>;
   createManyDiscounts: Array<Discount>;
   createManyDocuments: Array<Document>;
   createOneAction: Action;
   createOneBranch: Branch;
+  createOneConcept: Concept;
   createOneCycle: Cycle;
   createOneDebit: Debit;
   createOneDiscipline: Discipline;
@@ -1239,6 +1440,7 @@ export type Mutation = {
   createOneTutor: Tutor;
   deleteOneAction: ActionDeleteResponse;
   deleteOneBranch: BranchDeleteResponse;
+  deleteOneConcept: ConceptDeleteResponse;
   deleteOneCycle: CycleDeleteResponse;
   deleteOneDebit: DebitDeleteResponse;
   deleteOneDiscipline: DisciplineDeleteResponse;
@@ -1258,6 +1460,7 @@ export type Mutation = {
   removeStudentsFromDocument: Document;
   restoreManyActions: UpdateManyResponse;
   restoreManyBranchs: UpdateManyResponse;
+  restoreManyConcepts: UpdateManyResponse;
   restoreManyCycles: UpdateManyResponse;
   restoreManyDebits: UpdateManyResponse;
   restoreManyDisciplines: UpdateManyResponse;
@@ -1265,8 +1468,10 @@ export type Mutation = {
   restoreManyDocuments: UpdateManyResponse;
   restoreManyEnrollments: UpdateManyResponse;
   restoreManyFees: UpdateManyResponse;
+  restoreManyIncomes: UpdateManyResponse;
   restoreManyLevels: UpdateManyResponse;
   restoreManyPackages: UpdateManyResponse;
+  restoreManyPayments: UpdateManyResponse;
   restoreManyPeriods: UpdateManyResponse;
   restoreManyPolicies: UpdateManyResponse;
   restoreManySchedules: UpdateManyResponse;
@@ -1275,6 +1480,7 @@ export type Mutation = {
   restoreManyTutors: UpdateManyResponse;
   restoreOneAction: Action;
   restoreOneBranch: Branch;
+  restoreOneConcept: Concept;
   restoreOneCycle: Cycle;
   restoreOneDebit: Debit;
   restoreOneDiscipline: Discipline;
@@ -1282,8 +1488,10 @@ export type Mutation = {
   restoreOneDocument: Document;
   restoreOneEnrollment: Enrollment;
   restoreOneFee: Fee;
+  restoreOneIncome: Income;
   restoreOneLevel: Level;
   restoreOnePackage: Package;
+  restoreOnePayment: Payment;
   restoreOnePeriod: Period;
   restoreOnePolicy: Policy;
   restoreOneSchedule: Schedule;
@@ -1301,6 +1509,7 @@ export type Mutation = {
   updateManyPackages: UpdateManyResponse;
   updateOneAction: Action;
   updateOneBranch: Branch;
+  updateOneConcept: Concept;
   updateOneCycle: Cycle;
   updateOneDebit: Debit;
   updateOneDiscipline: Discipline;
@@ -1330,6 +1539,11 @@ export type MutationAddStudentsToDocumentArgs = {
 };
 
 
+export type MutationCreateManyConceptsArgs = {
+  input: CreateManyConceptsInput;
+};
+
+
 export type MutationCreateManyDebitsArgs = {
   input: CreateManyDebitsInput;
 };
@@ -1352,6 +1566,11 @@ export type MutationCreateOneActionArgs = {
 
 export type MutationCreateOneBranchArgs = {
   input: CreateOneBranchInput;
+};
+
+
+export type MutationCreateOneConceptArgs = {
+  input: CreateOneConceptInput;
 };
 
 
@@ -1437,6 +1656,11 @@ export type MutationDeleteOneActionArgs = {
 
 export type MutationDeleteOneBranchArgs = {
   input: DeleteOneBranchInput;
+};
+
+
+export type MutationDeleteOneConceptArgs = {
+  input: DeleteOneConceptInput;
 };
 
 
@@ -1535,6 +1759,11 @@ export type MutationRestoreManyBranchsArgs = {
 };
 
 
+export type MutationRestoreManyConceptsArgs = {
+  input: ConceptFilter;
+};
+
+
 export type MutationRestoreManyCyclesArgs = {
   input: CycleFilter;
 };
@@ -1570,6 +1799,11 @@ export type MutationRestoreManyFeesArgs = {
 };
 
 
+export type MutationRestoreManyIncomesArgs = {
+  input: IncomeFilter;
+};
+
+
 export type MutationRestoreManyLevelsArgs = {
   input: LevelFilter;
 };
@@ -1577,6 +1811,11 @@ export type MutationRestoreManyLevelsArgs = {
 
 export type MutationRestoreManyPackagesArgs = {
   input: PackageFilter;
+};
+
+
+export type MutationRestoreManyPaymentsArgs = {
+  input: PaymentFilter;
 };
 
 
@@ -1620,6 +1859,11 @@ export type MutationRestoreOneBranchArgs = {
 };
 
 
+export type MutationRestoreOneConceptArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
 export type MutationRestoreOneCycleArgs = {
   input: Scalars['ID']['input'];
 };
@@ -1655,12 +1899,22 @@ export type MutationRestoreOneFeeArgs = {
 };
 
 
+export type MutationRestoreOneIncomeArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
 export type MutationRestoreOneLevelArgs = {
   input: Scalars['ID']['input'];
 };
 
 
 export type MutationRestoreOnePackageArgs = {
+  input: Scalars['ID']['input'];
+};
+
+
+export type MutationRestoreOnePaymentArgs = {
   input: Scalars['ID']['input'];
 };
 
@@ -1747,6 +2001,11 @@ export type MutationUpdateOneActionArgs = {
 
 export type MutationUpdateOneBranchArgs = {
   input: UpdateOneBranchInput;
+};
+
+
+export type MutationUpdateOneConceptArgs = {
+  input: UpdateOneConceptInput;
 };
 
 
@@ -1952,6 +2211,65 @@ export type PackageUpdateFilter = {
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
+export type Payment = {
+  __typename?: 'Payment';
+  amount: Scalars['Float']['output'];
+  bank: Scalars['String']['output'];
+  createdAt: Scalars['DateTime']['output'];
+  date: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  folio: Scalars['Int']['output'];
+  id: Scalars['ID']['output'];
+  incomeId: Scalars['String']['output'];
+  state: PaymentState;
+  transaction: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
+};
+
+export type PaymentConnection = {
+  __typename?: 'PaymentConnection';
+  /** Array of nodes. */
+  nodes: Array<Payment>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type PaymentFilter = {
+  and?: InputMaybe<Array<PaymentFilter>>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  folio?: InputMaybe<IntFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  incomeId?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<PaymentFilter>>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type PaymentSort = {
+  direction: SortDirection;
+  field: PaymentSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum PaymentSortFields {
+  CreatedAt = 'createdAt',
+  Folio = 'folio',
+  Id = 'id',
+  IncomeId = 'incomeId',
+  UpdatedAt = 'updatedAt'
+}
+
+export enum PaymentState {
+  AttemptedStamping = 'ATTEMPTED_STAMPING',
+  Cancelled = 'CANCELLED',
+  GlobalStamping = 'GLOBAL_STAMPING',
+  Paid = 'PAID',
+  Pending = 'PENDING',
+  Stamping = 'STAMPING'
+}
+
 export type Period = {
   __typename?: 'Period';
   branchId: Scalars['String']['output'];
@@ -2084,6 +2402,8 @@ export type Query = {
   actions: ActionConnection;
   branch: Branch;
   branches: BranchConnection;
+  concept: Concept;
+  concepts: ConceptConnection;
   cycle: Cycle;
   cycles: CycleConnection;
   debit: Debit;
@@ -2098,10 +2418,14 @@ export type Query = {
   enrollments: EnrollmentConnection;
   fee: Fee;
   fees: FeeConnection;
+  income: Income;
+  incomes: IncomeConnection;
   level: Level;
   levels: LevelConnection;
   package: Package;
   packages: PackageConnection;
+  payment: Payment;
+  payments: PaymentConnection;
   period: Period;
   periods: PeriodConnection;
   policies: PolicyConnection;
@@ -2138,6 +2462,18 @@ export type QueryBranchesArgs = {
   filter?: BranchFilter;
   paging?: OffsetPaging;
   sorting?: Array<BranchSort>;
+};
+
+
+export type QueryConceptArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryConceptsArgs = {
+  filter?: ConceptFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<ConceptSort>;
 };
 
 
@@ -2225,6 +2561,18 @@ export type QueryFeesArgs = {
 };
 
 
+export type QueryIncomeArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryIncomesArgs = {
+  filter?: IncomeFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<IncomeSort>;
+};
+
+
 export type QueryLevelArgs = {
   id: Scalars['ID']['input'];
 };
@@ -2246,6 +2594,18 @@ export type QueryPackagesArgs = {
   filter?: PackageFilter;
   paging?: OffsetPaging;
   sorting?: Array<PackageSort>;
+};
+
+
+export type QueryPaymentArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryPaymentsArgs = {
+  filter?: PaymentFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<PaymentSort>;
 };
 
 
@@ -2742,6 +3102,21 @@ export type UpdateBranch = {
   picture?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type UpdateConcept = {
+  amount?: InputMaybe<Scalars['Float']['input']>;
+  debits?: InputMaybe<Array<NestedId>>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  discount?: InputMaybe<Scalars['Float']['input']>;
+  discounts?: InputMaybe<Array<NestedId>>;
+  incomeId?: InputMaybe<Scalars['String']['input']>;
+  quantity?: InputMaybe<Scalars['Float']['input']>;
+  subtotal?: InputMaybe<Scalars['Float']['input']>;
+  taxes?: InputMaybe<Scalars['Float']['input']>;
+  total?: InputMaybe<Scalars['Float']['input']>;
+  unitPrice?: InputMaybe<Scalars['Float']['input']>;
+  withTax?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
 export type UpdateCount = {
   __typename?: 'UpdateCount';
   updatedCount?: Maybe<Scalars['Int']['output']>;
@@ -2764,6 +3139,7 @@ export type UpdateDebit = {
   paymentDate?: InputMaybe<Scalars['DateTime']['input']>;
   quantity?: InputMaybe<Scalars['Float']['input']>;
   state?: InputMaybe<DebitState>;
+  studentId?: InputMaybe<Scalars['String']['input']>;
   unitPrice?: InputMaybe<Scalars['Float']['input']>;
   withTax?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -2845,6 +3221,13 @@ export type UpdateOneBranchInput = {
   id: Scalars['ID']['input'];
   /** The update to apply. */
   update: UpdateBranch;
+};
+
+export type UpdateOneConceptInput = {
+  /** The id of the record to update */
+  id: Scalars['ID']['input'];
+  /** The update to apply. */
+  update: UpdateConcept;
 };
 
 export type UpdateOneCycleInput = {
