@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-2 mt-2">
+<form class="flex flex-col gap-2 mt-2" [formGroup]="formGroup()" (ngSubmit)="submit()">
   <mat-form-field>
     <mat-label>Monto</mat-label>
     <input type="number" matInput />
@@ -34,4 +34,4 @@
     <input matInput />
     <mat-hint> Nombre del banco (opcional) </mat-hint>
   </mat-form-field>
-</div>
+</form>

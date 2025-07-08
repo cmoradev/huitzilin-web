@@ -70,6 +70,9 @@ export class StudentFormDialogComponent {
     code: [''],
     dni: [''],
     dateBirth: [''],
+    active: this.formTools.builder.control<boolean>(true, {
+      nonNullable: true,
+    }),
   });
 
   ngOnInit(): void {
@@ -238,6 +241,7 @@ export class StudentFormDialogComponent {
             lastname: values.lastname,
             dateBirth: values.dateBirth,
             dni: values.dni,
+            active: true,
           },
         })
       ),
@@ -263,10 +267,7 @@ export class StudentFormDialogComponent {
       .fetch(
         {
           filter: {
-            or: [
-              { code: { eq: values.code } },
-              { dni: { eq: values.code } },
-            ],
+            or: [{ code: { eq: values.code } }, { dni: { eq: values.code } }],
           },
         },
         {
