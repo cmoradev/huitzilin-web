@@ -1,49 +1,42 @@
 <h2 mat-dialog-title>Recibir Pago</h2>
 <mat-dialog-content>
-  <div class="mb-4 flex justify-between gap-2">
-    <p>
-      <span class="font-bold">Deuda total:</span>
-      {{ total() | currency : "MXN" }}
-    </p>
-    <p>
-      <span class="font-bold">Restante: </span
-      >{{ remainingAmount() | currency : "MXN" }}
-    </p>
-  </div>
+  <form id="paymentForm" [formGroup]="paymentsForm" (ngSubmit)="submit()">
+    <div class="flex justify-between gap-2">
+      <p>
+        <span class="font-bold">Deuda total:</span>
+        {{ total() | currency : "MXN" }}
+      </p>
+      <p>
+        <span class="font-bold">Restante: </span>
+        {{ remainingAmount() | currency : "MXN" }}
+      </p>
+    </div>
 
-  <mat-tab-group>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon svgIcon="bank-transfer-in" />
-        Transferencia
-      </ng-template>
-      
-      <!-- <app-charge-form /> -->
-    </mat-tab>
+    <mat-error>
+      {{ formTools.checkForErrorsIn(paymentsForm) }}
+    </mat-error>
 
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon svgIcon="credit-card" />
-        Tarjeta
-      </ng-template>
-      
-      <!-- <app-charge-form /> -->
-    </mat-tab>
+    <mat-tab-group formArrayName="payments">
+      @for (paymentForm of payments.controls; track $index +
+      paymentForm.get('method')?.value) {
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon
+            [svgIcon]="paymentIcons[paymentForm.get('method')!.value]"
+          />
+          {{ paymentNames[paymentForm.get("method")!.value] }}
+        </ng-template>
 
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon svgIcon="cash" />
-        Efectivo
-      </ng-template>
-      
-      <!-- <app-charge-form /> -->
-    </mat-tab>
-  </mat-tab-group>
+        <app-charge-form [form]="paymentForm" />
+      </mat-tab>
+      }
+    </mat-tab-group>
+  </form>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
-  <button mat-button cdkFocusInitial form="dataForm" [disabled]="loading()">
-    {{ loading() ? "Guardando..." : "Guardar" }}
+  <button mat-button cdkFocusInitial form="paymentForm" [disabled]="loading()">
+    {{ loading() ? "Cobrando..." : "Cobrar" }}
   </button>
 </mat-dialog-actions>

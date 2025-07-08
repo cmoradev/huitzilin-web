@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -8,7 +8,15 @@ import { PaymentMethod } from '@graphql';
 
 import { CurrencyPipe } from '@angular/common';
 import { ChargeFormComponent } from '../charge-form/charge-form.component';
-import { FormGroup, Validators } from '@angular/forms';
+import { debounceTime, filter, map } from 'rxjs';
+import {
+  FormArray,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import Decimal from 'decimal.js';
+import { MatError } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-charge-dialog',
@@ -18,24 +26,82 @@ import { FormGroup, Validators } from '@angular/forms';
     MatIconModule,
     MatButtonModule,
     CurrencyPipe,
+    ReactiveFormsModule,
     ChargeFormComponent,
+    MatError,
   ],
   templateUrl: './charge-dialog.component.html',
   styles: ``,
 })
-export class ChargeDialogComponent {
-  private readonly formTools = inject(FormToolsService);
+export class ChargeDialogComponent implements OnInit {
   private readonly pos = inject(PosService);
+  public readonly formTools = inject(FormToolsService);
 
   public loading = signal<boolean>(false);
   public total = computed(() => this.pos.total);
   public remainingAmount = signal<number>(0);
 
-  public paymentForm = this.formTools.builder.group({
-    payments: this.formTools.builder.array([
-      // this.createPaymentForm()
-    ]),
-  });
+  public paymentNames: any = {
+    [PaymentMethod.Card]: 'Tarjeta',
+    [PaymentMethod.Cash]: 'Efectivo',
+    [PaymentMethod.Transfer]: 'Transferencia',
+  };
+
+  public paymentIcons: any = {
+    [PaymentMethod.Card]: 'credit-card',
+    [PaymentMethod.Cash]: 'cash',
+    [PaymentMethod.Transfer]: 'bank-transfer-in',
+  };
+
+  public paymentsForm = this.formTools.builder.group(
+    {
+      payments: this.formTools.builder.array([
+        this.createPaymentForm(PaymentMethod.Transfer),
+        this.createPaymentForm(PaymentMethod.Card),
+        this.createPaymentForm(PaymentMethod.Cash),
+      ]),
+    },
+    {
+      validators: [
+        (form: FormGroup) => {
+          if (this.remainingAmount() < 0) {
+            return { totalExceeded: true };
+          }
+          return null;
+        },
+      ],
+    }
+  );
+
+  public get payments(): FormArray<FormGroup> {
+    return this.paymentsForm.get('payments') as FormArray<FormGroup>;
+  }
+
+  ngOnInit(): void {
+    this.paymentsForm.valueChanges.subscribe({
+      next: () => {
+        const payments = this.filterPaymentRecived();
+
+        const recived = payments.reduce((acc, current) => {
+          return acc.add(current.amount);
+        }, new Decimal(0));
+
+        this.remainingAmount.set(this.total() - recived.toNumber());
+      },
+    });
+  }
+
+  public submit() {
+    if (this.paymentsForm.valid) {
+      const recived = this.filterPaymentRecived();
+
+      this.payments.controls.forEach((payment, index) => {
+        console.log(payment.get('amount')?.errors);
+        console.log(payment.get('transaction')?.errors);
+        console.log(payment.get('bank')?.errors);
+      })
+    }
+  }
 
   private createPaymentForm(method: PaymentMethod): FormGroup {
     const form = this.formTools.builder.group({
@@ -44,28 +110,43 @@ export class ChargeDialogComponent {
         nonNullable: true,
       }),
       amount: this.formTools.builder.control<number>(0, {
-        validators: [Validators.required, Validators.min(0.01)],
         nonNullable: true,
       }),
       date: this.formTools.builder.control<Date>(new Date(), {
-        validators: [Validators.required],
         nonNullable: true,
       }),
-      transaction: this.formTools.builder.control<string | null>(null, {
-        validators: [Validators.required],
+      transaction: this.formTools.builder.control<string>('', {
         nonNullable: true,
       }),
-      bank: this.formTools.builder.control<string | null>(null, {
-        validators: [Validators.required],
+      bank: this.formTools.builder.control<string>('', {
         nonNullable: true,
       }),
     });
 
-    if (method !== PaymentMethod.Card) {
-      // form.get('transactionCode').addValidators(Validators.required);
-      // form.get('bank').addValidators(Validators.required);
-    }
+    form.get('amount')?.valueChanges.pipe(debounceTime(300)).subscribe({
+      next: (value) => {
+        console.log(!!value)
+        if (!!value) {
+          form.get('amount')?.setValidators([Validators.required]);
+          form.get('date')?.setValidators([Validators.required]);
+
+          if (form.get('method')?.value !== PaymentMethod.Cash) {
+            form.get('transaction')?.setValidators([Validators.required]);
+            form.get('bank')?.setValidators([Validators.required]);
+          }
+        } else {
+          form.get('amount')?.clearValidators();
+          form.get('date')?.clearValidators();
+          form.get('transaction')?.clearValidators();
+          form.get('bank')?.clearValidators();
+        }
+      },
+    });
 
     return form;
+  }
+
+  private filterPaymentRecived() {
+    return this.payments.value.filter((payment) => !!payment.amount);
   }
 }

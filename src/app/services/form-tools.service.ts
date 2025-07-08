@@ -78,6 +78,10 @@ export class FormToolsService {
       if (control.hasError('dniIsExists')) {
         return ERROR_MESSAGES['dniIsExists']();
       }
+
+      if (control.hasError('totalExceeded')) {
+        return ERROR_MESSAGES['totalExceeded']();
+      }
     }
 
     return '';

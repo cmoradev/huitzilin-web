@@ -1,9 +1,10 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTimepickerModule } from '@angular/material/timepicker';
+import { FormToolsService } from '@services';
 
 @Component({
   selector: 'app-charge-form',
@@ -18,9 +19,7 @@ import { MatTimepickerModule } from '@angular/material/timepicker';
   styles: ``,
 })
 export class ChargeFormComponent {
-  public formGroup = input.required<FormGroup>();
+  public formTools = inject(FormToolsService);
 
-  public submit() {
-    
-  }
+  public form = input.required<FormGroup>();
 }

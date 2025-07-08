@@ -1,37 +1,61 @@
-<form class="flex flex-col gap-2 mt-2" [formGroup]="formGroup()" (ngSubmit)="submit()">
+<form class="flex flex-col gap-2 mt-2" [formGroup]="form()" id="paymentForm">
   <mat-form-field>
     <mat-label>Monto</mat-label>
-    <input type="number" matInput />
+    <input type="number" matInput formControlName="amount" />
     <mat-hint> Monto a cobrar (MXN) </mat-hint>
+    <mat-error>
+      {{ formTools.checkForErrorsIn(form().get("amount")) }}
+    </mat-error>
   </mat-form-field>
-
   <div class="flex gap-2">
     <mat-form-field>
       <mat-label>Fecha</mat-label>
-      <input matInput [matDatepicker]="datepicker" />
+      <input
+        type="datetime"
+        matInput
+        [matDatepicker]="datepicker"
+        formControlName="date"
+      />
       <mat-datepicker #datepicker />
       <mat-datepicker-toggle [for]="datepicker" matSuffix />
       <mat-hint> Fecha de cobro </mat-hint>
+      <mat-error>
+        {{ formTools.checkForErrorsIn(form().get("date")) }}
+      </mat-error>
     </mat-form-field>
 
     <mat-form-field>
       <mat-label>Hora</mat-label>
-      <input matInput [matTimepicker]="timepicker" />
+      <input
+        type="datetime"
+        matInput
+        [matTimepicker]="timepicker"
+        formControlName="date"
+      />
       <mat-timepicker #timepicker />
       <mat-timepicker-toggle [for]="timepicker" matSuffix />
       <mat-hint> Hora de cobro </mat-hint>
+      <mat-error>
+        {{ formTools.checkForErrorsIn(form().get("date")) }}
+      </mat-error>
     </mat-form-field>
   </div>
 
   <mat-form-field>
     <mat-label>Transacción</mat-label>
-    <input matInput />
-    <mat-hint> Referencia de la transacción (opcional) </mat-hint>
+    <input matInput formControlName="transaction" />
+    <mat-hint> Referencia de la transacción</mat-hint>
+    <mat-error>
+      {{ formTools.checkForErrorsIn(form().get("transaction")) }}
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field>
     <mat-label>Nombre del banco </mat-label>
-    <input matInput />
-    <mat-hint> Nombre del banco (opcional) </mat-hint>
+    <input matInput formControlName="bank" />
+    <mat-hint> Nombre del banco </mat-hint>
+    <mat-error>
+      {{ formTools.checkForErrorsIn(form().get("bank")) }}
+    </mat-error>
   </mat-form-field>
 </form>

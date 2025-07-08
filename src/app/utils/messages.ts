@@ -12,4 +12,5 @@ export const ERROR_MESSAGES: { [key: string]: (...args: any) => string } = {
   studentNotFound: () => `El estudiante no fue encontrado`,
   noSelectedBranch: () => `No hay sucursal seleccionada`,
   dniIsExists: () => `El DNI ya existe en la base de datos`,
+  totalExceeded: () => `El total recibido excede la deuda total`,
 };
