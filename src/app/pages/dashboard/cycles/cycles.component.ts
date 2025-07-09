@@ -59,13 +59,11 @@ export class CyclesComponent {
 
   private readonly dialog = inject(MatDialog);
   private readonly _cyclesPageGQL = inject(GetCyclesPageGQL);
-  private readonly _globalStateService = inject(GlobalStateService);
 
   ngAfterViewInit(): void {
     merge(
       this.paginator.page,
       this.searchControl.valueChanges,
-      this._globalStateService.branch$
     )
       .pipe(debounceTime(300), startWith({}))
       .subscribe({
@@ -104,34 +102,31 @@ export class CyclesComponent {
   }
 
   public refresh() {
-    if (this._globalStateService.branch?.id) {
-      const limit: number = this.paginator.pageSize;
-      const offset: number = this.paginator.pageIndex * limit;
+    const limit: number = this.paginator.pageSize;
+    const offset: number = this.paginator.pageIndex * limit;
 
-      const filter: CycleFilter = {
-        name: { iLike: `%${this.searchControl.value}%` },
-        branchId: { eq: this._globalStateService.branch!.id },
-      };
+    const filter: CycleFilter = {
+      name: { iLike: `%${this.searchControl.value}%` },
+    };
 
-      this._cyclesPageGQL
-        .watch(
-          { limit, offset, filter },
-          {
-            fetchPolicy: 'cache-and-network',
-            nextFetchPolicy: 'cache-and-network',
-            notifyOnNetworkStatusChange: true,
-          }
-        )
-        .valueChanges.subscribe({
-          next: ({ data, loading }) => {
-            const { nodes, totalCount } = data.cycles;
+    this._cyclesPageGQL
+      .watch(
+        { limit, offset, filter },
+        {
+          fetchPolicy: 'cache-and-network',
+          nextFetchPolicy: 'cache-and-network',
+          notifyOnNetworkStatusChange: true,
+        }
+      )
+      .valueChanges.subscribe({
+        next: ({ data, loading }) => {
+          const { nodes, totalCount } = data.cycles;
 
-            this.dataSource.data = nodes;
+          this.dataSource.data = nodes;
 
-            this.loading.set(loading);
-            this.totalCount.set(totalCount);
-          },
-        });
-    }
+          this.loading.set(loading);
+          this.totalCount.set(totalCount);
+        },
+      });
   }
 }

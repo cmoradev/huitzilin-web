@@ -1,5 +1,5 @@
 export enum NavigationEnum {
-  OPERATIONS = 'Menú',
+  OPERATIONS = 'Operación',
   ADMINISTRATION = 'Administración',
   DEVELOPER = 'Opciones de desarrollador',
 }
@@ -30,27 +30,21 @@ export const navItems: RouteItem[] = [
     section: NavigationEnum.OPERATIONS,
   },
   {
-    displayName: 'Ciclos',
-    iconName: 'calendar-blank-outline',
-    route: '/cycles',
-    section: NavigationEnum.ADMINISTRATION,
-  },
-  {
     displayName: 'Niveles',
     iconName: 'magic-staff',
     route: '/levels',
     section: NavigationEnum.ADMINISTRATION,
   },
   {
-    displayName: 'Precios',
-    iconName: 'currency-usd',
-    route: '/prices',
-    section: NavigationEnum.ADMINISTRATION,
-  },
-  {
     displayName: 'Disciplinas',
     iconName: 'basketball',
     route: '/disciplines',
+    section: NavigationEnum.ADMINISTRATION,
+  },
+  {
+    displayName: 'Precios',
+    iconName: 'currency-usd',
+    route: '/prices',
     section: NavigationEnum.ADMINISTRATION,
   },
   {
@@ -63,6 +57,12 @@ export const navItems: RouteItem[] = [
     displayName: 'Negocios',
     iconName: 'town-hall',
     route: '/branches',
+    section: NavigationEnum.DEVELOPER,
+  },
+  {
+    displayName: 'Ciclos',
+    iconName: 'calendar-blank-outline',
+    route: '/cycles',
     section: NavigationEnum.DEVELOPER,
   },
 ];

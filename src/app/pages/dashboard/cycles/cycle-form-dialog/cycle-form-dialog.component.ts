@@ -40,7 +40,6 @@ export class CycleFormDialogComponent {
   public loading = signal(false);
   public data: CyclePartsFragment | null = inject(MAT_DIALOG_DATA);
 
-  private readonly _globalStateService = inject(GlobalStateService);
   private readonly _createOneCycle = inject(CreateOneCycleGQL);
   private readonly _updateOneCycle = inject(UpdateOneCycleGQL);
 
@@ -85,7 +84,7 @@ export class CycleFormDialogComponent {
             this.loading.set(false);
           },
         });
-      } else if (this._globalStateService.branch?.id) {
+      } else {
         this._save(values).subscribe({
           next: (cycle) => {
             this._dialogRef.close(cycle);
@@ -121,7 +120,6 @@ export class CycleFormDialogComponent {
           ...values,
           start: new Date(values.start).toISOString(),
           end: new Date(values.end).toISOString(),
-          branchId: this._globalStateService.branch!.id,
         },
       })
       .pipe(map((value) => value.data?.createOneCycle));

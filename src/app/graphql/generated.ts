@@ -338,7 +338,6 @@ export type CreateConcept = {
 };
 
 export type CreateCycle = {
-  branchId: Scalars['String']['input'];
   end: Scalars['String']['input'];
   name: Scalars['String']['input'];
   start: Scalars['String']['input'];
@@ -356,6 +355,7 @@ export type CreateDebit = {
   state: DebitState;
   studentId: Scalars['String']['input'];
   unitPrice: Scalars['Float']['input'];
+  withPayment: Scalars['Boolean']['input'];
   withTax: Scalars['Boolean']['input'];
 };
 
@@ -398,6 +398,7 @@ export type CreateEnrollment = {
 
 export type CreateFee = {
   amount: Scalars['Float']['input'];
+  autoLoad: Scalars['Boolean']['input'];
   frequency: Frequency;
   name: Scalars['String']['input'];
   packageId: Scalars['String']['input'];
@@ -592,7 +593,6 @@ export type CreateTutor = {
 
 export type Cycle = {
   __typename?: 'Cycle';
-  branchId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   end: Scalars['String']['output'];
@@ -615,7 +615,6 @@ export type CycleConnection = {
 
 export type CycleDeleteResponse = {
   __typename?: 'CycleDeleteResponse';
-  branchId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   end?: Maybe<Scalars['String']['output']>;
@@ -628,7 +627,6 @@ export type CycleDeleteResponse = {
 
 export type CycleFilter = {
   and?: InputMaybe<Array<CycleFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
   createdAt?: InputMaybe<DateFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
@@ -643,7 +641,6 @@ export type CycleSort = {
 };
 
 export enum CycleSortFields {
-  BranchId = 'branchId',
   CreatedAt = 'createdAt',
   Id = 'id',
   Name = 'name',
@@ -693,6 +690,7 @@ export type Debit = {
   unitPrice: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
+  withPayment: Scalars['Boolean']['output'];
   withTax: Scalars['Boolean']['output'];
 };
 
@@ -734,6 +732,7 @@ export type DebitDeleteResponse = {
   unitPrice?: Maybe<Scalars['Float']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   version?: Maybe<Scalars['Int']['output']>;
+  withPayment?: Maybe<Scalars['Boolean']['output']>;
   withTax?: Maybe<Scalars['Boolean']['output']>;
 };
 
@@ -1251,6 +1250,7 @@ export type EnrollmentStateFilterComparison = {
 export type Fee = {
   __typename?: 'Fee';
   amount: Scalars['Float']['output'];
+  autoLoad: Scalars['Boolean']['output'];
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   frequency: Frequency;
@@ -1277,6 +1277,7 @@ export type FeeConnection = {
 export type FeeDeleteResponse = {
   __typename?: 'FeeDeleteResponse';
   amount?: Maybe<Scalars['Float']['output']>;
+  autoLoad?: Maybe<Scalars['Boolean']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   frequency?: Maybe<Frequency>;
@@ -1292,6 +1293,7 @@ export type FeeDeleteResponse = {
 
 export type FeeFilter = {
   and?: InputMaybe<Array<FeeFilter>>;
+  autoLoad?: InputMaybe<BooleanFieldComparison>;
   createdAt?: InputMaybe<DateFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
@@ -1307,6 +1309,7 @@ export type FeeSort = {
 };
 
 export enum FeeSortFields {
+  AutoLoad = 'autoLoad',
   CreatedAt = 'createdAt',
   Id = 'id',
   Name = 'name',
@@ -3287,7 +3290,6 @@ export type UpdateCount = {
 };
 
 export type UpdateCycle = {
-  branchId?: InputMaybe<Scalars['String']['input']>;
   end?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   start?: InputMaybe<Scalars['String']['input']>;
@@ -3305,6 +3307,7 @@ export type UpdateDebit = {
   state?: InputMaybe<DebitState>;
   studentId?: InputMaybe<Scalars['String']['input']>;
   unitPrice?: InputMaybe<Scalars['Float']['input']>;
+  withPayment?: InputMaybe<Scalars['Boolean']['input']>;
   withTax?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -3347,6 +3350,7 @@ export type UpdateEnrollment = {
 
 export type UpdateFee = {
   amount?: InputMaybe<Scalars['Float']['input']>;
+  autoLoad?: InputMaybe<Scalars['Boolean']['input']>;
   frequency?: InputMaybe<Frequency>;
   name?: InputMaybe<Scalars['String']['input']>;
   packageId?: InputMaybe<Scalars['String']['input']>;

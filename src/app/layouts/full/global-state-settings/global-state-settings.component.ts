@@ -85,10 +85,8 @@ export class GlobalStateSettingsComponent implements AfterViewInit, OnInit {
         next: (value) => {
           if (value && typeof value === 'object') {
             this._globalStateService.branch = value;
-            this.cycleControl.setValue('');
             this._updateUser({
               branchId: value.id,
-              cycleId: null,
             });
           } else if (typeof value === 'string') {
             this._fetchBranch();
@@ -102,12 +100,9 @@ export class GlobalStateSettingsComponent implements AfterViewInit, OnInit {
         next: (value) => {
           if (value && typeof value === 'object') {
             this._globalStateService.cycle = value;
-            if (this._globalStateService.branch!.id) {
-              this._updateUser({
-                branchId: this._globalStateService.branch!.id,
-                cycleId: value.id,
-              });
-            }
+            this._updateUser({
+              cycleId: value.id,
+            });
           } else if (typeof value === 'string') {
             this._fetchCycles();
           }
@@ -120,34 +115,31 @@ export class GlobalStateSettingsComponent implements AfterViewInit, OnInit {
   }
 
   private _fetchCycles(): void {
-    if (this._globalStateService.branch?.id) {
-      this.loadingCycles.set(true);
+    this.loadingCycles.set(true);
 
-      // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
-      this._cyclesPageGQL
-        .watch(
-          {
-            limit: 100,
-            offset: 0,
-            filter: {
-              name: { iLike: `%${this.cycleControl.value}%` },
-              branchId: { eq: this._globalStateService.branch!.id },
-            },
+    // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
+    this._cyclesPageGQL
+      .watch(
+        {
+          limit: 100,
+          offset: 0,
+          filter: {
+            name: { iLike: `%${this.cycleControl.value}%` },
           },
-          {
-            fetchPolicy: 'cache-and-network',
-            nextFetchPolicy: 'cache-and-network',
-            notifyOnNetworkStatusChange: true,
-          }
-        )
-        .valueChanges.subscribe({
-          next: ({ loading, data }) => {
-            const nodes = data.cycles.nodes ?? [];
-            this.loadingCycles.set(loading);
-            this.cycles.set(nodes);
-          },
-        });
-    }
+        },
+        {
+          fetchPolicy: 'cache-and-network',
+          nextFetchPolicy: 'cache-and-network',
+          notifyOnNetworkStatusChange: true,
+        }
+      )
+      .valueChanges.subscribe({
+        next: ({ loading, data }) => {
+          const nodes = data.cycles.nodes ?? [];
+          this.loadingCycles.set(loading);
+          this.cycles.set(nodes);
+        },
+      });
   }
 
   private _fetchBranch(): void {
