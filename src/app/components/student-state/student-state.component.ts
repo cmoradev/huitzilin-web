@@ -19,7 +19,6 @@ import { MatInput } from '@angular/material/input';
 import { AvatarComponent } from '@components/avatar/avatar.component';
 import {
   FetchStudentGQL,
-  GetStudentsPageGQL,
   StudentPartsFragment,
 } from '@graphql';
 import { GlobalStateService } from '@services';
@@ -116,6 +115,7 @@ export class StudentStateComponent implements AfterViewInit, OnInit {
             limit: 100,
             offset: 0,
             filter: {
+              active: { is: true },
               branchs: { id: { eq: this._globalStateService.branch!.id } },
               or: [
                 { fullname: { iLike: `%${value}%` } },

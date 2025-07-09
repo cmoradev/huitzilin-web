@@ -18,11 +18,12 @@
       @for (student of students(); track student.id) {
       <mat-option [value]="student">
         <div class="flex items-center gap-2">
-          <img
-            [alt]="student.fullname"
-            class="h-6 w-6 rounded-[var(--mat-sys-corner-medium)]"
-            [src]="student.picture"
-          />
+          <app-avatar
+            [imageSource]="student.picture"
+            height="1.5rem"
+            width="1.5rem"
+          ></app-avatar>
+
           <span> {{ student.fullname }} </span>
         </div>
       </mat-option>
