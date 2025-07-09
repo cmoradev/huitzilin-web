@@ -16,6 +16,7 @@ export class PosService {
 
     return first?.withTax ?? false;
   });
+  private readonly _branchId = signal<string | null>(null);
 
   private readonly _amount = computed(() => {
     return this._debits().reduce(
@@ -43,7 +44,7 @@ export class PosService {
     effect(() => {
       const withTax = this.withTax();
       const subtotal = this._subtotal().toNumber();
-      
+
       const { taxes, total } = calculateTotalFromBaseAndTax(
         subtotal,
         withTax ? TaxEnum.Sixteen : TaxEnum.Zero
@@ -52,6 +53,14 @@ export class PosService {
       this._taxes.set(new Decimal(taxes));
       this._total.set(new Decimal(total));
     });
+  }
+
+  get branchId(): string | null {
+    return this._branchId();
+  }
+
+  set branchId(value: string | null) {
+    this._branchId.set(value);
   }
 
   get debits(): DebitPartsFragment[] {
@@ -82,8 +91,8 @@ export class PosService {
     return this._debits().some((d) => d.id === debit.id);
   }
 
-  public addDebit(value: DebitPartsFragment): boolean {
-    const canAdd = this._canAddDebit(value);
+  public addDebit(value: DebitPartsFragment, branchId: string): boolean {
+    const canAdd = this._canAddDebit(value, branchId);
 
     if (canAdd) {
       this._debits.update((previous) => {
@@ -93,6 +102,7 @@ export class PosService {
 
         return debits;
       });
+      this.branchId = branchId;
 
       return true;
     }
@@ -114,7 +124,7 @@ export class PosService {
     });
   }
 
-  private _canAddDebit(value: DebitPartsFragment): boolean {
+  private _canAddDebit(value: DebitPartsFragment, branchId: string): boolean {
     // Revisa si el nuevo adeudo tiene diferencia de impuestos
     const diferenceTaxes = this.debits.some(
       (debit) => debit.withTax !== value.withTax
@@ -123,6 +133,17 @@ export class PosService {
     if (diferenceTaxes) {
       this._snackBar.open(
         'No se puede agregar un adeudo con impuestos diferentes a los ya seleccionados.',
+        'Cerrar',
+        {
+          duration: 3000,
+          panelClass: ['error-snackbar'],
+        }
+      );
+    }
+
+    if (this.branchId !== null && this.branchId !== branchId) {
+      this._snackBar.open(
+        'No se puede agregar un adeudo de otra sucursal.',
         'Cerrar',
         {
           duration: 3000,

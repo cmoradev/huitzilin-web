@@ -5,7 +5,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { DebitPartsFragment, DebitState } from '@graphql';
+import { CurrentEnrollmentPartsFragment, DebitPartsFragment, DebitState } from '@graphql';
 import { isAfter } from 'date-fns'
 import { PosService } from '../../../../services/pos.service';
 
@@ -27,6 +27,7 @@ export class ConceptOptionComponent implements OnInit {
   private readonly pos = inject(PosService);
 
   public debit = input.required<DebitPartsFragment>();
+  public enrollment = input.required<CurrentEnrollmentPartsFragment>();
   public optionControl = new FormControl<boolean>(false);
 
   public stateTag = computed(() => {
@@ -62,7 +63,7 @@ export class ConceptOptionComponent implements OnInit {
 
   public toggleDebit(active: boolean): void {
     if (active) {
-      const added = this.pos.addDebit(this.debit());
+      const added = this.pos.addDebit(this.debit(), this.enrollment().id);
 
       if (!added) this.optionControl.setValue(false);
     } else {

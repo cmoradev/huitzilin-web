@@ -165,7 +165,10 @@ export class DebitFormCatalogDialogComponent implements OnInit {
 
       this.loading.set(true);
 
-      if (!!this._globalStateService.enrollment?.id && this._globalStateService.student?.id) {
+      if (
+        !!this._globalStateService.enrollment?.id &&
+        this._globalStateService.student?.id
+      ) {
         this._createManyDebits
           .mutate({
             debits: values.debits.map((debit: any) => ({

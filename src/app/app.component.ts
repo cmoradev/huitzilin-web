@@ -3,6 +3,7 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from '@services';
+import Decimal from 'decimal.js';
 
 import { setDefaultOptions } from 'date-fns';
 import { es } from 'date-fns/locale'
@@ -10,6 +11,12 @@ import { es } from 'date-fns/locale'
 setDefaultOptions({
   locale: es,
 })
+
+Decimal.set({
+  precision: 10,
+  rounding: Decimal.ROUND_HALF_UP,
+});
+
 
 @Component({
   selector: 'app-root',
