@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatButton, MatButtonModule } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
@@ -14,20 +14,16 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ImagePickerComponent } from '@components/image-picker/image-picker.component';
 import {
-  AddBranchsToStudentGQL,
   CreateOneStudentGQL,
-  CreateStudent,
-  FetchStudentGQL,
   StudentPartsFragment,
   UpdateOneStudentGQL,
 } from '@graphql';
 import {
   BranchToolsService,
   FormToolsService,
-  GlobalStateService,
   StorageService,
 } from '@services';
-import { filter, map, of, startWith, switchMap, catchError } from 'rxjs';
+import { of, startWith, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-student-form-dialog',
@@ -103,6 +99,7 @@ export class StudentFormDialogComponent {
         lastname: this.data.lastname,
         dateBirth: this.data.dateBirth,
         dni: this.data.dni,
+        active: this.data.active,
         branchIds: this.data.branchs.map((branch) => branch.id),
       });
       this.previusPicture = this.data.picture;

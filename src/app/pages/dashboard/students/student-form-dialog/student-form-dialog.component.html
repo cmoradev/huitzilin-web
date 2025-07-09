@@ -4,6 +4,10 @@
     <div class="flex flex-col gap-3">
       <app-image-picker formControlName="picture"></app-image-picker>
 
+      <mat-checkbox formControlName="active">
+        ¿Estudiante activo?
+      </mat-checkbox>
+
       <div class="grid grid-cols-2 gap-3">
         <mat-form-field>
           <mat-label>Nombre</mat-label>
@@ -69,10 +73,6 @@
         </mat-select>
         <mat-hint> Seleccione las sucursales </mat-hint>
       </mat-form-field>
-
-      <mat-checkbox formControlName="active">
-        ¿Estudiante activo?
-      </mat-checkbox>
     </div>
   </form>
 </mat-dialog-content>

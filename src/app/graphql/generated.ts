@@ -4022,14 +4022,14 @@ export type DeleteOneScheduleMutationVariables = Exact<{
 
 export type DeleteOneScheduleMutation = { __typename?: 'Mutation', deleteOneSchedule: { __typename?: 'ScheduleDeleteResponse', id?: string | null } };
 
-export type StudentPartsFragment = { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> };
+export type StudentPartsFragment = { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, active: boolean, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> };
 
 export type CreateOneStudentMutationVariables = Exact<{
   student: CreateStudent;
 }>;
 
 
-export type CreateOneStudentMutation = { __typename?: 'Mutation', createOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> } };
+export type CreateOneStudentMutation = { __typename?: 'Mutation', createOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, active: boolean, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> } };
 
 export type GetStudentsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -4038,7 +4038,7 @@ export type GetStudentsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetStudentsPageQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> }> } };
+export type GetStudentsPageQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, active: boolean, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> }> } };
 
 export type FetchStudentQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -4047,7 +4047,7 @@ export type FetchStudentQueryVariables = Exact<{
 }>;
 
 
-export type FetchStudentQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> }> } };
+export type FetchStudentQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, active: boolean, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> }> } };
 
 export type UpdateOneStudentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4055,7 +4055,7 @@ export type UpdateOneStudentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneStudentMutation = { __typename?: 'Mutation', updateOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> } };
+export type UpdateOneStudentMutation = { __typename?: 'Mutation', updateOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, active: boolean, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> } };
 
 export type DeleteOneStudentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4063,22 +4063,6 @@ export type DeleteOneStudentMutationVariables = Exact<{
 
 
 export type DeleteOneStudentMutation = { __typename?: 'Mutation', deleteOneStudent: { __typename?: 'StudentDeleteResponse', id?: string | null } };
-
-export type AddBranchsToStudentMutationVariables = Exact<{
-  studentId: Scalars['ID']['input'];
-  branchIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
-}>;
-
-
-export type AddBranchsToStudentMutation = { __typename?: 'Mutation', addBranchsToStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> } };
-
-export type RemoveBranchsFromStudentMutationVariables = Exact<{
-  studentId: Scalars['ID']['input'];
-  branchIds: Array<Scalars['ID']['input']> | Scalars['ID']['input'];
-}>;
-
-
-export type RemoveBranchsFromStudentMutation = { __typename?: 'Mutation', removeBranchsFromStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> } };
 
 export type DocumentPartsFragment = { __typename?: 'Document', id: string, name: string, key: string, url: string };
 
@@ -4330,6 +4314,7 @@ export const StudentPartsFragmentDoc = gql`
   firstname
   lastname
   dateBirth
+  active
   branchs {
     id
   }
@@ -5501,42 +5486,6 @@ export const DeleteOneStudentDocument = gql`
   })
   export class DeleteOneStudentGQL extends Apollo.Mutation<DeleteOneStudentMutation, DeleteOneStudentMutationVariables> {
     document = DeleteOneStudentDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const AddBranchsToStudentDocument = gql`
-    mutation addBranchsToStudent($studentId: ID!, $branchIds: [ID!]!) {
-  addBranchsToStudent(input: {id: $studentId, relationIds: $branchIds}) {
-    ...StudentParts
-  }
-}
-    ${StudentPartsFragmentDoc}`;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class AddBranchsToStudentGQL extends Apollo.Mutation<AddBranchsToStudentMutation, AddBranchsToStudentMutationVariables> {
-    document = AddBranchsToStudentDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const RemoveBranchsFromStudentDocument = gql`
-    mutation removeBranchsFromStudent($studentId: ID!, $branchIds: [ID!]!) {
-  removeBranchsFromStudent(input: {id: $studentId, relationIds: $branchIds}) {
-    ...StudentParts
-  }
-}
-    ${StudentPartsFragmentDoc}`;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class RemoveBranchsFromStudentGQL extends Apollo.Mutation<RemoveBranchsFromStudentMutation, RemoveBranchsFromStudentMutationVariables> {
-    document = RemoveBranchsFromStudentDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

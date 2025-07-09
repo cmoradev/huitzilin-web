@@ -13,7 +13,6 @@ import {
   MatIconButton,
 } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatBadge } from '@angular/material/badge';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { AuthService, GlobalStateService } from '@services';
@@ -25,7 +24,6 @@ import { AuthService, GlobalStateService } from '@services';
     MatIconButton,
     MatButton,
     MatIcon,
-    MatBadge,
     MatMenu,
     MatMenuTrigger,
     MatMenuItem,

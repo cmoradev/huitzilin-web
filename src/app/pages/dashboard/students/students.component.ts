@@ -2,24 +2,17 @@ import { NgClass } from '@angular/common';
 import { Component, inject, signal, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
-import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import {
-  MatCard,
-  MatCardContent,
-  MatCardHeader,
-  MatCardTitle,
+  MatCardModule,
 } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import {
-  MatFormField,
-  MatLabel,
-  MatPrefix,
+  MatFormFieldModule,
 } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatTooltip } from '@angular/material/tooltip';
 import { AvatarComponent } from '@components/avatar/avatar.component';
 import {
   GetStudentsPageGQL,
@@ -30,27 +23,23 @@ import { debounceTime, merge, startWith } from 'rxjs';
 import { StudentDeleteDialogComponent } from './student-delete-dialog/student-delete-dialog.component';
 import { StudentFormDialogComponent } from './student-form-dialog/student-form-dialog.component';
 import { StudentDocumentsDialogComponent } from './student-documents-dialog/student-documents-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-students',
   imports: [
     NgClass,
-    MatCard,
-    MatCardContent,
-    MatCardHeader,
-    MatCardTitle,
-    MatFormField,
-    MatInput,
-    MatLabel,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatFormFieldModule,
     MatIconButton,
-    MatIcon,
-    MatPrefix,
-    MatTooltip,
+    MatIconModule,
     MatTableModule,
-    MatPaginator,
+    MatPaginatorModule,
     AvatarComponent,
     ReactiveFormsModule,
-    CdkCopyToClipboard,
+    MatTooltipModule,
   ],
   templateUrl: './students.component.html',
   styles: ``,

@@ -6,6 +6,7 @@ fragment StudentParts on Student {
   firstname,
   lastname,
   dateBirth,
+  active
   branchs {
     id
   }
