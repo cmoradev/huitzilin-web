@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component, inject, signal, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { CdkCopyToClipboard } from '@angular/cdk/clipboard';
 import {
   MatCard,
@@ -29,7 +29,6 @@ import {
 import { debounceTime, merge, startWith } from 'rxjs';
 import { StudentDeleteDialogComponent } from './student-delete-dialog/student-delete-dialog.component';
 import { StudentFormDialogComponent } from './student-form-dialog/student-form-dialog.component';
-import { GlobalStateService } from '@services';
 import { StudentDocumentsDialogComponent } from './student-documents-dialog/student-documents-dialog.component';
 
 @Component({
@@ -68,13 +67,11 @@ export class StudentsComponent {
 
   private readonly dialog = inject(MatDialog);
   private readonly _companiesPageGQL = inject(GetStudentsPageGQL);
-  private readonly _globalStateService = inject(GlobalStateService);
 
   ngAfterViewInit(): void {
     merge(
       this.paginator.page,
       this.searchControl.valueChanges,
-      this._globalStateService.branch$
     )
       .pipe(debounceTime(300), startWith({}))
       .subscribe({
@@ -120,40 +117,35 @@ export class StudentsComponent {
   }
 
   public refresh() {
-    if (this._globalStateService.branch!.id) {
-      const limit: number = this.paginator.pageSize;
-      const offset: number = this.paginator.pageIndex * limit;
+    const limit: number = this.paginator.pageSize;
+    const offset: number = this.paginator.pageIndex * limit;
 
-      const branchId = this._globalStateService.branch!.id;
+    const filter: StudentFilter = {
+      fullname: { iLike: `%${this.searchControl.value}%` },
+    };
 
-      const filter: StudentFilter = {
-        fullname: { iLike: `%${this.searchControl.value}%` },
-        branchs: { id: { eq: branchId } },
-      };
+    this._companiesPageGQL
+      .watch(
+        { limit, offset, filter },
+        {
+          fetchPolicy: 'cache-and-network',
+          nextFetchPolicy: 'cache-and-network',
+          notifyOnNetworkStatusChange: true,
+        }
+      )
+      .valueChanges.subscribe({
+        next: ({ data, loading }) => {
+          const { nodes, totalCount } = data.students;
 
-      this._companiesPageGQL
-        .watch(
-          { limit, offset, filter },
-          {
-            fetchPolicy: 'cache-and-network',
-            nextFetchPolicy: 'cache-and-network',
-            notifyOnNetworkStatusChange: true,
-          }
-        )
-        .valueChanges.subscribe({
-          next: ({ data, loading }) => {
-            const { nodes, totalCount } = data.students;
+          this.dataSource.data = nodes.map((node) => {
+            return {
+              ...node,
+            };
+          });
 
-            this.dataSource.data = nodes.map((node) => {
-              return {
-                ...node,
-              };
-            });
-
-            this.loading.set(loading);
-            this.totalCount.set(totalCount);
-          },
-        });
-    }
+          this.loading.set(loading);
+          this.totalCount.set(totalCount);
+        },
+      });
   }
 }

@@ -2,22 +2,6 @@
 <mat-dialog-content>
   <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
     <div class="flex flex-col gap-3">
-      <mat-checkbox formControlName="withCode">
-        ¿Tiene código?
-      </mat-checkbox>
-
-      @if (formGroup.get('withCode')?.value) {
-      <mat-form-field>
-        <mat-label>Código del estudiante</mat-label>
-        <input matInput placeholder="Ej: 6a7db00d" formControlName="code" />
-        <mat-hint>
-          Ingrese el código para vincular al estudiante existente
-        </mat-hint>
-        <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("code")) }}
-        </mat-error>
-      </mat-form-field>
-      } @else {
       <app-image-picker formControlName="picture"></app-image-picker>
 
       <mat-form-field>
@@ -68,7 +52,6 @@
           {{ formTools.checkForErrorsIn(formGroup.get("dateBirth")) }}
         </mat-error>
       </mat-form-field>
-      }
     </div>
   </form>
 </mat-dialog-content>

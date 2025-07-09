@@ -10,55 +10,34 @@
     Selecciona la sucursal que deseas gestionar. Puedes cambiar entre las
     sucursales en cualquier momento.
   </p>
+
   <mat-form-field class="w-full">
-    <mat-label>Buscador</mat-label>
-    <input
-      type="text"
-      placeholder="Ej. Step Ups"
-      matInput
-      [formControl]="branchControl"
-      [matAutocomplete]="autoBranches"
-    />
-    @if (branchControl.value) {
-    <button mat-icon-button matSuffix (click)="branchControl.setValue('')">
-      <mat-icon svgIcon="close" />
-    </button>
-    }
-    <mat-autocomplete #autoBranches="matAutocomplete" [displayWith]="displayFn">
-      @for (branch of branches(); track branch.id) {
-      <mat-option [value]="branch">
+    <mat-label>Sucursal</mat-label>
+    <mat-select [formControl]="branchControl">
+      @for (branch of branchTools.options(); track $index) {
+      <mat-option [value]="branch.id">
         <div class="flex items-center gap-2">
           <img [alt]="branch.name" class="h-6 w-6" [src]="branch.picture" />
           <span> {{ branch.name }} </span>
         </div>
       </mat-option>
       }
-    </mat-autocomplete>
+    </mat-select>
+    <mat-hint> Seleccione una sucursal </mat-hint>
   </mat-form-field>
+
   <p class="mb-2">
     Selecciona el ciclo escolar que deseas gestionar. Puedes cambiar entre los
     ciclos en cualquier momento.
   </p>
+
   <mat-form-field class="w-full">
-    <mat-label>Buscador</mat-label>
-    <input
-      type="text"
-      placeholder="Ej. 2025-2026"
-      matInput
-      [formControl]="cycleControl"
-      [matAutocomplete]="autoCycles"
-    />
-    @if (cycleControl.value) {
-    <button mat-icon-button matSuffix (click)="cycleControl.setValue('')">
-      <mat-icon svgIcon="close" />
-    </button>
-    }
-    <mat-autocomplete #autoCycles="matAutocomplete" [displayWith]="displayFn">
-      @for (cycle of cycles(); track cycle.id) {
-      <mat-option [value]="cycle">
-        {{ cycle.name }}
-      </mat-option>
+    <mat-label>Ciclo escolar</mat-label>
+    <mat-select [formControl]="cycleControl">
+      @for (cycle of cycleTools.options(); track $index) {
+      <mat-option [value]="cycle.id">{{ cycle.name }}</mat-option>
       }
-    </mat-autocomplete>
+    </mat-select>
+    <mat-hint> Seleccione un ciclo escolar </mat-hint>
   </mat-form-field>
 </div>

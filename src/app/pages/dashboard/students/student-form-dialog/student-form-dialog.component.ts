@@ -63,94 +63,107 @@ export class StudentFormDialogComponent {
   private previusPicture = '';
 
   public formGroup = this.formTools.builder.group({
-    withCode: [false],
-    picture: [''],
-    firstname: [''],
-    lastname: [''],
-    code: [''],
-    dni: [''],
-    dateBirth: [''],
+    picture: this.formTools.builder.control<File | string>('', {
+      nonNullable: true,
+    }),
+    firstname: this.formTools.builder.control<string>('', {
+      validators: [Validators.required, Validators.maxLength(32)],
+      nonNullable: true,
+    }),
+    lastname: this.formTools.builder.control<string>('', {
+      validators: [Validators.required, Validators.maxLength(32)],
+      nonNullable: true,
+    }),
+    dni: this.formTools.builder.control<string>('', {
+      validators: [Validators.required, Validators.maxLength(32)],
+      asyncValidators: [this.formTools.isDniStudentValid],
+      nonNullable: true,
+    }),
+    dateBirth: this.formTools.builder.control<Date>(new Date(2010, 1, 1, 0), {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
     active: this.formTools.builder.control<boolean>(true, {
       nonNullable: true,
     }),
   });
 
   ngOnInit(): void {
-    this.formGroup
-      .get('withCode')
-      ?.valueChanges.pipe(startWith(''))
-      .subscribe((withCode) => {
-        if (withCode) {
-          this.formGroup.get('code')?.setValidators([Validators.required]);
-          this.formGroup
-            .get('code')
-            ?.setAsyncValidators([this.formTools.isStudentCodeValid]);
+    // this.formGroup
+    //   .get('withCode')
+    //   ?.valueChanges.pipe(startWith(''))
+    //   .subscribe((withCode) => {
+    //     if (withCode) {
+    //       this.formGroup.get('code')?.setValidators([Validators.required]);
+    //       this.formGroup
+    //         .get('code')
+    //         ?.setAsyncValidators([this.formTools.isStudentCodeValid]);
 
-          this.formGroup.get('dni')?.clearValidators();
-          this.formGroup.get('dni')?.clearAsyncValidators();
+    //       this.formGroup.get('dni')?.clearValidators();
+    //       this.formGroup.get('dni')?.clearAsyncValidators();
 
-          this.formGroup.get('firstname')?.clearValidators();
-          this.formGroup.get('lastname')?.clearValidators();
-          this.formGroup.get('dateBirth')?.clearValidators();
-        } else {
-          this.formGroup.get('code')?.clearValidators();
-          this.formGroup.get('code')?.clearAsyncValidators();
+    //       this.formGroup.get('firstname')?.clearValidators();
+    //       this.formGroup.get('lastname')?.clearValidators();
+    //       this.formGroup.get('dateBirth')?.clearValidators();
+    //     } else {
+    //       this.formGroup.get('code')?.clearValidators();
+    //       this.formGroup.get('code')?.clearAsyncValidators();
 
-          if (!this.data) {
-            this.formGroup
-              .get('dni')
-              ?.setValidators([Validators.required, Validators.maxLength(32)]);
-            this.formGroup
-              .get('dni')
-              ?.setAsyncValidators([this.formTools.isDniStudentValid]);
-          }
+    //       if (!this.data) {
+    //         this.formGroup
+    //           .get('dni')
+    //           ?.setValidators([Validators.required, Validators.maxLength(32)]);
+    //         this.formGroup
+    //           .get('dni')
+    //           ?.setAsyncValidators([this.formTools.isDniStudentValid]);
+    //       }
 
-          this.formGroup
-            .get('firstname')
-            ?.setValidators([Validators.required, Validators.maxLength(32)]);
-          this.formGroup
-            .get('lastname')
-            ?.setValidators([Validators.required, Validators.maxLength(32)]);
-          this.formGroup.get('dateBirth')?.setValidators([Validators.required]);
-        }
+    //       this.formGroup
+    //         .get('firstname')
+    //         ?.setValidators([Validators.required, Validators.maxLength(32)]);
+    //       this.formGroup
+    //         .get('lastname')
+    //         ?.setValidators([Validators.required, Validators.maxLength(32)]);
+    //       this.formGroup.get('dateBirth')?.setValidators([Validators.required]);
+    //     }
 
-        this.formGroup.get('code')?.updateValueAndValidity();
-        this.formGroup.get('firstname')?.updateValueAndValidity();
-        this.formGroup.get('lastname')?.updateValueAndValidity();
-        this.formGroup.get('dateBirth')?.updateValueAndValidity();
-        this.formGroup.get('dni')?.updateValueAndValidity();
-      });
+    //     this.formGroup.get('code')?.updateValueAndValidity();
+    //     this.formGroup.get('firstname')?.updateValueAndValidity();
+    //     this.formGroup.get('lastname')?.updateValueAndValidity();
+    //     this.formGroup.get('dateBirth')?.updateValueAndValidity();
+    //     this.formGroup.get('dni')?.updateValueAndValidity();
+    //   });
 
     if (!!this.data?.id) {
-      this.formGroup.get('picture')?.clearValidators();
+      // this.formGroup.get('picture')?.clearValidators();
       this.formGroup.patchValue({
         picture: this.data.picture,
         firstname: this.data.firstname,
         lastname: this.data.lastname,
-        dateBirth: this.data.dateBirth,
+        dateBirth: new Date(this.data.dateBirth),
         dni: this.data.dni,
       });
       this.previusPicture = this.data.picture;
-      this.formGroup.get('picture')?.updateValueAndValidity();
+      // this.formGroup.get('picture')?.updateValueAndValidity();
 
-      this.formGroup
-        .get('dni')
-        ?.valueChanges.pipe(
-          startWith(null),
-          filter((value, index) => index === 1) // Only execute on the first change
-        )
-        .subscribe({
-          next: () => {
-            this.formGroup
-              .get('dni')
-              ?.setValidators([Validators.required, Validators.maxLength(32)]);
-            this.formGroup
-              .get('dni')
-              ?.setAsyncValidators([this.formTools.isDniStudentValid]);
+      // this.formGroup
+      //   .get('dni')
+      //   ?.valueChanges.pipe(
+      //     startWith(null),
+      //     filter((value, index) => index === 1) // Only execute on the first change
+      //   )
+      //   .subscribe({
+      //     next: () => {
+      //       this.formGroup
+      //         .get('dni')
+      //         ?.setValidators([Validators.required, Validators.maxLength(32)]);
+      //       this.formGroup
+      //         .get('dni')
+      //         ?.setAsyncValidators([this.formTools.isDniStudentValid]);
 
-            this.formGroup.get('dni')?.updateValueAndValidity();
-          },
-        });
+      //       this.formGroup.get('dni')?.updateValueAndValidity();
+      //     },
+      //   });
     }
   }
 
@@ -158,45 +171,47 @@ export class StudentFormDialogComponent {
     if (this.formGroup.valid) {
       this.loading.set(true);
 
-      const values = this.formGroup.getRawValue() as any;
+      const values = this.formGroup.getRawValue();
 
-      if (!!this.data?.id) {
-        this._update(values).subscribe({
-          next: (student) => {
-            this._dialogRef.close(student);
-          },
-          error: (err) => {
-            console.error('UPDATE STUDENT ERROR: ', err);
-          },
-          complete: () => {
-            this.loading.set(false);
-          },
-        });
-      } else if (values.withCode) {
-        this._addStudentInCurrentBranch(values).subscribe({
-          next: (branch) => {
-            this._dialogRef.close(branch);
-          },
-          error: (err) => {
-            console.error('CREATE STUDENT ERROR: ', err);
-          },
-          complete: () => {
-            this.loading.set(false);
-          },
-        });
-      } else {
-        this._save(values).subscribe({
-          next: (branch) => {
-            this._dialogRef.close(branch);
-          },
-          error: (err) => {
-            console.error('CREATE STUDENT ERROR: ', err);
-          },
-          complete: () => {
-            this.loading.set(false);
-          },
-        });
-      }
+      console.log('FORM VALUES: ', values);
+
+      // if (!!this.data?.id) {
+      //   this._update(values).subscribe({
+      //     next: (student) => {
+      //       this._dialogRef.close(student);
+      //     },
+      //     error: (err) => {
+      //       console.error('UPDATE STUDENT ERROR: ', err);
+      //     },
+      //     complete: () => {
+      //       this.loading.set(false);
+      //     },
+      //   });
+      // } else if (values.withCode) {
+      //   this._addStudentInCurrentBranch(values).subscribe({
+      //     next: (branch) => {
+      //       this._dialogRef.close(branch);
+      //     },
+      //     error: (err) => {
+      //       console.error('CREATE STUDENT ERROR: ', err);
+      //     },
+      //     complete: () => {
+      //       this.loading.set(false);
+      //     },
+      //   });
+      // } else {
+      //   this._save(values).subscribe({
+      //     next: (branch) => {
+      //       this._dialogRef.close(branch);
+      //     },
+      //     error: (err) => {
+      //       console.error('CREATE STUDENT ERROR: ', err);
+      //     },
+      //     complete: () => {
+      //       this.loading.set(false);
+      //     },
+      //   });
+      // }
     }
   }
 

@@ -1,3 +1,4 @@
+import { JsonPipe } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -5,7 +6,6 @@ import {
   inject,
   OnInit,
   Output,
-  signal,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -16,38 +16,40 @@ import {
 import { MatIconButton } from '@angular/material/button';
 import {
   MatFormField,
+  MatFormFieldModule,
   MatLabel,
   MatSuffix,
 } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
-import { MatInput } from '@angular/material/input';
-import { MatToolbar } from '@angular/material/toolbar';
+import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatToolbar, MatToolbarModule } from '@angular/material/toolbar';
 import {
   BranchPartsFragment,
   CyclePartsFragment,
-  GetCompaniesPageGQL,
-  GetCyclesPageGQL,
   UpdateOneUserGQL,
   UpdateUser,
 } from '@graphql';
-import { BranchState, CycleState, GlobalStateService } from '@services';
-import { debounceTime, merge, startWith } from 'rxjs';
-import { isAfter, isBefore } from 'date-fns';
+import {
+  BranchState,
+  BranchToolsService,
+  CycleState,
+  CycleToolsService,
+  GlobalStateService,
+} from '@services';
+import { debounceTime, startWith } from 'rxjs';
 
 @Component({
   selector: 'app-global-state-settings',
   imports: [
-    MatToolbar,
-    MatFormField,
-    MatLabel,
-    MatInput,
-    MatOption,
-    MatAutocompleteTrigger,
-    MatAutocomplete,
+    MatToolbarModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
     MatIconButton,
-    MatIcon,
-    MatSuffix,
+    MatIconModule,
     ReactiveFormsModule,
+    JsonPipe,
   ],
   templateUrl: './global-state-settings.component.html',
   styles: ``,
@@ -55,117 +57,54 @@ import { isAfter, isBefore } from 'date-fns';
 export class GlobalStateSettingsComponent implements AfterViewInit, OnInit {
   @Output() closeSidenavLeft = new EventEmitter<void>();
 
-  public branchControl = new FormControl<BranchState | string>('');
-  public branches = signal<BranchPartsFragment[]>([]);
-  public loadingBranches = signal<boolean>(false);
-
-  public cycleControl = new FormControl<CycleState | string>('');
-  public cycles = signal<CyclePartsFragment[]>([]);
-  public loadingCycles = signal<boolean>(false);
-
-  private readonly _globalStateService = inject(GlobalStateService);
-  private readonly _companiesPageGQL = inject(GetCompaniesPageGQL);
+  public readonly _globalStateService = inject(GlobalStateService);
   private readonly _updateOneUserGQL = inject(UpdateOneUserGQL);
-  private readonly _cyclesPageGQL = inject(GetCyclesPageGQL);
+
+  public branchTools = inject(BranchToolsService);
+  public branchControl = new FormControl<string | null>(
+    this._globalStateService.branch?.id ?? null
+  );
+
+  public cycleTools = inject(CycleToolsService);
+  public cycleControl = new FormControl<string | null>(
+    this._globalStateService.cycle?.id ?? null
+  );
 
   ngOnInit(): void {
-    if (this._globalStateService.branch?.id) {
-      this.branchControl.setValue(this._globalStateService.branch);
-    }
-
-    if (this._globalStateService.cycle?.id) {
-      this.cycleControl.setValue(this._globalStateService.cycle);
-    }
+    this.branchTools.fetchAll();
+    this.cycleTools.fetchAll();
   }
 
   ngAfterViewInit(): void {
-    this.branchControl.valueChanges
-      .pipe(debounceTime(300), startWith(''))
-      .subscribe({
-        next: (value) => {
-          if (value && typeof value === 'object') {
-            this._globalStateService.branch = value;
-            this._updateUser({
-              branchId: value.id,
-            });
-          } else if (typeof value === 'string') {
-            this._fetchBranch();
-          }
-        },
-      });
+    this.branchControl.valueChanges.pipe(debounceTime(300)).subscribe({
+      next: (value) => {
+        const branch = this.branchTools
+          .options()
+          .find((branch) => branch.id === value);
 
-    merge(this.cycleControl.valueChanges)
-      .pipe(debounceTime(300), startWith(''))
-      .subscribe({
-        next: (value) => {
-          if (value && typeof value === 'object') {
-            this._globalStateService.cycle = value;
-            this._updateUser({
-              cycleId: value.id,
-            });
-          } else if (typeof value === 'string') {
-            this._fetchCycles();
-          }
-        },
-      });
+        if (!!branch) {
+          this._globalStateService.branch = branch;
+          this._updateUser({ branchId: branch.id });
+        }
+      },
+    });
+
+    this.cycleControl.valueChanges.pipe(debounceTime(300)).subscribe({
+      next: (value) => {
+        const cycle = this.cycleTools
+          .options()
+          .find((cycle) => cycle.id === value);
+
+        if (!!cycle) {
+          this._globalStateService.cycle = cycle;
+          this._updateUser({ cycleId: cycle.id });
+        }
+      },
+    });
   }
 
   public displayFn(value: BranchPartsFragment | CyclePartsFragment): string {
     return value?.name ?? '';
-  }
-
-  private _fetchCycles(): void {
-    this.loadingCycles.set(true);
-
-    // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
-    this._cyclesPageGQL
-      .watch(
-        {
-          limit: 100,
-          offset: 0,
-          filter: {
-            name: { iLike: `%${this.cycleControl.value}%` },
-          },
-        },
-        {
-          fetchPolicy: 'cache-and-network',
-          nextFetchPolicy: 'cache-and-network',
-          notifyOnNetworkStatusChange: true,
-        }
-      )
-      .valueChanges.subscribe({
-        next: ({ loading, data }) => {
-          const nodes = data.cycles.nodes ?? [];
-          this.loadingCycles.set(loading);
-          this.cycles.set(nodes);
-        },
-      });
-  }
-
-  private _fetchBranch(): void {
-    this.loadingBranches.set(true);
-
-    // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
-    this._companiesPageGQL
-      .watch(
-        {
-          limit: 100,
-          offset: 0,
-          filter: { name: { iLike: `%${this.branchControl.value}%` } },
-        },
-        {
-          fetchPolicy: 'cache-and-network',
-          nextFetchPolicy: 'cache-and-network',
-          notifyOnNetworkStatusChange: true,
-        }
-      )
-      .valueChanges.subscribe({
-        next: ({ loading, data }) => {
-          this.loadingBranches.set(loading);
-
-          this.branches.set(data?.branches.nodes ?? []);
-        },
-      });
   }
 
   private _updateUser(update: UpdateUser): void {
