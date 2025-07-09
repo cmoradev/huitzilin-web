@@ -49,7 +49,6 @@ import { debounceTime, startWith } from 'rxjs';
     MatIconButton,
     MatIconModule,
     ReactiveFormsModule,
-    JsonPipe,
   ],
   templateUrl: './global-state-settings.component.html',
   styles: ``,
