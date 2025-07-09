@@ -6,6 +6,9 @@ fragment StudentParts on Student {
   firstname,
   lastname,
   dateBirth,
+  branchs {
+    id
+  }
   dni
 }
 
@@ -69,28 +72,6 @@ mutation deleteOneStudent ($id: ID!) {
     }
   ) {
     id
-  }
-}
-
-mutation addBranchsToStudent ($studentId: ID!, $branchIds: [ID!]!) {
-  addBranchsToStudent (
-    input: {
-      id: $studentId,
-      relationIds: $branchIds
-    }
-  ) {
-    ...StudentParts
-  }
-}
-
-mutation removeBranchsFromStudent ($studentId: ID!, $branchIds: [ID!]!) {
-  removeBranchsFromStudent (
-    input: {
-      id: $studentId,
-      relationIds: $branchIds
-    }
-  ) {
-    ...StudentParts
   }
 }
 

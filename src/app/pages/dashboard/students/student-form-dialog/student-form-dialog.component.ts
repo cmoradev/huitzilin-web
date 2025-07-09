@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
@@ -11,15 +11,18 @@ import {
 } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { ImagePickerComponent } from '@components/image-picker/image-picker.component';
 import {
   AddBranchsToStudentGQL,
   CreateOneStudentGQL,
+  CreateStudent,
   FetchStudentGQL,
   StudentPartsFragment,
   UpdateOneStudentGQL,
 } from '@graphql';
 import {
+  BranchToolsService,
   FormToolsService,
   GlobalStateService,
   StorageService,
@@ -30,7 +33,8 @@ import { filter, map, of, startWith, switchMap, catchError } from 'rxjs';
   selector: 'app-student-form-dialog',
   imports: [
     MatDialogModule,
-    MatButton,
+    MatButtonModule,
+    MatSelectModule,
     MatCheckbox,
     ImagePickerComponent,
     MatAutocompleteModule,
@@ -49,11 +53,8 @@ export class StudentFormDialogComponent {
   public data: StudentPartsFragment | null = inject(MAT_DIALOG_DATA);
   public readonly _storage = inject(StorageService);
 
-  private readonly _globalStateService = inject(GlobalStateService);
+  public branchTools = inject(BranchToolsService);
   private readonly _createOneStudent = inject(CreateOneStudentGQL);
-  private readonly _addBranchsToStudent = inject(AddBranchsToStudentGQL);
-  private readonly _fetchStudentPage = inject(FetchStudentGQL);
-
   private readonly _updateOneStudent = inject(UpdateOneStudentGQL);
 
   private readonly _dialogRef = inject(
@@ -79,91 +80,48 @@ export class StudentFormDialogComponent {
       asyncValidators: [this.formTools.isDniStudentValid],
       nonNullable: true,
     }),
-    dateBirth: this.formTools.builder.control<Date>(new Date(2010, 1, 1, 0), {
-      validators: [Validators.required],
+    dateBirth: this.formTools.builder.control<string>(
+      new Date(2010, 1, 1, 0).toDateString(),
+      {
+        validators: [Validators.required],
+        nonNullable: true,
+      }
+    ),
+    active: this.formTools.builder.control<boolean>(true, {
       nonNullable: true,
     }),
-    active: this.formTools.builder.control<boolean>(true, {
+    branchIds: this.formTools.builder.control<string[]>([], {
       nonNullable: true,
     }),
   });
 
   ngOnInit(): void {
-    // this.formGroup
-    //   .get('withCode')
-    //   ?.valueChanges.pipe(startWith(''))
-    //   .subscribe((withCode) => {
-    //     if (withCode) {
-    //       this.formGroup.get('code')?.setValidators([Validators.required]);
-    //       this.formGroup
-    //         .get('code')
-    //         ?.setAsyncValidators([this.formTools.isStudentCodeValid]);
-
-    //       this.formGroup.get('dni')?.clearValidators();
-    //       this.formGroup.get('dni')?.clearAsyncValidators();
-
-    //       this.formGroup.get('firstname')?.clearValidators();
-    //       this.formGroup.get('lastname')?.clearValidators();
-    //       this.formGroup.get('dateBirth')?.clearValidators();
-    //     } else {
-    //       this.formGroup.get('code')?.clearValidators();
-    //       this.formGroup.get('code')?.clearAsyncValidators();
-
-    //       if (!this.data) {
-    //         this.formGroup
-    //           .get('dni')
-    //           ?.setValidators([Validators.required, Validators.maxLength(32)]);
-    //         this.formGroup
-    //           .get('dni')
-    //           ?.setAsyncValidators([this.formTools.isDniStudentValid]);
-    //       }
-
-    //       this.formGroup
-    //         .get('firstname')
-    //         ?.setValidators([Validators.required, Validators.maxLength(32)]);
-    //       this.formGroup
-    //         .get('lastname')
-    //         ?.setValidators([Validators.required, Validators.maxLength(32)]);
-    //       this.formGroup.get('dateBirth')?.setValidators([Validators.required]);
-    //     }
-
-    //     this.formGroup.get('code')?.updateValueAndValidity();
-    //     this.formGroup.get('firstname')?.updateValueAndValidity();
-    //     this.formGroup.get('lastname')?.updateValueAndValidity();
-    //     this.formGroup.get('dateBirth')?.updateValueAndValidity();
-    //     this.formGroup.get('dni')?.updateValueAndValidity();
-    //   });
-
     if (!!this.data?.id) {
-      // this.formGroup.get('picture')?.clearValidators();
       this.formGroup.patchValue({
         picture: this.data.picture,
         firstname: this.data.firstname,
         lastname: this.data.lastname,
-        dateBirth: new Date(this.data.dateBirth),
+        dateBirth: this.data.dateBirth,
         dni: this.data.dni,
+        branchIds: this.data.branchs.map((branch) => branch.id),
       });
       this.previusPicture = this.data.picture;
-      // this.formGroup.get('picture')?.updateValueAndValidity();
 
-      // this.formGroup
-      //   .get('dni')
-      //   ?.valueChanges.pipe(
-      //     startWith(null),
-      //     filter((value, index) => index === 1) // Only execute on the first change
-      //   )
-      //   .subscribe({
-      //     next: () => {
-      //       this.formGroup
-      //         .get('dni')
-      //         ?.setValidators([Validators.required, Validators.maxLength(32)]);
-      //       this.formGroup
-      //         .get('dni')
-      //         ?.setAsyncValidators([this.formTools.isDniStudentValid]);
-
-      //       this.formGroup.get('dni')?.updateValueAndValidity();
-      //     },
-      //   });
+      this.formGroup
+        .get('dni')
+        ?.valueChanges.pipe(startWith(this.data.dni))
+        .subscribe((value) => {
+          const dniControl = this.formGroup.get('dni');
+          if (value === this.data?.dni) {
+            dniControl?.clearAsyncValidators();
+          } else {
+            dniControl?.setAsyncValidators([this.formTools.isDniStudentValid]);
+          }
+          dniControl?.updateValueAndValidity({
+            onlySelf: true,
+            emitEvent: false,
+          });
+        });
     }
   }
 
@@ -173,55 +131,42 @@ export class StudentFormDialogComponent {
 
       const values = this.formGroup.getRawValue();
 
-      console.log('FORM VALUES: ', values);
-
-      // if (!!this.data?.id) {
-      //   this._update(values).subscribe({
-      //     next: (student) => {
-      //       this._dialogRef.close(student);
-      //     },
-      //     error: (err) => {
-      //       console.error('UPDATE STUDENT ERROR: ', err);
-      //     },
-      //     complete: () => {
-      //       this.loading.set(false);
-      //     },
-      //   });
-      // } else if (values.withCode) {
-      //   this._addStudentInCurrentBranch(values).subscribe({
-      //     next: (branch) => {
-      //       this._dialogRef.close(branch);
-      //     },
-      //     error: (err) => {
-      //       console.error('CREATE STUDENT ERROR: ', err);
-      //     },
-      //     complete: () => {
-      //       this.loading.set(false);
-      //     },
-      //   });
-      // } else {
-      //   this._save(values).subscribe({
-      //     next: (branch) => {
-      //       this._dialogRef.close(branch);
-      //     },
-      //     error: (err) => {
-      //       console.error('CREATE STUDENT ERROR: ', err);
-      //     },
-      //     complete: () => {
-      //       this.loading.set(false);
-      //     },
-      //   });
-      // }
+      if (!!this.data?.id) {
+        this._update(values).subscribe({
+          next: (student) => {
+            this._dialogRef.close(student);
+          },
+          error: (err) => {
+            console.error('UPDATE STUDENT ERROR: ', err);
+          },
+          complete: () => {
+            this.loading.set(false);
+          },
+        });
+      } else {
+        this._save(values).subscribe({
+          next: (branch) => {
+            this._dialogRef.close(branch);
+          },
+          error: (err) => {
+            console.error('CREATE STUDENT ERROR: ', err);
+          },
+          complete: () => {
+            this.loading.set(false);
+          },
+        });
+      }
     }
   }
 
   private _update(values: FormValues) {
-    const uploadPicture$ =
-      values.picture instanceof File
-        ? this._storage
-            .delete(this.previusPicture)
-            .pipe(switchMap(() => this._storage.upload(values.picture)))
-        : of(this.previusPicture);
+    const withFile = values.picture instanceof File;
+
+    const uploadPicture$ = withFile
+      ? this._storage
+          .delete(this.previusPicture)
+          .pipe(switchMap(() => this._storage.upload(values.picture as File)))
+      : of(this.previusPicture);
 
     return uploadPicture$.pipe(
       switchMap((picture) =>
@@ -233,19 +178,22 @@ export class StudentFormDialogComponent {
             lastname: values.lastname,
             dateBirth: values.dateBirth,
             dni: values.dni,
-          } as any,
+            active: values.active,
+            branchs: values.branchIds.map((branchId) => ({
+              id: branchId,
+            })),
+          },
         })
       )
     );
   }
 
   private _save(values: FormValues) {
-    const branchId = this._globalStateService.branch!.id;
+    const withFile = values.picture instanceof File;
 
-    const uploadPicture$ =
-      values.picture instanceof File
-        ? this._storage.upload(values.picture)
-        : of('images/image-default.png');
+    const uploadPicture$ = withFile
+      ? this._storage.upload(values.picture as File)
+      : of('images/image-default.png');
 
     return uploadPicture$.pipe(
       switchMap((picture) =>
@@ -256,63 +204,23 @@ export class StudentFormDialogComponent {
             lastname: values.lastname,
             dateBirth: values.dateBirth,
             dni: values.dni,
-            active: true,
+            active: values.active,
+            branchs: values.branchIds.map((branchId) => ({
+              id: branchId,
+            })),
           },
         })
-      ),
-      switchMap((resp) =>
-        this._addBranchsToStudent
-          .mutate({
-            branchIds: [branchId],
-            studentId: resp.data!.createOneStudent.id,
-          })
-          .pipe(map(() => resp.data?.createOneStudent))
       )
     );
-  }
-
-  /**
-   * @todo - Revisar el error de llaves duplicadas cuando el estudiante ya existe en sucursal actual.
-   * @todo - Revisar con el  filtro branchs: { id: { neq: branchId } }.
-   */
-  private _addStudentInCurrentBranch(values: FormValues) {
-    const branchId = this._globalStateService.branch!.id;
-
-    return this._fetchStudentPage
-      .fetch(
-        {
-          filter: {
-            or: [{ code: { eq: values.code } }, { dni: { eq: values.code } }],
-          },
-        },
-        {
-          fetchPolicy: 'network-only',
-        }
-      )
-      .pipe(
-        switchMap((resp) => {
-          const [student] = resp.data.students.nodes;
-
-          return this._addBranchsToStudent
-            .mutate({
-              branchIds: [branchId],
-              studentId: student!.id,
-            })
-            .pipe(
-              map(() => student),
-              catchError(() => of(student))
-            );
-        })
-      );
   }
 }
 
 type FormValues = {
-  picture: File;
+  picture: File | string;
   firstname: string;
   lastname: string;
-  dateBirth: string;
   dni: string;
-  withCode: boolean;
-  code: string;
+  dateBirth: string;
+  active: boolean;
+  branchIds: string[];
 };

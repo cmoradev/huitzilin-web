@@ -568,6 +568,7 @@ export type CreateSchedule = {
 
 export type CreateStudent = {
   active: Scalars['Boolean']['input'];
+  branchs?: InputMaybe<Array<NestedId>>;
   dateBirth: Scalars['String']['input'];
   dni: Scalars['String']['input'];
   firstname: Scalars['String']['input'];
@@ -3545,6 +3546,7 @@ export type UpdateSchedule = {
 
 export type UpdateStudent = {
   active?: InputMaybe<Scalars['Boolean']['input']>;
+  branchs?: InputMaybe<Array<NestedId>>;
   dateBirth?: InputMaybe<Scalars['String']['input']>;
   dni?: InputMaybe<Scalars['String']['input']>;
   firstname?: InputMaybe<Scalars['String']['input']>;
@@ -4020,14 +4022,14 @@ export type DeleteOneScheduleMutationVariables = Exact<{
 
 export type DeleteOneScheduleMutation = { __typename?: 'Mutation', deleteOneSchedule: { __typename?: 'ScheduleDeleteResponse', id?: string | null } };
 
-export type StudentPartsFragment = { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string };
+export type StudentPartsFragment = { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> };
 
 export type CreateOneStudentMutationVariables = Exact<{
   student: CreateStudent;
 }>;
 
 
-export type CreateOneStudentMutation = { __typename?: 'Mutation', createOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string } };
+export type CreateOneStudentMutation = { __typename?: 'Mutation', createOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> } };
 
 export type GetStudentsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -4036,7 +4038,7 @@ export type GetStudentsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetStudentsPageQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string }> } };
+export type GetStudentsPageQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> }> } };
 
 export type FetchStudentQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -4045,7 +4047,7 @@ export type FetchStudentQueryVariables = Exact<{
 }>;
 
 
-export type FetchStudentQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string }> } };
+export type FetchStudentQuery = { __typename?: 'Query', students: { __typename?: 'StudentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> }> } };
 
 export type UpdateOneStudentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4053,7 +4055,7 @@ export type UpdateOneStudentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneStudentMutation = { __typename?: 'Mutation', updateOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string } };
+export type UpdateOneStudentMutation = { __typename?: 'Mutation', updateOneStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> } };
 
 export type DeleteOneStudentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4068,7 +4070,7 @@ export type AddBranchsToStudentMutationVariables = Exact<{
 }>;
 
 
-export type AddBranchsToStudentMutation = { __typename?: 'Mutation', addBranchsToStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string } };
+export type AddBranchsToStudentMutation = { __typename?: 'Mutation', addBranchsToStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> } };
 
 export type RemoveBranchsFromStudentMutationVariables = Exact<{
   studentId: Scalars['ID']['input'];
@@ -4076,7 +4078,7 @@ export type RemoveBranchsFromStudentMutationVariables = Exact<{
 }>;
 
 
-export type RemoveBranchsFromStudentMutation = { __typename?: 'Mutation', removeBranchsFromStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string } };
+export type RemoveBranchsFromStudentMutation = { __typename?: 'Mutation', removeBranchsFromStudent: { __typename?: 'Student', id: string, code: string, picture: string, fullname: string, firstname: string, lastname: string, dateBirth: string, dni: string, branchs: Array<{ __typename?: 'Branch', id: string }> } };
 
 export type DocumentPartsFragment = { __typename?: 'Document', id: string, name: string, key: string, url: string };
 
@@ -4328,6 +4330,9 @@ export const StudentPartsFragmentDoc = gql`
   firstname
   lastname
   dateBirth
+  branchs {
+    id
+  }
   dni
 }
     `;
