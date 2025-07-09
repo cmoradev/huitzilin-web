@@ -46,10 +46,24 @@ export class FeeFormDialogComponent implements OnInit {
   public frequencies = frequencies;
 
   public formGroup = this.formTools.builder.group({
-    name: ['', [Validators.required, Validators.maxLength(64)]],
-    amount: [0, [Validators.required, Validators.min(1)]],
-    frequency: ['', [Validators.required]],
-    withTax: [this._globalState.activity?.withTax ?? true],
+    name: this.formTools.builder.control<string>('',{
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(64)],
+    }),
+    amount: this.formTools.builder.control<number>(0, {
+      nonNullable: true,
+      validators: [Validators.required, Validators.min(0)],
+    }),
+    frequency: this.formTools.builder.control<Frequency>(Frequency.Single, {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    withTax: this.formTools.builder.control(this._globalState.activity?.withTax ?? true, {
+      nonNullable: true,
+    }),
+    autoLoad: this.formTools.builder.control(false, {
+      nonNullable: true,
+    })
   });
 
   private readonly _globalStateService = inject(GlobalStateService);
@@ -65,6 +79,7 @@ export class FeeFormDialogComponent implements OnInit {
         amount: this.data.amount,
         frequency: this.data.frequency,
         withTax: this.data.withTax,
+        autoLoad: this.data.autoLoad,
       });
     }
 
@@ -81,7 +96,7 @@ export class FeeFormDialogComponent implements OnInit {
     if (this.formGroup.valid) {
       this.loading.set(true);
 
-      const values = this.formGroup.getRawValue() as any;
+      const values = this.formGroup.getRawValue();
 
       if (!!this.data?.id) {
         this._update(values).subscribe({
@@ -154,4 +169,5 @@ type FormValues = {
   amount: number;
   frequency: Frequency;
   withTax: boolean;
+  autoLoad: boolean;
 };

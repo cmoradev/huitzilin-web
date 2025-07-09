@@ -355,7 +355,6 @@ export type CreateDebit = {
   state: DebitState;
   studentId: Scalars['String']['input'];
   unitPrice: Scalars['Float']['input'];
-  withPayment: Scalars['Boolean']['input'];
   withTax: Scalars['Boolean']['input'];
 };
 
@@ -3307,7 +3306,6 @@ export type UpdateDebit = {
   state?: InputMaybe<DebitState>;
   studentId?: InputMaybe<Scalars['String']['input']>;
   unitPrice?: InputMaybe<Scalars['Float']['input']>;
-  withPayment?: InputMaybe<Scalars['Boolean']['input']>;
   withTax?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -3836,14 +3834,14 @@ export type GetCurrentEnrollmentsPageQueryVariables = Exact<{
 
 export type GetCurrentEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, branch: { __typename?: 'Branch', id: string, name: string, picture: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } }> } };
 
-export type FeePartsFragment = { __typename?: 'Fee', id: string, name: string, price: number, amount: number, frequency: Frequency, withTax: boolean };
+export type FeePartsFragment = { __typename?: 'Fee', id: string, name: string, price: number, amount: number, frequency: Frequency, withTax: boolean, autoLoad: boolean };
 
 export type CreateOneFeeMutationVariables = Exact<{
   fee: CreateFee;
 }>;
 
 
-export type CreateOneFeeMutation = { __typename?: 'Mutation', createOneFee: { __typename?: 'Fee', id: string, name: string, price: number, amount: number, frequency: Frequency, withTax: boolean } };
+export type CreateOneFeeMutation = { __typename?: 'Mutation', createOneFee: { __typename?: 'Fee', id: string, name: string, price: number, amount: number, frequency: Frequency, withTax: boolean, autoLoad: boolean } };
 
 export type GetFeePageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -3852,7 +3850,7 @@ export type GetFeePageQueryVariables = Exact<{
 }>;
 
 
-export type GetFeePageQuery = { __typename?: 'Query', fees: { __typename?: 'FeeConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Fee', id: string, name: string, price: number, amount: number, frequency: Frequency, withTax: boolean }> } };
+export type GetFeePageQuery = { __typename?: 'Query', fees: { __typename?: 'FeeConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Fee', id: string, name: string, price: number, amount: number, frequency: Frequency, withTax: boolean, autoLoad: boolean }> } };
 
 export type UpdateOneFeeMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3860,7 +3858,7 @@ export type UpdateOneFeeMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneFeeMutation = { __typename?: 'Mutation', updateOneFee: { __typename?: 'Fee', id: string, name: string, price: number, amount: number, frequency: Frequency, withTax: boolean } };
+export type UpdateOneFeeMutation = { __typename?: 'Mutation', updateOneFee: { __typename?: 'Fee', id: string, name: string, price: number, amount: number, frequency: Frequency, withTax: boolean, autoLoad: boolean } };
 
 export type DeleteOneFeeMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4269,6 +4267,7 @@ export const FeePartsFragmentDoc = gql`
   amount
   frequency
   withTax
+  autoLoad
 }
     `;
 export const LevelPartsFragmentDoc = gql`

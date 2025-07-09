@@ -40,9 +40,7 @@
         />
         <span matTextPrefix>$&nbsp;</span>
         <span matTextSuffix>.00</span>
-        <mat-hint>
-          Ingrese el precio base de la tarifa sin IVA.
-        </mat-hint>
+        <mat-hint> Ingrese el precio base de la tarifa sin IVA. </mat-hint>
         <mat-error>
           {{ formTools.checkForErrorsIn(formGroup.get("amount")) }}
         </mat-error>
@@ -50,6 +48,10 @@
 
       <mat-checkbox formControlName="withTax">
         ¿Agregar IVA al precio base?
+      </mat-checkbox>
+
+      <mat-checkbox formControlName="autoLoad">
+        ¿Cargar automáticamente esta tarifa al crear una inscripción?
       </mat-checkbox>
     </div>
   </form>

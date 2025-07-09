@@ -5,6 +5,7 @@ fragment FeeParts on Fee {
   amount,
   frequency
   withTax
+  autoLoad
 }
 
 mutation createOneFee ($fee: CreateFee!) {
