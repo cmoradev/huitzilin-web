@@ -92,14 +92,14 @@ export class ChargeDialogComponent implements OnInit {
   }
 
   public submit() {
+    this.paymentsForm.markAllAsTouched();
+
     if (this.paymentsForm.valid) {
       const recived = this.filterPaymentRecived();
 
-      this.payments.controls.forEach((payment, index) => {
-        console.log(payment.get('amount')?.errors);
-        console.log(payment.get('transaction')?.errors);
-        console.log(payment.get('bank')?.errors);
-      })
+      if (!!recived.length) {
+        
+      }
     }
   }
 
@@ -123,25 +123,32 @@ export class ChargeDialogComponent implements OnInit {
       }),
     });
 
-    form.get('amount')?.valueChanges.pipe(debounceTime(300)).subscribe({
-      next: (value) => {
-        console.log(!!value)
-        if (!!value) {
-          form.get('amount')?.setValidators([Validators.required]);
-          form.get('date')?.setValidators([Validators.required]);
+    form
+      .get('amount')
+      ?.valueChanges.pipe(debounceTime(300))
+      .subscribe({
+        next: (value) => {
+          if (!!value) {
+            form.get('amount')?.setValidators([Validators.required]);
+            form.get('date')?.setValidators([Validators.required]);
 
-          if (form.get('method')?.value !== PaymentMethod.Cash) {
-            form.get('transaction')?.setValidators([Validators.required]);
-            form.get('bank')?.setValidators([Validators.required]);
+            if (form.get('method')?.value !== PaymentMethod.Cash) {
+              form.get('transaction')?.setValidators([Validators.required]);
+              form.get('bank')?.setValidators([Validators.required]);
+            }
+          } else {
+            form.get('amount')?.clearValidators();
+            form.get('date')?.clearValidators();
+            form.get('transaction')?.clearValidators();
+            form.get('bank')?.clearValidators();
           }
-        } else {
-          form.get('amount')?.clearValidators();
-          form.get('date')?.clearValidators();
-          form.get('transaction')?.clearValidators();
-          form.get('bank')?.clearValidators();
-        }
-      },
-    });
+
+          form.get('amount')?.updateValueAndValidity();
+          form.get('date')?.updateValueAndValidity();
+          form.get('transaction')?.updateValueAndValidity();
+          form.get('bank')?.updateValueAndValidity();
+        },
+      });
 
     return form;
   }

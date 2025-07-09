@@ -16,8 +16,7 @@ export class PosService {
 
     return first?.withTax ?? false;
   });
-  private readonly _branchId = signal<string | null>(null);
-
+  
   private readonly _amount = computed(() => {
     return this._debits().reduce(
       (accumulated, debit) => accumulated.plus(debit.amount),
@@ -55,14 +54,6 @@ export class PosService {
     });
   }
 
-  get branchId(): string | null {
-    return this._branchId();
-  }
-
-  set branchId(value: string | null) {
-    this._branchId.set(value);
-  }
-
   get debits(): DebitPartsFragment[] {
     return this._debits();
   }
@@ -91,8 +82,8 @@ export class PosService {
     return this._debits().some((d) => d.id === debit.id);
   }
 
-  public addDebit(value: DebitPartsFragment, branchId: string): boolean {
-    const canAdd = this._canAddDebit(value, branchId);
+  public addDebit(value: DebitPartsFragment): boolean {
+    const canAdd = this._canAddDebit(value);
 
     if (canAdd) {
       this._debits.update((previous) => {
@@ -102,7 +93,6 @@ export class PosService {
 
         return debits;
       });
-      this.branchId = branchId;
 
       return true;
     }
@@ -124,7 +114,7 @@ export class PosService {
     });
   }
 
-  private _canAddDebit(value: DebitPartsFragment, branchId: string): boolean {
+  private _canAddDebit(value: DebitPartsFragment): boolean {
     // Revisa si el nuevo adeudo tiene diferencia de impuestos
     const diferenceTaxes = this.debits.some(
       (debit) => debit.withTax !== value.withTax
@@ -133,17 +123,6 @@ export class PosService {
     if (diferenceTaxes) {
       this._snackBar.open(
         'No se puede agregar un adeudo con impuestos diferentes a los ya seleccionados.',
-        'Cerrar',
-        {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        }
-      );
-    }
-
-    if (this.branchId !== null && this.branchId !== branchId) {
-      this._snackBar.open(
-        'No se puede agregar un adeudo de otra sucursal.',
         'Cerrar',
         {
           duration: 3000,

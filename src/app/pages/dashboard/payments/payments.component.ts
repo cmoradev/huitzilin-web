@@ -12,7 +12,7 @@ import {
 } from '@graphql';
 import { GlobalStateService } from '@services';
 import { NgScrollbar } from 'ngx-scrollbar';
-import { map } from 'rxjs';
+import { map, merge } from 'rxjs';
 import { EnrollmentWithDebitsComponent } from './enrollment-with-debits/enrollment-with-debits.component';
 import { SaleDetailsComponent } from './sale-details/sale-details.component';
 
@@ -38,7 +38,7 @@ export class PaymentsComponent implements OnInit {
   public loading = signal<boolean>(true);
 
   ngOnInit(): void {
-    this._globalState.student$.subscribe({
+    merge(this._globalState.student$, this._globalState.cycle$).subscribe({
       next: () => this._fetchAllEnrollments(),
     });
   }
@@ -46,7 +46,7 @@ export class PaymentsComponent implements OnInit {
   private _fetchAllEnrollments(
     accumulared: CurrentEnrollmentPartsFragment[] = []
   ): void {
-    if (!!this._globalState.student?.id) {
+    if (!!this._globalState.student?.id && !!this._globalState.cycle?.id) {
       this.loading.set(true);
 
       const limit = 50;
@@ -55,6 +55,7 @@ export class PaymentsComponent implements OnInit {
       const params: GetEnrollmentsPageQueryVariables = {
         filter: {
           studentId: { eq: this._globalState.student!.id },
+          cycleId: { eq: this._globalState.cycle!.id },
           state: { eq: EnrollmentState.Active },
         },
         limit,

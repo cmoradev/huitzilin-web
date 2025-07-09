@@ -1,4 +1,4 @@
-<form class="flex flex-col gap-2 mt-2" [formGroup]="form()" id="paymentForm">
+<form class="flex flex-col gap-2 mt-2" [formGroup]="form()">
   <mat-form-field>
     <mat-label>Monto</mat-label>
     <input type="number" matInput formControlName="amount" />
@@ -41,8 +41,9 @@
     </mat-form-field>
   </div>
 
+  @if (form().get("method")?.value !== "CASH") {
   <mat-form-field>
-    <mat-label>Transacción</mat-label>
+    <mat-label>Referencia</mat-label>
     <input matInput formControlName="transaction" />
     <mat-hint> Referencia de la transacción</mat-hint>
     <mat-error>
@@ -58,4 +59,5 @@
       {{ formTools.checkForErrorsIn(form().get("bank")) }}
     </mat-error>
   </mat-form-field>
+  }
 </form>

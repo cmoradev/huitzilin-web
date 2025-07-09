@@ -27,7 +27,6 @@ export class ConceptOptionComponent implements OnInit {
   private readonly pos = inject(PosService);
 
   public debit = input.required<DebitPartsFragment>();
-  public enrollment = input.required<CurrentEnrollmentPartsFragment>();
   public optionControl = new FormControl<boolean>(false);
 
   public stateTag = computed(() => {
@@ -63,7 +62,7 @@ export class ConceptOptionComponent implements OnInit {
 
   public toggleDebit(active: boolean): void {
     if (active) {
-      const added = this.pos.addDebit(this.debit(), this.enrollment().id);
+      const added = this.pos.addDebit(this.debit());
 
       if (!added) this.optionControl.setValue(false);
     } else {

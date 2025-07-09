@@ -43,7 +43,7 @@ export class EnrollmentWithDebitsComponent implements OnInit {
 
   public enrollment = input.required<CurrentEnrollmentPartsFragment>();
 
-  public expanded = signal<boolean>(false);
+  public expanded = signal<boolean>(true);
   public loading = signal<boolean>(false);
   public debits = signal<DebitPartsFragment[]>([]);
 
@@ -94,7 +94,6 @@ export class EnrollmentWithDebitsComponent implements OnInit {
           if (allItems.length >= totalCount) {
             this.debits.set(allItems);
             this.loading.set(false);
-            this._checkIsExpanded(allItems);
             return; // No more enrollments to fetch
           }
 
@@ -105,13 +104,5 @@ export class EnrollmentWithDebitsComponent implements OnInit {
         },
       });
     }
-  }
-
-  private _checkIsExpanded(debits: DebitPartsFragment[]) {
-    const withSelections = debits.some((debit) =>
-      this._pos.checkIsSelected(debit)
-    );
-
-    this.expanded.set(withSelections);
   }
 }
