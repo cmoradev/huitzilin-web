@@ -1,7 +1,7 @@
 import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { calculateTotalFromBaseAndTax, TaxEnum } from '@calculations';
-import { DebitPartsFragment } from '@graphql';
+import { DebitPartsFragment, DiscountPartsFragment } from '@graphql';
 import Decimal from 'decimal.js';
 
 @Injectable({
@@ -9,23 +9,23 @@ import Decimal from 'decimal.js';
 })
 export class PosService {
   private readonly _snackBar = inject(MatSnackBar);
-  private readonly _debits = signal<DebitPartsFragment[]>([]);
+  private readonly _concepts = signal<Concept[]>([]);
 
   public withTax = computed(() => {
-    const [first] = this._debits();
+    const [first] = this._concepts();
 
     return first?.withTax ?? false;
   });
   
   private readonly _amount = computed(() => {
-    return this._debits().reduce(
+    return this._concepts().reduce(
       (accumulated, debit) => accumulated.plus(debit.amount),
       new Decimal(0)
     );
   });
 
   private readonly _discount = computed(() => {
-    return this._debits().reduce(
+    return this._concepts().reduce(
       (accumulated, debit) => accumulated.plus(debit.discount),
       new Decimal(0)
     );
@@ -54,8 +54,8 @@ export class PosService {
     });
   }
 
-  get debits(): DebitPartsFragment[] {
-    return this._debits();
+  get concepts(): Concept[] {
+    return this._concepts();
   }
 
   get amount() {
@@ -78,18 +78,18 @@ export class PosService {
     return this._total().toNumber();
   }
 
-  public checkIsSelected(debit: DebitPartsFragment): boolean {
-    return this._debits().some((d) => d.id === debit.id);
+  public checkIsSelected(debit: Concept): boolean {
+    return this.concepts.some((d) => d.debitId === debit.debitId);
   }
 
-  public addDebit(value: DebitPartsFragment): boolean {
+  public addDebit(value: Concept): boolean {
     const canAdd = this._canAddDebit(value);
 
     if (canAdd) {
-      this._debits.update((previous) => {
+      this._concepts.update((previous) => {
         const debits = [...previous];
 
-        debits.push(value);
+        // debits.push(value);
 
         return debits;
       });
@@ -100,23 +100,23 @@ export class PosService {
     return false;
   }
 
-  public removeDebit(value: DebitPartsFragment) {
-    this._debits.update((previous) => {
-      const debits = [...previous];
+  public removeDebit(value: Concept) {
+    this._concepts.update((previous) => {
+      const concepts = [...previous];
 
-      const index = debits.findIndex((debit) => debit.id === value.id);
+      const index = concepts.findIndex((concept) => concept.debitId === value.debitId);
 
       if (index !== -1) {
-        debits.splice(index, 1);
+        concepts.splice(index, 1);
       }
 
-      return debits;
+      return concepts;
     });
   }
 
-  private _canAddDebit(value: DebitPartsFragment): boolean {
+  private _canAddDebit(value: Concept): boolean {
     // Revisa si el nuevo adeudo tiene diferencia de impuestos
-    const diferenceTaxes = this.debits.some(
+    const diferenceTaxes = this.concepts.some(
       (debit) => debit.withTax !== value.withTax
     );
 
@@ -133,4 +133,19 @@ export class PosService {
 
     return !diferenceTaxes;
   }
+}
+
+export type Concept = {
+  description: string;
+  unitPrice: number;
+  quantity: number;
+  amount: number;
+  discount: number;
+  subtotal: number;
+  taxes: number;
+  total: number;
+  withTax: boolean;
+  dueDate: Date;
+  debitId: string;
+  discounts: DiscountPartsFragment[];
 }
