@@ -304,15 +304,10 @@ export type CreateClipAccount = {
 };
 
 export type CreateConcept = {
-  amount: Scalars['Float']['input'];
   debitId: Scalars['String']['input'];
   description: Scalars['String']['input'];
-  discount: Scalars['Float']['input'];
   discounts?: InputMaybe<Array<NestedId>>;
   quantity: Scalars['Float']['input'];
-  subtotal: Scalars['Float']['input'];
-  taxes: Scalars['Float']['input'];
-  total: Scalars['Float']['input'];
   unitPrice: Scalars['Float']['input'];
   withTax: Scalars['Boolean']['input'];
 };
@@ -324,6 +319,7 @@ export type CreateCycle = {
 };
 
 export type CreateDebit = {
+  branchId: Scalars['String']['input'];
   description: Scalars['String']['input'];
   discount: Scalars['Float']['input'];
   discounts?: InputMaybe<Array<NestedId>>;
@@ -653,6 +649,7 @@ export type DateFieldComparisonBetween = {
 export type Debit = {
   __typename?: 'Debit';
   amount: Scalars['Float']['output'];
+  branchId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   description: Scalars['String']['output'];
@@ -663,7 +660,6 @@ export type Debit = {
   frequency: Frequency;
   id: Scalars['ID']['output'];
   paymentDate?: Maybe<Scalars['DateTime']['output']>;
-  pendingPayment: Scalars['Float']['output'];
   quantity: Scalars['Float']['output'];
   state: DebitState;
   studentId: Scalars['String']['output'];
@@ -696,6 +692,7 @@ export type DebitConnection = {
 export type DebitDeleteResponse = {
   __typename?: 'DebitDeleteResponse';
   amount?: Maybe<Scalars['Float']['output']>;
+  branchId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
@@ -705,7 +702,6 @@ export type DebitDeleteResponse = {
   frequency?: Maybe<Frequency>;
   id?: Maybe<Scalars['ID']['output']>;
   paymentDate?: Maybe<Scalars['DateTime']['output']>;
-  pendingPayment?: Maybe<Scalars['Float']['output']>;
   quantity?: Maybe<Scalars['Float']['output']>;
   state?: Maybe<DebitState>;
   studentId?: Maybe<Scalars['String']['output']>;
@@ -3241,6 +3237,7 @@ export type UpdateCycle = {
 };
 
 export type UpdateDebit = {
+  branchId?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   discount?: InputMaybe<Scalars['Float']['input']>;
   discounts?: InputMaybe<Array<NestedId>>;
@@ -3617,14 +3614,14 @@ export type DeleteOneCycleMutationVariables = Exact<{
 
 export type DeleteOneCycleMutation = { __typename?: 'Mutation', deleteOneCycle: { __typename?: 'CycleDeleteResponse', id?: string | null } };
 
-export type DebitPartsFragment = { __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, pendingPayment: number, paymentDate?: any | null, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> };
+export type DebitPartsFragment = { __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> };
 
 export type CreateOneDebitMutationVariables = Exact<{
   debit: CreateDebit;
 }>;
 
 
-export type CreateOneDebitMutation = { __typename?: 'Mutation', createOneDebit: { __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, pendingPayment: number, paymentDate?: any | null, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> } };
+export type CreateOneDebitMutation = { __typename?: 'Mutation', createOneDebit: { __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> } };
 
 export type GetDebitsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -3633,7 +3630,7 @@ export type GetDebitsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetDebitsPageQuery = { __typename?: 'Query', debits: { __typename?: 'DebitConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, pendingPayment: number, paymentDate?: any | null, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> }> } };
+export type GetDebitsPageQuery = { __typename?: 'Query', debits: { __typename?: 'DebitConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> }> } };
 
 export type UpdateOneDebitMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3641,14 +3638,14 @@ export type UpdateOneDebitMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneDebitMutation = { __typename?: 'Mutation', updateOneDebit: { __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, pendingPayment: number, paymentDate?: any | null, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> } };
+export type UpdateOneDebitMutation = { __typename?: 'Mutation', updateOneDebit: { __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> } };
 
 export type CreateManyDebitsMutationVariables = Exact<{
   debits: Array<CreateDebit> | CreateDebit;
 }>;
 
 
-export type CreateManyDebitsMutation = { __typename?: 'Mutation', createManyDebits: Array<{ __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, pendingPayment: number, paymentDate?: any | null, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> }> };
+export type CreateManyDebitsMutation = { __typename?: 'Mutation', createManyDebits: Array<{ __typename?: 'Debit', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, state: DebitState, frequency: Frequency, dueDate: string, paymentDate?: any | null, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> }> };
 
 export type DeleteOneDebitMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4100,7 +4097,6 @@ export const DebitPartsFragmentDoc = gql`
   state
   frequency
   dueDate
-  pendingPayment
   paymentDate
   discounts {
     id

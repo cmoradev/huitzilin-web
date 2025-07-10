@@ -12,7 +12,6 @@ fragment DebitParts on Debit {
   state
   frequency
   dueDate
-  pendingPayment
   paymentDate
   discounts {
     id

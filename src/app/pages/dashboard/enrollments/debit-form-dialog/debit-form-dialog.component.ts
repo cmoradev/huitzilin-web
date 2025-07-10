@@ -151,13 +151,14 @@ export class DebitFormDialogComponent {
 
   public async submit(): Promise<void> {
     if (this.formGroup.valid) {
-      this.loading.set(true);
-
+      
       const values = this.formGroup.getRawValue();
 
       const { amount: _, ...payload } = values;
 
       if (!!this.data?.id) {
+        this.loading.set(true);
+
         this._update(payload).subscribe({
           next: (debit) => {
             this._snackBar.open(
@@ -178,7 +179,13 @@ export class DebitFormDialogComponent {
             this.loading.set(false);
           },
         });
-      } else if (this._globalStateService.activity!.id && this._globalStateService.student!.id) {
+      } else if (
+        !!this._globalStateService?.enrollment?.id &&
+        !!this._globalStateService?.student?.id &&
+        !!this._globalStateService?.branch?.id
+      ) {
+        this.loading.set(true);
+
         this._save(payload).subscribe({
           next: (debit) => {
             this._snackBar.open(
@@ -215,7 +222,12 @@ export class DebitFormDialogComponent {
   private _save(
     values: Omit<
       CreateDebit,
-      'frequency' | 'enrollmentId' | 'studentId' | 'discount' | 'paymentDate'
+      | 'frequency'
+      | 'enrollmentId'
+      | 'studentId'
+      | 'branchId'
+      | 'discount'
+      | 'paymentDate'
     >
   ) {
     return this._createOneDebit
@@ -225,6 +237,7 @@ export class DebitFormDialogComponent {
           discount: 0,
           paymentDate: null,
           frequency: Frequency.Single,
+          branchId: this._globalStateService.branch!.id,
           studentId: this._globalStateService.student!.id,
           enrollmentId: this._globalStateService.enrollment!.id,
         },

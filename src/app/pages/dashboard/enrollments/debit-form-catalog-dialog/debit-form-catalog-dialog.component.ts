@@ -99,7 +99,7 @@ export class DebitFormCatalogDialogComponent implements OnInit {
   public addDebit(
     initialValues: Omit<
       CreateDebit,
-      'enrollmentId' | 'studentId' | 'paymentDate' | 'discount'
+      'enrollmentId' | 'studentId' | 'branchId' | 'paymentDate' | 'discount'
     >
   ): void {
     const {
@@ -167,7 +167,8 @@ export class DebitFormCatalogDialogComponent implements OnInit {
 
       if (
         !!this._globalStateService.enrollment?.id &&
-        this._globalStateService.student?.id
+        !!this._globalStateService.student?.id && 
+        !!this._globalStateService.branch?.id
       ) {
         this._createManyDebits
           .mutate({
@@ -182,6 +183,7 @@ export class DebitFormCatalogDialogComponent implements OnInit {
               frequency: debit.frequency,
               paymentDate: null,
               studentId: this._globalStateService.student!.id,
+              branchId: this._globalStateService.branch!.id,
               discounts: debit.discounts.map((discount: any) => ({
                 id: discount.id,
               })),
