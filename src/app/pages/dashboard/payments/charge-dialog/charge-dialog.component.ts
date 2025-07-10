@@ -4,7 +4,12 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { FormToolsService, PosService } from '@services';
-import { PaymentMethod } from '@graphql';
+import {
+  CreateConcept,
+  CreateIncomesGQL,
+  CreatePayment,
+  PaymentMethod,
+} from '@graphql';
 
 import { CurrencyPipe } from '@angular/common';
 import { ChargeFormComponent } from '../charge-form/charge-form.component';
@@ -17,6 +22,7 @@ import {
 } from '@angular/forms';
 import Decimal from 'decimal.js';
 import { MatError } from '@angular/material/form-field';
+import { id } from 'date-fns/locale';
 
 @Component({
   selector: 'app-charge-dialog',
@@ -35,6 +41,8 @@ import { MatError } from '@angular/material/form-field';
 })
 export class ChargeDialogComponent implements OnInit {
   private readonly pos = inject(PosService);
+  private readonly _createIncomes = inject(CreateIncomesGQL);
+
   public readonly formTools = inject(FormToolsService);
 
   public loading = signal<boolean>(false);
@@ -98,7 +106,52 @@ export class ChargeDialogComponent implements OnInit {
       const recived = this.filterPaymentRecived();
 
       if (!!recived.length) {
-        
+        this.loading.set(true);
+
+        const payments: CreatePayment[] = recived.map((payment) => ({
+          method: payment.method,
+          amount: payment.amount,
+          date: payment.date,
+          transaction: payment.transaction,
+          bank: payment.bank,
+        }));
+
+        const concepts: CreateConcept[] = this.pos.debits.map((debit) => ({
+          description: debit.description,
+          amount: debit.amount,
+          discount: debit.discount,
+          quantity: debit.quantity,
+          unitPrice: debit.unitPrice,
+          subtotal: debit.subtotal,
+          taxes: debit.taxes,
+          total: debit.total,
+          withTax: debit.withTax,
+          discounts: debit.discounts.map((discount) => ({
+            id: discount.id,
+          })),
+          debitId: debit.id,
+        }));
+
+        this._createIncomes
+          .mutate({
+            input: {
+              payments,
+              concepts,
+            },
+          })
+          .subscribe({
+            next: (data) => {
+              this.loading.set(false);
+              console.log(
+                'Incomes created successfully:',
+                data.data?.createIncomes
+              );
+            },
+            error: (error) => {
+              this.loading.set(false);
+              // console.error('Error creating incomes:', error);
+            },
+          });
       }
     }
   }

@@ -72,7 +72,7 @@ export class StudentsComponent {
 
   public openDoucumentsDialog(value: StudentPartsFragment): void {
     this.dialog.open(StudentDocumentsDialogComponent, {
-      width: '42rem',
+      width: '52rem',
       data: value,
     });
   }

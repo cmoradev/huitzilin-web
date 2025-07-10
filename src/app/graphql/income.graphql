@@ -1,0 +1,8 @@
+mutation createIncomes ($input: CreateIncome!) {
+  createIncomes (
+    input: $input
+  ) {
+    id
+    folio
+  }
+}

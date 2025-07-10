@@ -12,7 +12,14 @@ fragment DebitParts on Debit {
   state
   frequency
   dueDate
+  pendingPayment
   paymentDate
+  discounts {
+    id
+    name
+    value
+    type
+  }
 }
 
 mutation createOneDebit($debit: CreateDebit!) {
