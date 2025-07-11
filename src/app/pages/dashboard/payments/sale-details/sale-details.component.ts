@@ -1,10 +1,10 @@
 import { CurrencyPipe, NgClass } from '@angular/common';
-import { Component, computed, effect, inject } from '@angular/core';
+import { Component, computed, effect, inject, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { DebitPartsFragment } from '@graphql';
-import { PosService } from '@services';
+import { Concept, PosService } from '@services';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { ChargeDialogComponent } from '../charge-dialog/charge-dialog.component';
 
@@ -24,6 +24,8 @@ export class SaleDetailsComponent {
   private readonly _pos = inject(PosService);
   private readonly _dialog = inject(MatDialog);
 
+  public refresh = output<void>();
+
   public displayedColumns = [
     'description',
     'amount',
@@ -32,7 +34,7 @@ export class SaleDetailsComponent {
     'taxes',
     'total',
   ];
-  public dataSource = new MatTableDataSource<DebitPartsFragment>([]);
+  public dataSource = new MatTableDataSource<Concept>([]);
   public expandedElement: DebitPartsFragment | null = null;
 
   public amount = computed(() => this._pos.amount);
@@ -43,14 +45,23 @@ export class SaleDetailsComponent {
 
   constructor() {
     effect(() => {
-      this.dataSource.data = this._pos.debits;
+      this.dataSource.data = this._pos.concepts;
     });
   }
 
   public openChargeDialog() {
-    this._dialog.open(ChargeDialogComponent, {
+    const dislog$ = this._dialog.open(ChargeDialogComponent, {
       width: '30rem',
     });
+
+    dislog$.afterClosed().subscribe({
+      next: (result) => {
+        if (result) {
+          this._pos.clearConcepts();
+          this.refresh.emit();
+        }
+      },
+    })
   }
 
   /** Checks whether an element is expanded. */

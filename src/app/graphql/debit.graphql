@@ -32,7 +32,11 @@ query getDebitsPage(
   $limit: Int = 10
   $filter: DebitFilter = {}
 ) {
-  debits(paging: { limit: $limit, offset: $offset }, filter: $filter) {
+  debits(
+    paging: { limit: $limit, offset: $offset },
+    sorting:  { field: dueDate, direction: ASC }
+    filter: $filter
+  ) {
     totalCount
     pageInfo {
       hasNextPage

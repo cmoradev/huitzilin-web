@@ -43,6 +43,11 @@ export class PaymentsComponent implements OnInit {
     });
   }
 
+  public refresh() {
+    this.enrollments.set([]);
+    this._fetchAllEnrollments();
+  }
+
   private _fetchAllEnrollments(
     accumulared: CurrentEnrollmentPartsFragment[] = []
   ): void {

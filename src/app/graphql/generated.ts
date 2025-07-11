@@ -669,7 +669,6 @@ export type Debit = {
   unitPrice: Scalars['Float']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
-  withPayment: Scalars['Boolean']['output'];
   withTax: Scalars['Boolean']['output'];
 };
 
@@ -711,7 +710,6 @@ export type DebitDeleteResponse = {
   unitPrice?: Maybe<Scalars['Float']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   version?: Maybe<Scalars['Int']['output']>;
-  withPayment?: Maybe<Scalars['Boolean']['output']>;
   withTax?: Maybe<Scalars['Boolean']['output']>;
 };
 
@@ -1318,10 +1316,12 @@ export type IdFilterComparison = {
 
 export type Income = {
   __typename?: 'Income';
+  amount: Scalars['Float']['output'];
   branchId: Scalars['String']['output'];
   clipLink?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  discount: Scalars['Float']['output'];
   folio: Scalars['Int']['output'];
   id: Scalars['ID']['output'];
   pendingPayment: Scalars['Float']['output'];
@@ -4509,7 +4509,11 @@ export const CreateOneDebitDocument = gql`
   }
 export const GetDebitsPageDocument = gql`
     query getDebitsPage($offset: Int = 0, $limit: Int = 10, $filter: DebitFilter = {}) {
-  debits(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+  debits(
+    paging: {limit: $limit, offset: $offset}
+    sorting: {field: dueDate, direction: ASC}
+    filter: $filter
+  ) {
     totalCount
     pageInfo {
       hasNextPage

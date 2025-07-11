@@ -45,13 +45,30 @@ export function calculateAmountFromUnitPriceAndQuantity(
   return Number(unitPriceDecimal.times(quantityDecimal).toFixed(2));
 }
 
+export function calculateTaxesFromSubtotal(
+  subtotal: number,
+  taxRate: number = TaxEnum.Sixteen
+) {
+  const subtotalDecimal = new Decimal(subtotal);
+  const rateDecimal = new Decimal(taxRate).dividedBy(100);
+
+  const taxesDecimal = subtotalDecimal.times(rateDecimal);
+  const totalDecimal = subtotalDecimal.plus(taxesDecimal);
+
+  return {
+    subtotal: Number(subtotalDecimal.toFixed(2)),
+    taxes: Number(taxesDecimal.toFixed(2)),
+    total: Number(totalDecimal.toFixed(2)),
+  };
+}
+
 /**
  * Calcula el descuento a partir de un importe y una lista de descuentos.
  * @param amount Importe total
  * @param discounts Lista de descuentos aplicables
  * @returns Un objeto con el descuento total y el subtotal después de aplicar los descuentos
  */
-export function calculateDiscountFromAmountAndDiscounts(
+export function calculateSubtotalAndDiscount(
   amount: number,
   discounts: { value: number; type: DiscountBy }[]
 ) {
@@ -79,19 +96,27 @@ export function calculateDiscountFromAmountAndDiscounts(
   };
 }
 
-export function calculateTaxesFromSubtotal(
-  subtotal: number,
-  taxRate: number = TaxEnum.Sixteen
-) {
-  const subtotalDecimal = new Decimal(subtotal);
-  const rateDecimal = new Decimal(taxRate).dividedBy(100);
+/**
+ * Calcula el monto total a partir del precio unitario y la cantidad.
+ *
+ * Utiliza la librería Decimal para realizar cálculos precisos con decimales.
+ * Retorna un objeto con el precio unitario, la cantidad y el monto total,
+ * todos redondeados a dos decimales.
+ *
+ * @param {number} unitPrice - Precio unitario del producto o servicio.
+ * @param {number} quantity - Cantidad de productos o servicios.
+ * @returns {{ unitPrice: number; quantity: number; amount: number }}
+ *   Objeto con el precio unitario, la cantidad y el monto total.
+ */
+export function calculateAmount(unitPrice: number, quantity: number) {
+  const unitPriceDecimal = new Decimal(unitPrice);
+  const quantityDecimal = new Decimal(quantity);
 
-  const taxesDecimal = subtotalDecimal.times(rateDecimal);
-  const totalDecimal = subtotalDecimal.plus(taxesDecimal);
+  const amountDecimal = unitPriceDecimal.times(quantityDecimal);
 
   return {
-    subtotal: Number(subtotalDecimal.toFixed(2)),
-    taxes: Number(taxesDecimal.toFixed(2)),
-    total: Number(totalDecimal.toFixed(2)),
+    unitPrice: Number(unitPriceDecimal.toFixed(2)),
+    quantity: Number(quantityDecimal.toFixed(2)),
+    amount: Number(amountDecimal.toFixed(2)),
   };
 }

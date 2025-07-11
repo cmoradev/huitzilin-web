@@ -98,12 +98,9 @@ export class DebitFormDialogComponent {
       validators: [Validators.required, Validators.min(1)],
       nonNullable: true,
     }),
-    withTax: this.formTools.builder.control<boolean>(
-      this._globalStateService.activity?.withTax ?? false,
-      {
-        nonNullable: true,
-      }
-    ),
+    withTax: this.formTools.builder.control<boolean>(true, {
+      nonNullable: true,
+    }),
     state: this.formTools.builder.control<DebitState>(DebitState.Debt, {
       validators: [Validators.required],
       nonNullable: true,
@@ -151,7 +148,6 @@ export class DebitFormDialogComponent {
 
   public async submit(): Promise<void> {
     if (this.formGroup.valid) {
-      
       const values = this.formGroup.getRawValue();
 
       const { amount: _, ...payload } = values;

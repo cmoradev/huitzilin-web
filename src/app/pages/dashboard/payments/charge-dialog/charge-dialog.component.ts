@@ -1,7 +1,7 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { FormToolsService, PosService } from '@services';
 import {
@@ -23,6 +23,7 @@ import {
 import Decimal from 'decimal.js';
 import { MatError } from '@angular/material/form-field';
 import { id } from 'date-fns/locale';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-charge-dialog',
@@ -41,7 +42,11 @@ import { id } from 'date-fns/locale';
 })
 export class ChargeDialogComponent implements OnInit {
   private readonly pos = inject(PosService);
+  private readonly _snackBar = inject(MatSnackBar);
   private readonly _createIncomes = inject(CreateIncomesGQL);
+  private readonly _dialogRef = inject(
+    MatDialogRef<ChargeDialogComponent>
+  );
 
   public readonly formTools = inject(FormToolsService);
 
@@ -116,20 +121,15 @@ export class ChargeDialogComponent implements OnInit {
           bank: payment.bank,
         }));
 
-        const concepts: CreateConcept[] = this.pos.debits.map((debit) => ({
-          description: debit.description,
-          amount: debit.amount,
-          discount: debit.discount,
-          quantity: debit.quantity,
-          unitPrice: debit.unitPrice,
-          subtotal: debit.subtotal,
-          taxes: debit.taxes,
-          total: debit.total,
-          withTax: debit.withTax,
-          discounts: debit.discounts.map((discount) => ({
+        const concepts: CreateConcept[] = this.pos.concepts.map((concept) => ({
+          description: concept.description,
+          debitId: concept.debitId,
+          quantity: concept.quantity,
+          unitPrice: concept.unitPrice,
+          withTax: concept.withTax,
+          discounts: concept.discounts.map((discount) => ({
             id: discount.id,
           })),
-          debitId: debit.id,
         }));
 
         this._createIncomes
@@ -142,10 +142,16 @@ export class ChargeDialogComponent implements OnInit {
           .subscribe({
             next: (data) => {
               this.loading.set(false);
-              console.log(
-                'Incomes created successfully:',
-                data.data?.createIncomes
+              this._snackBar.open(
+                'Se han creado los ingresos correctamente',
+                'Cerrar',
+                {
+                  duration: 3000,
+                  horizontalPosition: 'center',
+                  verticalPosition: 'bottom',
+                }
               );
+              this._dialogRef.close(data.data?.createIncomes);
             },
             error: (error) => {
               this.loading.set(false);

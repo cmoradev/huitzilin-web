@@ -17,7 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 import {
   calculateAmountFromUnitPriceAndQuantity,
-  calculateDiscountFromAmountAndDiscounts,
+  calculateSubtotalAndDiscount,
   calculateTaxesFromSubtotal,
   TaxEnum,
 } from '@calculations';
@@ -96,8 +96,10 @@ export class DebitWithDiscountFormComponent implements OnInit {
           const discounts = this.formGroup.get('discounts')?.value;
           const amount = this.formGroup.get('amount')?.value;
 
-          const { discount, subtotal } =
-            calculateDiscountFromAmountAndDiscounts(amount, discounts);
+          const { discount, subtotal } = calculateSubtotalAndDiscount(
+            amount,
+            discounts
+          );
 
           this.formGroup.get('discount')?.setValue(discount);
 
