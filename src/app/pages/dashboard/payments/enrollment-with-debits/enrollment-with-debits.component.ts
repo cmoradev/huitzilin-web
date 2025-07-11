@@ -75,7 +75,7 @@ export class EnrollmentWithDebitsComponent implements OnInit {
       const params: GetDebitsPageQueryVariables = {
         filter: {
           enrollmentId: { eq: this.enrollment().id },
-          state: { in: [DebitState.Debt, DebitState.PartiallyPaid] },
+          state: { eq: DebitState.Debt },
         },
         limit,
         offset,

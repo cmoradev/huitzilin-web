@@ -44,8 +44,11 @@ export class PaymentsComponent implements OnInit {
   }
 
   public refresh() {
+    console.log('Refreshing enrollments...');
     this.enrollments.set([]);
-    this._fetchAllEnrollments();
+    setTimeout(() => {
+      this._fetchAllEnrollments();
+    }, 50);
   }
 
   private _fetchAllEnrollments(
