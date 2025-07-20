@@ -75,7 +75,7 @@ export class DebitWithDiscountFormComponent implements OnInit {
           const unitPrice = this.formGroup.get('unitPrice')!.value;
           const quantity = this.formGroup.get('quantity')!.value;
 
-          if (unitPrice === null || quantity === null) {
+          if (unitPrice !== undefined && quantity !== undefined) {
             const amount = calculateAmountFromUnitPriceAndQuantity(
               unitPrice,
               quantity
@@ -108,7 +108,7 @@ export class DebitWithDiscountFormComponent implements OnInit {
         },
       });
 
-    this.subtotal$.pipe(startWith(0)).subscribe({
+    merge(this.formGroup.get('withTax')!.valueChanges, this.subtotal$).pipe(startWith(0)).subscribe({
       next: () => {
         const withTax = this.formGroup.get('withTax')?.value ?? false;
 
