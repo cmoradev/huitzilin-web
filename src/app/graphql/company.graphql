@@ -2,6 +2,10 @@ fragment BranchParts on Branch {
   id,
   name,
   picture,
+  clipAccounts {
+    id,
+    name
+  }
 }
 
 mutation createOneBranch ($branch: CreateBranch!) {

@@ -3581,14 +3581,14 @@ export type DeleteOneClipAccountMutationVariables = Exact<{
 
 export type DeleteOneClipAccountMutation = { __typename?: 'Mutation', deleteOneClipAccount: { __typename?: 'ClipAccountDeleteResponse', id?: string | null } };
 
-export type BranchPartsFragment = { __typename?: 'Branch', id: string, name: string, picture: string };
+export type BranchPartsFragment = { __typename?: 'Branch', id: string, name: string, picture: string, clipAccounts: Array<{ __typename?: 'ClipAccount', id: string, name: string }> };
 
 export type CreateOneBranchMutationVariables = Exact<{
   branch: CreateBranch;
 }>;
 
 
-export type CreateOneBranchMutation = { __typename?: 'Mutation', createOneBranch: { __typename?: 'Branch', id: string, name: string, picture: string } };
+export type CreateOneBranchMutation = { __typename?: 'Mutation', createOneBranch: { __typename?: 'Branch', id: string, name: string, picture: string, clipAccounts: Array<{ __typename?: 'ClipAccount', id: string, name: string }> } };
 
 export type GetCompaniesPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -3597,7 +3597,7 @@ export type GetCompaniesPageQueryVariables = Exact<{
 }>;
 
 
-export type GetCompaniesPageQuery = { __typename?: 'Query', branches: { __typename?: 'BranchConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Branch', id: string, name: string, picture: string }> } };
+export type GetCompaniesPageQuery = { __typename?: 'Query', branches: { __typename?: 'BranchConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Branch', id: string, name: string, picture: string, clipAccounts: Array<{ __typename?: 'ClipAccount', id: string, name: string }> }> } };
 
 export type UpdateOneBranchMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3605,7 +3605,7 @@ export type UpdateOneBranchMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneBranchMutation = { __typename?: 'Mutation', updateOneBranch: { __typename?: 'Branch', id: string, name: string, picture: string } };
+export type UpdateOneBranchMutation = { __typename?: 'Mutation', updateOneBranch: { __typename?: 'Branch', id: string, name: string, picture: string, clipAccounts: Array<{ __typename?: 'ClipAccount', id: string, name: string }> } };
 
 export type DeleteOneBranchMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4111,6 +4111,10 @@ export const BranchPartsFragmentDoc = gql`
   id
   name
   picture
+  clipAccounts {
+    id
+    name
+  }
 }
     `;
 export const CyclePartsFragmentDoc = gql`
