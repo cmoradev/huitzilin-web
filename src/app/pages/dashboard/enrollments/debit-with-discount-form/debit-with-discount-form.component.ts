@@ -1,5 +1,5 @@
 import { CurrencyPipe, JsonPipe } from '@angular/common';
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, output, signal } from '@angular/core';
 import {
   FormArray,
   FormGroup,
@@ -48,6 +48,8 @@ import { toObservable } from '@angular/core/rxjs-interop';
 })
 export class DebitWithDiscountFormComponent implements OnInit {
   @Input({ required: true }) formGroup!: FormGroup;
+
+  public remove = output<void>();
 
   private readonly _dialog = inject(MatDialog);
   private readonly _formTools = inject(FormToolsService);
@@ -135,6 +137,11 @@ export class DebitWithDiscountFormComponent implements OnInit {
         }
       },
     });
+  }
+
+  public removeWidget(event: MouseEvent): void {
+    event.stopPropagation();
+    this.remove.emit();
   }
 
   public get discounts(): FormArray<FormGroup> {

@@ -17,7 +17,7 @@
 
     <mat-accordion multi formArrayName="debits">
       @for (debitFormGroup of debits.controls; track $index + debitFormGroup.get('description')?.value) {
-      <app-debit-with-discount-form [formGroup]="debitFormGroup" />
+      <app-debit-with-discount-form [formGroup]="debitFormGroup" (remove)="removeDebit($index)" />
       }
     </mat-accordion>
   </form>
