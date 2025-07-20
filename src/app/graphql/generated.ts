@@ -3548,6 +3548,39 @@ export type UpdateOneUserMutationVariables = Exact<{
 
 export type UpdateOneUserMutation = { __typename?: 'Mutation', updateOneUser: { __typename?: 'User', id: string } };
 
+export type ClipAccountPartsFragment = { __typename?: 'ClipAccount', id: string, name: string };
+
+export type CreateOneClipAccountMutationVariables = Exact<{
+  account: CreateClipAccount;
+}>;
+
+
+export type CreateOneClipAccountMutation = { __typename?: 'Mutation', createOneClipAccount: { __typename?: 'ClipAccount', id: string, name: string } };
+
+export type GetClipAccountsPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<ClipAccountFilter>;
+}>;
+
+
+export type GetClipAccountsPageQuery = { __typename?: 'Query', clipAccounts: { __typename?: 'ClipAccountConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'ClipAccount', id: string, name: string }> } };
+
+export type UpdateOneClipAccountMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateClipAccount;
+}>;
+
+
+export type UpdateOneClipAccountMutation = { __typename?: 'Mutation', updateOneClipAccount: { __typename?: 'ClipAccount', id: string, name: string } };
+
+export type DeleteOneClipAccountMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneClipAccountMutation = { __typename?: 'Mutation', deleteOneClipAccount: { __typename?: 'ClipAccountDeleteResponse', id?: string | null } };
+
 export type BranchPartsFragment = { __typename?: 'Branch', id: string, name: string, picture: string };
 
 export type CreateOneBranchMutationVariables = Exact<{
@@ -4067,6 +4100,12 @@ export const SessionPartsFragmentDoc = gql`
   iat
 }
     `;
+export const ClipAccountPartsFragmentDoc = gql`
+    fragment ClipAccountParts on ClipAccount {
+  id
+  name
+}
+    `;
 export const BranchPartsFragmentDoc = gql`
     fragment BranchParts on Branch {
   id
@@ -4326,6 +4365,85 @@ export const UpdateOneUserDocument = gql`
   })
   export class UpdateOneUserGQL extends Apollo.Mutation<UpdateOneUserMutation, UpdateOneUserMutationVariables> {
     document = UpdateOneUserDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneClipAccountDocument = gql`
+    mutation createOneClipAccount($account: CreateClipAccount!) {
+  createOneClipAccount(input: {clipAccount: $account}) {
+    ...ClipAccountParts
+  }
+}
+    ${ClipAccountPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneClipAccountGQL extends Apollo.Mutation<CreateOneClipAccountMutation, CreateOneClipAccountMutationVariables> {
+    document = CreateOneClipAccountDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetClipAccountsPageDocument = gql`
+    query getClipAccountsPage($offset: Int = 0, $limit: Int = 10, $filter: ClipAccountFilter = {}) {
+  clipAccounts(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...ClipAccountParts
+    }
+  }
+}
+    ${ClipAccountPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetClipAccountsPageGQL extends Apollo.Query<GetClipAccountsPageQuery, GetClipAccountsPageQueryVariables> {
+    document = GetClipAccountsPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneClipAccountDocument = gql`
+    mutation updateOneClipAccount($id: ID!, $update: UpdateClipAccount!) {
+  updateOneClipAccount(input: {id: $id, update: $update}) {
+    ...ClipAccountParts
+  }
+}
+    ${ClipAccountPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneClipAccountGQL extends Apollo.Mutation<UpdateOneClipAccountMutation, UpdateOneClipAccountMutationVariables> {
+    document = UpdateOneClipAccountDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneClipAccountDocument = gql`
+    mutation deleteOneClipAccount($id: ID!) {
+  deleteOneClipAccount(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneClipAccountGQL extends Apollo.Mutation<DeleteOneClipAccountMutation, DeleteOneClipAccountMutationVariables> {
+    document = DeleteOneClipAccountDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

@@ -64,4 +64,9 @@ export const DashboardRoutes: Routes = [
     loadComponent: () =>
       import('./branches/branches.component').then((m) => m.BranchsComponent),
   },
+  {
+    path: 'clip-accounts',
+    loadComponent: () =>
+      import('./clip-accounts/clip-accounts.component').then((m) => m.ClipAccountsComponent),
+  },
 ];

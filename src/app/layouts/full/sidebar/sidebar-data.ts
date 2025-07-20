@@ -71,6 +71,12 @@ export const navItems: RouteItem[] = [
     route: '/cycles',
     section: NavigationEnum.DEVELOPER,
   },
+    {
+    displayName: 'Cuentas clip',
+    iconName: 'cash',
+    route: '/clip-accounts',
+    section: NavigationEnum.DEVELOPER,
+  },
 ];
 
 export type RouteItem = {

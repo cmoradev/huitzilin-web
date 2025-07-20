@@ -1,0 +1,51 @@
+fragment ClipAccountParts on ClipAccount {
+  id,
+  name,
+}
+
+mutation createOneClipAccount ($account: CreateClipAccount!) {
+  createOneClipAccount (
+    input: {
+      clipAccount: $account
+    }
+  ) {
+    ...ClipAccountParts
+  }
+}
+
+query getClipAccountsPage ($offset: Int = 0, $limit: Int = 10, $filter: ClipAccountFilter = {})  {
+  clipAccounts (
+    paging: { limit: $limit, offset: $offset },
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...ClipAccountParts
+    }
+  }
+}
+
+mutation updateOneClipAccount ($id: ID!, $update: UpdateClipAccount!) {
+  updateOneClipAccount (
+    input: {
+      id: $id,
+      update: $update
+    }
+  ) {
+    ...ClipAccountParts
+  }
+}
+
+mutation deleteOneClipAccount ($id: ID!) {
+	deleteOneClipAccount (
+    input: {
+      id: $id
+    }
+  ) {
+    id
+  }
+}
