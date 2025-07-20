@@ -18,7 +18,7 @@ import { DisciplineDeleteDialogComponent } from './discipline-delete-dialog/disc
 import { DisciplineFormDialogComponent } from './discipline-form-dialog/discipline-form-dialog.component';
 import { NgClass } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
-import { RouterLink } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-disciplines',
@@ -31,8 +31,8 @@ import { RouterLink } from '@angular/router';
     MatInputModule,
     MatIconModule,
     MatPaginatorModule,
+    MatTooltipModule,
     ReactiveFormsModule,
-    RouterLink
   ],
   templateUrl: './disciplines.component.html',
   styles: ``,

@@ -42,6 +42,12 @@ export const navItems: RouteItem[] = [
     section: NavigationEnum.ADMINISTRATION,
   },
   {
+    displayName: 'Calendario',
+    iconName: 'calendar-multiselect',
+    route: '/calendars',
+    section: NavigationEnum.ADMINISTRATION,
+  },
+  {
     displayName: 'Precios',
     iconName: 'currency-usd',
     route: '/prices',
