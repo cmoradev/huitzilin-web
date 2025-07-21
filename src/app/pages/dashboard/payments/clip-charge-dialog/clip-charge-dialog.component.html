@@ -1,0 +1,13 @@
+<h2 mat-dialog-title>
+    Crear un link de cobro
+</h2>
+<mat-dialog-content>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
+  <button mat-button cdkFocusInitial [disabled]="loading()" (click)="generateLink()">
+    {{ loading() ? "Generando link..." : "Generar link" }}
+  </button>
+</mat-dialog-actions>

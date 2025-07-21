@@ -13,7 +13,7 @@ import {
 
 import { CurrencyPipe } from '@angular/common';
 import { ChargeFormComponent } from '../charge-form/charge-form.component';
-import { debounceTime, filter, map } from 'rxjs';
+import { debounceTime } from 'rxjs';
 import {
   FormArray,
   FormGroup,
@@ -22,7 +22,6 @@ import {
 } from '@angular/forms';
 import Decimal from 'decimal.js';
 import { MatError } from '@angular/material/form-field';
-import { id } from 'date-fns/locale';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

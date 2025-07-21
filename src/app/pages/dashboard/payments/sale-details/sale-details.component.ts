@@ -7,6 +7,7 @@ import { DebitPartsFragment } from '@graphql';
 import { Concept, PosService } from '@services';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { ChargeDialogComponent } from '../charge-dialog/charge-dialog.component';
+import { ClipChargeDialogComponent } from '../clip-charge-dialog/clip-charge-dialog.component';
 
 @Component({
   selector: 'app-sale-details',
@@ -49,6 +50,21 @@ export class SaleDetailsComponent {
     });
   }
 
+  public openClipChargeDialog() {
+    const dislog$ = this._dialog.open(ClipChargeDialogComponent, {
+      width: '30rem',
+    });
+
+    dislog$.afterClosed().subscribe({
+      next: (result) => {
+        if (result) {
+          this._pos.clearConcepts();
+          this.refresh.emit();
+        }
+      },
+    });
+  }
+
   public openChargeDialog() {
     const dislog$ = this._dialog.open(ChargeDialogComponent, {
       width: '30rem',
@@ -61,7 +77,7 @@ export class SaleDetailsComponent {
           this.refresh.emit();
         }
       },
-    })
+    });
   }
 
   /** Checks whether an element is expanded. */

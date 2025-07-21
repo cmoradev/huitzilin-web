@@ -10,7 +10,7 @@ import {
   GetCurrentEnrollmentsPageGQL,
   GetEnrollmentsPageQueryVariables,
 } from '@graphql';
-import { GlobalStateService } from '@services';
+import { GlobalStateService, PosService } from '@services';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { map, merge } from 'rxjs';
 import { EnrollmentWithDebitsComponent } from './enrollment-with-debits/enrollment-with-debits.component';
@@ -33,18 +33,20 @@ import { SaleDetailsComponent } from './sale-details/sale-details.component';
 export class PaymentsComponent implements OnInit {
   private readonly _globalState = inject(GlobalStateService);
   private readonly _getEnrollmentsPage = inject(GetCurrentEnrollmentsPageGQL);
+  private readonly _pos = inject(PosService);
 
   public enrollments = signal<CurrentEnrollmentPartsFragment[]>([]);
   public loading = signal<boolean>(true);
 
   ngOnInit(): void {
+    this._pos.clearConcepts();
+
     merge(this._globalState.student$, this._globalState.cycle$).subscribe({
       next: () => this._fetchAllEnrollments(),
     });
   }
 
   public refresh() {
-    console.log('Refreshing enrollments...');
     this.enrollments.set([]);
     setTimeout(() => {
       this._fetchAllEnrollments();

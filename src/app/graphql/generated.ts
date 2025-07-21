@@ -392,6 +392,10 @@ export type CreateLevel = {
   order: Scalars['Float']['input'];
 };
 
+export type CreateLinkIncome = {
+  concepts?: InputMaybe<Array<CreateConcept>>;
+};
+
 export type CreateManyClipAccountsInput = {
   /** Array of records to create */
   clipAccounts: Array<CreateClipAccount>;
@@ -1482,6 +1486,7 @@ export type Mutation = {
   addBranchsToStudent: Student;
   addStudentsToDocument: Document;
   createIncomes: Array<Income>;
+  createLinkIncomes: Array<Income>;
   createManyClipAccounts: Array<ClipAccount>;
   createManyDebits: Array<Debit>;
   createManyDiscounts: Array<Discount>;
@@ -1609,6 +1614,11 @@ export type MutationAddStudentsToDocumentArgs = {
 
 export type MutationCreateIncomesArgs = {
   input: CreateIncome;
+};
+
+
+export type MutationCreateLinkIncomesArgs = {
+  input: CreateLinkIncome;
 };
 
 
@@ -3844,6 +3854,13 @@ export type CreateIncomesMutationVariables = Exact<{
 
 export type CreateIncomesMutation = { __typename?: 'Mutation', createIncomes: Array<{ __typename?: 'Income', id: string, folio: number }> };
 
+export type CreateLinkIncomesMutationVariables = Exact<{
+  input: CreateLinkIncome;
+}>;
+
+
+export type CreateLinkIncomesMutation = { __typename?: 'Mutation', createLinkIncomes: Array<{ __typename?: 'Income', id: string, folio: number }> };
+
 export type LevelPartsFragment = { __typename?: 'Level', id: string, name: string, abbreviation: string, order: number };
 
 export type CreateOneLevelMutationVariables = Exact<{
@@ -5093,6 +5110,25 @@ export const CreateIncomesDocument = gql`
   })
   export class CreateIncomesGQL extends Apollo.Mutation<CreateIncomesMutation, CreateIncomesMutationVariables> {
     document = CreateIncomesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateLinkIncomesDocument = gql`
+    mutation createLinkIncomes($input: CreateLinkIncome!) {
+  createLinkIncomes(input: $input) {
+    id
+    folio
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateLinkIncomesGQL extends Apollo.Mutation<CreateLinkIncomesMutation, CreateLinkIncomesMutationVariables> {
+    document = CreateLinkIncomesDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
