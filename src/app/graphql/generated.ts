@@ -392,6 +392,10 @@ export type CreateLevel = {
   order: Scalars['Float']['input'];
 };
 
+export type CreateLinkIncome = {
+  concepts?: InputMaybe<Array<CreateConcept>>;
+};
+
 export type CreateManyClipAccountsInput = {
   /** Array of records to create */
   clipAccounts: Array<CreateClipAccount>;
@@ -1482,6 +1486,7 @@ export type Mutation = {
   addBranchsToStudent: Student;
   addStudentsToDocument: Document;
   createIncomes: Array<Income>;
+  createLinkIncomes: Array<Income>;
   createManyClipAccounts: Array<ClipAccount>;
   createManyDebits: Array<Debit>;
   createManyDiscounts: Array<Discount>;
@@ -1609,6 +1614,11 @@ export type MutationAddStudentsToDocumentArgs = {
 
 export type MutationCreateIncomesArgs = {
   input: CreateIncome;
+};
+
+
+export type MutationCreateLinkIncomesArgs = {
+  input: CreateLinkIncome;
 };
 
 
@@ -3548,14 +3558,47 @@ export type UpdateOneUserMutationVariables = Exact<{
 
 export type UpdateOneUserMutation = { __typename?: 'Mutation', updateOneUser: { __typename?: 'User', id: string } };
 
-export type BranchPartsFragment = { __typename?: 'Branch', id: string, name: string, picture: string };
+export type ClipAccountPartsFragment = { __typename?: 'ClipAccount', id: string, name: string };
+
+export type CreateOneClipAccountMutationVariables = Exact<{
+  account: CreateClipAccount;
+}>;
+
+
+export type CreateOneClipAccountMutation = { __typename?: 'Mutation', createOneClipAccount: { __typename?: 'ClipAccount', id: string, name: string } };
+
+export type GetClipAccountsPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<ClipAccountFilter>;
+}>;
+
+
+export type GetClipAccountsPageQuery = { __typename?: 'Query', clipAccounts: { __typename?: 'ClipAccountConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'ClipAccount', id: string, name: string }> } };
+
+export type UpdateOneClipAccountMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateClipAccount;
+}>;
+
+
+export type UpdateOneClipAccountMutation = { __typename?: 'Mutation', updateOneClipAccount: { __typename?: 'ClipAccount', id: string, name: string } };
+
+export type DeleteOneClipAccountMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneClipAccountMutation = { __typename?: 'Mutation', deleteOneClipAccount: { __typename?: 'ClipAccountDeleteResponse', id?: string | null } };
+
+export type BranchPartsFragment = { __typename?: 'Branch', id: string, name: string, picture: string, clipAccounts: Array<{ __typename?: 'ClipAccount', id: string, name: string }> };
 
 export type CreateOneBranchMutationVariables = Exact<{
   branch: CreateBranch;
 }>;
 
 
-export type CreateOneBranchMutation = { __typename?: 'Mutation', createOneBranch: { __typename?: 'Branch', id: string, name: string, picture: string } };
+export type CreateOneBranchMutation = { __typename?: 'Mutation', createOneBranch: { __typename?: 'Branch', id: string, name: string, picture: string, clipAccounts: Array<{ __typename?: 'ClipAccount', id: string, name: string }> } };
 
 export type GetCompaniesPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -3564,7 +3607,7 @@ export type GetCompaniesPageQueryVariables = Exact<{
 }>;
 
 
-export type GetCompaniesPageQuery = { __typename?: 'Query', branches: { __typename?: 'BranchConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Branch', id: string, name: string, picture: string }> } };
+export type GetCompaniesPageQuery = { __typename?: 'Query', branches: { __typename?: 'BranchConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Branch', id: string, name: string, picture: string, clipAccounts: Array<{ __typename?: 'ClipAccount', id: string, name: string }> }> } };
 
 export type UpdateOneBranchMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3572,7 +3615,7 @@ export type UpdateOneBranchMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneBranchMutation = { __typename?: 'Mutation', updateOneBranch: { __typename?: 'Branch', id: string, name: string, picture: string } };
+export type UpdateOneBranchMutation = { __typename?: 'Mutation', updateOneBranch: { __typename?: 'Branch', id: string, name: string, picture: string, clipAccounts: Array<{ __typename?: 'ClipAccount', id: string, name: string }> } };
 
 export type DeleteOneBranchMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3810,6 +3853,13 @@ export type CreateIncomesMutationVariables = Exact<{
 
 
 export type CreateIncomesMutation = { __typename?: 'Mutation', createIncomes: Array<{ __typename?: 'Income', id: string, folio: number }> };
+
+export type CreateLinkIncomesMutationVariables = Exact<{
+  input: CreateLinkIncome;
+}>;
+
+
+export type CreateLinkIncomesMutation = { __typename?: 'Mutation', createLinkIncomes: Array<{ __typename?: 'Income', id: string, folio: number }> };
 
 export type LevelPartsFragment = { __typename?: 'Level', id: string, name: string, abbreviation: string, order: number };
 
@@ -4067,11 +4117,21 @@ export const SessionPartsFragmentDoc = gql`
   iat
 }
     `;
+export const ClipAccountPartsFragmentDoc = gql`
+    fragment ClipAccountParts on ClipAccount {
+  id
+  name
+}
+    `;
 export const BranchPartsFragmentDoc = gql`
     fragment BranchParts on Branch {
   id
   name
   picture
+  clipAccounts {
+    id
+    name
+  }
 }
     `;
 export const CyclePartsFragmentDoc = gql`
@@ -4326,6 +4386,85 @@ export const UpdateOneUserDocument = gql`
   })
   export class UpdateOneUserGQL extends Apollo.Mutation<UpdateOneUserMutation, UpdateOneUserMutationVariables> {
     document = UpdateOneUserDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneClipAccountDocument = gql`
+    mutation createOneClipAccount($account: CreateClipAccount!) {
+  createOneClipAccount(input: {clipAccount: $account}) {
+    ...ClipAccountParts
+  }
+}
+    ${ClipAccountPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneClipAccountGQL extends Apollo.Mutation<CreateOneClipAccountMutation, CreateOneClipAccountMutationVariables> {
+    document = CreateOneClipAccountDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetClipAccountsPageDocument = gql`
+    query getClipAccountsPage($offset: Int = 0, $limit: Int = 10, $filter: ClipAccountFilter = {}) {
+  clipAccounts(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...ClipAccountParts
+    }
+  }
+}
+    ${ClipAccountPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetClipAccountsPageGQL extends Apollo.Query<GetClipAccountsPageQuery, GetClipAccountsPageQueryVariables> {
+    document = GetClipAccountsPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneClipAccountDocument = gql`
+    mutation updateOneClipAccount($id: ID!, $update: UpdateClipAccount!) {
+  updateOneClipAccount(input: {id: $id, update: $update}) {
+    ...ClipAccountParts
+  }
+}
+    ${ClipAccountPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneClipAccountGQL extends Apollo.Mutation<UpdateOneClipAccountMutation, UpdateOneClipAccountMutationVariables> {
+    document = UpdateOneClipAccountDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneClipAccountDocument = gql`
+    mutation deleteOneClipAccount($id: ID!) {
+  deleteOneClipAccount(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneClipAccountGQL extends Apollo.Mutation<DeleteOneClipAccountMutation, DeleteOneClipAccountMutationVariables> {
+    document = DeleteOneClipAccountDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -4971,6 +5110,25 @@ export const CreateIncomesDocument = gql`
   })
   export class CreateIncomesGQL extends Apollo.Mutation<CreateIncomesMutation, CreateIncomesMutationVariables> {
     document = CreateIncomesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateLinkIncomesDocument = gql`
+    mutation createLinkIncomes($input: CreateLinkIncome!) {
+  createLinkIncomes(input: $input) {
+    id
+    folio
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateLinkIncomesGQL extends Apollo.Mutation<CreateLinkIncomesMutation, CreateLinkIncomesMutationVariables> {
+    document = CreateLinkIncomesDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

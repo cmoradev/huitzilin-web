@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>
+  {{ !!data?.id ? "Actualizar" : "Crear" }} ciclo escolar
+</h2>
+<mat-dialog-content>
+  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
+    <div class="flex flex-col gap-3">
+      <mat-form-field>
+        <mat-label>Nombre</mat-label>
+        <input
+          matInput
+          placeholder="Ej: contabilidad@example.com"
+          formControlName="name"
+        />
+        <mat-hint>Ingrese el nombre de la cuenta clip</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("name")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <p>
+        Puede dejar el campo de token vacío para no actualizarlo, o bien
+        ingresar un nuevo token para actualizarlo.
+      </p>
+
+      <p>
+        Puede obtener el token de autenticación de la cuenta clip
+        <a
+          href="https://developer.clip.mx/reference/token-de-autenticacion"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-primary font-bold"
+
+          >aquí</a
+        >
+      </p>
+
+      <mat-form-field>
+        <mat-label>Token</mat-label>
+        <input
+          matInput
+          placeholder="Ej: 1234567890abcdef"
+          formControlName="token"
+        />
+        <mat-hint>Ingrese el token de autenticación de la cuenta clip</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("token")) }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
+  <button mat-button cdkFocusInitial form="dataForm" [disabled]="loading()">
+    {{ loading() ? "Guardando..." : "Guardar" }}
+  </button>
+</mat-dialog-actions>

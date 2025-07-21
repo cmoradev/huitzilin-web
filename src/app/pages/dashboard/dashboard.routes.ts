@@ -40,9 +40,16 @@ export const DashboardRoutes: Routes = [
   },
   {
     path: 'disciplines',
-    loadChildren: () =>
-      import('./disciplines/disciplines.routes').then(
-        (m) => m.DisciplinesRoutes
+    loadComponent: () =>
+      import('./disciplines/disciplines.component').then(
+        (m) => m.DisciplinesComponent
+      ),
+  },
+  {
+    path: 'calendars',
+    loadComponent: () =>
+      import('./calendars/calendar-page.component').then(
+        (m) => m.CalendarPageComponent
       ),
   },
   {
@@ -56,5 +63,10 @@ export const DashboardRoutes: Routes = [
     path: 'branches',
     loadComponent: () =>
       import('./branches/branches.component').then((m) => m.BranchsComponent),
+  },
+  {
+    path: 'clip-accounts',
+    loadComponent: () =>
+      import('./clip-accounts/clip-accounts.component').then((m) => m.ClipAccountsComponent),
   },
 ];

@@ -1,45 +1,37 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { Validators, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
 import {
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogTitle,
-  MatDialogRef,
   MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
 } from '@angular/material/dialog';
-import {
-  MatError,
-  MatFormField,
-  MatHint,
-  MatLabel,
-} from '@angular/material/form-field';
-import { MatInput } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { ImagePickerComponent } from '@components/image-picker/image-picker.component';
 import {
   BranchPartsFragment,
   CreateOneBranchGQL,
   UpdateOneBranchGQL,
 } from '@graphql';
-import { FormToolsService, StorageService } from '@services';
+import {
+  ClipAccountToolsService,
+  FormToolsService,
+  StorageService,
+} from '@services';
 import { map, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-form-dialog',
   imports: [
-    MatDialogTitle,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
+    MatDialogModule,
     MatButton,
-    MatFormField,
-    MatInput,
-    MatHint,
-    MatError,
-    MatLabel,
+    MatFormFieldModule,
+    MatInputModule,
     ImagePickerComponent,
     ReactiveFormsModule,
+    MatSelectModule,
   ],
   templateUrl: './branch-form-dialog.component.html',
   styles: ``,
@@ -54,24 +46,44 @@ export class BranchFormDialogComponent implements OnInit {
   private readonly _createOneBranch = inject(CreateOneBranchGQL);
   private readonly _updateOneBranch = inject(UpdateOneBranchGQL);
 
-  private readonly _dialogRef = inject(
-    MatDialogRef<BranchFormDialogComponent>
-  );
+  private readonly _dialogRef = inject(MatDialogRef<BranchFormDialogComponent>);
+
+  public clipAccountTools = inject(ClipAccountToolsService);
 
   private previusPicture = '';
 
   public formGroup = this.formTools.builder.group({
-    picture: ['', [Validators.required]],
-    name: ['', [Validators.required, Validators.minLength(3)]],
+    picture: this.formTools.builder.control<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    name: this.formTools.builder.control<string>('', {
+      validators: [Validators.required, Validators.maxLength(16)],
+      nonNullable: true,
+    }),
+    clipAccountID: this.formTools.builder.control<string | null>(null, {
+      validators: [],
+      nonNullable: false,
+    }),
   });
 
   ngOnInit(): void {
+    this.clipAccountTools.fetchAll();
+
     if (!!this.data?.id) {
+      const clipAccount = this.data.clipAccounts.find(() => true);
+
       this.formGroup.get('picture')?.clearValidators();
+
       this.formGroup.patchValue({
         name: this.data.name,
         picture: this.data.picture,
       });
+
+      if (!!clipAccount) {
+        this.formGroup.get('clipAccountID')?.setValue(clipAccount.id);
+      }
+
       this.previusPicture = this.data.picture;
       this.formGroup.get('picture')?.updateValueAndValidity();
     }
@@ -128,7 +140,13 @@ export class BranchFormDialogComponent implements OnInit {
     return this._updateOneBranch
       .mutate({
         id: this.data!.id,
-        update: { ...values } as any,
+        update: {
+          name: values.name,
+          picture: values.picture,
+          clipAccounts: values?.clipAccountID
+            ? [{ id: values.clipAccountID }]
+            : [],
+        } as any,
       })
       .pipe(map((value) => value.data?.updateOneBranch));
   }
@@ -136,7 +154,15 @@ export class BranchFormDialogComponent implements OnInit {
   private _save(values: FormValues) {
     return this._storage.upload(values.picture).pipe(
       switchMap((picture) =>
-        this._createOneBranch.mutate({ branch: { ...values, picture } })
+        this._createOneBranch.mutate({
+          branch: {
+            picture,
+            name: values.name,
+            clipAccounts: values?.clipAccountID
+              ? [{ id: values.clipAccountID }]
+              : [],
+          },
+        })
       ),
       map((value) => value.data?.createOneBranch)
     );
@@ -146,4 +172,5 @@ export class BranchFormDialogComponent implements OnInit {
 type FormValues = {
   picture: File;
   name: string;
+  clipAccountID: string | null;
 };

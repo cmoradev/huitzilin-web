@@ -6,3 +6,12 @@ mutation createIncomes ($input: CreateIncome!) {
     folio
   }
 }
+
+mutation createLinkIncomes ($input: CreateLinkIncome!) {
+  createLinkIncomes (
+    input: $input
+  ) {
+    id
+    folio
+  }
+}

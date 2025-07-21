@@ -2,7 +2,10 @@
 <mat-dialog-content>
   <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
     <div class="flex flex-col gap-3">
-      <mat-checkbox formControlName="withTax" matTooltip="El IVA se aplica despues de los descuentos">
+      <mat-checkbox
+        formControlName="withTax"
+        matTooltip="El IVA se aplica despues de los descuentos"
+      >
         ¿Incluye IVA?
       </mat-checkbox>
 
@@ -63,36 +66,84 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Fecha del pago</mat-label>
-        <input
-          matInput
-          [matDatepicker]="datepicker"
-          formControlName="dueDate"
-        />
-        <mat-hint>Seleccione la fecha en que se realizará el pago</mat-hint>
-        <mat-datepicker-toggle
-          matIconSuffix
-          [for]="datepicker"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #datepicker> </mat-datepicker>
-        <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("dueDate")) }}
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Estado del adeudo</mat-label>
-        <mat-select formControlName="state">
-          @for (state of states; track $index) {
-          <mat-option [value]="state.value">{{ state.label }}</mat-option>
+      <mat-chip-set formArrayName="discounts">
+        @for (discountFormGroup of discounts.controls; track $index +
+        discountFormGroup.get('value')?.value) {
+        <mat-chip>
+          @if (discountFormGroup.get('type')?.value === 'PERCENTAGE') {
+          <span>- {{ discountFormGroup.get("value")?.value }} %</span>
+          } @else if (discountFormGroup.get('type')?.value === 'FIXED') {
+          <span
+            >-
+            {{ discountFormGroup.get("value")?.value | currency : "MXN" }}</span
+          >
           }
-        </mat-select>
-        <mat-hint>Seleccione el estado actual del adeudo</mat-hint>
-        <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("state")) }}
-        </mat-error>
-      </mat-form-field>
+
+          <button matChipRemove (click)="removeDiscount($index)">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip>
+        }
+
+        <mat-chip (click)="selectDebitDiscount()"> Agregar descuento </mat-chip>
+      </mat-chip-set>
+
+      <div class="grid grid-cols-2 gap-3">
+        <mat-form-field>
+          <mat-label>Fecha del pago</mat-label>
+          <input
+            matInput
+            [matDatepicker]="datepicker"
+            formControlName="dueDate"
+          />
+          <mat-hint>Seleccione la fecha de pago</mat-hint>
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="datepicker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #datepicker> </mat-datepicker>
+          <mat-error>
+            {{ formTools.checkForErrorsIn(formGroup.get("dueDate")) }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Estado del adeudo</mat-label>
+          <mat-select formControlName="state">
+            @for (state of states; track $index) {
+            <mat-option [value]="state.value">{{ state.label }}</mat-option>
+            }
+          </mat-select>
+          <mat-hint>Seleccione el estado actual</mat-hint>
+          <mat-error>
+            {{ formTools.checkForErrorsIn(formGroup.get("state")) }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="w-60 flex flex-col gap-2 ml-auto">
+      <div class="flex gap-2 w-full">
+        <p class="w-full text-right font-semibold">Importe</p>
+        <p class="w-full text-right">{{ amount() | currency : "MXN" }}</p>
+      </div>
+      <div class="flex gap-2 w-full">
+        <p class="w-full text-right font-semibold">Descuentos</p>
+        <p class="w-full text-right">
+          {{ this.formGroup.get("discount")?.value ?? 0 | currency : "MXN" }}
+        </p>
+      </div>
+      <div class="flex gap-2 w-full">
+        <p class="w-full text-right font-semibold">Subtotal</p>
+        <p class="w-full text-right">{{ subtotal() | currency : "MXN" }}</p>
+      </div>
+      <div class="flex gap-2 w-full">
+        <p class="w-full text-right font-semibold">IVA</p>
+        <p class="w-full text-right">{{ taxes() | currency : "MXN" }}</p>
+      </div>
+      <div class="flex gap-2 w-full">
+        <p class="w-full text-right font-semibold">Total</p>
+        <p class="w-full text-right">{{ total() | currency : "MXN" }}</p>
+      </div>
     </div>
   </form>
 </mat-dialog-content>

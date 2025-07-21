@@ -42,6 +42,12 @@ export const navItems: RouteItem[] = [
     section: NavigationEnum.ADMINISTRATION,
   },
   {
+    displayName: 'Calendario',
+    iconName: 'calendar-multiselect',
+    route: '/calendars',
+    section: NavigationEnum.ADMINISTRATION,
+  },
+  {
     displayName: 'Precios',
     iconName: 'currency-usd',
     route: '/prices',
@@ -63,6 +69,12 @@ export const navItems: RouteItem[] = [
     displayName: 'Ciclos',
     iconName: 'calendar-blank-outline',
     route: '/cycles',
+    section: NavigationEnum.DEVELOPER,
+  },
+    {
+    displayName: 'Cuentas clip',
+    iconName: 'cash',
+    route: '/clip-accounts',
     section: NavigationEnum.DEVELOPER,
   },
 ];

@@ -1,38 +1,29 @@
 import { NgClass } from '@angular/common';
 import { Component, inject, signal, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule, MatIconButton } from '@angular/material/button';
-import {
-  MatCard,
-  MatCardContent,
-  MatCardHeader,
-  MatCardModule,
-  MatCardTitle,
-} from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  MatFormField,
-  MatFormFieldModule,
-  MatLabel,
-  MatPrefix,
-} from '@angular/material/form-field';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
-import { MatInput, MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { MatTooltip, MatTooltipModule } from '@angular/material/tooltip';
-import { CycleFilter, CyclePartsFragment, GetCyclesPageGQL } from '@graphql';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import {
+  ClipAccountFilter,
+  ClipAccountPartsFragment,
+  GetClipAccountsPageGQL,
+} from '@graphql';
 import { debounceTime, merge, startWith } from 'rxjs';
-import { CycleFormDialogComponent } from './cycle-form-dialog/cycle-form-dialog.component';
-import { CycleDeleteDialogComponent } from './cycle-delete-dialog/cycle-delete-dialog.component';
-import { GlobalStateService } from '@services';
+import { ClipAccountFormDialogComponent } from './clip-account-form-dialog/clip-account-form-dialog.component';
+import { ClipAccountDeleteDialogComponent } from './clip-account-delete-dialog/clip-account-delete-dialog.component';
 
 @Component({
-  selector: 'app-cycles',
+  selector: 'app-clip-accounts',
   imports: [
     NgClass,
     MatCardModule,
-    MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -40,28 +31,26 @@ import { GlobalStateService } from '@services';
     MatTableModule,
     MatPaginatorModule,
     ReactiveFormsModule,
+    MatIconModule,
   ],
-  templateUrl: './cycles.component.html',
+  templateUrl: './clip-accounts.component.html',
   styles: ``,
 })
-export class CyclesComponent {
+export class ClipAccountsComponent {
   @ViewChild('paginator') public paginator!: MatPaginator;
   public searchControl = new FormControl('');
 
   public displayedColumns: string[] = ['name', 'actions'];
-  public dataSource = new MatTableDataSource<CyclePartsFragment>([]);
+  public dataSource = new MatTableDataSource<ClipAccountPartsFragment>([]);
 
   public loading = signal(false);
   public totalCount = signal(0);
 
   private readonly dialog = inject(MatDialog);
-  private readonly _cyclesPageGQL = inject(GetCyclesPageGQL);
+  private readonly _clipAccountsPageGQL = inject(GetClipAccountsPageGQL);
 
   ngAfterViewInit(): void {
-    merge(
-      this.paginator.page,
-      this.searchControl.valueChanges,
-    )
+    merge(this.paginator.page, this.searchControl.valueChanges)
       .pipe(debounceTime(300), startWith({}))
       .subscribe({
         next: () => {
@@ -71,29 +60,29 @@ export class CyclesComponent {
   }
 
   public openFormDialog(
-    value: CyclePartsFragment | undefined = undefined
+    value: ClipAccountPartsFragment | undefined = undefined
   ): void {
-    const $dialog = this.dialog.open(CycleFormDialogComponent, {
+    const $dialog = this.dialog.open(ClipAccountFormDialogComponent, {
       width: '30rem',
       data: value,
     });
 
     $dialog.afterClosed().subscribe({
-      next: (cycle) => {
-        if (cycle) this.refresh();
+      next: (account) => {
+        if (account) this.refresh();
       },
     });
   }
 
-  public openDeleteDialog(value: CyclePartsFragment): void {
-    const $dialog = this.dialog.open(CycleDeleteDialogComponent, {
+  public openDeleteDialog(value: ClipAccountPartsFragment): void {
+    const $dialog = this.dialog.open(ClipAccountDeleteDialogComponent, {
       data: value,
       width: '30rem',
     });
 
     $dialog.afterClosed().subscribe({
-      next: (cycle) => {
-        if (cycle) this.refresh();
+      next: (account) => {
+        if (account) this.refresh();
       },
     });
   }
@@ -102,11 +91,11 @@ export class CyclesComponent {
     const limit: number = this.paginator.pageSize;
     const offset: number = this.paginator.pageIndex * limit;
 
-    const filter: CycleFilter = {
+    const filter: ClipAccountFilter = {
       name: { iLike: `%${this.searchControl.value}%` },
     };
 
-    this._cyclesPageGQL
+    this._clipAccountsPageGQL
       .watch(
         { limit, offset, filter },
         {
@@ -117,7 +106,7 @@ export class CyclesComponent {
       )
       .valueChanges.subscribe({
         next: ({ data, loading }) => {
-          const { nodes, totalCount } = data.cycles;
+          const { nodes, totalCount } = data.clipAccounts;
 
           this.dataSource.data = nodes;
 

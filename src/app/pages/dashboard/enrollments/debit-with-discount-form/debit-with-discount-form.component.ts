@@ -1,5 +1,5 @@
 import { CurrencyPipe, JsonPipe } from '@angular/common';
-import { Component, inject, Input, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, output, signal } from '@angular/core';
 import {
   FormArray,
   FormGroup,
@@ -49,6 +49,8 @@ import { toObservable } from '@angular/core/rxjs-interop';
 export class DebitWithDiscountFormComponent implements OnInit {
   @Input({ required: true }) formGroup!: FormGroup;
 
+  public remove = output<void>();
+
   private readonly _dialog = inject(MatDialog);
   private readonly _formTools = inject(FormToolsService);
 
@@ -75,7 +77,7 @@ export class DebitWithDiscountFormComponent implements OnInit {
           const unitPrice = this.formGroup.get('unitPrice')!.value;
           const quantity = this.formGroup.get('quantity')!.value;
 
-          if (unitPrice === null || quantity === null) {
+          if (unitPrice !== undefined && quantity !== undefined) {
             const amount = calculateAmountFromUnitPriceAndQuantity(
               unitPrice,
               quantity
@@ -108,7 +110,7 @@ export class DebitWithDiscountFormComponent implements OnInit {
         },
       });
 
-    this.subtotal$.pipe(startWith(0)).subscribe({
+    merge(this.formGroup.get('withTax')!.valueChanges, this.subtotal$).pipe(startWith(0)).subscribe({
       next: () => {
         const withTax = this.formGroup.get('withTax')?.value ?? false;
 
@@ -135,6 +137,11 @@ export class DebitWithDiscountFormComponent implements OnInit {
         }
       },
     });
+  }
+
+  public removeWidget(event: MouseEvent): void {
+    event.stopPropagation();
+    this.remove.emit();
   }
 
   public get discounts(): FormArray<FormGroup> {

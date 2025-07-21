@@ -31,13 +31,11 @@ import {
   UpdateUser,
 } from '@graphql';
 import {
-  BranchState,
   BranchToolsService,
-  CycleState,
   CycleToolsService,
   GlobalStateService,
 } from '@services';
-import { debounceTime, startWith } from 'rxjs';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-global-state-settings',
