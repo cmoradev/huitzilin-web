@@ -60,10 +60,11 @@ export class GlobalStateService {
     } else {
       sessionStorage.removeItem(BRANCH_KEY);
     }
-    this._cycle.set(null);
+
     this._activity.set(null);
     this._enrollment.set(null);
     this._student.set(null);
+    this._period.set(null);
   }
 
   get activity(): PackagePartsFragment | null {
