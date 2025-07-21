@@ -169,11 +169,15 @@ export enum BranchSortFields {
 export type ClipAccount = {
   __typename?: 'ClipAccount';
   createdAt: Scalars['DateTime']['output'];
+  default: Scalars['String']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  error: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   name: Scalars['String']['output'];
+  success: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
+  webhook: Scalars['String']['output'];
 };
 
 export type ClipAccountConnection = {
@@ -189,11 +193,15 @@ export type ClipAccountConnection = {
 export type ClipAccountDeleteResponse = {
   __typename?: 'ClipAccountDeleteResponse';
   createdAt?: Maybe<Scalars['DateTime']['output']>;
+  default?: Maybe<Scalars['String']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  error?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   name?: Maybe<Scalars['String']['output']>;
+  success?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   version?: Maybe<Scalars['Int']['output']>;
+  webhook?: Maybe<Scalars['String']['output']>;
 };
 
 export type ClipAccountFilter = {
@@ -215,6 +223,70 @@ export enum ClipAccountSortFields {
   CreatedAt = 'createdAt',
   Id = 'id',
   Name = 'name',
+  UpdatedAt = 'updatedAt'
+}
+
+export type ClipLink = {
+  __typename?: 'ClipLink';
+  createdAt: Scalars['DateTime']['output'];
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  expiresAt: Scalars['DateTime']['output'];
+  id: Scalars['ID']['output'];
+  incomeId: Scalars['String']['output'];
+  link: Scalars['String']['output'];
+  qr: Scalars['String']['output'];
+  requestId: Scalars['String']['output'];
+  updatedAt: Scalars['DateTime']['output'];
+  version: Scalars['Int']['output'];
+};
+
+export type ClipLinkConnection = {
+  __typename?: 'ClipLinkConnection';
+  /** Array of nodes. */
+  nodes: Array<ClipLink>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type ClipLinkDeleteResponse = {
+  __typename?: 'ClipLinkDeleteResponse';
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  expiresAt?: Maybe<Scalars['DateTime']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  incomeId?: Maybe<Scalars['String']['output']>;
+  link?: Maybe<Scalars['String']['output']>;
+  qr?: Maybe<Scalars['String']['output']>;
+  requestId?: Maybe<Scalars['String']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
+};
+
+export type ClipLinkFilter = {
+  and?: InputMaybe<Array<ClipLinkFilter>>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  expiresAt?: InputMaybe<DateFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  incomeId?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<ClipLinkFilter>>;
+  requestId?: InputMaybe<StringFieldComparison>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type ClipLinkSort = {
+  direction: SortDirection;
+  field: ClipLinkSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum ClipLinkSortFields {
+  CreatedAt = 'createdAt',
+  ExpiresAt = 'expiresAt',
+  Id = 'id',
+  IncomeId = 'incomeId',
+  RequestId = 'requestId',
   UpdatedAt = 'updatedAt'
 }
 
@@ -299,8 +371,20 @@ export type CreateBranch = {
 };
 
 export type CreateClipAccount = {
+  default: Scalars['String']['input'];
+  error: Scalars['String']['input'];
   name: Scalars['String']['input'];
+  success: Scalars['String']['input'];
   token: Scalars['String']['input'];
+  webhook: Scalars['String']['input'];
+};
+
+export type CreateClipLink = {
+  expiresAt: Scalars['DateTime']['input'];
+  incomeId: Scalars['String']['input'];
+  link: Scalars['String']['input'];
+  qr: Scalars['String']['input'];
+  requestId: Scalars['String']['input'];
 };
 
 export type CreateConcept = {
@@ -429,6 +513,11 @@ export type CreateOneBranchInput = {
 export type CreateOneClipAccountInput = {
   /** The record to create */
   clipAccount: CreateClipAccount;
+};
+
+export type CreateOneClipLinkInput = {
+  /** The record to create */
+  clipLink: CreateClipLink;
 };
 
 export type CreateOneCycleInput = {
@@ -783,6 +872,11 @@ export type DeleteOneBranchInput = {
 };
 
 export type DeleteOneClipAccountInput = {
+  /** The id of the record to delete. */
+  id: Scalars['ID']['input'];
+};
+
+export type DeleteOneClipLinkInput = {
   /** The id of the record to delete. */
   id: Scalars['ID']['input'];
 };
@@ -1322,7 +1416,6 @@ export type Income = {
   __typename?: 'Income';
   amount: Scalars['Float']['output'];
   branchId: Scalars['String']['output'];
-  clipLink?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   discount: Scalars['Float']['output'];
@@ -1494,6 +1587,7 @@ export type Mutation = {
   createOneAction: Action;
   createOneBranch: Branch;
   createOneClipAccount: ClipAccount;
+  createOneClipLink: ClipLink;
   createOneCycle: Cycle;
   createOneDebit: Debit;
   createOneDiscipline: Discipline;
@@ -1512,6 +1606,7 @@ export type Mutation = {
   deleteOneAction: ActionDeleteResponse;
   deleteOneBranch: BranchDeleteResponse;
   deleteOneClipAccount: ClipAccountDeleteResponse;
+  deleteOneClipLink: ClipLinkDeleteResponse;
   deleteOneCycle: CycleDeleteResponse;
   deleteOneDebit: DebitDeleteResponse;
   deleteOneDiscipline: DisciplineDeleteResponse;
@@ -1583,6 +1678,7 @@ export type Mutation = {
   updateOneAction: Action;
   updateOneBranch: Branch;
   updateOneClipAccount: ClipAccount;
+  updateOneClipLink: ClipLink;
   updateOneCycle: Cycle;
   updateOneDebit: Debit;
   updateOneDiscipline: Discipline;
@@ -1654,6 +1750,11 @@ export type MutationCreateOneBranchArgs = {
 
 export type MutationCreateOneClipAccountArgs = {
   input: CreateOneClipAccountInput;
+};
+
+
+export type MutationCreateOneClipLinkArgs = {
+  input: CreateOneClipLinkInput;
 };
 
 
@@ -1744,6 +1845,11 @@ export type MutationDeleteOneBranchArgs = {
 
 export type MutationDeleteOneClipAccountArgs = {
   input: DeleteOneClipAccountInput;
+};
+
+
+export type MutationDeleteOneClipLinkArgs = {
+  input: DeleteOneClipLinkInput;
 };
 
 
@@ -2099,6 +2205,11 @@ export type MutationUpdateOneBranchArgs = {
 
 export type MutationUpdateOneClipAccountArgs = {
   input: UpdateOneClipAccountInput;
+};
+
+
+export type MutationUpdateOneClipLinkArgs = {
+  input: UpdateOneClipLinkInput;
 };
 
 
@@ -2502,6 +2613,8 @@ export type Query = {
   branches: BranchConnection;
   clipAccount: ClipAccount;
   clipAccounts: ClipAccountConnection;
+  clipLink: ClipLink;
+  clipLinks: ClipLinkConnection;
   concept: Concept;
   concepts: ConceptConnection;
   cycle: Cycle;
@@ -2574,6 +2687,18 @@ export type QueryClipAccountsArgs = {
   filter?: ClipAccountFilter;
   paging?: OffsetPaging;
   sorting?: Array<ClipAccountSort>;
+};
+
+
+export type QueryClipLinkArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryClipLinksArgs = {
+  filter?: ClipLinkFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<ClipLinkSort>;
 };
 
 
@@ -3231,8 +3356,20 @@ export type UpdateBranch = {
 };
 
 export type UpdateClipAccount = {
+  default?: InputMaybe<Scalars['String']['input']>;
+  error?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
+  success?: InputMaybe<Scalars['String']['input']>;
   token?: InputMaybe<Scalars['String']['input']>;
+  webhook?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateClipLink = {
+  expiresAt?: InputMaybe<Scalars['DateTime']['input']>;
+  incomeId?: InputMaybe<Scalars['String']['input']>;
+  link?: InputMaybe<Scalars['String']['input']>;
+  qr?: InputMaybe<Scalars['String']['input']>;
+  requestId?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type UpdateCount = {
@@ -3347,6 +3484,13 @@ export type UpdateOneClipAccountInput = {
   id: Scalars['ID']['input'];
   /** The update to apply. */
   update: UpdateClipAccount;
+};
+
+export type UpdateOneClipLinkInput = {
+  /** The id of the record to update */
+  id: Scalars['ID']['input'];
+  /** The update to apply. */
+  update: UpdateClipLink;
 };
 
 export type UpdateOneCycleInput = {
@@ -3558,14 +3702,14 @@ export type UpdateOneUserMutationVariables = Exact<{
 
 export type UpdateOneUserMutation = { __typename?: 'Mutation', updateOneUser: { __typename?: 'User', id: string } };
 
-export type ClipAccountPartsFragment = { __typename?: 'ClipAccount', id: string, name: string };
+export type ClipAccountPartsFragment = { __typename?: 'ClipAccount', id: string, name: string, webhook: string, deletedAt?: any | null, success: string, error: string, default: string };
 
 export type CreateOneClipAccountMutationVariables = Exact<{
   account: CreateClipAccount;
 }>;
 
 
-export type CreateOneClipAccountMutation = { __typename?: 'Mutation', createOneClipAccount: { __typename?: 'ClipAccount', id: string, name: string } };
+export type CreateOneClipAccountMutation = { __typename?: 'Mutation', createOneClipAccount: { __typename?: 'ClipAccount', id: string, name: string, webhook: string, deletedAt?: any | null, success: string, error: string, default: string } };
 
 export type GetClipAccountsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -3574,7 +3718,7 @@ export type GetClipAccountsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetClipAccountsPageQuery = { __typename?: 'Query', clipAccounts: { __typename?: 'ClipAccountConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'ClipAccount', id: string, name: string }> } };
+export type GetClipAccountsPageQuery = { __typename?: 'Query', clipAccounts: { __typename?: 'ClipAccountConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'ClipAccount', id: string, name: string, webhook: string, deletedAt?: any | null, success: string, error: string, default: string }> } };
 
 export type UpdateOneClipAccountMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3582,7 +3726,7 @@ export type UpdateOneClipAccountMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneClipAccountMutation = { __typename?: 'Mutation', updateOneClipAccount: { __typename?: 'ClipAccount', id: string, name: string } };
+export type UpdateOneClipAccountMutation = { __typename?: 'Mutation', updateOneClipAccount: { __typename?: 'ClipAccount', id: string, name: string, webhook: string, deletedAt?: any | null, success: string, error: string, default: string } };
 
 export type DeleteOneClipAccountMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4121,6 +4265,11 @@ export const ClipAccountPartsFragmentDoc = gql`
     fragment ClipAccountParts on ClipAccount {
   id
   name
+  webhook
+  deletedAt
+  success
+  error
+  default
 }
     `;
 export const BranchPartsFragmentDoc = gql`
