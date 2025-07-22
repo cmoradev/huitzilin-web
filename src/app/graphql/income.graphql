@@ -1,17 +1,25 @@
-mutation createIncomes ($input: CreateIncome!) {
-  createIncomes (
-    input: $input
-  ) {
+mutation createIncomes($input: CreateIncome!) {
+  createIncomes(input: $input) {
     id
     folio
   }
 }
 
-mutation createLinkIncomes ($input: CreateLinkIncome!) {
-  createLinkIncomes (
-    input: $input
-  ) {
-    id
-    folio
+fragment IncomeWithLinks on Income {
+  id
+  folio
+  pendingPayment
+  clipLinks {
+    amount
+    link
+    qr
+    expiresAt
+    requestId
+  }
+}
+
+mutation createLinkIncomes($input: CreateLinkIncome!) {
+  createLinkIncomes(input: $input) {
+    ...IncomeWithLinks
   }
 }
