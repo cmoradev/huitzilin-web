@@ -16,13 +16,13 @@
 
   <span class="flex-1"></span>
 
-  <!-- matTooltip="{{ debit().state | debitState }}" -->
   <mat-icon
     svgIcon="circle-medium"
+    [matTooltip]="nametag()"
     [ngClass]="{
-    '!text-yellow-600': debit().state === 'CANCELED' || debit().state === 'DEBT' || debit().state === 'CONDONED',
-    '!text-purple-800': debit().state === 'PARTIALLY_PAID',
-    '!text-green-800': debit().state === 'PAID',
+    '!text-yellow-600': isDebit() && !isDebitWithDelay(),
+    '!text-purple-800': isDebitPartiallyPaid(),
+    '!text-red-800': isDebitWithDelay(),
 }"
   ></mat-icon>
 </div>
