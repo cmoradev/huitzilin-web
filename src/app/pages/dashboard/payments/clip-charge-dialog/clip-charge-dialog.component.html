@@ -54,7 +54,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close [disabled]="loading()">Cerrar</button>
+  <button mat-button [disabled]="loading()" (click)="closeDialog()">Cerrar</button>
 
   @if (!created()) {
   <button

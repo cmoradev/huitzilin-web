@@ -6,7 +6,11 @@ import {
   calculateTotalFromBaseAndTax,
   TaxEnum,
 } from '@calculations';
-import { DebitPartsFragment, DiscountPartsFragment } from '@graphql';
+import {
+  DebitPartsFragment,
+  DebitState,
+  DiscountPartsFragment,
+} from '@graphql';
 import Decimal from 'decimal.js';
 
 @Injectable({
@@ -166,7 +170,21 @@ export class PosService {
       );
     }
 
-    return !diferenceTaxes;
+    const isPartiallyPaid = value.state === DebitState.PartiallyPaid;
+
+    if (isPartiallyPaid) {
+      this._snackBar.open(
+        'No se puede agregar un adeudo que ya está parcialmente pagado.',
+        'Cerrar',
+        {
+          duration: 3000,
+          panelClass: ['error-snackbar'],
+        }
+      );
+      return false;
+    }
+
+    return !diferenceTaxes && !isPartiallyPaid;
   }
 
   public clearConcepts() {

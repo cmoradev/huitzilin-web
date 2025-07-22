@@ -5,7 +5,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CurrentEnrollmentPartsFragment, DebitPartsFragment, DebitState } from '@graphql';
+import { DebitPartsFragment, DebitState } from '@graphql';
 import { isAfter } from 'date-fns'
 import { PosService } from '../../../../services/pos.service';
 
