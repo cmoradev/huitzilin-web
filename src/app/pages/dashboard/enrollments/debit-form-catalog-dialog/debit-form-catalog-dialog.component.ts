@@ -251,7 +251,7 @@ export class DebitFormCatalogDialogComponent implements OnInit {
           state: DebitState.Debt,
           dueDate: defaultDueDate,
           withTax: value.withTax,
-          frequency: Frequency.Single,
+          frequency: value.frequency,
         });
         break;
     }
