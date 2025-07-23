@@ -1,1 +1,92 @@
-<p>incomes works!</p>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Reporte de ingresos</mat-card-title>
+  </mat-card-header>
+  <mat-card-content class="min-h-[calc(100vh-10rem)]">
+    <div class="flex gap-2 mt-2 items-center">
+      <mat-form-field subscriptSizing="dynamic" class="max-w-lg w-full">
+        <mat-label> Rango de fechas </mat-label>
+        <mat-date-range-input [rangePicker]="datePicker">
+          <input matStartDate />
+          <input matEndDate />
+        </mat-date-range-input>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="datePicker"
+        ></mat-datepicker-toggle>
+        <mat-date-range-picker #datePicker></mat-date-range-picker>
+      </mat-form-field>
+
+      <span class="flex-1"></span>
+
+      <button
+        mat-icon-button
+        matTooltip="Refrescar"
+        (click)="refresh()"
+        [ngClass]="{ 'animate-spin': loading() }"
+      >
+        <mat-icon svgIcon="refresh" />
+      </button>
+    </div>
+    <mat-table [dataSource]="dataSource" class="mt-4">
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <!-- {{ element.name }} -->
+          <!-- <div class="flex items-center gap-2">
+            <mat-icon
+              svgIcon="drag"
+              class="cursor-move"
+              cdkDragHandle
+            ></mat-icon>
+
+            <div>
+              <p>
+                {{ element.name }}
+              </p>
+              <p class="text-gray-700">
+                {{ element.abbreviation }}
+              </p>
+            </div>
+          </div> -->
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>
+          <p class="w-full text-right!">Acciones</p>
+        </mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <!-- <div class="w-full text-right">
+            <button
+              mat-icon-button
+              matTooltip="Editar"
+              (click)="openFormDialog(element)"
+            >
+              <mat-icon svgIcon="pencil" />
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Eliminar"
+              (click)="openDeleteDialog(element)"
+            >
+              <mat-icon svgIcon="delete" class="!text-red-400" />
+            </button>
+          </div> -->
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
+
+    <mat-paginator
+      #paginator
+      [length]="totalCount()"
+      [pageSize]="10"
+      [pageSizeOptions]="[10, 25, 100]"
+    >
+    </mat-paginator>
+  </mat-card-content>
+</mat-card>
