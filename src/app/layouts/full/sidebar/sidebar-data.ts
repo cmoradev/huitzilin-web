@@ -30,6 +30,12 @@ export const navItems: RouteItem[] = [
     section: NavigationEnum.OPERATIONS,
   },
   {
+    displayName: 'Reportes',
+    iconName: 'database',
+    route: '/reports',
+    section: NavigationEnum.OPERATIONS,
+  },
+  {
     displayName: 'Niveles',
     iconName: 'magic-staff',
     route: '/levels',
@@ -71,7 +77,7 @@ export const navItems: RouteItem[] = [
     route: '/cycles',
     section: NavigationEnum.DEVELOPER,
   },
-    {
+  {
     displayName: 'Cuentas clip',
     iconName: 'cash',
     route: '/clip-accounts',
