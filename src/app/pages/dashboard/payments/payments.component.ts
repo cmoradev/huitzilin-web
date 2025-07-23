@@ -5,7 +5,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { StudentStateComponent } from '@components/student-state/student-state.component';
 import {
   CurrentEnrollmentPartsFragment,
-  EnrollmentPartsFragment,
   EnrollmentState,
   GetCurrentEnrollmentsPageGQL,
   GetEnrollmentsPageQueryVariables,
@@ -48,6 +47,7 @@ export class PaymentsComponent implements OnInit {
 
   public refresh() {
     this.enrollments.set([]);
+
     setTimeout(() => {
       this._fetchAllEnrollments();
     }, 50);

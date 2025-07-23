@@ -1,13 +1,69 @@
-<h2 mat-dialog-title>
-    Crear un link de cobro
-</h2>
+<h2 mat-dialog-title>Crear un link de cobro</h2>
 <mat-dialog-content>
+  <div class="grid grid-cols-1 gap-2">
+    <p>Genera un link de cobro para los conceptos seleccionados.</p>
 
+    <p>
+      Una vez generado, podrás compartirlo con tus clientes para facilitar el
+      proceso de pago.
+    </p>
+
+    <p><strong>Nota:</strong> El link de cobro es válido por 7 días.</p>
+
+    <p>
+      <strong>Nota:</strong> Se creará un link de cobro por cada segmento de
+      negocio.
+    </p>
+
+    <p>Enlaces</p>
+
+    <div class="">
+      @for (income of incomes(); track income.id) { @for (link of
+      income.clipLinks; track link.link) {
+      <div class="item">
+        <div>
+          <p>
+            <span class="font-medium">Folio:</span> {{ income.folio | folio }}
+          </p>
+          <p>
+            <span class="font-bold">Monto:</span>
+            {{ income.pendingPayment | currency : "MXN" }}
+          </p>
+        </div>
+        <span class="flex-1"></span>
+        <button
+          type="button"
+          mat-icon-button
+          matTooltip="Compartir enlace por WhatsApp"
+          (click)="shareLinkWhatsApp(link)"
+        >
+          <mat-icon svgIcon="share-variant" />
+        </button>
+        <a
+          mat-icon-button
+          [href]="link.link"
+          target="_blank"
+          matTooltip="Abrir enlace"
+        >
+          <mat-icon svgIcon="open-in-new" />
+        </a>
+      </div>
+      } }
+    </div>
+  </div>
 </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
-  <button mat-button cdkFocusInitial [disabled]="loading()" (click)="generateLink()">
+<mat-dialog-actions>
+  <button mat-button [disabled]="loading()" (click)="closeDialog()">Cerrar</button>
+
+  @if (!created()) {
+  <button
+    mat-button
+    cdkFocusInitial
+    [disabled]="loading()"
+    (click)="generateLink()"
+  >
     {{ loading() ? "Generando link..." : "Generar link" }}
   </button>
+  }
 </mat-dialog-actions>

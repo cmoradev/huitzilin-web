@@ -22,6 +22,7 @@
     "@angular/router": "^19.2.0",
     "@apollo/client": "^3.13.5",
     "@mdi/angular-material": "^7.2.96",
+    "@nestjs/mapped-types": "*",
     "@tailwindcss/postcss": "^4.0.14",
     "apollo-angular": "^10.0.3",
     "date-fns": "^4.1.0",

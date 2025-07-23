@@ -5,8 +5,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CurrentEnrollmentPartsFragment, DebitPartsFragment, DebitState } from '@graphql';
-import { isAfter } from 'date-fns'
+import { DebitPartsFragment, DebitState } from '@graphql';
+import { isAfter } from 'date-fns';
 import { PosService } from '../../../../services/pos.service';
 
 @Component({
@@ -27,6 +27,28 @@ export class ConceptOptionComponent implements OnInit {
   private readonly pos = inject(PosService);
 
   public debit = input.required<DebitPartsFragment>();
+
+  public isDebit = computed(() => this.debit().state === DebitState.Debt);
+  public isDebitPartiallyPaid = computed(
+    () => this.debit().state === DebitState.PartiallyPaid
+  );
+  public isDebitWithDelay = computed(() => {
+    const dueDate = new Date(this.debit().dueDate);
+
+    return this.isDebit() && isAfter(new Date(), dueDate);
+  });
+
+  public nametag = computed(() => {
+    if (this.isDebitWithDelay()) {
+      return 'Con retraso';
+    } else if (this.isDebitPartiallyPaid()) {
+      return 'Parcialmente Pagado';
+    } else if (this.isDebit()) {
+      return 'Deuda';
+    }
+    return 'Desconocido';
+  });
+
   public optionControl = new FormControl<boolean>(false);
 
   public stateTag = computed(() => {
@@ -50,7 +72,7 @@ export class ConceptOptionComponent implements OnInit {
     this.optionControl.setValue(this.pos.checkIsSelected(this.debit()));
 
     this.optionControl.valueChanges.subscribe({
-      next: (value) => this.toggleDebit(!!value)
+      next: (value) => this.toggleDebit(!!value),
     });
   }
 

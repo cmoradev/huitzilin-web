@@ -1,6 +1,11 @@
 fragment ClipAccountParts on ClipAccount {
   id,
   name,
+  webhook
+  deletedAt
+  success
+  error
+  default
 }
 
 mutation createOneClipAccount ($account: CreateClipAccount!) {

@@ -25,7 +25,7 @@ import { map } from 'rxjs';
     MatInputModule,
     MatDialogModule,
     ReactiveFormsModule,
-    MatButtonModule
+    MatButtonModule,
   ],
   templateUrl: './clip-account-form-dialog.component.html',
   styles: ``,
@@ -52,12 +52,32 @@ export class ClipAccountFormDialogComponent {
       validators: [Validators.required],
       nonNullable: true,
     }),
+    webhook: this.formTools.builder.control<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    default: this.formTools.builder.control<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    success: this.formTools.builder.control<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
+    error: this.formTools.builder.control<string>('', {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
   });
 
   ngOnInit(): void {
     if (!!this.data?.id) {
       this.formGroup.patchValue({
         name: this.data.name,
+        webhook: this.data.webhook,
+        success: this.data.success,
+        default: this.data.default,
+        error: this.data.error,
       });
 
       this.formGroup.get('token')?.clearValidators();
@@ -74,6 +94,7 @@ export class ClipAccountFormDialogComponent {
       if (!!this.data?.id) {
         const payload: UpdateClipAccount = {
           name: values.name,
+          
         };
 
         if (values.token !== '') {
