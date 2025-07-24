@@ -4,3 +4,4 @@ export * from './debit-state.pipe';
 export * from './packageKind.pipe';
 export * from './day-of-week.pipe';
 export * from './folio.pipe';
+export * from './method.pipe';

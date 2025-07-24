@@ -112,7 +112,7 @@ export class StudentStateComponent implements AfterViewInit, OnInit {
       this._fetchStudentGQL
         .watch(
           {
-            limit: 100,
+            limit: 50,
             offset: 0,
             filter: {
               active: { is: true },

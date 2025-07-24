@@ -7,8 +7,8 @@
       <mat-form-field subscriptSizing="dynamic" class="max-w-lg w-full">
         <mat-label> Rango de fechas </mat-label>
         <mat-date-range-input [rangePicker]="datePicker">
-          <input matStartDate />
-          <input matEndDate />
+          <input matStartDate [formControl]="startDateControl" />
+          <input matEndDate [formControl]="endDateControl" />
         </mat-date-range-input>
         <mat-datepicker-toggle
           matIconSuffix
@@ -28,51 +28,61 @@
         <mat-icon svgIcon="refresh" />
       </button>
     </div>
-    <mat-table [dataSource]="dataSource" class="mt-4">
-      <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          <!-- {{ element.name }} -->
-          <!-- <div class="flex items-center gap-2">
-            <mat-icon
-              svgIcon="drag"
-              class="cursor-move"
-              cdkDragHandle
-            ></mat-icon>
 
-            <div>
-              <p>
-                {{ element.name }}
-              </p>
-              <p class="text-gray-700">
-                {{ element.abbreviation }}
-              </p>
-            </div>
-          </div> -->
+    <h5 class="text-xl mb-6 mt-8">
+      Ingresos totales:
+      <span class="font-bold">{{ total() | currency : "MXN" }}</span>
+    </h5>
+
+    <mat-table [dataSource]="dataSource" class="mt-4">
+      <ng-container matColumnDef="branchName">
+        <mat-header-cell *matHeaderCellDef>Negocio</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.branchName }}
         </mat-cell>
       </ng-container>
 
-      <ng-container matColumnDef="actions">
-        <mat-header-cell *matHeaderCellDef>
-          <p class="w-full text-right!">Acciones</p>
-        </mat-header-cell>
+      <ng-container matColumnDef="studentNames">
+        <mat-header-cell *matHeaderCellDef>Estudiante</mat-header-cell>
         <mat-cell *matCellDef="let element">
-          <!-- <div class="w-full text-right">
-            <button
-              mat-icon-button
-              matTooltip="Editar"
-              (click)="openFormDialog(element)"
-            >
-              <mat-icon svgIcon="pencil" />
-            </button>
-            <button
-              mat-icon-button
-              matTooltip="Eliminar"
-              (click)="openDeleteDialog(element)"
-            >
-              <mat-icon svgIcon="delete" class="!text-red-400" />
-            </button>
-          </div> -->
+          @for (student of element.students; track student.id) {
+          {{ student.fullname }}
+          }
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="incomeFolio">
+        <mat-header-cell *matHeaderCellDef>Folio de venta</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          V{{ element.incomeFolio | folio }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="paymentFolio">
+        <mat-header-cell *matHeaderCellDef>Folio de pago</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          P{{ element.paymentFolio | folio }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="paymentMethod">
+        <mat-header-cell *matHeaderCellDef>Método</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.paymentMethod | method }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="paymentDate">
+        <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.paymentDate | date : "medium" }}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="paymentAmount">
+        <mat-header-cell *matHeaderCellDef>Monto</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          {{ element.paymentAmount | currency : "MXN" }}
         </mat-cell>
       </ng-container>
 
@@ -81,12 +91,7 @@
       <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
     </mat-table>
 
-    <mat-paginator
-      #paginator
-      [length]="totalCount()"
-      [pageSize]="10"
-      [pageSizeOptions]="[10, 25, 100]"
-    >
+    <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 100]">
     </mat-paginator>
   </mat-card-content>
 </mat-card>

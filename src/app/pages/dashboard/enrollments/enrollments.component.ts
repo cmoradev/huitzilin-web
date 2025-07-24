@@ -245,7 +245,7 @@ export class EnrollmentsComponent implements OnInit {
               enrollmentId: { eq: this._globalStateService.enrollment!.id },
             },
 
-            limit: 100,
+            limit: 50,
             offset: 0,
           },
           {
