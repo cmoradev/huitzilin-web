@@ -10,6 +10,23 @@
       </mat-checkbox>
 
       <mat-form-field>
+        <mat-label>Frecuencia de pago</mat-label>
+        <mat-select formControlName="frequency">
+          @for (frequency of frequencies; track $index) {
+          <mat-option [value]="frequency.value">{{
+            frequency.label
+          }}</mat-option>
+          }
+        </mat-select>
+        <mat-hint
+          >Seleccione la frecuencia con la que se realizará el pago</mat-hint
+        >
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("frequency")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
         <mat-label>Descripción del adeudo</mat-label>
         <input
           matInput
@@ -89,6 +106,7 @@
       </mat-chip-set>
 
       <div class="grid grid-cols-2 gap-3">
+        @if (formGroup.get('frequency')?.value !== 'MONTHLY') {
         <mat-form-field>
           <mat-label>Fecha del pago</mat-label>
           <input
@@ -106,6 +124,7 @@
             {{ formTools.checkForErrorsIn(formGroup.get("dueDate")) }}
           </mat-error>
         </mat-form-field>
+        }
 
         <mat-form-field>
           <mat-label>Estado del adeudo</mat-label>

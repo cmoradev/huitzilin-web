@@ -19,7 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   CreateDebit,
-  CreateOneDebitGQL,
+  CreateManyDebitsGQL,
   DebitPartsFragment,
   DebitState,
   DiscountBy,
@@ -30,9 +30,16 @@ import {
   UpdateOneDebitGQL,
 } from '@graphql';
 import { FormToolsService, GlobalStateService } from '@services';
-import { debitStates } from '@utils/contains';
+import { debitStates, frequencies } from '@utils/contains';
 import { map, merge, startWith } from 'rxjs';
-import { addMonths, format } from 'date-fns';
+import {
+  addMonths,
+  endOfMonth,
+  format,
+  isBefore,
+  setDate,
+  startOfMonth,
+} from 'date-fns';
 import {
   calculateAmountFromUnitPriceAndQuantity,
   calculateSubtotalAndDiscount,
@@ -79,8 +86,10 @@ export class DebitFormDialogComponent {
   public loading = signal(false);
   public data: DebitPartsFragment | null = inject(MAT_DIALOG_DATA);
 
+  public frequencies = frequencies;
+
   private readonly _globalStateService = inject(GlobalStateService);
-  private readonly _createOneDebit = inject(CreateOneDebitGQL);
+  private readonly _createManyDebits = inject(CreateManyDebitsGQL);
   private readonly _updateOneDebit = inject(UpdateOneDebitGQL);
   private readonly _dialog = inject(MatDialog);
   private readonly _dialogRef = inject(MatDialogRef<DebitFormDialogComponent>);
@@ -125,6 +134,10 @@ export class DebitFormDialogComponent {
     dueDate: this.formTools.builder.control<string>(defaultDueDate, {
       validators: [Validators.required],
       nonNullable: true,
+    }),
+    frequency: this.formTools.builder.control<Frequency>(Frequency.Single, {
+      nonNullable: true,
+      validators: [Validators.required],
     }),
     discount: this.formTools.builder.control<number>(0, {
       validators: [Validators.required, Validators.min(1)],
@@ -255,31 +268,42 @@ export class DebitFormDialogComponent {
       ) {
         this.loading.set(true);
 
-        this._save({
+        const debit = {
           ...payload,
           discounts: payload.discounts.map(
             (value: any) => ({ id: value.id } as NestedId)
           ),
-        }).subscribe({
-          next: (debit) => {
-            this._snackBar.open(
-              'Se ha creado un adeudo correctamente',
-              'Cerrar',
-              {
-                duration: 1000,
-                horizontalPosition: 'center',
-                verticalPosition: 'bottom',
-              }
-            );
-            this._dialogRef.close(debit);
-          },
-          error: (err) => {
-            console.error('CREATE DEBIT ERROR: ', err);
-          },
-          complete: () => {
-            this.loading.set(false);
-          },
-        });
+        };
+
+        const debits = this.generateDebits(debit);
+
+        this._createManyDebits
+          .mutate({
+            debits: debits.map((debit: any) => ({
+              description: debit.description,
+              unitPrice: debit.unitPrice,
+              discount: debit.discount,
+              dueDate: debit.dueDate,
+              quantity: debit.quantity,
+              state: debit.state,
+              withTax: debit.withTax,
+              frequency: debit.frequency,
+              paymentDate: null,
+              studentId: this._globalStateService.student!.id,
+              branchId: this._globalStateService.branch!.id,
+              discounts: debit.discounts.map((discount: any) => ({
+                id: discount.id,
+              })),
+              enrollmentId: this._globalStateService.enrollment!.id,
+            })),
+          })
+          .pipe(map((resp) => resp.data?.createManyDebits))
+          .subscribe({
+            next: (resp) => {
+              this.loading.set(false);
+              this._dialogRef.close(resp);
+            },
+          });
       }
     }
   }
@@ -291,26 +315,6 @@ export class DebitFormDialogComponent {
         update: { ...values },
       })
       .pipe(map((value) => value.data?.updateOneDebit));
-  }
-
-  private _save(
-    values: Omit<
-      CreateDebit,
-      'frequency' | 'enrollmentId' | 'studentId' | 'branchId' | 'paymentDate'
-    >
-  ) {
-    return this._createOneDebit
-      .mutate({
-        debit: {
-          ...values,
-          paymentDate: null,
-          frequency: Frequency.Single,
-          branchId: this._globalStateService.branch!.id,
-          studentId: this._globalStateService.student!.id,
-          enrollmentId: this._globalStateService.enrollment!.id,
-        },
-      })
-      .pipe(map((value) => value.data?.createOneDebit));
   }
 
   public selectDebitDiscount() {
@@ -359,4 +363,63 @@ export class DebitFormDialogComponent {
 
     this.discounts.push(debitDiscountFormGroup);
   }
+
+  private generateDebits(value: PayloadDebit) {
+    const debits: Array<PayloadDebit> = [];
+
+    switch (value.frequency) {
+      case Frequency.Monthly:
+        if (
+          !!this._globalStateService!.enrollment!.period?.start &&
+          !!this._globalStateService!.enrollment!.period?.end
+        ) {
+          const startPeriod = startOfMonth(
+            `${this._globalStateService!.enrollment!.period!.start}T12:00:00`
+          );
+          const endPeriod = endOfMonth(
+            `${this._globalStateService!.enrollment!.period!.end}T12:00:00`
+          );
+
+          let currentDate = startPeriod;
+
+          while (isBefore(currentDate, endPeriod)) {
+            currentDate = setDate(currentDate, 5);
+
+            const description = `${value.description} - ${format(
+              currentDate,
+              'MMMM'
+            )}`;
+
+            debits.push({
+              ...value,
+              description,
+              frequency: Frequency.Single,
+              dueDate: format(currentDate, 'yyyy-MM-dd') + 'T12:00:00',
+            });
+
+            currentDate = addMonths(currentDate, 1);
+          }
+        }
+
+        break;
+
+      default:
+        debits.push(value);
+        break;
+    }
+
+    return debits;
+  }
 }
+
+type PayloadDebit = {
+  discounts: NestedId[];
+  description: string;
+  unitPrice: number;
+  quantity: number;
+  withTax: boolean;
+  state: DebitState;
+  dueDate: string;
+  frequency: Frequency;
+  discount: number;
+};
