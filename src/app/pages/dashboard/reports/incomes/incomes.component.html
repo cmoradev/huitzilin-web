@@ -17,6 +17,10 @@
         <mat-date-range-picker #datePicker></mat-date-range-picker>
       </mat-form-field>
 
+      <h5 class="text-xl mb-6 mt-8 text-center font-bold">
+        {{ total() | currency : "MXN" }}
+      </h5>
+
       <span class="flex-1"></span>
 
       <button
@@ -29,10 +33,10 @@
       </button>
     </div>
 
-    <h5 class="text-xl mb-6 mt-8">
-      Ingresos totales:
-      <span class="font-bold">{{ total() | currency : "MXN" }}</span>
-    </h5>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div #branchsChart class="aspect-square w-full"></div>
+      <div #methodsChart class="aspect-square w-full"></div>
+    </div>
 
     <mat-table [dataSource]="dataSource" class="mt-4">
       <ng-container matColumnDef="branchName">
