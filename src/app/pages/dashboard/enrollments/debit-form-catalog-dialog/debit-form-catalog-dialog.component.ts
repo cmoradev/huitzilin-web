@@ -115,7 +115,7 @@ export class DebitFormCatalogDialogComponent implements OnInit {
     const unitPriceDecimal = new Decimal(unitPrice);
     const quantityDecimal = new Decimal(quantity);
 
-    const amount = Number(unitPriceDecimal.times(quantityDecimal).toFixed(2));
+    const amount = Number(unitPriceDecimal.times(quantityDecimal).toFixed(6));
 
     const debitFormGroup = this._formTools.builder.group({
       description: this._formTools.builder.control<string>(description, {
