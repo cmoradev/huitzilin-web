@@ -4,7 +4,7 @@
   </mat-card-header>
   <mat-card-content class="min-h-[calc(100vh-10rem)]">
     <div class="flex gap-2 mt-2 items-center">
-      <mat-form-field subscriptSizing="dynamic" class="max-w-lg w-full">
+      <mat-form-field subscriptSizing="dynamic" class="max-w-md w-full">
         <mat-label> Rango de fechas </mat-label>
         <mat-date-range-input [rangePicker]="datePicker">
           <input matStartDate [formControl]="startDateControl" />
@@ -15,6 +15,20 @@
           [for]="datePicker"
         ></mat-datepicker-toggle>
         <mat-date-range-picker #datePicker></mat-date-range-picker>
+      </mat-form-field>
+
+      <mat-form-field subscriptSizing="dynamic" class="max-w-md w-full">
+        <mat-label>Sucursal</mat-label>
+        <mat-select [formControl]="branchControl">
+          @for (branch of branchTools.options(); track $index) {
+          <mat-option [value]="branch.id">
+            <div class="flex items-center gap-2">
+              <img [alt]="branch.name" class="h-6 w-6" [src]="branch.picture" />
+              <span> {{ branch.name }} </span>
+            </div>
+          </mat-option>
+          }
+        </mat-select>
       </mat-form-field>
 
       <h5 class="text-xl mb-6 mt-8 text-center font-bold">
@@ -33,69 +47,114 @@
       </button>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-      <div #branchsChart class="aspect-square w-full"></div>
-      <div #methodsChart class="aspect-square w-full"></div>
-    </div>
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon svgIcon="list-status" class="mr-1" />
+          Resumen
+        </ng-template>
 
-    <mat-table [dataSource]="dataSource" class="mt-4">
-      <ng-container matColumnDef="branchName">
-        <mat-header-cell *matHeaderCellDef>Negocio</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          {{ element.branchName }}
-        </mat-cell>
-      </ng-container>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="w-full">
+            <div #methodsChart class="w-96 h-96 mx-auto"></div>
+          </div>
+          <div>
+            <mat-table [dataSource]="summaryDataSource">
+              <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef>Método</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  {{ element.name }}
+                </mat-cell>
+              </ng-container>
 
-      <ng-container matColumnDef="studentNames">
-        <mat-header-cell *matHeaderCellDef>Estudiante</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          @for (student of element.students; track student.id) {
-          {{ student.fullname }}
-          }
-        </mat-cell>
-      </ng-container>
+              <ng-container matColumnDef="value">
+                <mat-header-cell *matHeaderCellDef>Ingreso</mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  {{ element.count | currency : "MXN" }}
+                </mat-cell>
+              </ng-container>
 
-      <ng-container matColumnDef="incomeFolio">
-        <mat-header-cell *matHeaderCellDef>Folio de venta</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          V{{ element.incomeFolio | folio }}
-        </mat-cell>
-      </ng-container>
+              <mat-header-row
+                *matHeaderRowDef="summaryDisplayedColumns"
+              ></mat-header-row>
 
-      <ng-container matColumnDef="paymentFolio">
-        <mat-header-cell *matHeaderCellDef>Folio de pago</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          P{{ element.paymentFolio | folio }}
-        </mat-cell>
-      </ng-container>
+              <mat-row
+                *matRowDef="let row; columns: summaryDisplayedColumns"
+              ></mat-row>
+            </mat-table>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon svgIcon="database" class="mr-1" />
+          Datos
+        </ng-template>
 
-      <ng-container matColumnDef="paymentMethod">
-        <mat-header-cell *matHeaderCellDef>Método</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          {{ element.paymentMethod | method }}
-        </mat-cell>
-      </ng-container>
+        <mat-table [dataSource]="dataSource">
+          <ng-container matColumnDef="branchName">
+            <mat-header-cell *matHeaderCellDef>Negocio</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.branchName }}
+            </mat-cell>
+          </ng-container>
 
-      <ng-container matColumnDef="paymentDate">
-        <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          {{ element.paymentDate | date : "medium" }}
-        </mat-cell>
-      </ng-container>
+          <ng-container matColumnDef="studentNames">
+            <mat-header-cell *matHeaderCellDef>Estudiante</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              @for (student of element.students; track student.id) {
+              {{ student.fullname }}
+              }
+            </mat-cell>
+          </ng-container>
 
-      <ng-container matColumnDef="paymentAmount">
-        <mat-header-cell *matHeaderCellDef>Monto</mat-header-cell>
-        <mat-cell *matCellDef="let element">
-          {{ element.paymentAmount | currency : "MXN" }}
-        </mat-cell>
-      </ng-container>
+          <ng-container matColumnDef="incomeFolio">
+            <mat-header-cell *matHeaderCellDef>Folio de venta</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              V{{ element.incomeFolio | folio }}
+            </mat-cell>
+          </ng-container>
 
-      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <ng-container matColumnDef="paymentFolio">
+            <mat-header-cell *matHeaderCellDef>Folio de pago</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              P{{ element.paymentFolio | folio }}
+            </mat-cell>
+          </ng-container>
 
-      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-    </mat-table>
+          <ng-container matColumnDef="paymentMethod">
+            <mat-header-cell *matHeaderCellDef>Método</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.paymentMethod | method }}
+            </mat-cell>
+          </ng-container>
 
-    <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[10, 25, 100]">
-    </mat-paginator>
+          <ng-container matColumnDef="paymentDate">
+            <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.paymentDate | date : "medium" }}
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="paymentAmount">
+            <mat-header-cell *matHeaderCellDef>Monto</mat-header-cell>
+            <mat-cell *matCellDef="let element">
+              {{ element.paymentAmount | currency : "MXN" }}
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+          <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+        </mat-table>
+
+        <mat-paginator
+          #paginator
+          [pageSize]="10"
+          [pageSizeOptions]="[10, 25, 100]"
+        >
+        </mat-paginator>
+      </mat-tab>
+    </mat-tab-group>
   </mat-card-content>
 </mat-card>
