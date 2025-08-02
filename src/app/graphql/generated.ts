@@ -228,6 +228,7 @@ export enum ClipAccountSortFields {
 
 export type ClipLink = {
   __typename?: 'ClipLink';
+  accountId: Scalars['String']['output'];
   amount: Scalars['Float']['output'];
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -252,6 +253,7 @@ export type ClipLinkConnection = {
 };
 
 export type ClipLinkFilter = {
+  accountId?: InputMaybe<StringFieldComparison>;
   and?: InputMaybe<Array<ClipLinkFilter>>;
   createdAt?: InputMaybe<DateFieldComparison>;
   expiresAt?: InputMaybe<DateFieldComparison>;
@@ -269,6 +271,7 @@ export type ClipLinkSort = {
 };
 
 export enum ClipLinkSortFields {
+  AccountId = 'accountId',
   CreatedAt = 'createdAt',
   ExpiresAt = 'expiresAt',
   Id = 'id',
@@ -1452,6 +1455,7 @@ export type IncomeFilter = {
 };
 
 export type IncomeFilterClipLinkFilter = {
+  accountId?: InputMaybe<StringFieldComparison>;
   and?: InputMaybe<Array<IncomeFilterClipLinkFilter>>;
   createdAt?: InputMaybe<DateFieldComparison>;
   expiresAt?: InputMaybe<DateFieldComparison>;
@@ -2657,6 +2661,8 @@ export type Query = {
   teachers: TeacherConnection;
   tutor: Tutor;
   tutors: TutorConnection;
+  user: User;
+  users: UserConnection;
 };
 
 
@@ -2921,6 +2927,18 @@ export type QueryTutorsArgs = {
   filter?: TutorFilter;
   paging?: OffsetPaging;
   sorting?: Array<TutorSort>;
+};
+
+
+export type QueryUserArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryUsersArgs = {
+  filter?: UserFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<UserSort>;
 };
 
 export type RemoveBranchsFromStudentInput = {
@@ -3661,6 +3679,7 @@ export type User = {
   __typename?: 'User';
   branchId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
+  cycleId: Scalars['String']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
@@ -3668,6 +3687,44 @@ export type User = {
   username: Scalars['String']['output'];
   version: Scalars['Int']['output'];
 };
+
+export type UserConnection = {
+  __typename?: 'UserConnection';
+  /** Array of nodes. */
+  nodes: Array<User>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type UserFilter = {
+  and?: InputMaybe<Array<UserFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  cycleId?: InputMaybe<StringFieldComparison>;
+  email?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  or?: InputMaybe<Array<UserFilter>>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+  username?: InputMaybe<StringFieldComparison>;
+};
+
+export type UserSort = {
+  direction: SortDirection;
+  field: UserSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum UserSortFields {
+  BranchId = 'branchId',
+  CreatedAt = 'createdAt',
+  CycleId = 'cycleId',
+  Email = 'email',
+  Id = 'id',
+  UpdatedAt = 'updatedAt',
+  Username = 'username'
+}
 
 export type SessionPartsFragment = { __typename?: 'Session', id: string, token: string, username: string, exp: any, iat: any, branch?: { __typename?: 'Branch', id: string, picture: string, name: string } | null, cycle?: { __typename?: 'Cycle', id: string, name: string, start: string, end: string } | null };
 
@@ -4234,6 +4291,17 @@ export type DeleteOneDocumentMutationVariables = Exact<{
 
 export type DeleteOneDocumentMutation = { __typename?: 'Mutation', deleteOneDocument: { __typename?: 'DocumentDeleteResponse', id?: string | null } };
 
+export type UserPartsFragment = { __typename?: 'User', id: string, username: string, email: string, branchId: string, cycleId: string };
+
+export type GetUsersPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<UserFilter>;
+}>;
+
+
+export type GetUsersPageQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'User', id: string, username: string, email: string, branchId: string, cycleId: string }> } };
+
 export const SessionPartsFragmentDoc = gql`
     fragment SessionParts on Session {
   id
@@ -4491,6 +4559,15 @@ export const DocumentPartsFragmentDoc = gql`
   name
   key
   url
+}
+    `;
+export const UserPartsFragmentDoc = gql`
+    fragment UserParts on User {
+  id
+  username
+  email
+  branchId
+  cycleId
 }
     `;
 export const SignInDocument = gql`
@@ -5866,6 +5943,31 @@ export const DeleteOneDocumentDocument = gql`
   })
   export class DeleteOneDocumentGQL extends Apollo.Mutation<DeleteOneDocumentMutation, DeleteOneDocumentMutationVariables> {
     document = DeleteOneDocumentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetUsersPageDocument = gql`
+    query getUsersPage($offset: Int = 0, $limit: Int = 10, $filter: UserFilter = {}) {
+  users(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...UserParts
+    }
+  }
+}
+    ${UserPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetUsersPageGQL extends Apollo.Query<GetUsersPageQuery, GetUsersPageQueryVariables> {
+    document = GetUsersPageDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

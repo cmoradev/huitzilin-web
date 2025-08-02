@@ -72,6 +72,11 @@ export const DashboardRoutes: Routes = [
       ),
   },
   {
+    path: 'users',
+    loadComponent: () =>
+      import('./users/users.component').then((m) => m.UsersComponent),
+  },
+  {
     path: 'reports',
     loadChildren: () =>
       import('./reports/reports.routes').then((m) => m.ReportsRoutes),

@@ -1,7 +1,7 @@
 export enum NavigationEnum {
   OPERATIONS = 'Operación',
   ADMINISTRATION = 'Administración',
-  DEVELOPER = 'Opciones de desarrollador',
+  DEVELOPER = 'Configuraciones',
 }
 
 export const navItems: RouteItem[] = [
@@ -81,6 +81,12 @@ export const navItems: RouteItem[] = [
     displayName: 'Cuentas clip',
     iconName: 'cash',
     route: '/clip-accounts',
+    section: NavigationEnum.DEVELOPER,
+  },
+  {
+    displayName: 'Usuarios',
+    iconName: 'key',
+    route: '/users',
     section: NavigationEnum.DEVELOPER,
   },
 ];
