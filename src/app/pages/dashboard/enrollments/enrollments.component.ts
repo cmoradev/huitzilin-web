@@ -107,7 +107,7 @@ export class EnrollmentsComponent implements OnInit {
     this._dialog.open(EnrollmentCalendarComponent, {
       width: '56rem',
       maxWidth: '95vw',
-      data: value
+      data: value,
     });
   }
 
@@ -230,6 +230,10 @@ export class EnrollmentsComponent implements OnInit {
             this.enrollmentsLoading.set(false);
           },
         });
+    } else {
+      this.enrollments.set([]);
+      this.enrollmentsLoading.set(false);
+      this.enrollmentsTotalCount.set(0);
     }
   }
 
