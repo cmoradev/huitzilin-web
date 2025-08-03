@@ -1,0 +1,75 @@
+<h2 mat-dialog-title>
+  @if (accountsReceivable() !== null) { Completar pago de V{{
+    accountsReceivable()!.folio | folio
+  }}
+  }
+</h2>
+
+@if (accountsReceivable() !== null) {
+<mat-dialog-content>
+  <h2 class="text-lg font-medium">Conceptos</h2>
+
+  @for (concept of accountsReceivable()?.concepts; track concept.id) {
+  <div class="px-4 py-2">
+    <p>{{ concept.description }}</p>
+    <div class="flex items-center justify-between gap-4">
+      <p matTooltip="Adeudo">{{ concept.total | currency : "MXN" }}</p>
+      <p matTooltip="Pagado">
+        {{ concept.total - concept.pendingPayment | currency : "MXN" }}
+      </p>
+      <p matTooltip="Pendiente">
+        {{ concept.pendingPayment | currency : "MXN" }}
+      </p>
+    </div>
+  </div>
+  }
+
+  <h2 class="text-lg font-medium">Pagos recibidos</h2>
+
+  @for (payment of accountsReceivable()?.payments; track payment.id) {
+  <div class="px-4 py-2">
+    <div class="flex items-center justify-between gap-4">
+      <p>{{ payment.method | method }}</p>
+      <p>
+        {{ payment.amount | currency : "MXN" }}
+      </p>
+    </div>
+  </div>
+  }
+
+  <h2 class="text-lg font-medium">Resumen</h2>
+
+  <div class="px-4 py-2">
+    <div class="flex items-center justify-between gap-4">
+      <p class="font-medium">Deuda total:</p>
+      <p>
+        {{ accountsReceivable()!.total | currency : "MXN" }}
+      </p>
+    </div>
+
+    <div class="flex items-center justify-between gap-4">
+      <p class="font-medium">Monto pagado:</p>
+      <p>
+        {{
+          accountsReceivable()!.total - accountsReceivable()!.pendingPayment
+            | currency : "MXN"
+        }}
+      </p>
+    </div>
+
+    <div class="flex items-center justify-between gap-4">
+      <p class="font-medium">Pendiente por cobrar:</p>
+      <p class="font-bold">
+        {{ accountsReceivable()!.pendingPayment | currency : "MXN" }}
+      </p>
+    </div>
+  </div>
+</mat-dialog-content>
+}
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+  <button type="button" mat-button cdkFocusInitial (click)="addConcepts()">
+    Cargar conceptos
+  </button>
+</mat-dialog-actions>

@@ -123,7 +123,14 @@ export class PosService {
     return true;
   }
 
-  public addDebit(value: DebitPartsFragment, branchID: string, studentID: string): boolean {
+  public addDebit(
+    value: Pick<
+      DebitPartsFragment,
+      'withTax' | 'state' | 'unitPrice' | 'quantity' | 'discounts' | 'dueDate' | 'id' | 'description'
+    >,
+    branchID: string,
+    studentID: string
+  ): boolean {
     const canAdd = this._canAddDebit(value, branchID);
 
     if (canAdd) {
@@ -188,7 +195,10 @@ export class PosService {
     });
   }
 
-  private _canAddDebit(value: DebitPartsFragment, branchID: string): boolean {
+  private _canAddDebit(
+    value: Pick<DebitPartsFragment, 'withTax' | 'state'>,
+    branchID: string
+  ): boolean {
     const isEqualBranchOrEmpty =
       this.branchID === null || this.branchID === branchID;
 
@@ -219,21 +229,7 @@ export class PosService {
       );
     }
 
-    const isPartiallyPaid = value.state === DebitState.PartiallyPaid;
-
-    if (isPartiallyPaid) {
-      this._snackBar.open(
-        'No se puede agregar un adeudo que ya está parcialmente pagado.',
-        'Cerrar',
-        {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        }
-      );
-      return false;
-    }
-
-    return !diferenceTaxes && !isPartiallyPaid && isEqualBranchOrEmpty;
+    return !diferenceTaxes && isEqualBranchOrEmpty;
   }
 
   public clearConcepts() {

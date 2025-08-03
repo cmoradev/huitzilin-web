@@ -18,41 +18,36 @@
     @if(income()) {
     <p class="font-bold">Enlaces</p>
 
-    <div class="">
-      @for (link of income()!.clipLinks; track link.link) {
-      <div class="item">
-        <div>
-          <p>
-            <span class="font-medium">Folio:</span> V{{
-              income()!.folio | folio
-            }}
-          </p>
-          <p>
-            <span class="font-bold">Monto:</span>
-            {{ income()!.pendingPayment | currency : "MXN" }}
-          </p>
-        </div>
-        <span class="flex-1"></span>
-        <button
-          type="button"
-          mat-icon-button
-          matTooltip="Compartir enlace por WhatsApp"
-          (click)="shareLinkWhatsApp(link)"
-        >
-          <mat-icon svgIcon="share-variant" />
-        </button>
-        <a
-          mat-icon-button
-          [href]="link.link"
-          target="_blank"
-          matTooltip="Abrir enlace"
-        >
-          <mat-icon svgIcon="open-in-new" />
-        </a>
+    @for (link of income()!.clipLinks; track link.link) {
+    <div class="item">
+      <div>
+        <p>
+          <span class="font-medium">Folio:</span> V{{ income()!.folio | folio }}
+        </p>
+        <p>
+          <span class="font-bold">Monto:</span>
+          {{ income()!.pendingPayment | currency : "MXN" }}
+        </p>
       </div>
-      }
+      <span class="flex-1"></span>
+      <button
+        type="button"
+        mat-icon-button
+        matTooltip="Compartir enlace por WhatsApp"
+        (click)="shareLinkWhatsApp(link)"
+      >
+        <mat-icon svgIcon="share-variant" />
+      </button>
+      <a
+        mat-icon-button
+        [href]="link.link"
+        target="_blank"
+        matTooltip="Abrir enlace"
+      >
+        <mat-icon svgIcon="open-in-new" />
+      </a>
     </div>
-    }
+    } }
   </div>
 </mat-dialog-content>
 

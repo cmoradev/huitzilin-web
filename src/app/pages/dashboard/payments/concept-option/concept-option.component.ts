@@ -8,6 +8,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { DebitPartsFragment, DebitState } from '@graphql';
 import { isAfter } from 'date-fns';
 import { PosService } from '../../../../services/pos.service';
+import { MatDialog } from '@angular/material/dialog';
+import { CompletePaymentDialogComponent } from '../complete-payment-dialog/complete-payment-dialog.component';
 
 @Component({
   selector: 'app-concept-option',
@@ -25,6 +27,8 @@ import { PosService } from '../../../../services/pos.service';
 })
 export class ConceptOptionComponent implements OnInit {
   private readonly pos = inject(PosService);
+
+  private readonly _dialog = inject(MatDialog);
 
   public debit = input.required<DebitPartsFragment>();
   public branchID = input.required<string>();
@@ -87,8 +91,15 @@ export class ConceptOptionComponent implements OnInit {
   public toggleDebit(active: boolean): void {
     if (active) {
       if (this.debit().state === DebitState.PartiallyPaid) {
-        console.log('Hello World');
         this.optionControl.setValue(false);
+        this._dialog.open(CompletePaymentDialogComponent, {
+          width: '30rem',
+          data: {
+            debit: this.debit(),
+            branchID: this.branchID(),
+            studentID: this.studentID(),
+          },
+        });
       } else {
         const added = this.pos.addDebit(
           this.debit(),

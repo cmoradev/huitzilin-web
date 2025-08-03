@@ -4069,14 +4069,14 @@ export type CreateLinkIncomesMutationVariables = Exact<{
 
 export type CreateLinkIncomesMutation = { __typename?: 'Mutation', createLinkIncomes: { __typename?: 'Income', id: string, folio: number, pendingPayment: number, clipLinks: Array<{ __typename?: 'ClipLink', amount: number, link: string, qr: string, expiresAt: any, requestId: string }> } };
 
-export type AccountsReceivablePartsFragment = { __typename?: 'Income', id: string, folio: number, total: number, pendingPayment: number, concepts: Array<{ __typename?: 'Concept', description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, pendingPayment: number, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> }>, payments: Array<{ __typename?: 'Payment', id: string, folio: number, state: PaymentState, method: PaymentMethod, date: any, amount: number, transaction: string, bank: string }> };
+export type AccountsReceivablePartsFragment = { __typename?: 'Income', id: string, folio: number, total: number, pendingPayment: number, concepts: Array<{ __typename?: 'Concept', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, pendingPayment: number, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> }>, payments: Array<{ __typename?: 'Payment', id: string, folio: number, state: PaymentState, method: PaymentMethod, date: any, amount: number, transaction: string, bank: string }> };
 
 export type GetAccountsReceivableQueryVariables = Exact<{
   input: AccountsReceivable;
 }>;
 
 
-export type GetAccountsReceivableQuery = { __typename?: 'Query', getAccountsReceivable: { __typename?: 'Income', id: string, folio: number, total: number, pendingPayment: number, concepts: Array<{ __typename?: 'Concept', description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, pendingPayment: number, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> }>, payments: Array<{ __typename?: 'Payment', id: string, folio: number, state: PaymentState, method: PaymentMethod, date: any, amount: number, transaction: string, bank: string }> } };
+export type GetAccountsReceivableQuery = { __typename?: 'Query', getAccountsReceivable: { __typename?: 'Income', id: string, folio: number, total: number, pendingPayment: number, concepts: Array<{ __typename?: 'Concept', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, pendingPayment: number, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> }>, payments: Array<{ __typename?: 'Payment', id: string, folio: number, state: PaymentState, method: PaymentMethod, date: any, amount: number, transaction: string, bank: string }> } };
 
 export type LevelPartsFragment = { __typename?: 'Level', id: string, name: string, abbreviation: string, order: number };
 
@@ -4508,6 +4508,7 @@ export const AccountsReceivablePartsFragmentDoc = gql`
   total
   pendingPayment
   concepts {
+    id
     description
     unitPrice
     quantity

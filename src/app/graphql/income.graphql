@@ -30,6 +30,7 @@ fragment AccountsReceivableParts on Income {
     total
     pendingPayment
     concepts {
+      id
       description
       unitPrice
       quantity
