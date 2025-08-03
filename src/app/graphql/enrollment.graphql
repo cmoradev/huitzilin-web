@@ -90,6 +90,7 @@ fragment CurrentEnrollmentParts on Enrollment {
   state
   hours
   diciplines
+  studentId
   branch {
     id, 
     name, 

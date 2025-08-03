@@ -18,6 +18,9 @@ import Decimal from 'decimal.js';
 })
 export class PosService {
   private readonly _snackBar = inject(MatSnackBar);
+
+  private readonly _branchID = signal<string | null>(null);
+  private readonly _studentIDs = signal<string[]>([]);
   private readonly _concepts = signal<Concept[]>([]);
 
   public withTax = computed(() => {
@@ -61,10 +64,33 @@ export class PosService {
       this._taxes.set(new Decimal(taxes));
       this._total.set(new Decimal(total));
     });
+
+    effect(() => {
+      if (!this._concepts().length) {
+        this.branchID = null;
+        this.studentIDs = [];
+      }
+    });
+  }
+
+  set studentIDs(value: string[]) {
+    this._studentIDs.set(value);
+  }
+
+  set branchID(value: string | null) {
+    this._branchID.set(value);
+  }
+
+  get branchID() {
+    return this._branchID();
   }
 
   get concepts(): Concept[] {
     return this._concepts();
+  }
+
+  get studentIDs() {
+    return this._studentIDs();
   }
 
   get amount() {
@@ -91,8 +117,14 @@ export class PosService {
     return this.concepts.some((concept) => concept.debitId === value.id);
   }
 
-  public addDebit(value: DebitPartsFragment): boolean {
-    const canAdd = this._canAddDebit(value);
+  public addStudent(value: string): boolean {
+    const setIDs = new Set([...this.studentIDs, value]);
+    this.studentIDs = Array.from(setIDs);
+    return true;
+  }
+
+  public addDebit(value: DebitPartsFragment, branchID: string, studentID: string): boolean {
+    const canAdd = this._canAddDebit(value, branchID);
 
     if (canAdd) {
       const { unitPrice, quantity, amount } = calculateAmount(
@@ -131,6 +163,9 @@ export class PosService {
         return debits;
       });
 
+      this.branchID = branchID;
+      this.addStudent(studentID);
+
       return true;
     }
 
@@ -153,7 +188,21 @@ export class PosService {
     });
   }
 
-  private _canAddDebit(value: DebitPartsFragment): boolean {
+  private _canAddDebit(value: DebitPartsFragment, branchID: string): boolean {
+    const isEqualBranchOrEmpty =
+      this.branchID === null || this.branchID === branchID;
+
+    if (!isEqualBranchOrEmpty) {
+      this._snackBar.open(
+        'No se puede mezclar adeudos de diferentes sucursales',
+        'Cerrar',
+        {
+          duration: 3000,
+          panelClass: ['error-snackbar'],
+        }
+      );
+    }
+
     // Revisa si el nuevo adeudo tiene diferencia de impuestos
     const diferenceTaxes = this.concepts.some(
       (debit) => debit.withTax !== value.withTax
@@ -184,7 +233,7 @@ export class PosService {
       return false;
     }
 
-    return !diferenceTaxes && !isPartiallyPaid;
+    return !diferenceTaxes && !isPartiallyPaid && isEqualBranchOrEmpty;
   }
 
   public clearConcepts() {

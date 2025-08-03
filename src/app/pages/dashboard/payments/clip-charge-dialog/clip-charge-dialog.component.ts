@@ -36,10 +36,10 @@ export class ClipChargeDialogComponent {
 
   public loading = signal<boolean>(false);
   public created = signal<boolean>(false);
-  public incomes = signal<IncomeWithLinksFragment[]>([]);
+  public income = signal<IncomeWithLinksFragment | null>(null);
 
   public closeDialog() {
-    this._dialogRef.close(this.incomes());
+    this._dialogRef.close(this.income());
   }
 
   public shareLinkWhatsApp(link: Partial<ClipLink>) {
@@ -68,26 +68,33 @@ export class ClipChargeDialogComponent {
       })),
     }));
 
-    this._createLinkIncomes
-      .mutate({
-        input: {
-          concepts,
-        },
-      })
-      .subscribe({
-        next: ({ data }) => {
-          this.loading.set(false);
-          if (data?.createLinkIncomes) {
-            this.created.set(true);
-            this.incomes.set(data.createLinkIncomes);
-          }
-        },
-        error: (error) => {
-          this.loading.set(false);
-          this._snackBar.open('Error al generar el link', 'Cerrar', {
-            duration: 3000,
-          });
-        },
-      });
+    const studentIDs = Array.from(new Set(this.pos.studentIDs));
+    const branchID = this.pos.branchID;
+
+    if (!!studentIDs.length && !!branchID) {
+      this._createLinkIncomes
+        .mutate({
+          input: {
+            concepts,
+            studentIDs,
+            branchID,
+          },
+        })
+        .subscribe({
+          next: ({ data }) => {
+            this.loading.set(false);
+            if (data?.createLinkIncomes) {
+              this.created.set(true);
+              this.income.set(data.createLinkIncomes);
+            }
+          },
+          error: (error) => {
+            this.loading.set(false);
+            this._snackBar.open('Error al generar el link', 'Cerrar', {
+              duration: 3000,
+            });
+          },
+        });
+    }
   }
 }

@@ -19,6 +19,10 @@ export type Scalars = {
   DateTime: { input: any; output: any; }
 };
 
+export type AccountsReceivable = {
+  debitId: Scalars['ID']['input'];
+};
+
 export type Action = {
   __typename?: 'Action';
   action: Scalars['String']['output'];
@@ -91,6 +95,11 @@ export type AddBranchsToStudentInput = {
   id: Scalars['ID']['input'];
   /** The ids of the relations. */
   relationIds: Array<Scalars['ID']['input']>;
+};
+
+export type AddPayment = {
+  id: Scalars['ID']['input'];
+  payments?: InputMaybe<Array<CreatePayment>>;
 };
 
 export type AddStudentsToDocumentInput = {
@@ -228,6 +237,7 @@ export enum ClipAccountSortFields {
 
 export type ClipLink = {
   __typename?: 'ClipLink';
+  accountId: Scalars['String']['output'];
   amount: Scalars['Float']['output'];
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -252,6 +262,7 @@ export type ClipLinkConnection = {
 };
 
 export type ClipLinkFilter = {
+  accountId?: InputMaybe<StringFieldComparison>;
   and?: InputMaybe<Array<ClipLinkFilter>>;
   createdAt?: InputMaybe<DateFieldComparison>;
   expiresAt?: InputMaybe<DateFieldComparison>;
@@ -269,6 +280,7 @@ export type ClipLinkSort = {
 };
 
 export enum ClipLinkSortFields {
+  AccountId = 'accountId',
   CreatedAt = 'createdAt',
   ExpiresAt = 'expiresAt',
   Id = 'id',
@@ -288,6 +300,7 @@ export type Concept = {
   discounts: Array<Discount>;
   id: Scalars['ID']['output'];
   incomeId: Scalars['String']['output'];
+  pendingPayment: Scalars['Float']['output'];
   quantity: Scalars['Float']['output'];
   subtotal: Scalars['Float']['output'];
   taxes: Scalars['Float']['output'];
@@ -367,7 +380,7 @@ export type CreateClipAccount = {
 };
 
 export type CreateConcept = {
-  debitId: Scalars['String']['input'];
+  debitId?: InputMaybe<Scalars['String']['input']>;
   description: Scalars['String']['input'];
   discounts?: InputMaybe<Array<NestedId>>;
   quantity: Scalars['Float']['input'];
@@ -444,8 +457,10 @@ export type CreateFee = {
 };
 
 export type CreateIncome = {
-  concepts?: InputMaybe<Array<CreateConcept>>;
-  payments?: InputMaybe<Array<CreatePayment>>;
+  branchID: Scalars['String']['input'];
+  concepts: Array<CreateConcept>;
+  payments: Array<CreatePayment>;
+  studentIDs: Array<Scalars['String']['input']>;
 };
 
 export type CreateLevel = {
@@ -456,7 +471,9 @@ export type CreateLevel = {
 };
 
 export type CreateLinkIncome = {
-  concepts?: InputMaybe<Array<CreateConcept>>;
+  branchID: Scalars['String']['input'];
+  concepts: Array<CreateConcept>;
+  studentIDs: Array<Scalars['String']['input']>;
 };
 
 export type CreateManyClipAccountsInput = {
@@ -1452,6 +1469,7 @@ export type IncomeFilter = {
 };
 
 export type IncomeFilterClipLinkFilter = {
+  accountId?: InputMaybe<StringFieldComparison>;
   and?: InputMaybe<Array<IncomeFilterClipLinkFilter>>;
   createdAt?: InputMaybe<DateFieldComparison>;
   expiresAt?: InputMaybe<DateFieldComparison>;
@@ -1601,9 +1619,10 @@ export enum LevelSortFields {
 export type Mutation = {
   __typename?: 'Mutation';
   addBranchsToStudent: Student;
+  addPaymentToIncome: Income;
   addStudentsToDocument: Document;
-  createIncomes: Array<Income>;
-  createLinkIncomes: Array<Income>;
+  createIncomes: Income;
+  createLinkIncomes: Income;
   createManyClipAccounts: Array<ClipAccount>;
   createManyDebits: Array<Debit>;
   createManyDiscounts: Array<Discount>;
@@ -1657,7 +1676,6 @@ export type Mutation = {
   restoreManyDocuments: UpdateManyResponse;
   restoreManyEnrollments: UpdateManyResponse;
   restoreManyFees: UpdateManyResponse;
-  restoreManyIncomes: UpdateManyResponse;
   restoreManyLevels: UpdateManyResponse;
   restoreManyPackages: UpdateManyResponse;
   restoreManyPayments: UpdateManyResponse;
@@ -1678,7 +1696,6 @@ export type Mutation = {
   restoreOneDocument: Document;
   restoreOneEnrollment: Enrollment;
   restoreOneFee: Fee;
-  restoreOneIncome: Income;
   restoreOneLevel: Level;
   restoreOnePackage: Package;
   restoreOnePayment: Payment;
@@ -1721,6 +1738,11 @@ export type Mutation = {
 
 export type MutationAddBranchsToStudentArgs = {
   input: AddBranchsToStudentInput;
+};
+
+
+export type MutationAddPaymentToIncomeArgs = {
+  input: AddPayment;
 };
 
 
@@ -2004,11 +2026,6 @@ export type MutationRestoreManyFeesArgs = {
 };
 
 
-export type MutationRestoreManyIncomesArgs = {
-  input: IncomeFilter;
-};
-
-
 export type MutationRestoreManyLevelsArgs = {
   input: LevelFilter;
 };
@@ -2105,11 +2122,6 @@ export type MutationRestoreOneEnrollmentArgs = {
 
 
 export type MutationRestoreOneFeeArgs = {
-  input: Scalars['ID']['input'];
-};
-
-
-export type MutationRestoreOneIncomeArgs = {
   input: Scalars['ID']['input'];
 };
 
@@ -2637,6 +2649,7 @@ export type Query = {
   enrollments: EnrollmentConnection;
   fee: Fee;
   fees: FeeConnection;
+  getAccountsReceivable: Income;
   income: Income;
   incomes: IncomeConnection;
   level: Level;
@@ -2657,6 +2670,8 @@ export type Query = {
   teachers: TeacherConnection;
   tutor: Tutor;
   tutors: TutorConnection;
+  user: User;
+  users: UserConnection;
 };
 
 
@@ -2804,6 +2819,11 @@ export type QueryFeesArgs = {
 };
 
 
+export type QueryGetAccountsReceivableArgs = {
+  input: AccountsReceivable;
+};
+
+
 export type QueryIncomeArgs = {
   id: Scalars['ID']['input'];
 };
@@ -2921,6 +2941,18 @@ export type QueryTutorsArgs = {
   filter?: TutorFilter;
   paging?: OffsetPaging;
   sorting?: Array<TutorSort>;
+};
+
+
+export type QueryUserArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryUsersArgs = {
+  filter?: UserFilter;
+  paging?: OffsetPaging;
+  sorting?: Array<UserSort>;
 };
 
 export type RemoveBranchsFromStudentInput = {
@@ -3661,6 +3693,7 @@ export type User = {
   __typename?: 'User';
   branchId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
+  cycleId: Scalars['String']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
@@ -3668,6 +3701,44 @@ export type User = {
   username: Scalars['String']['output'];
   version: Scalars['Int']['output'];
 };
+
+export type UserConnection = {
+  __typename?: 'UserConnection';
+  /** Array of nodes. */
+  nodes: Array<User>;
+  /** Paging information */
+  pageInfo: OffsetPageInfo;
+  /** Fetch total count of records */
+  totalCount: Scalars['Int']['output'];
+};
+
+export type UserFilter = {
+  and?: InputMaybe<Array<UserFilter>>;
+  branchId?: InputMaybe<StringFieldComparison>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  cycleId?: InputMaybe<StringFieldComparison>;
+  email?: InputMaybe<StringFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  or?: InputMaybe<Array<UserFilter>>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+  username?: InputMaybe<StringFieldComparison>;
+};
+
+export type UserSort = {
+  direction: SortDirection;
+  field: UserSortFields;
+  nulls?: InputMaybe<SortNulls>;
+};
+
+export enum UserSortFields {
+  BranchId = 'branchId',
+  CreatedAt = 'createdAt',
+  CycleId = 'cycleId',
+  Email = 'email',
+  Id = 'id',
+  UpdatedAt = 'updatedAt',
+  Username = 'username'
+}
 
 export type SessionPartsFragment = { __typename?: 'Session', id: string, token: string, username: string, exp: any, iat: any, branch?: { __typename?: 'Branch', id: string, picture: string, name: string } | null, cycle?: { __typename?: 'Cycle', id: string, name: string, start: string, end: string } | null };
 
@@ -3938,7 +4009,7 @@ export type SetOrderEnrollmentsMutationVariables = Exact<{
 
 export type SetOrderEnrollmentsMutation = { __typename?: 'Mutation', setOrderEnrollments: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
-export type CurrentEnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, branch: { __typename?: 'Branch', id: string, name: string, picture: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } };
+export type CurrentEnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, studentId: string, branch: { __typename?: 'Branch', id: string, name: string, picture: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } };
 
 export type GetCurrentEnrollmentsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -3947,7 +4018,7 @@ export type GetCurrentEnrollmentsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetCurrentEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, branch: { __typename?: 'Branch', id: string, name: string, picture: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } }> } };
+export type GetCurrentEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, studentId: string, branch: { __typename?: 'Branch', id: string, name: string, picture: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } }> } };
 
 export type FeePartsFragment = { __typename?: 'Fee', id: string, name: string, price: number, amount: number, frequency: Frequency, withTax: boolean, autoLoad: boolean };
 
@@ -3987,7 +4058,7 @@ export type CreateIncomesMutationVariables = Exact<{
 }>;
 
 
-export type CreateIncomesMutation = { __typename?: 'Mutation', createIncomes: Array<{ __typename?: 'Income', id: string, folio: number }> };
+export type CreateIncomesMutation = { __typename?: 'Mutation', createIncomes: { __typename?: 'Income', id: string, folio: number } };
 
 export type IncomeWithLinksFragment = { __typename?: 'Income', id: string, folio: number, pendingPayment: number, clipLinks: Array<{ __typename?: 'ClipLink', amount: number, link: string, qr: string, expiresAt: any, requestId: string }> };
 
@@ -3996,7 +4067,16 @@ export type CreateLinkIncomesMutationVariables = Exact<{
 }>;
 
 
-export type CreateLinkIncomesMutation = { __typename?: 'Mutation', createLinkIncomes: Array<{ __typename?: 'Income', id: string, folio: number, pendingPayment: number, clipLinks: Array<{ __typename?: 'ClipLink', amount: number, link: string, qr: string, expiresAt: any, requestId: string }> }> };
+export type CreateLinkIncomesMutation = { __typename?: 'Mutation', createLinkIncomes: { __typename?: 'Income', id: string, folio: number, pendingPayment: number, clipLinks: Array<{ __typename?: 'ClipLink', amount: number, link: string, qr: string, expiresAt: any, requestId: string }> } };
+
+export type AccountsReceivablePartsFragment = { __typename?: 'Income', id: string, folio: number, total: number, pendingPayment: number, concepts: Array<{ __typename?: 'Concept', description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, pendingPayment: number, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> }>, payments: Array<{ __typename?: 'Payment', id: string, folio: number, state: PaymentState, method: PaymentMethod, date: any, amount: number, transaction: string, bank: string }> };
+
+export type GetAccountsReceivableQueryVariables = Exact<{
+  input: AccountsReceivable;
+}>;
+
+
+export type GetAccountsReceivableQuery = { __typename?: 'Query', getAccountsReceivable: { __typename?: 'Income', id: string, folio: number, total: number, pendingPayment: number, concepts: Array<{ __typename?: 'Concept', description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, pendingPayment: number, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> }>, payments: Array<{ __typename?: 'Payment', id: string, folio: number, state: PaymentState, method: PaymentMethod, date: any, amount: number, transaction: string, bank: string }> } };
 
 export type LevelPartsFragment = { __typename?: 'Level', id: string, name: string, abbreviation: string, order: number };
 
@@ -4374,6 +4454,7 @@ export const CurrentEnrollmentPartsFragmentDoc = gql`
   state
   hours
   diciplines
+  studentId
   branch {
     id
     name
@@ -4417,6 +4498,42 @@ export const IncomeWithLinksFragmentDoc = gql`
     qr
     expiresAt
     requestId
+  }
+}
+    `;
+export const AccountsReceivablePartsFragmentDoc = gql`
+    fragment AccountsReceivableParts on Income {
+  id
+  folio
+  total
+  pendingPayment
+  concepts {
+    description
+    unitPrice
+    quantity
+    amount
+    discount
+    subtotal
+    taxes
+    total
+    withTax
+    pendingPayment
+    discounts {
+      id
+      name
+      value
+      type
+    }
+  }
+  payments {
+    id
+    folio
+    state
+    method
+    date
+    amount
+    transaction
+    bank
   }
 }
     `;
@@ -5284,6 +5401,24 @@ export const CreateLinkIncomesDocument = gql`
   })
   export class CreateLinkIncomesGQL extends Apollo.Mutation<CreateLinkIncomesMutation, CreateLinkIncomesMutationVariables> {
     document = CreateLinkIncomesDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetAccountsReceivableDocument = gql`
+    query getAccountsReceivable($input: AccountsReceivable!) {
+  getAccountsReceivable(input: $input) {
+    ...AccountsReceivableParts
+  }
+}
+    ${AccountsReceivablePartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetAccountsReceivableGQL extends Apollo.Query<GetAccountsReceivableQuery, GetAccountsReceivableQueryVariables> {
+    document = GetAccountsReceivableDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

@@ -15,19 +15,21 @@
       negocio.
     </p>
 
-    <p>Enlaces</p>
+    @if(income()) {
+    <p class="font-bold">Enlaces</p>
 
     <div class="">
-      @for (income of incomes(); track income.id) { @for (link of
-      income.clipLinks; track link.link) {
+      @for (link of income()!.clipLinks; track link.link) {
       <div class="item">
         <div>
           <p>
-            <span class="font-medium">Folio:</span> V{{ income.folio | folio }}
+            <span class="font-medium">Folio:</span> V{{
+              income()!.folio | folio
+            }}
           </p>
           <p>
             <span class="font-bold">Monto:</span>
-            {{ income.pendingPayment | currency : "MXN" }}
+            {{ income()!.pendingPayment | currency : "MXN" }}
           </p>
         </div>
         <span class="flex-1"></span>
@@ -48,15 +50,17 @@
           <mat-icon svgIcon="open-in-new" />
         </a>
       </div>
-      } }
+      }
     </div>
+    }
   </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button [disabled]="loading()" (click)="closeDialog()">Cerrar</button>
+  <button mat-button [disabled]="loading()" (click)="closeDialog()">
+    Cerrar
+  </button>
 
-  @if (!created()) {
   <button
     mat-button
     cdkFocusInitial
@@ -65,5 +69,4 @@
   >
     {{ loading() ? "Generando link..." : "Generar link" }}
   </button>
-  }
 </mat-dialog-actions>

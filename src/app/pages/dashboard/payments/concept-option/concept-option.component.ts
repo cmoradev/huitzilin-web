@@ -27,6 +27,8 @@ export class ConceptOptionComponent implements OnInit {
   private readonly pos = inject(PosService);
 
   public debit = input.required<DebitPartsFragment>();
+  public branchID = input.required<string>();
+  public studentID = input.required<string>();
 
   public isDebit = computed(() => this.debit().state === DebitState.Debt);
   public isDebitPartiallyPaid = computed(
@@ -84,9 +86,18 @@ export class ConceptOptionComponent implements OnInit {
 
   public toggleDebit(active: boolean): void {
     if (active) {
-      const added = this.pos.addDebit(this.debit());
+      if (this.debit().state === DebitState.PartiallyPaid) {
+        console.log('Hello World');
+        this.optionControl.setValue(false);
+      } else {
+        const added = this.pos.addDebit(
+          this.debit(),
+          this.branchID(),
+          this.studentID()
+        );
 
-      if (!added) this.optionControl.setValue(false);
+        if (!added) this.optionControl.setValue(false);
+      }
     } else {
       this.pos.removeDebit(this.debit());
     }

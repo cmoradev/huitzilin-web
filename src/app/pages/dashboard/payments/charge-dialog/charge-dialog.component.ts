@@ -43,9 +43,7 @@ export class ChargeDialogComponent implements OnInit {
   private readonly pos = inject(PosService);
   private readonly _snackBar = inject(MatSnackBar);
   private readonly _createIncomes = inject(CreateIncomesGQL);
-  private readonly _dialogRef = inject(
-    MatDialogRef<ChargeDialogComponent>
-  );
+  private readonly _dialogRef = inject(MatDialogRef<ChargeDialogComponent>);
 
   public readonly formTools = inject(FormToolsService);
 
@@ -131,32 +129,39 @@ export class ChargeDialogComponent implements OnInit {
           })),
         }));
 
-        this._createIncomes
-          .mutate({
-            input: {
-              payments,
-              concepts,
-            },
-          })
-          .subscribe({
-            next: (data) => {
-              this.loading.set(false);
-              this._snackBar.open(
-                'Se han creado los ingresos correctamente',
-                'Cerrar',
-                {
-                  duration: 3000,
-                  horizontalPosition: 'center',
-                  verticalPosition: 'bottom',
-                }
-              );
-              this._dialogRef.close(data.data?.createIncomes);
-            },
-            error: (error) => {
-              this.loading.set(false);
-              // console.error('Error creating incomes:', error);
-            },
-          });
+        const studentIDs = Array.from(new Set(this.pos.studentIDs));
+        const branchID = this.pos.branchID;
+
+        if (!!studentIDs.length && !!branchID) {
+          this._createIncomes
+            .mutate({
+              input: {
+                branchID,
+                studentIDs,
+                payments,
+                concepts,
+              },
+            })
+            .subscribe({
+              next: (data) => {
+                this.loading.set(false);
+                this._snackBar.open(
+                  'Se han creado los ingresos correctamente',
+                  'Cerrar',
+                  {
+                    duration: 3000,
+                    horizontalPosition: 'center',
+                    verticalPosition: 'bottom',
+                  }
+                );
+                this._dialogRef.close(data.data?.createIncomes);
+              },
+              error: (error) => {
+                this.loading.set(false);
+                // console.error('Error creating incomes:', error);
+              },
+            });
+        }
       }
     }
   }

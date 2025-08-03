@@ -23,3 +23,44 @@ mutation createLinkIncomes($input: CreateLinkIncome!) {
     ...IncomeWithLinks
   }
 }
+
+fragment AccountsReceivableParts on Income {
+    id
+    folio
+    total
+    pendingPayment
+    concepts {
+      description
+      unitPrice
+      quantity
+      amount
+      discount
+      subtotal
+      taxes
+      total
+      withTax
+      pendingPayment
+      discounts {
+        id
+        name
+        value
+        type
+      }
+    }
+    payments {
+      id
+      folio
+      state
+      method
+      date
+      amount
+      transaction
+      bank
+    }
+}
+
+query getAccountsReceivable($input: AccountsReceivable!) {
+  getAccountsReceivable(input: $input) {
+		...AccountsReceivableParts
+  }
+}

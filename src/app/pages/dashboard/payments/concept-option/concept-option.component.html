@@ -9,8 +9,10 @@
   <div>
     <p class="font-medium">{{ debit().description }}</p>
     <p class="text-xs text-gray-500">
-       <span matTooltip="Fecha limite de pago">{{ debit().dueDate }}</span>,  
-      <span matTooltip="Cantidad a pagar ">{{ debit().total | currency : "MXN" }}</span>
+      <span matTooltip="Fecha limite de pago">{{ debit().dueDate }}</span>,
+      <span matTooltip="Cantidad a pagar ">{{
+        debit().total | currency : "MXN"
+      }}</span>
     </p>
   </div>
 
