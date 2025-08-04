@@ -91,8 +91,7 @@ export class ConceptOptionComponent implements OnInit {
   public toggleDebit(active: boolean): void {
     if (active) {
       if (this.debit().state === DebitState.PartiallyPaid) {
-        this.optionControl.setValue(false);
-        this._dialog.open(CompletePaymentDialogComponent, {
+        const $dialog = this._dialog.open(CompletePaymentDialogComponent, {
           width: '30rem',
           data: {
             debit: this.debit(),
@@ -100,12 +99,37 @@ export class ConceptOptionComponent implements OnInit {
             studentID: this.studentID(),
           },
         });
+
+        $dialog.afterClosed().subscribe({
+          next: (added) => {
+            if (!added) this.optionControl.setValue(false);
+          },
+        });
       } else {
-        const added = this.pos.addDebit(
-          this.debit(),
-          this.branchID(),
-          this.studentID()
-        );
+        const {
+          id,
+          description,
+          unitPrice,
+          quantity,
+          discounts,
+          withTax,
+          dueDate,
+        } = this.debit();
+
+        const branchID = this.branchID();
+        const studentID = this.studentID();
+
+        const added = this.pos.addConcept({
+          debitId: id,
+          description,
+          unitPrice,
+          quantity,
+          discounts,
+          withTax,
+          dueDate,
+          branchID,
+          studentID,
+        });
 
         if (!added) this.optionControl.setValue(false);
       }

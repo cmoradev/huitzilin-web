@@ -2,6 +2,8 @@
   @if (accountsReceivable() !== null) { Completar pago de V{{
     accountsReceivable()!.folio | folio
   }}
+  } @else {
+    Cargando conceptos
   }
 </h2>
 

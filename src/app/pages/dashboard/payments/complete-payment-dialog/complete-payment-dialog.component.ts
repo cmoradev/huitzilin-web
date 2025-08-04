@@ -56,28 +56,34 @@ export class CompletePaymentDialogComponent implements OnInit {
 
   public addConcepts() {
     if (this.accountsReceivable()) {
-      const concepts = this.accountsReceivable()!.concepts.filter((concept) =>
-        new Decimal(concept.pendingPayment).greaterThan(0)
-      );
+      // this._pos.clearConcepts();
 
-      concepts.forEach((concept) => {
-        this._pos.addDebit(
-          {
-            description: concept.description,
-            withTax: concept.withTax,
-            state: DebitState.PartiallyPaid,
-            unitPrice: concept.pendingPayment,
-            quantity: 1,
-            discounts: [],
-            dueDate: new Date().toISOString(),
-            id: concept.id,
-          },
-          this.data.branchID,
-          this.data.studentID
-        );
-      });
+      // const concepts = this.accountsReceivable()!.concepts.filter((concept) =>
+      //   new Decimal(concept.pendingPayment).greaterThan(0)
+      // );
 
-      this._dialogRef.close();
+      // let added = true;
+
+      // concepts.forEach((concept) => {
+      //   const { description, withTax, pendingPayment } = concept;
+
+      //   const branchID = this.data.branchID;
+      //   const studentID = this.data.studentID;
+
+      //   added = added && this._pos.addConcept({
+      //     description,
+      //     withTax,
+      //     branchID,
+      //     studentID,
+      //     unitPrice: pendingPayment,
+      //     quantity: 1,
+      //     debitId: null,
+      //     dueDate: null,
+      //     discounts: [],
+      //   });
+      // });
+
+      // this._dialogRef.close(added);
     }
   }
 

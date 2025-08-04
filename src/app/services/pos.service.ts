@@ -6,52 +6,76 @@ import {
   calculateTotalFromBaseAndTax,
   TaxEnum,
 } from '@calculations';
-import {
-  DebitPartsFragment,
-  DebitState,
-  DiscountPartsFragment,
-} from '@graphql';
+import { DebitPartsFragment, DiscountPartsFragment } from '@graphql';
 import Decimal from 'decimal.js';
+
+// Tipo que representa los parámetros para agregar un concepto
+export type AddConceptParams = {
+  description: string;
+  branchID: string;
+  studentID: string;
+  withTax: boolean;
+  unitPrice: number;
+  quantity: number;
+  debitId: string | null;
+  dueDate: string | null;
+  discounts: Array<Omit<DiscountPartsFragment, '__typename'>>;
+};
+
+// Tipo que representa un concepto en el punto de venta
+export type Concept = Omit<AddConceptParams, 'branchID' | 'studentID'> & {
+  amount: number;
+  discount: number;
+  subtotal: number;
+  taxes: number;
+  total: number;
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class PosService {
+  // Inyección de dependencias
   private readonly _snackBar = inject(MatSnackBar);
 
+  // Señales reactivas para el estado interno
   private readonly _branchID = signal<string | null>(null);
   private readonly _studentIDs = signal<string[]>([]);
   private readonly _concepts = signal<Concept[]>([]);
 
+  // Computed: Determina si los conceptos tienen impuestos
   public withTax = computed(() => {
     const [first] = this._concepts();
-
     return first?.withTax ?? false;
   });
 
-  private readonly _amount = computed(() => {
-    return this._concepts().reduce(
+  // Computed: Calcula el monto total de los conceptos
+  private readonly _amount = computed(() =>
+    this._concepts().reduce(
       (accumulated, debit) => accumulated.plus(debit.amount),
       new Decimal(0)
-    );
-  });
+    )
+  );
 
-  private readonly _discount = computed(() => {
-    return this._concepts().reduce(
+  // Computed: Calcula el descuento total de los conceptos
+  private readonly _discount = computed(() =>
+    this._concepts().reduce(
       (accumulated, debit) => accumulated.plus(debit.discount),
       new Decimal(0)
-    );
-  });
+    )
+  );
 
-  private readonly _subtotal = computed(() => {
-    return this._amount().minus(this._discount());
-  });
+  // Computed: Calcula el subtotal (monto - descuento)
+  private readonly _subtotal = computed(() =>
+    this._amount().minus(this._discount())
+  );
 
+  // Señales para impuestos y total
   private readonly _taxes = signal<Decimal>(new Decimal(0));
-
   private readonly _total = signal<Decimal>(new Decimal(0));
 
   constructor() {
+    // Efecto: Actualiza impuestos y total cuando cambian los conceptos o el impuesto
     effect(() => {
       const withTax = this.withTax();
       const subtotal = this._subtotal().toNumber();
@@ -65,6 +89,7 @@ export class PosService {
       this._total.set(new Decimal(total));
     });
 
+    // Efecto: Limpia branch y estudiantes si no hay conceptos
     effect(() => {
       if (!this._concepts().length) {
         this.branchID = null;
@@ -73,87 +98,77 @@ export class PosService {
     });
   }
 
+  // Setters y getters para branchID y studentIDs
   set studentIDs(value: string[]) {
     this._studentIDs.set(value);
   }
-
   set branchID(value: string | null) {
     this._branchID.set(value);
   }
-
   get branchID() {
     return this._branchID();
   }
-
-  get concepts(): Concept[] {
-    return this._concepts();
-  }
-
   get studentIDs() {
     return this._studentIDs();
   }
 
+  // Getters para conceptos y cálculos
+  get concepts(): Concept[] {
+    return this._concepts();
+  }
   get amount() {
     return this._amount().toNumber();
   }
-
   get discount() {
     return this._discount().toNumber();
   }
-
   get subtotal() {
     return this._subtotal().toNumber();
   }
-
   get taxes() {
     return this._taxes().toNumber();
   }
-
   get total() {
     return this._total().toNumber();
   }
 
+  // Verifica si un adeudo está seleccionado
   public checkIsSelected(value: DebitPartsFragment): boolean {
     return this.concepts.some((concept) => concept.debitId === value.id);
   }
 
+  // Agrega un estudiante al listado, evitando duplicados
   public addStudent(value: string): boolean {
     const setIDs = new Set([...this.studentIDs, value]);
     this.studentIDs = Array.from(setIDs);
     return true;
   }
 
-  public addDebit(
-    value: Pick<
-      DebitPartsFragment,
-      'withTax' | 'state' | 'unitPrice' | 'quantity' | 'discounts' | 'dueDate' | 'id' | 'description'
-    >,
-    branchID: string,
-    studentID: string
-  ): boolean {
-    const canAdd = this._canAddDebit(value, branchID);
+  // Agrega un adeudo como concepto, validando impuestos y sucursal
+  public addConcept(value: AddConceptParams): boolean {
+    const canAdd = this._canAddDebit(value);
 
     if (canAdd) {
+      const { description, withTax, discounts, debitId, dueDate } = value;
+      // Calcula montos y descuentos
       const { unitPrice, quantity, amount } = calculateAmount(
         value.unitPrice,
         value.quantity
       );
-
       const { discount, subtotal } = calculateSubtotalAndDiscount(
         amount,
         value.discounts
       );
-
       const { taxes, total } = calculateTotalFromBaseAndTax(
         subtotal,
         value.withTax ? TaxEnum.Sixteen : TaxEnum.Zero
       );
 
-      this._concepts.update((previous) => {
-        const debits = [...previous];
-
-        debits.push({
-          description: value.description,
+      // Agrega el concepto
+      this._concepts.update((previous) => [
+        ...previous,
+        {
+          description,
           unitPrice,
           quantity,
           amount,
@@ -161,17 +176,15 @@ export class PosService {
           subtotal,
           taxes,
           total,
-          withTax: value.withTax,
-          dueDate: value.dueDate,
-          debitId: value.id,
-          discounts: value.discounts || [],
-        });
+          withTax,
+          discounts,
+          debitId,
+          dueDate,
+        },
+      ]);
 
-        return debits;
-      });
-
-      this.branchID = branchID;
-      this.addStudent(studentID);
+      this.branchID = value.branchID;
+      this.addStudent(value.studentID);
 
       return true;
     }
@@ -179,28 +192,24 @@ export class PosService {
     return false;
   }
 
+  // Elimina un adeudo de los conceptos
   public removeDebit(value: DebitPartsFragment) {
     this._concepts.update((previous) => {
       const concepts = [...previous];
-
       const index = concepts.findIndex(
         (concept) => concept.debitId === value.id
       );
-
       if (index !== -1) {
         concepts.splice(index, 1);
       }
-
       return concepts;
     });
   }
 
-  private _canAddDebit(
-    value: Pick<DebitPartsFragment, 'withTax' | 'state'>,
-    branchID: string
-  ): boolean {
+  // Valida si se puede agregar un adeudo (misma sucursal y tipo de impuesto)
+  private _canAddDebit(value: AddConceptParams): boolean {
     const isEqualBranchOrEmpty =
-      this.branchID === null || this.branchID === branchID;
+      this.branchID === null || this.branchID === value.branchID;
 
     if (!isEqualBranchOrEmpty) {
       this._snackBar.open(
@@ -232,24 +241,10 @@ export class PosService {
     return !diferenceTaxes && isEqualBranchOrEmpty;
   }
 
+  // Limpia todos los conceptos y resetea impuestos y total
   public clearConcepts() {
     this._concepts.set([]);
     this._taxes.set(new Decimal(0));
     this._total.set(new Decimal(0));
   }
 }
-
-export type Concept = {
-  description: string;
-  unitPrice: number;
-  quantity: number;
-  amount: number;
-  discount: number;
-  subtotal: number;
-  taxes: number;
-  total: number;
-  withTax: boolean;
-  dueDate: string;
-  debitId: string;
-  discounts: DiscountPartsFragment[];
-};
