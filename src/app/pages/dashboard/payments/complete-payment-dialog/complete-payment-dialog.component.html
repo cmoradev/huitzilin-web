@@ -2,9 +2,7 @@
   @if (accountsReceivable() !== null) { Completar pago de V{{
     accountsReceivable()!.folio | folio
   }}
-  } @else {
-    Cargando conceptos
-  }
+  } @else { Cargando conceptos }
 </h2>
 
 @if (accountsReceivable() !== null) {
@@ -70,8 +68,10 @@
 }
 
 <mat-dialog-actions align="end">
-  <button mat-button mat-dialog-close>Cerrar</button>
-  <button type="button" mat-button cdkFocusInitial (click)="openChargeDialog()">
+  <button type="button" mat-button (click)="closeDialog()">Cerrar</button>
+  @if (!!accountsReceivable()?.pendingPayment) {
+  <button type="button" mat-button (click)="openChargeDialog()" cdkFocusInitial>
     Cobrar
   </button>
+  }
 </mat-dialog-actions>
