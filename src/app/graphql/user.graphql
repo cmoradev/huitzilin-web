@@ -1,0 +1,23 @@
+fragment UserParts on User {
+  id,
+  username,
+  email
+  branchId
+  cycleId
+}
+
+query getUsersPage ($offset: Int = 0, $limit: Int = 10, $filter: UserFilter = {})  {
+  users (
+    paging: { limit: $limit, offset: $offset },
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...UserParts
+    }
+  }
+}

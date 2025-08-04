@@ -4321,6 +4321,17 @@ export type DeleteOneDocumentMutationVariables = Exact<{
 
 export type DeleteOneDocumentMutation = { __typename?: 'Mutation', deleteOneDocument: { __typename?: 'DocumentDeleteResponse', id?: string | null } };
 
+export type UserPartsFragment = { __typename?: 'User', id: string, username: string, email: string, branchId: string, cycleId: string };
+
+export type GetUsersPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<UserFilter>;
+}>;
+
+
+export type GetUsersPageQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'User', id: string, username: string, email: string, branchId: string, cycleId: string }> } };
+
 export const SessionPartsFragmentDoc = gql`
     fragment SessionParts on Session {
   id
@@ -4616,6 +4627,15 @@ export const DocumentPartsFragmentDoc = gql`
   name
   key
   url
+}
+    `;
+export const UserPartsFragmentDoc = gql`
+    fragment UserParts on User {
+  id
+  username
+  email
+  branchId
+  cycleId
 }
     `;
 export const SignInDocument = gql`
@@ -6028,6 +6048,31 @@ export const DeleteOneDocumentDocument = gql`
   })
   export class DeleteOneDocumentGQL extends Apollo.Mutation<DeleteOneDocumentMutation, DeleteOneDocumentMutationVariables> {
     document = DeleteOneDocumentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetUsersPageDocument = gql`
+    query getUsersPage($offset: Int = 0, $limit: Int = 10, $filter: UserFilter = {}) {
+  users(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...UserParts
+    }
+  }
+}
+    ${UserPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetUsersPageGQL extends Apollo.Query<GetUsersPageQuery, GetUsersPageQueryVariables> {
+    document = GetUsersPageDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

@@ -20,11 +20,19 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { merge, startWith } from 'rxjs';
 import { endOfDay, startOfDay } from 'date-fns';
-import { ReportsData, ReportsGrouped, ReportsService } from '@services';
+import {
+  BranchToolsService,
+  GlobalStateService,
+  ReportsData,
+  ReportsGrouped,
+  ReportsService,
+} from '@services';
 import { FolioPipe, MethodPipe } from '@pipes';
 import { init } from 'echarts';
 import { PaymentMethod } from '@graphql';
 import { paymentNames } from '@utils/contains';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-incomes',
@@ -40,6 +48,8 @@ import { paymentNames } from '@utils/contains';
     ReactiveFormsModule,
     MatDatepickerModule,
     MatTooltipModule,
+    MatSelectModule,
+    MatTabsModule,
     FolioPipe,
     MethodPipe,
     DatePipe,
@@ -48,16 +58,13 @@ import { paymentNames } from '@utils/contains';
   templateUrl: './incomes.component.html',
   styles: ``,
 })
-export class IncomesComponent implements AfterViewInit {
+export class IncomesComponent implements AfterViewInit, OnInit {
   @ViewChild('paginator') public paginator!: MatPaginator;
-  @ViewChild('branchsChart')
-  public branchsChartElement!: ElementRef<HTMLDivElement>;
   @ViewChild('methodsChart')
   public methodsChartElement!: ElementRef<HTMLDivElement>;
 
   public loading = signal<boolean>(false);
   public total = signal<number>(0);
-  public incomeBranchs = signal<ReportsGrouped[]>([]);
   public incomeMethods = signal<ReportsGrouped[]>([]);
   public displayedColumns: string[] = [
     'branchName',
@@ -68,18 +75,34 @@ export class IncomesComponent implements AfterViewInit {
     'paymentDate',
     'paymentAmount',
   ];
+  public summaryDisplayedColumns: string[] = ['name', 'value'];
 
   public dataSource = new MatTableDataSource<ReportsData>([]);
+  public summaryDataSource = new MatTableDataSource<ReportsGrouped>([]);
 
   private readonly reportsService = inject(ReportsService);
+  private readonly _globalStateService = inject(GlobalStateService);
+
+  public branchTools = inject(BranchToolsService);
 
   public startDateControl = new FormControl<Date>(startOfDay(new Date()));
   public endDateControl = new FormControl<Date>(endOfDay(new Date()));
+  public branchControl = new FormControl<string | null>(
+    this._globalStateService.branch?.id ?? null
+  );
+
+  ngOnInit(): void {
+    this.branchTools.fetchAll();
+  }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
 
-    merge(this.startDateControl.valueChanges, this.endDateControl.valueChanges)
+    merge(
+      this.startDateControl.valueChanges,
+      this.endDateControl.valueChanges,
+      this.branchControl.valueChanges
+    )
       .pipe(startWith(null))
       .subscribe({
         next: () => {
@@ -91,15 +114,22 @@ export class IncomesComponent implements AfterViewInit {
   public refresh() {
     this.loading.set(true);
 
-    if (!!this.startDateControl?.value && this.endDateControl.value) {
+    if (
+      !!this.startDateControl?.value &&
+      this.endDateControl.value &&
+      this.branchControl.value
+    ) {
       const start = startOfDay(this.startDateControl.value).toISOString();
       const end = endOfDay(this.endDateControl.value).toISOString();
+      const branchId = this.branchControl.value;
 
-      this.reportsService.incomes(start, end).subscribe({
+      this.reportsService.incomes(start, end, branchId).subscribe({
         next: (response) => {
           this.dataSource.data = response.data;
-          this.incomeBranchs.set(response.groupedByBranch);
           this.incomeMethods.set(response.groupedByMethod);
+          this.summaryDataSource.data = response.groupedByMethod.map(
+            (data) => ({ ...data, name: paymentNames[data.id.toUpperCase() as PaymentMethod] })
+          );
           this.total.set(response.total);
           this.loading.set(false);
           this.drawCharts();
@@ -113,52 +143,6 @@ export class IncomesComponent implements AfterViewInit {
   }
 
   private drawCharts() {
-    if (this.branchsChartElement.nativeElement) {
-      const branchsChart = init(this.branchsChartElement.nativeElement);
-
-      const branchsData = this.incomeBranchs().map((grouped) => ({
-        value: grouped.count,
-        name: grouped.name,
-      }));
-
-      branchsChart.setOption({
-        tooltip: {
-          trigger: 'item',
-        },
-        legend: {
-          top: '5%',
-          left: 'center',
-        },
-        series: [
-          {
-            name: 'Ingresos por sucursal',
-            type: 'pie',
-            radius: ['40%', '70%'],
-            avoidLabelOverlap: false,
-            padAngle: 5,
-            itemStyle: {
-              borderRadius: 10,
-            },
-            label: {
-              show: false,
-              position: 'center',
-            },
-            emphasis: {
-              label: {
-                show: true,
-                fontSize: 24,
-                fontWeight: 'bold',
-              },
-            },
-            labelLine: {
-              show: false,
-            },
-            data: branchsData,
-          },
-        ],
-      });
-    }
-
     if (this.methodsChartElement.nativeElement) {
       const methodsChart = init(this.methodsChartElement.nativeElement);
 
@@ -181,9 +165,9 @@ export class IncomesComponent implements AfterViewInit {
             type: 'pie',
             radius: ['40%', '70%'],
             avoidLabelOverlap: false,
-            padAngle: 5,
+            padAngle: 3,
             itemStyle: {
-              borderRadius: 10,
+              borderRadius: 8,
             },
             label: {
               show: false,

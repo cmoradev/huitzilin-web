@@ -11,9 +11,13 @@ export class ReportsService {
 
   private readonly http = inject(HttpClient);
 
-  public incomes(start: string, end: string): Observable<ReportsResponse> {
+  public incomes(
+    start: string,
+    end: string,
+    branchId: string
+  ): Observable<ReportsResponse> {
     return this.http.get<ReportsResponse>(`${this.apiUri}/incomes`, {
-      params: { start, end },
+      params: { start, end, branchId },
     });
   }
 }
@@ -54,7 +58,6 @@ export interface ReportsGrouped {
 }
 
 export interface ReportsResponse {
-  groupedByBranch: ReportsGrouped[];
   groupedByMethod: ReportsGrouped[];
   total: number;
   data: ReportsData[];
