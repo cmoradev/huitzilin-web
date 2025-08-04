@@ -1,12 +1,14 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
-import { FormToolsService, PosService } from '@services';
 import {
-  CreateConcept,
-  CreateIncomesGQL,
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { FormToolsService } from '@services';
+import {
   CreatePayment,
   PaymentMethod,
 } from '@graphql';
@@ -22,7 +24,7 @@ import {
 } from '@angular/forms';
 import Decimal from 'decimal.js';
 import { MatError } from '@angular/material/form-field';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { paymentIcons, paymentNames } from '@utils/contains';
 
 @Component({
   selector: 'app-charge-dialog',
@@ -40,28 +42,16 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styles: ``,
 })
 export class ChargeDialogComponent implements OnInit {
-  private readonly pos = inject(PosService);
-  private readonly _snackBar = inject(MatSnackBar);
-  private readonly _createIncomes = inject(CreateIncomesGQL);
   private readonly _dialogRef = inject(MatDialogRef<ChargeDialogComponent>);
 
-  public readonly formTools = inject(FormToolsService);
-
+  public formTools = inject(FormToolsService);
+  public total = inject<number>(MAT_DIALOG_DATA);
   public loading = signal<boolean>(false);
-  public total = computed(() => this.pos.total);
   public remainingAmount = signal<number>(0);
 
-  public paymentNames: any = {
-    [PaymentMethod.Card]: 'Tarjeta',
-    [PaymentMethod.Cash]: 'Efectivo',
-    [PaymentMethod.Transfer]: 'Transferencia',
-  };
+  public paymentNames: any = paymentNames;
 
-  public paymentIcons: any = {
-    [PaymentMethod.Card]: 'credit-card',
-    [PaymentMethod.Cash]: 'cash',
-    [PaymentMethod.Transfer]: 'bank-transfer-in',
-  };
+  public paymentIcons: any = paymentIcons;
 
   public paymentsForm = this.formTools.builder.group(
     {
@@ -96,7 +86,7 @@ export class ChargeDialogComponent implements OnInit {
           return acc.add(current.amount);
         }, new Decimal(0));
 
-        this.remainingAmount.set(this.total() - recived.toNumber());
+        this.remainingAmount.set(this.total - recived.toNumber());
       },
     });
   }
@@ -118,50 +108,7 @@ export class ChargeDialogComponent implements OnInit {
           bank: payment.bank,
         }));
 
-        const concepts: CreateConcept[] = this.pos.concepts.map((concept) => ({
-          description: concept.description,
-          debitId: concept.debitId,
-          quantity: concept.quantity,
-          unitPrice: concept.unitPrice,
-          withTax: concept.withTax,
-          discounts: concept.discounts.map((discount) => ({
-            id: discount.id,
-          })),
-        }));
-
-        const studentIDs = Array.from(new Set(this.pos.studentIDs));
-        const branchID = this.pos.branchID;
-
-        if (!!studentIDs.length && !!branchID) {
-          this._createIncomes
-            .mutate({
-              input: {
-                branchID,
-                studentIDs,
-                payments,
-                concepts,
-              },
-            })
-            .subscribe({
-              next: (data) => {
-                this.loading.set(false);
-                this._snackBar.open(
-                  'Se han creado los ingresos correctamente',
-                  'Cerrar',
-                  {
-                    duration: 3000,
-                    horizontalPosition: 'center',
-                    verticalPosition: 'bottom',
-                  }
-                );
-                this._dialogRef.close(data.data?.createIncomes);
-              },
-              error: (error) => {
-                this.loading.set(false);
-                // console.error('Error creating incomes:', error);
-              },
-            });
-        }
+        this._dialogRef.close(payments);
       }
     }
   }

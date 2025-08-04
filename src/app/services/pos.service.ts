@@ -109,7 +109,7 @@ export class PosService {
     return this._branchID();
   }
   get studentIDs() {
-    return this._studentIDs();
+    return Array.from(new Set(this._studentIDs()));
   }
 
   // Getters para conceptos y cálculos

@@ -24,6 +24,7 @@ import { ReportsData, ReportsGrouped, ReportsService } from '@services';
 import { FolioPipe, MethodPipe } from '@pipes';
 import { init } from 'echarts';
 import { PaymentMethod } from '@graphql';
+import { paymentNames } from '@utils/contains';
 
 @Component({
   selector: 'app-incomes',
@@ -161,16 +162,9 @@ export class IncomesComponent implements AfterViewInit {
     if (this.methodsChartElement.nativeElement) {
       const methodsChart = init(this.methodsChartElement.nativeElement);
 
-      const paymentNames: any = {
-        [PaymentMethod.Card]: 'Tarjeta',
-        [PaymentMethod.Cash]: 'Efectivo',
-        [PaymentMethod.Transfer]: 'Transferencia',
-        [PaymentMethod.Clip]: 'Clip',
-      };
-
       const methodsData = this.incomeMethods().map((grouped) => ({
         value: grouped.count,
-        name: paymentNames[grouped.id.toUpperCase()],
+        name: paymentNames[grouped.id.toUpperCase() as PaymentMethod],
       }));
 
       methodsChart.setOption({

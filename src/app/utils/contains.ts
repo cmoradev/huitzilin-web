@@ -4,6 +4,7 @@ import {
   DebitState,
   DiscountBy,
   PackageKind,
+  PaymentMethod,
 } from '@graphql';
 
 export const discountTypes = [
@@ -124,3 +125,17 @@ export const studentDocuments = [
 ];
 
 export const defaultDate = '2025-06-15';
+
+export const paymentNames: Record<PaymentMethod, string> = {
+  [PaymentMethod.Card]: 'Tarjeta',
+  [PaymentMethod.Cash]: 'Efectivo',
+  [PaymentMethod.Transfer]: 'Transferencia',
+  [PaymentMethod.Clip]: 'Clip',
+};
+
+export const paymentIcons: Record<PaymentMethod, string> = {
+  [PaymentMethod.Card]: 'credit-card',
+  [PaymentMethod.Cash]: 'cash',
+  [PaymentMethod.Transfer]: 'bank-transfer-in',
+  [PaymentMethod.Clip]: 'clipboard',
+};
