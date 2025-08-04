@@ -1,5 +1,12 @@
 import { CurrencyPipe, NgClass } from '@angular/common';
-import { Component, computed, inject, input, OnInit } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  OnInit,
+  output,
+} from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRippleModule } from '@angular/material/core';
@@ -33,6 +40,7 @@ export class ConceptOptionComponent implements OnInit {
   public debit = input.required<DebitPartsFragment>();
   public branchID = input.required<string>();
   public studentID = input.required<string>();
+  public refresh = output<void>();
 
   public isDebit = computed(() => this.debit().state === DebitState.Debt);
   public isDebitPartiallyPaid = computed(
@@ -102,7 +110,11 @@ export class ConceptOptionComponent implements OnInit {
 
         $dialog.afterClosed().subscribe({
           next: (added) => {
-            if (!added) this.optionControl.setValue(false);
+            if (added) {
+              this.refresh.emit();
+            }
+
+            this.optionControl.setValue(false);
           },
         });
       } else {

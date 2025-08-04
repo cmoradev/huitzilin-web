@@ -37,7 +37,6 @@ import { AvatarComponent } from '@components/avatar/avatar.component';
   styleUrls: ['./enrollment-with-debits.component.scss'],
 })
 export class EnrollmentWithDebitsComponent implements OnInit {
-  private readonly _pos = inject(PosService);
   private readonly _dialog = inject(MatDialog);
   private readonly _getDebitsPage = inject(GetDebitsPageGQL);
 
@@ -48,6 +47,12 @@ export class EnrollmentWithDebitsComponent implements OnInit {
   public debits = signal<DebitPartsFragment[]>([]);
 
   ngOnInit(): void {
+    this._fetchAllDebits();
+  }
+
+  public refreshDebits(): void {
+    this.loading.set(true);
+    this.debits.set([]);
     this._fetchAllDebits();
   }
 

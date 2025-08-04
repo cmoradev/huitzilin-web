@@ -28,6 +28,7 @@
     [debit]="debit"
     [branchID]="enrollment().branch.id"
     [studentID]="enrollment().studentId"
+    (refresh)="refreshDebits()"
   />
   }
 </div>

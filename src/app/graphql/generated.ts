@@ -98,7 +98,7 @@ export type AddBranchsToStudentInput = {
 };
 
 export type AddPayment = {
-  id: Scalars['ID']['input'];
+  incomeID: Scalars['ID']['input'];
   payments?: InputMaybe<Array<CreatePayment>>;
 };
 
@@ -4078,6 +4078,13 @@ export type GetAccountsReceivableQueryVariables = Exact<{
 
 export type GetAccountsReceivableQuery = { __typename?: 'Query', getAccountsReceivable: { __typename?: 'Income', id: string, folio: number, total: number, pendingPayment: number, concepts: Array<{ __typename?: 'Concept', id: string, description: string, unitPrice: number, quantity: number, amount: number, discount: number, subtotal: number, taxes: number, total: number, withTax: boolean, pendingPayment: number, discounts: Array<{ __typename?: 'Discount', id: string, name: string, value: number, type: DiscountBy }> }>, payments: Array<{ __typename?: 'Payment', id: string, folio: number, state: PaymentState, method: PaymentMethod, date: any, amount: number, transaction: string, bank: string }> } };
 
+export type AddPaymentToIncomeMutationVariables = Exact<{
+  input: AddPayment;
+}>;
+
+
+export type AddPaymentToIncomeMutation = { __typename?: 'Mutation', addPaymentToIncome: { __typename?: 'Income', id: string, folio: number } };
+
 export type LevelPartsFragment = { __typename?: 'Level', id: string, name: string, abbreviation: string, order: number };
 
 export type CreateOneLevelMutationVariables = Exact<{
@@ -5420,6 +5427,25 @@ export const GetAccountsReceivableDocument = gql`
   })
   export class GetAccountsReceivableGQL extends Apollo.Query<GetAccountsReceivableQuery, GetAccountsReceivableQueryVariables> {
     document = GetAccountsReceivableDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const AddPaymentToIncomeDocument = gql`
+    mutation addPaymentToIncome($input: AddPayment!) {
+  addPaymentToIncome(input: $input) {
+    id
+    folio
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class AddPaymentToIncomeGQL extends Apollo.Mutation<AddPaymentToIncomeMutation, AddPaymentToIncomeMutationVariables> {
+    document = AddPaymentToIncomeDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
