@@ -13,12 +13,10 @@ import {
   AddPaymentToIncomeGQL,
   CreatePayment,
   DebitPartsFragment,
-  DebitState,
   GetAccountsReceivableGQL,
 } from '@graphql';
 import { FolioPipe, MethodPipe } from '@pipes';
 import { PosService } from '@services';
-import Decimal from 'decimal.js';
 import { ChargeDialogComponent } from '../charge-dialog/charge-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -42,7 +40,6 @@ type CompletePaymentDialogData = {
   styles: ``,
 })
 export class CompletePaymentDialogComponent implements OnInit {
-  private readonly _pos = inject(PosService);
   private readonly _dialogRef = inject(
     MatDialogRef<CompletePaymentDialogComponent>
   );
@@ -51,6 +48,7 @@ export class CompletePaymentDialogComponent implements OnInit {
   private readonly _addPaymentToIncome = inject(AddPaymentToIncomeGQL);
   private readonly _snackBar = inject(MatSnackBar);
 
+  public withNewPayment = signal<boolean>(false);
   public loading = signal<boolean>(false);
   public accountsReceivable = signal<AccountsReceivablePartsFragment | null>(
     null
@@ -61,6 +59,10 @@ export class CompletePaymentDialogComponent implements OnInit {
   }
 
   public data = inject<CompletePaymentDialogData>(MAT_DIALOG_DATA);
+
+  public closeDialog() {
+    this._dialogRef.close(this.withNewPayment());
+  }
 
   public openChargeDialog() {
     if (
@@ -79,6 +81,8 @@ export class CompletePaymentDialogComponent implements OnInit {
       $dislog.afterClosed().subscribe({
         next: (payments) => {
           if (!!payments && !!payments.length) {
+            this.withNewPayment.set(true);
+
             this._addPaymentToIncome
               .mutate({
                 input: {
@@ -98,8 +102,7 @@ export class CompletePaymentDialogComponent implements OnInit {
                       verticalPosition: 'bottom',
                     }
                   );
-                  this._pos.clearConcepts();
-                  this._dialogRef.close(data?.addPaymentToIncome);
+                  this.fetchAccountsReceivable();
                 },
                 error: (error) => {
                   this.loading.set(false);
@@ -115,11 +118,16 @@ export class CompletePaymentDialogComponent implements OnInit {
     if (this.data?.debit.id) {
       this.loading.set(true);
       this._getAccountsReceivable
-        .fetch({
-          input: {
-            debitId: this.data!.debit.id,
+        .fetch(
+          {
+            input: {
+              debitId: this.data!.debit.id,
+            },
           },
-        })
+          {
+            fetchPolicy: 'network-only',
+          }
+        )
         .subscribe({
           next: ({ data }) => {
             data.getAccountsReceivable;
