@@ -4332,6 +4332,13 @@ export type GetUsersPageQueryVariables = Exact<{
 
 export type GetUsersPageQuery = { __typename?: 'Query', users: { __typename?: 'UserConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'User', id: string, username: string, email: string, branchId: string, cycleId: string }> } };
 
+export type CreateOneUserMutationVariables = Exact<{
+  input: SignUpInput;
+}>;
+
+
+export type CreateOneUserMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Session', id: string, username: string, token: string } };
+
 export const SessionPartsFragmentDoc = gql`
     fragment SessionParts on Session {
   id
@@ -6073,6 +6080,26 @@ export const GetUsersPageDocument = gql`
   })
   export class GetUsersPageGQL extends Apollo.Query<GetUsersPageQuery, GetUsersPageQueryVariables> {
     document = GetUsersPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneUserDocument = gql`
+    mutation createOneUser($input: SignUpInput!) {
+  signUp(input: $input) {
+    id
+    username
+    token
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneUserGQL extends Apollo.Mutation<CreateOneUserMutation, CreateOneUserMutationVariables> {
+    document = CreateOneUserDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

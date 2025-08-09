@@ -21,3 +21,13 @@ query getUsersPage ($offset: Int = 0, $limit: Int = 10, $filter: UserFilter = {}
     }
   }
 }
+
+mutation createOneUser($input: SignUpInput!) {
+  signUp  (
+   input:$input
+  ){
+    id,
+    username,
+    token
+  }
+}

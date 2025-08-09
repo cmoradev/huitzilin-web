@@ -1,0 +1,77 @@
+<h2 mat-dialog-title>{{ !!data?.id ? "Actualizar" : "Crear" }} usuario</h2>
+<mat-dialog-content>
+  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
+    <div class="flex flex-col gap-3">
+      <mat-form-field>
+        <mat-label>Correo electrónico</mat-label>
+        <input
+          type="email"
+          matInput
+          placeholder="Ej: example@domain.com"
+          formControlName="email"
+        />
+        <mat-hint>Ingrese el correo electrónico</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("email")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Nombre de usuario</mat-label>
+        <input matInput placeholder="Ej: jperez" formControlName="username" />
+        <mat-hint>Ingrese el nombre de usuario</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("username")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Contraseña</mat-label>
+        <input matInput placeholder="Ej: ********" formControlName="password" />
+        <mat-hint>Ingrese la contraseña</mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("password")) }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="w-full">
+        <mat-label>Sucursal</mat-label>
+        <mat-select formControlName="branchId">
+          @for (branch of branchTools.options(); track $index) {
+          <mat-option [value]="branch.id">
+            <div class="flex items-center gap-2">
+              <img [alt]="branch.name" class="h-6 w-6" [src]="branch.picture" />
+              <span> {{ branch.name }} </span>
+            </div>
+          </mat-option>
+          }
+        </mat-select>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("branchId")) }}
+        </mat-error>
+        <mat-hint> Seleccione una sucursal </mat-hint>
+      </mat-form-field>
+
+      <mat-form-field class="w-full">
+        <mat-label>Ciclo</mat-label>
+        <mat-select formControlName="cycleId">
+          @for (cycle of cycleTools.options(); track $index) {
+          <mat-option [value]="cycle.id">
+            {{ cycle.name }}
+          </mat-option>
+          }
+        </mat-select>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("cycleId")) }}
+        </mat-error>
+        <mat-hint> Seleccione una sucursal </mat-hint>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
+  <button mat-button cdkFocusInitial form="dataForm" [disabled]="loading()">
+    {{ loading() ? "Guardando..." : "Guardar" }}
+  </button>
+</mat-dialog-actions>
