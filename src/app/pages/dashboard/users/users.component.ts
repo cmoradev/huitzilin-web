@@ -19,6 +19,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { GetUsersPageGQL, UserFilter, UserPartsFragment } from '@graphql';
 import { debounceTime, merge, startWith } from 'rxjs';
 import { UserFormDialogComponent } from './user-form-dialog/user-form-dialog.component';
+import { UserDeleteDialogComponent } from './user-delete-dialog/user-delete-dialog.component';
 
 @Component({
   selector: 'app-users',
@@ -95,6 +96,21 @@ export class UsersComponent implements AfterViewInit {
 
   public openFormDialog(user: UserPartsFragment | undefined = undefined): void {
     const $dialog = this.dialog.open(UserFormDialogComponent, {
+      width: '30rem',
+      data: user,
+    });
+
+    $dialog.afterClosed().subscribe({
+      next: (user) => {
+        if (user) this.refresh();
+      },
+    });
+  }
+
+  public openDeleteDialog(
+    user: UserPartsFragment | undefined = undefined
+  ): void {
+    const $dialog = this.dialog.open(UserDeleteDialogComponent, {
       width: '30rem',
       data: user,
     });
