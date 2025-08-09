@@ -25,6 +25,7 @@
         </mat-error>
       </mat-form-field>
 
+      @if (!data?.id) {
       <mat-form-field>
         <mat-label>Contraseña</mat-label>
         <input matInput placeholder="Ej: ********" formControlName="password" />
@@ -33,6 +34,7 @@
           {{ formTools.checkForErrorsIn(formGroup.get("password")) }}
         </mat-error>
       </mat-form-field>
+      }
 
       <mat-form-field class="w-full">
         <mat-label>Sucursal</mat-label>

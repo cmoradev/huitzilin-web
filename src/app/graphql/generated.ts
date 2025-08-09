@@ -942,6 +942,11 @@ export type DeleteOneTutorInput = {
   id: Scalars['ID']['input'];
 };
 
+export type DeleteOneUserInput = {
+  /** The id of the record to delete. */
+  id: Scalars['ID']['input'];
+};
+
 export type Discipline = {
   __typename?: 'Discipline';
   branchId: Scalars['ID']['output'];
@@ -1663,6 +1668,7 @@ export type Mutation = {
   deleteOneStudent: StudentDeleteResponse;
   deleteOneTeacher: TeacherDeleteResponse;
   deleteOneTutor: TutorDeleteResponse;
+  deleteOneUser: UserDeleteResponse;
   removeBranchsFromStudent: Student;
   removeStudentsFromDocument: Document;
   restoreManyActions: UpdateManyResponse;
@@ -1958,6 +1964,11 @@ export type MutationDeleteOneTeacherArgs = {
 
 export type MutationDeleteOneTutorArgs = {
   input: DeleteOneTutorInput;
+};
+
+
+export type MutationDeleteOneUserArgs = {
+  input: DeleteOneUserInput;
 };
 
 
@@ -2307,8 +2318,7 @@ export type MutationUpdateOneTutorArgs = {
 
 
 export type MutationUpdateOneUserArgs = {
-  id: Scalars['ID']['input'];
-  update: UpdateUser;
+  input: UpdateOneUserInput;
 };
 
 export type NestedId = {
@@ -3621,6 +3631,13 @@ export type UpdateOneTutorInput = {
   update: UpdateTutor;
 };
 
+export type UpdateOneUserInput = {
+  /** The id of the record to update */
+  id: Scalars['ID']['input'];
+  /** The update to apply. */
+  update: UpdateUser;
+};
+
 export type UpdatePackage = {
   branchId?: InputMaybe<Scalars['String']['input']>;
   kind?: InputMaybe<PackageKind>;
@@ -3684,9 +3701,14 @@ export type UpdateTutor = {
 
 export type UpdateUser = {
   branchId?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   cycleId?: InputMaybe<Scalars['String']['input']>;
+  deletedAt?: InputMaybe<Scalars['DateTime']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
   username?: InputMaybe<Scalars['String']['input']>;
+  version?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type User = {
@@ -3710,6 +3732,19 @@ export type UserConnection = {
   pageInfo: OffsetPageInfo;
   /** Fetch total count of records */
   totalCount: Scalars['Int']['output'];
+};
+
+export type UserDeleteResponse = {
+  __typename?: 'UserDeleteResponse';
+  branchId?: Maybe<Scalars['String']['output']>;
+  createdAt?: Maybe<Scalars['DateTime']['output']>;
+  cycleId?: Maybe<Scalars['String']['output']>;
+  deletedAt?: Maybe<Scalars['DateTime']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  updatedAt?: Maybe<Scalars['DateTime']['output']>;
+  username?: Maybe<Scalars['String']['output']>;
+  version?: Maybe<Scalars['Int']['output']>;
 };
 
 export type UserFilter = {
@@ -3755,14 +3790,6 @@ export type SignUpMutationVariables = Exact<{
 
 
 export type SignUpMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Session', id: string, token: string, username: string, exp: any, iat: any, branch?: { __typename?: 'Branch', id: string, picture: string, name: string } | null, cycle?: { __typename?: 'Cycle', id: string, name: string, start: string, end: string } | null } };
-
-export type UpdateOneUserMutationVariables = Exact<{
-  update: UpdateUser;
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type UpdateOneUserMutation = { __typename?: 'Mutation', updateOneUser: { __typename?: 'User', id: string } };
 
 export type ClipAccountPartsFragment = { __typename?: 'ClipAccount', id: string, name: string, webhook: string, deletedAt?: any | null, success: string, error: string, default: string };
 
@@ -4337,7 +4364,22 @@ export type CreateOneUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateOneUserMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Session', id: string, username: string, token: string } };
+export type CreateOneUserMutation = { __typename?: 'Mutation', signUp: { __typename?: 'Session', id: string, username: string } };
+
+export type UpdateOneUserMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateUser;
+}>;
+
+
+export type UpdateOneUserMutation = { __typename?: 'Mutation', updateOneUser: { __typename?: 'User', id: string } };
+
+export type DeleteOneUserMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneUserMutation = { __typename?: 'Mutation', deleteOneUser: { __typename?: 'UserDeleteResponse', id?: string | null, username?: string | null } };
 
 export const SessionPartsFragmentDoc = gql`
     fragment SessionParts on Session {
@@ -4676,24 +4718,6 @@ export const SignUpDocument = gql`
   })
   export class SignUpGQL extends Apollo.Mutation<SignUpMutation, SignUpMutationVariables> {
     document = SignUpDocument;
-    
-    constructor(apollo: Apollo.Apollo) {
-      super(apollo);
-    }
-  }
-export const UpdateOneUserDocument = gql`
-    mutation updateOneUser($update: UpdateUser!, $id: ID!) {
-  updateOneUser(id: $id, update: $update) {
-    id
-  }
-}
-    `;
-
-  @Injectable({
-    providedIn: 'root'
-  })
-  export class UpdateOneUserGQL extends Apollo.Mutation<UpdateOneUserMutation, UpdateOneUserMutationVariables> {
-    document = UpdateOneUserDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
@@ -6090,7 +6114,6 @@ export const CreateOneUserDocument = gql`
   signUp(input: $input) {
     id
     username
-    token
   }
 }
     `;
@@ -6100,6 +6123,43 @@ export const CreateOneUserDocument = gql`
   })
   export class CreateOneUserGQL extends Apollo.Mutation<CreateOneUserMutation, CreateOneUserMutationVariables> {
     document = CreateOneUserDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneUserDocument = gql`
+    mutation updateOneUser($id: ID!, $update: UpdateUser!) {
+  updateOneUser(input: {id: $id, update: $update}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneUserGQL extends Apollo.Mutation<UpdateOneUserMutation, UpdateOneUserMutationVariables> {
+    document = UpdateOneUserDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneUserDocument = gql`
+    mutation deleteOneUser($id: ID!) {
+  deleteOneUser(input: {id: $id}) {
+    id
+    username
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneUserGQL extends Apollo.Mutation<DeleteOneUserMutation, DeleteOneUserMutationVariables> {
+    document = DeleteOneUserDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

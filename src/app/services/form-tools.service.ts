@@ -5,7 +5,7 @@ import {
   FormBuilder,
   ValidatorFn,
 } from '@angular/forms';
-import { FetchStudentGQL } from '@graphql';
+import { FetchStudentGQL, GetUsersPageGQL } from '@graphql';
 import { ERROR_MESSAGES } from '@utils/messages';
 import { map } from 'rxjs';
 
@@ -15,6 +15,7 @@ import { map } from 'rxjs';
 export class FormToolsService {
   public readonly builder: FormBuilder = inject<FormBuilder>(FormBuilder);
   private readonly _fetchStudentPage = inject(FetchStudentGQL);
+  private readonly _fetchUsersPage = inject(GetUsersPageGQL);
 
   /**
    * Busca el error y retorna una descripción
@@ -74,9 +75,13 @@ export class FormToolsService {
       if (control.hasError('studentNotFound')) {
         return ERROR_MESSAGES['studentNotFound']();
       }
-      
+
       if (control.hasError('dniIsExists')) {
         return ERROR_MESSAGES['dniIsExists']();
+      }
+
+      if (control.hasError('usernameIsExists')) {
+        return ERROR_MESSAGES['usernameIsExists']();
       }
 
       if (control.hasError('totalExceeded')) {
@@ -112,6 +117,26 @@ export class FormToolsService {
           })
         );
     };
+  }
+
+  public get isUsernameValid(): AsyncValidatorFn {
+    return (control) =>
+      this._fetchUsersPage
+        .fetch(
+          {
+            filter: {
+              username: { eq: control.value },
+            },
+          },
+          { fetchPolicy: 'network-only' }
+        )
+        .pipe(
+          map((resp) => {
+            const user = resp.data.users.nodes.find((value) => value?.id);
+
+            return user ? { usernameIsExists: true } : null;
+          })
+        );
   }
 
   public get isDniStudentValid(): AsyncValidatorFn {

@@ -19,10 +19,3 @@ mutation signUp($input: SignUpInput!) {
     ...SessionParts
   }
 }
-
-mutation updateOneUser ($update: UpdateUser!, $id: ID!) {
-  updateOneUser (
-    id: $id,
-    update: $update
-  ){id}
-}

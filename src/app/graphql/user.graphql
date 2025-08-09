@@ -27,7 +27,23 @@ mutation createOneUser($input: SignUpInput!) {
    input:$input
   ){
     id,
+    username
+  }
+}
+
+mutation updateOneUser($id: ID!, $update: UpdateUser!) {
+  updateOneUser  (
+   input: {id:$id, update: $update}
+  ){
+    id
+  }
+}
+
+mutation deleteOneUser($id: ID!) {
+  deleteOneUser  (
+   input: {id:$id}
+  ){
+    id,
     username,
-    token
   }
 }
