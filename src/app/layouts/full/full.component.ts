@@ -14,9 +14,9 @@ import { NgScrollbar } from 'ngx-scrollbar';
 import { concatMap, filter, groupBy, mergeMap, of, toArray, zip } from 'rxjs';
 import { HeaderComponent } from './header/header.component';
 import { NavItemComponent } from './sidebar/nav-item/nav-item.component';
-import { NavItem, navItems } from './sidebar/sidebar-data';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { GlobalStateSettingsComponent } from './global-state-settings/global-state-settings.component';
+import { NavItem, navItems } from '@routes';
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';

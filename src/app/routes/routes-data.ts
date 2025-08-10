@@ -1,8 +1,4 @@
-export enum NavigationEnum {
-  OPERATIONS = 'Operación',
-  ADMINISTRATION = 'Administración',
-  DEVELOPER = 'Configuraciones',
-}
+import { NavigationEnum, RouteItem } from './types';
 
 export const navItems: RouteItem[] = [
   {
@@ -253,55 +249,3 @@ export const navItems: RouteItem[] = [
     ],
   },
 ];
-
-export type Entity =
-  | 'branches'
-  | 'cycles'
-  | 'clip-accounts'
-  | 'users'
-  | 'policies'
-  | 'permissions'
-  | 'discounts'
-  | 'price-lists'
-  | 'fees'
-  | 'periods'
-  | 'schedules'
-  | 'disciplines'
-  | 'levels'
-  | 'students'
-  | 'debits'
-  | 'incomes'
-  | 'enrollments'
-  | 'documents';
-
-export type Action =
-  | 'create'
-  | 'read'
-  | 'update'
-  | 'delete'
-  | 'select'
-  | 'management';
-
-export type Reports =
-  | 'reports:incomes'
-  | 'reports:debits'
-  | 'reports:statement-account'
-  | 'reports:chart'
-  | 'reports:data';
-
-export type Permission = `${Action}:${Entity}` | Reports | '*:*';
-
-export type RouteItem = {
-  displayName: string;
-  iconName: string;
-  route: string;
-  showInSidebar: boolean;
-  section: NavigationEnum;
-  permissions: Permission[];
-  isGlobal: boolean;
-};
-
-export type NavItem = {
-  section: NavigationEnum;
-  routes: RouteItem[];
-};
