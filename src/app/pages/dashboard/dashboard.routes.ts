@@ -77,6 +77,11 @@ export const DashboardRoutes: Routes = [
       import('./users/users.component').then((m) => m.UsersComponent),
   },
   {
+    path: 'policies',
+    loadComponent: () =>
+      import('./policies/policies.component').then((m) => m.PoliciesComponent),
+  },
+  {
     path: 'reports',
     loadChildren: () =>
       import('./reports/reports.routes').then((m) => m.ReportsRoutes),

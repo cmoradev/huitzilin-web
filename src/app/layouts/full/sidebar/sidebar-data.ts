@@ -89,6 +89,12 @@ export const navItems: RouteItem[] = [
     route: '/users',
     section: NavigationEnum.DEVELOPER,
   },
+  {
+    displayName: 'Políticas',
+    iconName: 'shield',
+    route: '/policies',
+    section: NavigationEnum.DEVELOPER,
+  },
 ];
 
 export type RouteItem = {

@@ -1462,46 +1462,11 @@ export type IncomeConnection = {
 export type IncomeFilter = {
   and?: InputMaybe<Array<IncomeFilter>>;
   branchId?: InputMaybe<StringFieldComparison>;
-  clipLinks?: InputMaybe<IncomeFilterClipLinkFilter>;
-  concepts?: InputMaybe<IncomeFilterConceptFilter>;
   createdAt?: InputMaybe<DateFieldComparison>;
   folio?: InputMaybe<IntFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<IncomeFilter>>;
-  payments?: InputMaybe<IncomeFilterPaymentFilter>;
   students?: InputMaybe<IncomeFilterStudentFilter>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
-export type IncomeFilterClipLinkFilter = {
-  accountId?: InputMaybe<StringFieldComparison>;
-  and?: InputMaybe<Array<IncomeFilterClipLinkFilter>>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  expiresAt?: InputMaybe<DateFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  incomeId?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<IncomeFilterClipLinkFilter>>;
-  requestId?: InputMaybe<StringFieldComparison>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
-export type IncomeFilterConceptFilter = {
-  and?: InputMaybe<Array<IncomeFilterConceptFilter>>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  description?: InputMaybe<StringFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  incomeId?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<IncomeFilterConceptFilter>>;
-  updatedAt?: InputMaybe<DateFieldComparison>;
-};
-
-export type IncomeFilterPaymentFilter = {
-  and?: InputMaybe<Array<IncomeFilterPaymentFilter>>;
-  createdAt?: InputMaybe<DateFieldComparison>;
-  folio?: InputMaybe<IntFieldComparison>;
-  id?: InputMaybe<IdFilterComparison>;
-  incomeId?: InputMaybe<StringFieldComparison>;
-  or?: InputMaybe<Array<IncomeFilterPaymentFilter>>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -2579,6 +2544,8 @@ export enum PeriodSortFields {
 
 export type Policy = {
   __typename?: 'Policy';
+  actions: Array<Action>;
+  branch: Branch;
   branchId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
@@ -2586,6 +2553,12 @@ export type Policy = {
   name: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
+};
+
+
+export type PolicyActionsArgs = {
+  filter?: ActionFilter;
+  sorting?: Array<ActionSort>;
 };
 
 export type PolicyConnection = {
@@ -4232,6 +4205,39 @@ export type SetOrderPeriodsMutationVariables = Exact<{
 
 export type SetOrderPeriodsMutation = { __typename?: 'Mutation', setOrderPeriods: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
+export type PolicyPartsFragment = { __typename?: 'Policy', id: string, name: string, branchId: string, branch: { __typename?: 'Branch', name: string, picture: string } };
+
+export type CreateOnePolicyMutationVariables = Exact<{
+  policy: CreatePolicy;
+}>;
+
+
+export type CreateOnePolicyMutation = { __typename?: 'Mutation', createOnePolicy: { __typename?: 'Policy', id: string, name: string, branchId: string, branch: { __typename?: 'Branch', name: string, picture: string } } };
+
+export type GetPoliciesPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<PolicyFilter>;
+}>;
+
+
+export type GetPoliciesPageQuery = { __typename?: 'Query', policies: { __typename?: 'PolicyConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Policy', id: string, name: string, branchId: string, branch: { __typename?: 'Branch', name: string, picture: string } }> } };
+
+export type UpdateOnePolicyMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdatePolicy;
+}>;
+
+
+export type UpdateOnePolicyMutation = { __typename?: 'Mutation', updateOnePolicy: { __typename?: 'Policy', id: string, name: string, branchId: string, branch: { __typename?: 'Branch', name: string, picture: string } } };
+
+export type DeleteOnePolicyMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOnePolicyMutation = { __typename?: 'Mutation', deleteOnePolicy: { __typename?: 'PolicyDeleteResponse', id?: string | null } };
+
 export type SchedulePartsFragment = { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number }, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } };
 
 export type CreateOneScheduleMutationVariables = Exact<{
@@ -4632,6 +4638,17 @@ export const PeriodPartsFragmentDoc = gql`
   end
   firstHour
   lastHour
+}
+    `;
+export const PolicyPartsFragmentDoc = gql`
+    fragment PolicyParts on Policy {
+  id
+  name
+  branchId
+  branch {
+    name
+    picture
+  }
 }
     `;
 export const SchedulePartsFragmentDoc = gql`
@@ -5800,6 +5817,89 @@ export const SetOrderPeriodsDocument = gql`
   })
   export class SetOrderPeriodsGQL extends Apollo.Mutation<SetOrderPeriodsMutation, SetOrderPeriodsMutationVariables> {
     document = SetOrderPeriodsDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOnePolicyDocument = gql`
+    mutation createOnePolicy($policy: CreatePolicy!) {
+  createOnePolicy(input: {policy: $policy}) {
+    ...PolicyParts
+  }
+}
+    ${PolicyPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOnePolicyGQL extends Apollo.Mutation<CreateOnePolicyMutation, CreateOnePolicyMutationVariables> {
+    document = CreateOnePolicyDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetPoliciesPageDocument = gql`
+    query getPoliciesPage($offset: Int = 0, $limit: Int = 10, $filter: PolicyFilter = {}) {
+  policies(
+    paging: {limit: $limit, offset: $offset}
+    sorting: [{field: createdAt, direction: DESC}]
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...PolicyParts
+    }
+  }
+}
+    ${PolicyPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetPoliciesPageGQL extends Apollo.Query<GetPoliciesPageQuery, GetPoliciesPageQueryVariables> {
+    document = GetPoliciesPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOnePolicyDocument = gql`
+    mutation updateOnePolicy($id: ID!, $update: UpdatePolicy!) {
+  updateOnePolicy(input: {id: $id, update: $update}) {
+    ...PolicyParts
+  }
+}
+    ${PolicyPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOnePolicyGQL extends Apollo.Mutation<UpdateOnePolicyMutation, UpdateOnePolicyMutationVariables> {
+    document = UpdateOnePolicyDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOnePolicyDocument = gql`
+    mutation deleteOnePolicy($id: ID!) {
+  deleteOnePolicy(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOnePolicyGQL extends Apollo.Mutation<DeleteOnePolicyMutation, DeleteOnePolicyMutationVariables> {
+    document = DeleteOnePolicyDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);
