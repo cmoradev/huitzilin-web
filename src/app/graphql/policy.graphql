@@ -1,54 +1,49 @@
 fragment PolicyParts on Policy {
-  id,
-  name,
-  branchId
-  branch {name, picture}
+  id
+  name
+  actions {
+    id
+    route
+    actions
+    resources
+  }
 }
 
-mutation createOnePolicy ($policy: CreatePolicy!) {
-  createOnePolicy (
-    input: {
-      policy: $policy
-    }
-  ) {
+mutation createOnePolicy($policy: CreatePolicy!) {
+  createOnePolicy(input: { policy: $policy }) {
     ...PolicyParts
   }
 }
 
-query getPoliciesPage ($offset: Int = 0, $limit: Int = 10, $filter: PolicyFilter = {})  {
-  policies (
-    paging: { limit: $limit, offset: $offset },
+query getPoliciesPage(
+  $offset: Int = 0
+  $limit: Int = 10
+  $filter: PolicyFilter = {}
+) {
+  policies(
+    paging: { limit: $limit, offset: $offset }
     sorting: [{ field: createdAt, direction: DESC }]
     filter: $filter
   ) {
     totalCount
     pageInfo {
-      hasNextPage,
+      hasNextPage
       hasPreviousPage
-    },
+    }
     nodes {
-			...PolicyParts
+      ...PolicyParts
     }
   }
 }
 
-mutation updateOnePolicy ($id: ID!, $update: UpdatePolicy!) {
-  updateOnePolicy (
-    input: {
-      id: $id,
-      update: $update
-    }
-  ) {
+mutation updateOnePolicy($id: ID!, $update: UpdatePolicy!) {
+  updateOnePolicy(input: { id: $id, update: $update }) {
     ...PolicyParts
   }
 }
 
-mutation deleteOnePolicy ($id: ID!) {
-	deleteOnePolicy (
-    input: {
-      id: $id
-    }
-  ) {
+mutation deleteOnePolicy($id: ID!) {
+  deleteOnePolicy(input: { id: $id }) {
     id
   }
 }

@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>Asignar políticas a {{ data.username }}</h2>
+<mat-dialog-content>
+  @if (loadingPolicies()) {
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  }
+  <mat-selection-list [formControl]="policiesFormControl">
+    @for (policy of policies(); track policy.id) {
+    <mat-list-option [value]="policy.id">
+      <span matListItemTitle>{{ policy.name }}</span>
+      <span matListItemLine>{{ policy.actions.length }} permisos</span>
+    </mat-list-option>
+    }
+  </mat-selection-list>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancel</button>
+  <button
+    mat-button
+    cdkFocusInitial
+    (click)="savePolicies()"
+    [disabled]="loading()"
+  >
+    {{ loading() ? "Guardando..." : "Guardar" }}
+  </button>
+</mat-dialog-actions>

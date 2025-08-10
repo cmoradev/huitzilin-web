@@ -18,6 +18,7 @@ import {
 import { debounceTime, merge, startWith } from 'rxjs';
 import { PolicyDeleteDialogComponent } from './policy-delete-dialog/policy-delete-dialog.component';
 import { PolicyFormDialogComponent } from './policy-form-dialog/policy-form-dialog.component';
+import { UserPoliciesDialogComponent } from '../users/user-policies-dialog/user-policies-dialog.component';
 
 @Component({
   selector: 'app-policies',
@@ -87,6 +88,15 @@ export class PoliciesComponent {
           this.totalCount.set(totalCount);
         },
       });
+  }
+
+  public openPoliciesDialog(
+    user: PolicyPartsFragment | undefined = undefined
+  ): void {
+    this.dialog.open(UserPoliciesDialogComponent, {
+      width: '30rem',
+      data: user,
+    });
   }
 
   public openFormDialog(

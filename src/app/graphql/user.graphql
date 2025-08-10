@@ -47,3 +47,11 @@ mutation deleteOneUser($id: ID!) {
     username,
   }
 }
+
+query getUserPolicies ($id: ID!) {
+  user (id: $id) {
+    policies {
+      id
+    }
+  }
+}

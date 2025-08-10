@@ -25,12 +25,12 @@ export type AccountsReceivable = {
 
 export type Action = {
   __typename?: 'Action';
-  action: Scalars['String']['output'];
+  actions: Array<Scalars['String']['output']>;
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
-  effect: ActionEffect;
   id: Scalars['ID']['output'];
   policyId: Scalars['String']['output'];
+  resources: Scalars['String']['output'];
   route: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
@@ -48,29 +48,24 @@ export type ActionConnection = {
 
 export type ActionDeleteResponse = {
   __typename?: 'ActionDeleteResponse';
-  action?: Maybe<Scalars['String']['output']>;
+  actions?: Maybe<Array<Scalars['String']['output']>>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
-  effect?: Maybe<ActionEffect>;
   id?: Maybe<Scalars['ID']['output']>;
   policyId?: Maybe<Scalars['String']['output']>;
+  resources?: Maybe<Scalars['String']['output']>;
   route?: Maybe<Scalars['String']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   version?: Maybe<Scalars['Int']['output']>;
 };
 
-export enum ActionEffect {
-  Allow = 'ALLOW',
-  Deny = 'DENY'
-}
-
 export type ActionFilter = {
-  action?: InputMaybe<StringFieldComparison>;
   and?: InputMaybe<Array<ActionFilter>>;
   createdAt?: InputMaybe<DateFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<ActionFilter>>;
   policyId?: InputMaybe<StringFieldComparison>;
+  resources?: InputMaybe<StringFieldComparison>;
   route?: InputMaybe<StringFieldComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
@@ -82,10 +77,10 @@ export type ActionSort = {
 };
 
 export enum ActionSortFields {
-  Action = 'action',
   CreatedAt = 'createdAt',
   Id = 'id',
   PolicyId = 'policyId',
+  Resources = 'resources',
   Route = 'route',
   UpdatedAt = 'updatedAt'
 }
@@ -358,9 +353,9 @@ export enum ConceptSortFields {
 }
 
 export type CreateAction = {
-  action: Scalars['String']['input'];
-  effect: ActionEffect;
+  actions: Array<Scalars['String']['input']>;
   policyId: Scalars['String']['input'];
+  resources: Scalars['String']['input'];
   route: Scalars['String']['input'];
 };
 
@@ -615,7 +610,6 @@ export type CreatePeriod = {
 };
 
 export type CreatePolicy = {
-  branchId: Scalars['String']['input'];
   name: Scalars['String']['input'];
 };
 
@@ -2545,8 +2539,6 @@ export enum PeriodSortFields {
 export type Policy = {
   __typename?: 'Policy';
   actions: Array<Action>;
-  branch: Branch;
-  branchId: Scalars['String']['output'];
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   id: Scalars['ID']['output'];
@@ -2573,7 +2565,6 @@ export type PolicyConnection = {
 
 export type PolicyDeleteResponse = {
   __typename?: 'PolicyDeleteResponse';
-  branchId?: Maybe<Scalars['String']['output']>;
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
@@ -2584,7 +2575,6 @@ export type PolicyDeleteResponse = {
 
 export type PolicyFilter = {
   and?: InputMaybe<Array<PolicyFilter>>;
-  branchId?: InputMaybe<StringFieldComparison>;
   createdAt?: InputMaybe<DateFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
   name?: InputMaybe<StringFieldComparison>;
@@ -2599,7 +2589,6 @@ export type PolicySort = {
 };
 
 export enum PolicySortFields {
-  BranchId = 'branchId',
   CreatedAt = 'createdAt',
   Id = 'id',
   Name = 'name',
@@ -3364,9 +3353,9 @@ export enum TutorSortFields {
 }
 
 export type UpdateAction = {
-  action?: InputMaybe<Scalars['String']['input']>;
-  effect?: InputMaybe<ActionEffect>;
+  actions?: InputMaybe<Array<Scalars['String']['input']>>;
   policyId?: InputMaybe<Scalars['String']['input']>;
+  resources?: InputMaybe<Scalars['String']['input']>;
   route?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -3632,7 +3621,6 @@ export type UpdatePeriod = {
 };
 
 export type UpdatePolicy = {
-  branchId?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 
@@ -3674,14 +3662,10 @@ export type UpdateTutor = {
 
 export type UpdateUser = {
   branchId?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   cycleId?: InputMaybe<Scalars['String']['input']>;
-  deletedAt?: InputMaybe<Scalars['DateTime']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
+  policies?: InputMaybe<Array<NestedId>>;
   username?: InputMaybe<Scalars['String']['input']>;
-  version?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type User = {
@@ -3692,9 +3676,16 @@ export type User = {
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   email: Scalars['String']['output'];
   id: Scalars['ID']['output'];
+  policies: Array<Policy>;
   updatedAt: Scalars['DateTime']['output'];
   username: Scalars['String']['output'];
   version: Scalars['Int']['output'];
+};
+
+
+export type UserPoliciesArgs = {
+  filter?: PolicyFilter;
+  sorting?: Array<PolicySort>;
 };
 
 export type UserConnection = {
@@ -4205,14 +4196,14 @@ export type SetOrderPeriodsMutationVariables = Exact<{
 
 export type SetOrderPeriodsMutation = { __typename?: 'Mutation', setOrderPeriods: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
-export type PolicyPartsFragment = { __typename?: 'Policy', id: string, name: string, branchId: string, branch: { __typename?: 'Branch', name: string, picture: string } };
+export type PolicyPartsFragment = { __typename?: 'Policy', id: string, name: string, actions: Array<{ __typename?: 'Action', id: string, route: string, actions: Array<string>, resources: string }> };
 
 export type CreateOnePolicyMutationVariables = Exact<{
   policy: CreatePolicy;
 }>;
 
 
-export type CreateOnePolicyMutation = { __typename?: 'Mutation', createOnePolicy: { __typename?: 'Policy', id: string, name: string, branchId: string, branch: { __typename?: 'Branch', name: string, picture: string } } };
+export type CreateOnePolicyMutation = { __typename?: 'Mutation', createOnePolicy: { __typename?: 'Policy', id: string, name: string, actions: Array<{ __typename?: 'Action', id: string, route: string, actions: Array<string>, resources: string }> } };
 
 export type GetPoliciesPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -4221,7 +4212,7 @@ export type GetPoliciesPageQueryVariables = Exact<{
 }>;
 
 
-export type GetPoliciesPageQuery = { __typename?: 'Query', policies: { __typename?: 'PolicyConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Policy', id: string, name: string, branchId: string, branch: { __typename?: 'Branch', name: string, picture: string } }> } };
+export type GetPoliciesPageQuery = { __typename?: 'Query', policies: { __typename?: 'PolicyConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Policy', id: string, name: string, actions: Array<{ __typename?: 'Action', id: string, route: string, actions: Array<string>, resources: string }> }> } };
 
 export type UpdateOnePolicyMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4229,7 +4220,7 @@ export type UpdateOnePolicyMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOnePolicyMutation = { __typename?: 'Mutation', updateOnePolicy: { __typename?: 'Policy', id: string, name: string, branchId: string, branch: { __typename?: 'Branch', name: string, picture: string } } };
+export type UpdateOnePolicyMutation = { __typename?: 'Mutation', updateOnePolicy: { __typename?: 'Policy', id: string, name: string, actions: Array<{ __typename?: 'Action', id: string, route: string, actions: Array<string>, resources: string }> } };
 
 export type DeleteOnePolicyMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4386,6 +4377,13 @@ export type DeleteOneUserMutationVariables = Exact<{
 
 
 export type DeleteOneUserMutation = { __typename?: 'Mutation', deleteOneUser: { __typename?: 'UserDeleteResponse', id?: string | null, username?: string | null } };
+
+export type GetUserPoliciesQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetUserPoliciesQuery = { __typename?: 'Query', user: { __typename?: 'User', policies: Array<{ __typename?: 'Policy', id: string }> } };
 
 export const SessionPartsFragmentDoc = gql`
     fragment SessionParts on Session {
@@ -4644,10 +4642,11 @@ export const PolicyPartsFragmentDoc = gql`
     fragment PolicyParts on Policy {
   id
   name
-  branchId
-  branch {
-    name
-    picture
+  actions {
+    id
+    route
+    actions
+    resources
   }
 }
     `;
@@ -6260,6 +6259,26 @@ export const DeleteOneUserDocument = gql`
   })
   export class DeleteOneUserGQL extends Apollo.Mutation<DeleteOneUserMutation, DeleteOneUserMutationVariables> {
     document = DeleteOneUserDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetUserPoliciesDocument = gql`
+    query getUserPolicies($id: ID!) {
+  user(id: $id) {
+    policies {
+      id
+    }
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetUserPoliciesGQL extends Apollo.Query<GetUserPoliciesQuery, GetUserPoliciesQueryVariables> {
+    document = GetUserPoliciesDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

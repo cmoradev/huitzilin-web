@@ -20,6 +20,7 @@ import { GetUsersPageGQL, UserFilter, UserPartsFragment } from '@graphql';
 import { debounceTime, merge, startWith } from 'rxjs';
 import { UserFormDialogComponent } from './user-form-dialog/user-form-dialog.component';
 import { UserDeleteDialogComponent } from './user-delete-dialog/user-delete-dialog.component';
+import { UserPoliciesDialogComponent } from './user-policies-dialog/user-policies-dialog.component';
 
 @Component({
   selector: 'app-users',
@@ -92,6 +93,15 @@ export class UsersComponent implements AfterViewInit {
           this.totalCount.set(totalCount);
         },
       });
+  }
+
+  public openPoliciesDialog(
+    user: UserPartsFragment | undefined = undefined
+  ): void {
+    this.dialog.open(UserPoliciesDialogComponent, {
+      width: '30rem',
+      data: user,
+    });
   }
 
   public openFormDialog(user: UserPartsFragment | undefined = undefined): void {
