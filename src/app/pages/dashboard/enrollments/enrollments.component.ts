@@ -115,7 +115,7 @@ export class EnrollmentsComponent implements OnInit {
     value: EnrollmentPartsFragment | undefined = undefined
   ): void {
     const $dialog = this._dialog.open(EnrollmentFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       maxWidth: '95vw',
       data: value,
     });
@@ -129,7 +129,7 @@ export class EnrollmentsComponent implements OnInit {
 
   public openEnrollmentDeleteDialog(value: EnrollmentPartsFragment): void {
     const $dialog = this._dialog.open(EnrollmentDeleteDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: value,
     });
 
@@ -172,7 +172,7 @@ export class EnrollmentsComponent implements OnInit {
 
   public openDebitDeleteDialog(value: DebitPartsFragment): void {
     const $dialog = this._dialog.open(DebitDeleteDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: value,
     });
 

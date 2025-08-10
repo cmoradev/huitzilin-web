@@ -245,7 +245,6 @@ export const navItems: RouteItem[] = [
       'read:policies',
       'update:policies',
       'delete:policies',
-      'management:permissions',
     ],
   },
 ];

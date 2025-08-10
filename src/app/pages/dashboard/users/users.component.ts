@@ -99,14 +99,14 @@ export class UsersComponent implements AfterViewInit {
     user: UserPartsFragment | undefined = undefined
   ): void {
     this.dialog.open(UserPoliciesDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: user,
     });
   }
 
   public openFormDialog(user: UserPartsFragment | undefined = undefined): void {
     const $dialog = this.dialog.open(UserFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: user,
     });
 
@@ -121,7 +121,7 @@ export class UsersComponent implements AfterViewInit {
     user: UserPartsFragment | undefined = undefined
   ): void {
     const $dialog = this.dialog.open(UserDeleteDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: user,
     });
 

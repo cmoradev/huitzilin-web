@@ -81,7 +81,7 @@ export class LevelsComponent {
     level: LevelPartsFragment | undefined = undefined
   ): void {
     const $dialog = this.dialog.open(LevelFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: level,
     });
 
@@ -95,7 +95,7 @@ export class LevelsComponent {
   public openDeleteDialog(level: LevelPartsFragment): void {
     const $dialog = this.dialog.open(LevelDeleteDialogComponent, {
       data: level,
-      width: '30rem',
+      width: '32rem',
     });
 
     $dialog.afterClosed().subscribe({

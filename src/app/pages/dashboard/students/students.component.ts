@@ -81,7 +81,7 @@ export class StudentsComponent {
     value: StudentPartsFragment | undefined = undefined
   ): void {
     const $dialog = this.dialog.open(StudentFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: value,
     });
 
@@ -95,7 +95,7 @@ export class StudentsComponent {
   public openDeleteDialog(value: StudentPartsFragment): void {
     const $dialog = this.dialog.open(StudentDeleteDialogComponent, {
       data: value,
-      width: '30rem',
+      width: '32rem',
     });
 
     $dialog.afterClosed().subscribe({

@@ -127,7 +127,7 @@ export class DebitWithDiscountFormComponent implements OnInit {
 
   public selectDebitDiscount() {
     const dialog$ = this._dialog.open(SelectDebitDiscountFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
     });
 
     dialog$.afterClosed().subscribe({

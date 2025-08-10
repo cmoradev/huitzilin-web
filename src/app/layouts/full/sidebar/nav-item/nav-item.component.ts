@@ -5,8 +5,8 @@ import {
   MatListItemIcon,
   MatListItemTitle,
 } from '@angular/material/list';
-import { RouteItem } from '../sidebar-data';
 import { Router } from '@angular/router';
+import { RouteItem } from '@routes';
 
 @Component({
   selector: 'app-nav-item',

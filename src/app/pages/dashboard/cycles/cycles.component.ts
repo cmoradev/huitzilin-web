@@ -74,7 +74,7 @@ export class CyclesComponent {
     value: CyclePartsFragment | undefined = undefined
   ): void {
     const $dialog = this.dialog.open(CycleFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: value,
     });
 
@@ -88,7 +88,7 @@ export class CyclesComponent {
   public openDeleteDialog(value: CyclePartsFragment): void {
     const $dialog = this.dialog.open(CycleDeleteDialogComponent, {
       data: value,
-      width: '30rem',
+      width: '32rem',
     });
 
     $dialog.afterClosed().subscribe({

@@ -103,7 +103,7 @@ export class CalendarPageComponent {
     value: PeriodPartsFragment | undefined = undefined
   ): void {
     const $dialog = this._dialog.open(CalendarFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: value,
     });
 
@@ -119,7 +119,7 @@ export class CalendarPageComponent {
 
   public openPeriodDeleteDialog(value: PeriodPartsFragment): void {
     const $dialog = this._dialog.open(CalendarDeleteDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: value,
     });
 
@@ -141,7 +141,7 @@ export class CalendarPageComponent {
     };
 
     const $dialog = this._dialog.open(ScheduleFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: schedule,
     });
 
@@ -159,7 +159,7 @@ export class CalendarPageComponent {
     event.stopPropagation();
 
     const $dialog = this._dialog.open(ScheduleFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: {
         ...schedule,
         start: new Date(`${defaultDate}T${schedule.start}`).toISOString(),

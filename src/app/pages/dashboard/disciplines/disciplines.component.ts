@@ -69,7 +69,7 @@ export class DisciplinesComponent {
     value: DisciplinePartsFragment | undefined = undefined
   ): void {
     const $dialog = this.dialog.open(DisciplineFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: value,
     });
 
@@ -83,7 +83,7 @@ export class DisciplinesComponent {
   public openDeleteDialog(value: DisciplinePartsFragment): void {
     const $dialog = this.dialog.open(DisciplineDeleteDialogComponent, {
       data: value,
-      width: '30rem',
+      width: '32rem',
     });
 
     $dialog.afterClosed().subscribe({

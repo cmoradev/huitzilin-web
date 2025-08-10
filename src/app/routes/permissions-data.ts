@@ -457,10 +457,4 @@ export const permissions: Permission[] = [
     permission: 'delete:policies',
     description: 'Permite eliminar políticas.',
   },
-  {
-    route: '/policies',
-    name: 'Administrar permisos',
-    permission: 'management:permissions',
-    description: 'Permite la gestión avanzada de permisos.',
-  },
 ];

@@ -97,7 +97,7 @@ export class PricesComponent implements OnInit {
     value: PackagePartsFragment | undefined = undefined
   ): void {
     const $dialog = this._dialog.open(ActivityFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: value,
     });
 
@@ -110,7 +110,7 @@ export class PricesComponent implements OnInit {
 
   public openActivityDeleteDialog(value: PackagePartsFragment): void {
     const $dialog = this._dialog.open(ActivityDeleteDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: value,
     });
 
@@ -125,7 +125,7 @@ export class PricesComponent implements OnInit {
     value: FeePartsFragment | undefined = undefined
   ): void {
     const $dialog = this._dialog.open(FeeFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: value,
     });
 
@@ -138,7 +138,7 @@ export class PricesComponent implements OnInit {
 
   public openFeeDeleteDialog(value: FeePartsFragment): void {
     const $dialog = this._dialog.open(FeeDeleteDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: value,
     });
 

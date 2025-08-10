@@ -74,7 +74,7 @@ export class CompletePaymentDialogComponent implements OnInit {
         number,
         CreatePayment[]
       >(ChargeDialogComponent, {
-        width: '30rem',
+        width: '32rem',
         data: this.accountsReceivable()!.pendingPayment,
       });
 

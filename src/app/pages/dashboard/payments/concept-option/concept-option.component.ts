@@ -100,7 +100,7 @@ export class ConceptOptionComponent implements OnInit {
     if (active) {
       if (this.debit().state === DebitState.PartiallyPaid) {
         const $dialog = this._dialog.open(CompletePaymentDialogComponent, {
-          width: '30rem',
+          width: '32rem',
           data: {
             debit: this.debit(),
             branchID: this.branchID(),

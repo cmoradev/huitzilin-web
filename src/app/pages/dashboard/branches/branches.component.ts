@@ -83,7 +83,7 @@ export class BranchsComponent implements AfterViewInit {
 
   public openFormDialog(branch: BranchPartsFragment | undefined = undefined): void {
     const $dialog = this.dialog.open(BranchFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: branch,
     });
 
@@ -97,7 +97,7 @@ export class BranchsComponent implements AfterViewInit {
   public openDeleteDialog(branch: BranchPartsFragment): void {
     const $dialog = this.dialog.open(BranchDeleteDialogComponent, {
       data: branch,
-      width: '30rem',
+      width: '32rem',
     });
 
     $dialog.afterClosed().subscribe({

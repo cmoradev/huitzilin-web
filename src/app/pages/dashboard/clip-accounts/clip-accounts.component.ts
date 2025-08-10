@@ -63,7 +63,7 @@ export class ClipAccountsComponent {
     value: ClipAccountPartsFragment | undefined = undefined
   ): void {
     const $dialog = this.dialog.open(ClipAccountFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: value,
     });
 
@@ -77,7 +77,7 @@ export class ClipAccountsComponent {
   public openDeleteDialog(value: ClipAccountPartsFragment): void {
     const $dialog = this.dialog.open(ClipAccountDeleteDialogComponent, {
       data: value,
-      width: '30rem',
+      width: '32rem',
     });
 
     $dialog.afterClosed().subscribe({

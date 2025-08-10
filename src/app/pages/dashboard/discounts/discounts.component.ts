@@ -66,7 +66,7 @@ export class DiscountsComponent {
     value: DiscountPartsFragment | undefined = undefined
   ): void {
     const $dialog = this.dialog.open(DiscountFormDialogComponent, {
-      width: '30rem',
+      width: '32rem',
       data: value,
     });
 
@@ -80,7 +80,7 @@ export class DiscountsComponent {
   public openDeleteDialog(value: DiscountPartsFragment): void {
     const $dialog = this.dialog.open(DiscountDeleteDialogComponent, {
       data: value,
-      width: '30rem',
+      width: '32rem',
     });
 
     $dialog.afterClosed().subscribe({
