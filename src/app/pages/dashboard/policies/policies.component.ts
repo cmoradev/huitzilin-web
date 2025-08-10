@@ -19,6 +19,7 @@ import { debounceTime, merge, startWith } from 'rxjs';
 import { PolicyDeleteDialogComponent } from './policy-delete-dialog/policy-delete-dialog.component';
 import { PolicyFormDialogComponent } from './policy-form-dialog/policy-form-dialog.component';
 import { UserPoliciesDialogComponent } from '../users/user-policies-dialog/user-policies-dialog.component';
+import { PolicyPermissionDialogComponent } from './policy-permission-dialog/policy-permission-dialog.component';
 
 @Component({
   selector: 'app-policies',
@@ -90,12 +91,12 @@ export class PoliciesComponent {
       });
   }
 
-  public openPoliciesDialog(
-    user: PolicyPartsFragment | undefined = undefined
+  public openPermissionDialog(
+    policy: PolicyPartsFragment | undefined = undefined
   ): void {
-    this.dialog.open(UserPoliciesDialogComponent, {
+    this.dialog.open(PolicyPermissionDialogComponent, {
       width: '30rem',
-      data: user,
+      data: policy,
     });
   }
 
