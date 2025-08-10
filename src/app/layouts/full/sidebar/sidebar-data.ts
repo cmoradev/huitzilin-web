@@ -7,102 +7,298 @@ export enum NavigationEnum {
 export const navItems: RouteItem[] = [
   {
     displayName: 'Panel de control',
+    showInSidebar: true,
     iconName: 'view-dashboard-outline',
     route: '/',
     section: NavigationEnum.OPERATIONS,
+    isGlobal: true,
+    permissions: [],
   },
   {
     displayName: 'Estudiantes',
+    showInSidebar: true,
     iconName: 'account-school-outline',
     route: '/students',
     section: NavigationEnum.OPERATIONS,
+    isGlobal: true,
+    permissions: [
+      'create:students',
+      'read:students',
+      'update:students',
+      'delete:students',
+      'select:documents',
+    ],
   },
   {
     displayName: 'Inscripciones',
+    showInSidebar: true,
     iconName: 'tag-text-outline',
     route: '/enrollments',
     section: NavigationEnum.OPERATIONS,
+    isGlobal: false,
+    permissions: [
+      'create:enrollments',
+      'read:enrollments',
+      'update:enrollments',
+      'delete:enrollments',
+      'select:periods',
+      'create:debits',
+      'read:debits',
+      'update:debits',
+      'delete:debits',
+    ],
   },
   {
     displayName: 'Cobranza',
+    showInSidebar: true,
     iconName: 'point-of-sale',
     route: '/payments',
     section: NavigationEnum.OPERATIONS,
+    isGlobal: true,
+    permissions: [
+      'select:students',
+      'select:debits',
+      'select:periods',
+      'create:incomes',
+    ],
   },
   {
     displayName: 'Reportes',
+    showInSidebar: true,
     iconName: 'database',
     route: '/reports',
     section: NavigationEnum.OPERATIONS,
+    isGlobal: true,
+    permissions: [
+      'reports:incomes',
+      'reports:debits',
+      'reports:statement-account',
+    ],
+  },
+  {
+    displayName: 'Reporte de ingresos',
+    showInSidebar: false,
+    iconName: 'database',
+    route: '/reports/incomes',
+    section: NavigationEnum.OPERATIONS,
+    isGlobal: true,
+    permissions: ['reports:chart', 'reports:data'],
+  },
+  {
+    displayName: 'Reporte de adeudos',
+    showInSidebar: false,
+    iconName: 'database',
+    route: '/reports/debits',
+    section: NavigationEnum.OPERATIONS,
+    isGlobal: true,
+    permissions: ['reports:chart', 'reports:data'],
+  },
+  {
+    displayName: 'Reporte de estados de cuenta',
+    showInSidebar: false,
+    iconName: 'database',
+    route: '/reports/statement-account',
+    section: NavigationEnum.OPERATIONS,
+    isGlobal: true,
+    permissions: ['reports:chart', 'reports:data'],
   },
   {
     displayName: 'Niveles',
+    showInSidebar: true,
     iconName: 'magic-staff',
     route: '/levels',
     section: NavigationEnum.ADMINISTRATION,
+    isGlobal: false,
+    permissions: [
+      'create:levels',
+      'read:levels',
+      'update:levels',
+      'delete:levels',
+    ],
   },
   {
     displayName: 'Disciplinas',
+    showInSidebar: true,
     iconName: 'basketball',
     route: '/disciplines',
     section: NavigationEnum.ADMINISTRATION,
+    isGlobal: false,
+    permissions: [
+      'create:disciplines',
+      'read:disciplines',
+      'update:disciplines',
+      'delete:disciplines',
+    ],
   },
   {
     displayName: 'Calendario',
+    showInSidebar: true,
     iconName: 'calendar-multiselect',
     route: '/calendars',
     section: NavigationEnum.ADMINISTRATION,
+    isGlobal: false,
+    permissions: [
+      'create:periods',
+      'read:periods',
+      'update:periods',
+      'delete:periods',
+      'create:schedules',
+      'read:schedules',
+      'update:schedules',
+      'delete:schedules',
+    ],
   },
   {
     displayName: 'Precios',
+    showInSidebar: true,
     iconName: 'currency-usd',
     route: '/prices',
     section: NavigationEnum.ADMINISTRATION,
+    isGlobal: false,
+    permissions: [
+      'create:price-lists',
+      'read:price-lists',
+      'update:price-lists',
+      'delete:price-lists',
+      'create:fees',
+      'read:fees',
+      'update:fees',
+      'delete:fees',
+    ],
   },
   {
     displayName: 'Descuentos',
+    showInSidebar: true,
     iconName: 'percent',
     route: '/discounts',
     section: NavigationEnum.ADMINISTRATION,
+    isGlobal: false,
+    permissions: [
+      'create:discounts',
+      'read:discounts',
+      'update:discounts',
+      'delete:discounts',
+    ],
   },
   {
     displayName: 'Negocios',
+    showInSidebar: true,
     iconName: 'town-hall',
     route: '/branches',
     section: NavigationEnum.DEVELOPER,
+    isGlobal: true,
+    permissions: [
+      'create:branches',
+      'read:branches',
+      'update:branches',
+      'delete:branches',
+    ],
   },
   {
     displayName: 'Ciclos',
+    showInSidebar: true,
     iconName: 'calendar-blank-outline',
     route: '/cycles',
     section: NavigationEnum.DEVELOPER,
+    isGlobal: true,
+    permissions: [
+      'create:cycles',
+      'read:cycles',
+      'update:cycles',
+      'delete:cycles',
+    ],
   },
   {
     displayName: 'Cuentas clip',
+    showInSidebar: true,
     iconName: 'cash',
     route: '/clip-accounts',
     section: NavigationEnum.DEVELOPER,
+    isGlobal: true,
+    permissions: [
+      'create:clip-accounts',
+      'read:clip-accounts',
+      'update:clip-accounts',
+      'delete:clip-accounts',
+    ],
   },
   {
     displayName: 'Usuarios',
+    showInSidebar: true,
     iconName: 'key',
     route: '/users',
     section: NavigationEnum.DEVELOPER,
+    isGlobal: true,
+    permissions: [
+      'create:users',
+      'read:users',
+      'update:users',
+      'delete:users',
+      'select:policies',
+    ],
   },
   {
     displayName: 'Políticas',
+    showInSidebar: true,
     iconName: 'shield',
     route: '/policies',
     section: NavigationEnum.DEVELOPER,
+    isGlobal: true,
+    permissions: [
+      'create:policies',
+      'read:policies',
+      'update:policies',
+      'delete:policies',
+      'management:permissions',
+    ],
   },
 ];
+
+export type Entity =
+  | 'branches'
+  | 'cycles'
+  | 'clip-accounts'
+  | 'users'
+  | 'policies'
+  | 'permissions'
+  | 'discounts'
+  | 'price-lists'
+  | 'fees'
+  | 'periods'
+  | 'schedules'
+  | 'disciplines'
+  | 'levels'
+  | 'students'
+  | 'debits'
+  | 'incomes'
+  | 'enrollments'
+  | 'documents';
+
+export type Action =
+  | 'create'
+  | 'read'
+  | 'update'
+  | 'delete'
+  | 'select'
+  | 'management';
+
+export type Reports =
+  | 'reports:incomes'
+  | 'reports:debits'
+  | 'reports:statement-account'
+  | 'reports:chart'
+  | 'reports:data';
+
+export type Permission = `${Action}:${Entity}` | Reports | '*:*';
 
 export type RouteItem = {
   displayName: string;
   iconName: string;
   route: string;
+  showInSidebar: boolean;
   section: NavigationEnum;
-  children?: RouteItem[];
+  permissions: Permission[];
+  isGlobal: boolean;
 };
 
 export type NavItem = {

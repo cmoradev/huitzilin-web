@@ -63,7 +63,7 @@ export class FullComponent {
         this.content.scrollTo({ top: 0 });
       });
 
-    of(navItems)
+    of(navItems.filter((item) => item.showInSidebar))
       .pipe(
         concatMap((res) => res),
         groupBy((item) => item.section),
