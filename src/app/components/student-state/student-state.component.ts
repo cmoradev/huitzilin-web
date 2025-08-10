@@ -1,8 +1,10 @@
 import {
   AfterViewInit,
+  booleanAttribute,
   Component,
   computed,
   inject,
+  input,
   OnInit,
   signal,
 } from '@angular/core';
@@ -17,10 +19,7 @@ import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { AvatarComponent } from '@components/avatar/avatar.component';
-import {
-  FetchStudentGQL,
-  StudentPartsFragment,
-} from '@graphql';
+import { FetchStudentGQL, StudentPartsFragment } from '@graphql';
 import { GlobalStateService } from '@services';
 import { debounceTime, filter, merge, startWith } from 'rxjs';
 
@@ -54,13 +53,9 @@ export class StudentStateComponent implements AfterViewInit, OnInit {
   public student = computed(() => this._globalStateService.student);
 
   ngOnInit(): void {
+    // @todo - Existe un bug al cambiar de sucursal, no refrescar el autocomplete
 
-    // @todo - Existe un bug al cambiar de sucursal, no refrescar el autocomplete 
-
-    merge(
-      this._globalStateService.branch$,
-      this._globalStateService.cycle$
-    ).subscribe({
+    merge(this._globalStateService.branch$).subscribe({
       next: () => {
         this.studentControl.setValue('');
         this._fetchStudents('');
@@ -105,10 +100,9 @@ export class StudentStateComponent implements AfterViewInit, OnInit {
   }
 
   private _fetchStudents(value: string): void {
-    if (this._globalStateService.branch!.id) {
+    if (!!this._globalStateService.branch?.id) {
       this.loadingStudents.set(true);
 
-      // TODO: Cambiar el limit a 10 y usar un fetchMore scroll infinito
       this._fetchStudentGQL
         .watch(
           {
@@ -137,9 +131,6 @@ export class StudentStateComponent implements AfterViewInit, OnInit {
             this.students.set(data?.students.nodes ?? []);
           },
         });
-    } else {
-      this.loadingStudents.set(false);
-      this.students.set([]);
     }
   }
 }
