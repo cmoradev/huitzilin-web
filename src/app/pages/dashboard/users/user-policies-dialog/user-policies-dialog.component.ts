@@ -114,15 +114,23 @@ export class UserPoliciesDialogComponent implements OnInit {
   }
 
   private fetchUserPolicies(userId: string): void {
-    this.getUserPoliciesGQL.watch({ id: userId }).valueChanges.subscribe({
-      next: ({ data }) => {
-        this.policiesFormControl.setValue(
-          data.user.policies.map((policy) => policy.id)
-        );
-      },
-      error: (error) => {
-        console.error('Error fetching user policies', error);
-      },
-    });
+    this.getUserPoliciesGQL
+      .watch(
+        { id: userId },
+        {
+          fetchPolicy: 'cache-and-network',
+          nextFetchPolicy: 'cache-and-network',
+        }
+      )
+      .valueChanges.subscribe({
+        next: ({ data }) => {
+          this.policiesFormControl.setValue(
+            data.user.policies.map((policy) => policy.id)
+          );
+        },
+        error: (error) => {
+          console.error('Error fetching user policies', error);
+        },
+      });
   }
 }
