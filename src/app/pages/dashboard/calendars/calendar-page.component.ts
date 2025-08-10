@@ -55,7 +55,6 @@ import { MatChipsModule } from '@angular/material/chips';
     DragDropModule,
     MatProgressBarModule,
     MatChipsModule,
-    RouterLink,
     PeriodItemComponent,
     CalendarComponent,
     NgScrollbar,
@@ -174,34 +173,6 @@ export class CalendarPageComponent {
       },
     });
   }
-
-  // public openFeeFormDialog(
-  //   value: FeePartsFragment | undefined = undefined
-  // ): void {
-  //   const $dialog = this._dialog.open(FeeFormDialogComponent, {
-  //     width: '30rem',
-  //     data: value,
-  //   });
-
-  //   $dialog.afterClosed().subscribe({
-  //     next: (fee) => {
-  //       if (fee) this.refreshFees();
-  //     },
-  //   });
-  // }
-
-  // public openFeeDeleteDialog(value: FeePartsFragment): void {
-  //   const $dialog = this._dialog.open(FeeDeleteDialogComponent, {
-  //     width: '30rem',
-  //     data: value,
-  //   });
-
-  //   $dialog.afterClosed().subscribe({
-  //     next: (fee) => {
-  //       if (fee) this.refreshFees();
-  //     },
-  //   });
-  // }
 
   public refreshPeriods(accumulared: PeriodPartsFragment[] = []): void {
     if (!!this._globalStateService.branch?.id) {
