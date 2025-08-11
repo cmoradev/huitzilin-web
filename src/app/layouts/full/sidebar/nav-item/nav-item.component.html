@@ -3,8 +3,6 @@
   (click)="navigateTo(route.route)"
   [activated]="router.isActive(route.route, true)"
 >
-  <!-- expanded: expanded,
-disabled: item.disabled -->
   <mat-icon [svgIcon]="route.iconName" matListItemIcon />
   <div matListItemTitle>
     {{ route.displayName }}

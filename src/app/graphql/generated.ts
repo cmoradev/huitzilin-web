@@ -46,19 +46,6 @@ export type ActionConnection = {
   totalCount: Scalars['Int']['output'];
 };
 
-export type ActionDeleteResponse = {
-  __typename?: 'ActionDeleteResponse';
-  actions?: Maybe<Array<Scalars['String']['output']>>;
-  createdAt?: Maybe<Scalars['DateTime']['output']>;
-  deletedAt?: Maybe<Scalars['DateTime']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
-  policyId?: Maybe<Scalars['String']['output']>;
-  resources?: Maybe<Scalars['String']['output']>;
-  route?: Maybe<Scalars['String']['output']>;
-  updatedAt?: Maybe<Scalars['DateTime']['output']>;
-  version?: Maybe<Scalars['Int']['output']>;
-};
-
 export type ActionFilter = {
   and?: InputMaybe<Array<ActionFilter>>;
   createdAt?: InputMaybe<DateFieldComparison>;
@@ -354,7 +341,7 @@ export enum ConceptSortFields {
 
 export type CreateAction = {
   actions: Array<Scalars['String']['input']>;
-  policyId: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['ID']['input']>;
   resources: Scalars['String']['input'];
   route: Scalars['String']['input'];
 };
@@ -491,11 +478,6 @@ export type CreateManyDocumentsInput = {
   documents: Array<CreateDocument>;
 };
 
-export type CreateOneActionInput = {
-  /** The record to create */
-  action: CreateAction;
-};
-
 export type CreateOneBranchInput = {
   /** The record to create */
   branch: CreateBranch;
@@ -610,6 +592,7 @@ export type CreatePeriod = {
 };
 
 export type CreatePolicy = {
+  actions: Array<CreateAction>;
   name: Scalars['String']['input'];
 };
 
@@ -844,11 +827,6 @@ export type DebitStateFilterComparison = {
   notILike?: InputMaybe<DebitState>;
   notIn?: InputMaybe<Array<DebitState>>;
   notLike?: InputMaybe<DebitState>;
-};
-
-export type DeleteOneActionInput = {
-  /** The id of the record to delete. */
-  id: Scalars['ID']['input'];
 };
 
 export type DeleteOneBranchInput = {
@@ -1591,7 +1569,6 @@ export type Mutation = {
   createManyDebits: Array<Debit>;
   createManyDiscounts: Array<Discount>;
   createManyDocuments: Array<Document>;
-  createOneAction: Action;
   createOneBranch: Branch;
   createOneClipAccount: ClipAccount;
   createOneCycle: Cycle;
@@ -1609,7 +1586,6 @@ export type Mutation = {
   createOneStudent: Student;
   createOneTeacher: Teacher;
   createOneTutor: Tutor;
-  deleteOneAction: ActionDeleteResponse;
   deleteOneBranch: BranchDeleteResponse;
   deleteOneClipAccount: ClipAccountDeleteResponse;
   deleteOneCycle: CycleDeleteResponse;
@@ -1679,7 +1655,6 @@ export type Mutation = {
   signIn: Session;
   signUp: Session;
   updateManyPackages: UpdateManyResponse;
-  updateOneAction: Action;
   updateOneBranch: Branch;
   updateOneClipAccount: ClipAccount;
   updateOneCycle: Cycle;
@@ -1743,11 +1718,6 @@ export type MutationCreateManyDiscountsArgs = {
 
 export type MutationCreateManyDocumentsArgs = {
   input: CreateManyDocumentsInput;
-};
-
-
-export type MutationCreateOneActionArgs = {
-  input: CreateOneActionInput;
 };
 
 
@@ -1833,11 +1803,6 @@ export type MutationCreateOneTeacherArgs = {
 
 export type MutationCreateOneTutorArgs = {
   input: CreateOneTutorInput;
-};
-
-
-export type MutationDeleteOneActionArgs = {
-  input: DeleteOneActionInput;
 };
 
 
@@ -2183,11 +2148,6 @@ export type MutationSignUpArgs = {
 
 export type MutationUpdateManyPackagesArgs = {
   input: UpdateManyPackagesInput;
-};
-
-
-export type MutationUpdateOneActionArgs = {
-  input: UpdateOneActionInput;
 };
 
 
@@ -3352,13 +3312,6 @@ export enum TutorSortFields {
   UpdatedAt = 'updatedAt'
 }
 
-export type UpdateAction = {
-  actions?: InputMaybe<Array<Scalars['String']['input']>>;
-  policyId?: InputMaybe<Scalars['String']['input']>;
-  resources?: InputMaybe<Scalars['String']['input']>;
-  route?: InputMaybe<Scalars['String']['input']>;
-};
-
 export type UpdateBranch = {
   clipAccounts?: InputMaybe<Array<NestedId>>;
   name?: InputMaybe<Scalars['String']['input']>;
@@ -3465,13 +3418,6 @@ export type UpdateManyResponse = {
   __typename?: 'UpdateManyResponse';
   /** The number of records updated. */
   updatedCount: Scalars['Int']['output'];
-};
-
-export type UpdateOneActionInput = {
-  /** The id of the record to update */
-  id: Scalars['ID']['input'];
-  /** The update to apply. */
-  update: UpdateAction;
 };
 
 export type UpdateOneBranchInput = {
@@ -3621,6 +3567,7 @@ export type UpdatePeriod = {
 };
 
 export type UpdatePolicy = {
+  actions?: InputMaybe<Array<CreateAction>>;
   name?: InputMaybe<Scalars['String']['input']>;
 };
 

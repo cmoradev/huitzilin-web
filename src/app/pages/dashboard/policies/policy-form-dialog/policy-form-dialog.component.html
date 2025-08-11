@@ -1,7 +1,14 @@
 <h2 mat-dialog-title>{{ !!data?.id ? "Actualizar" : "Crear" }} política</h2>
 <mat-dialog-content>
-  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
+  <form
+    id="dataForm"
+    [formGroup]="formGroup"
+    (ngSubmit)="submit()"
+    class="flex flex-col gap-3"
+  >
     <div class="flex flex-col gap-3">
+      <h5 class="font-medium">Informacion de la política</h5>
+
       <mat-form-field>
         <mat-label>Nombre de la política</mat-label>
         <input
@@ -14,6 +21,34 @@
           {{ formTools.checkForErrorsIn(formGroup.get("name")) }}
         </mat-error>
       </mat-form-field>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+      <app-action-form (save)="actions.set($event)" />
+
+      <div>
+        <h5 class="font-medium">Lista de permisos</h5>
+
+        <div class="flex flex-col gap-3">
+          @for (action of actions(); track $index + action.route) {
+          <div class="flex items-center justify-between">
+            <div>
+              <h4 class="font-medium">{{ action.route }}</h4>
+
+              <mat-chip-set aria-label="Dog selection">
+                @for (key of action.actions; track key) {
+
+                <mat-chip> {{ key }} </mat-chip>
+                }
+              </mat-chip-set>
+            </div>
+            <button mat-icon-button matTooltip="Eliminar permiso">
+              <mat-icon svgIcon="close" />
+            </button>
+          </div>
+          }
+        </div>
+      </div>
     </div>
   </form>
 </mat-dialog-content>

@@ -1,0 +1,79 @@
+<form
+  [formGroup]="formGroup"
+  class="flex flex-col gap-3"
+  id="permissionForm"
+  (ngSubmit)="saveData()"
+>
+  <h5 class="font-medium">Agregar Permisos a la Política</h5>
+
+  <mat-form-field>
+    <mat-label>Ruta</mat-label>
+    <mat-select formControlName="route">
+      @for (group of navigations; track group.section) {
+      <mat-optgroup [label]="group.section">
+        @for (link of group.routes; track link.route + $index) {
+        <mat-option
+          [value]="link.route"
+          [matTooltip]="link.isGlobal ? 'Global' : 'Por sucursal'"
+        >
+          <div class="flex items-center">
+            <mat-icon [svgIcon]="link.iconName" />
+            <h4 mat-line>{{ link.displayName }}</h4>
+          </div>
+        </mat-option>
+        }
+      </mat-optgroup>
+      }
+    </mat-select>
+    <mat-hint>
+      Seleccione la ruta a la que se le asignarán los permisos
+    </mat-hint>
+    <mat-error>
+      {{ formTools.checkForErrorsIn(formGroup.get("route")) }}
+    </mat-error>
+  </mat-form-field>
+
+  @if (withRoute) {
+  <mat-form-field>
+    <mat-label>Permisos</mat-label>
+    <mat-select formControlName="actions" multiple>
+      @for (permission of permissions; track permission.permission) {
+      <mat-option [value]="permission.permission">
+        {{ permission.name }}
+      </mat-option>
+      }
+    </mat-select>
+    <mat-hint>
+      Seleccione los permisos a los que se le asignarán a la política
+    </mat-hint>
+    <mat-error>
+      {{ formTools.checkForErrorsIn(formGroup.get("actions")) }}
+    </mat-error>
+  </mat-form-field>
+
+  @if (!isGlobalRoute) {
+  <mat-form-field>
+    <mat-label>Sucursales</mat-label>
+    <mat-select formControlName="resources" multiple>
+      @for (branch of branchTools.options(); track $index) {
+      <mat-option [value]="branch.id">
+        <div class="flex items-center gap-2">
+          <img [alt]="branch.name" class="h-6 w-6" [src]="branch.picture" />
+          <span> {{ branch.name }} </span>
+        </div>
+      </mat-option>
+      }
+    </mat-select>
+    <mat-hint>
+      Seleccione la ruta a la que se le asignarán los permisos
+    </mat-hint>
+    <mat-error>
+      {{ formTools.checkForErrorsIn(formGroup.get("route")) }}
+    </mat-error>
+  </mat-form-field>
+  } }
+
+  <button mat-button form="permissionForm">
+    {{ formGroup.get("id")?.value ? "Actualizar" : "Crear" }} permiso
+  </button>
+</form>

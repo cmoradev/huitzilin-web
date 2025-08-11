@@ -79,7 +79,6 @@ export class PoliciesComponent {
       .valueChanges.subscribe({
         next: ({ data, loading }) => {
           const { nodes, totalCount } = data.policies;
-          console.log(nodes);
 
           this.dataSource.data = nodes;
 
@@ -93,7 +92,7 @@ export class PoliciesComponent {
     user: PolicyPartsFragment | undefined = undefined
   ): void {
     const $dialog = this.dialog.open(PolicyFormDialogComponent, {
-      width: '32rem',
+      width: '56rem',
       data: user,
     });
 
