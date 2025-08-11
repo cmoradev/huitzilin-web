@@ -123,4 +123,8 @@ permissionMap.set('emartinez', [
     route: CALENDARS_ROUTE.route,
     permissions: new Set(CALENDARS_ROUTE.permissions),
   },
+  {
+    route: PRICES_ROUTE.route,
+    permissions: new Set(PRICES_ROUTE.permissions),
+  },
 ]);
