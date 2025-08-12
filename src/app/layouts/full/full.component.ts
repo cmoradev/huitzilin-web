@@ -17,7 +17,7 @@ import { NavItemComponent } from './sidebar/nav-item/nav-item.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { GlobalStateSettingsComponent } from './global-state-settings/global-state-settings.component';
 import { NavItem, navItems } from '@routes';
-import { AuthService } from '@services';
+import { AuthService, GlobalStateService } from '@services';
 import { permissionMap } from '@utils/permissions.data';
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
@@ -45,7 +45,7 @@ export class FullComponent {
   @ViewChild('leftsidenav') public sidenav!: MatSidenav;
   @ViewChild('content', { static: true }) content!: MatSidenavContent;
 
-  private readonly auth = inject(AuthService);
+  private readonly globalState = inject(GlobalStateService);
   private readonly breakpointObserver = inject(BreakpointObserver);
   private readonly router = inject(Router);
 
@@ -66,7 +66,7 @@ export class FullComponent {
         this.content.scrollTo({ top: 0 });
       });
     // Cambiar esto para que sea dinamico
-    const username = this.auth.username;
+    const username = this.globalState.session!.username;
 
     of(
       navItems

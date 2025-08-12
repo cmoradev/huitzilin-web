@@ -11,9 +11,7 @@ export const permissionGuard: CanActivateChildFn = (route, state) => {
 
   if (username && permissionMap.has(username)) {
     const permissions = permissionMap.get(username) || [];
-
-    console.log(permissions)
-    
+        
     const hasPermission = permissions.some(permission => permission.route === state.url);
 
     return hasPermission;
