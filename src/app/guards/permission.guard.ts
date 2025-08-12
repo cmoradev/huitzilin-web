@@ -1,15 +1,18 @@
 import { inject } from '@angular/core';
 import { CanActivateChildFn } from '@angular/router';
-import { AuthService } from '@services';
+import { AuthService, GlobalStateService } from '@services';
 import { permissionMap } from '@utils/permissions.data';
+import { setDefaultOptions } from 'date-fns';
 
 export const permissionGuard: CanActivateChildFn = (route, state) => {
-  const auth = inject(AuthService);
+  const globalState = inject(GlobalStateService);
 
-  const username = auth.username;
+  const username = globalState.session?.username;
 
-  if (permissionMap.has(username)) {
+  if (username && permissionMap.has(username)) {
     const permissions = permissionMap.get(username) || [];
+
+    console.log(permissions)
     
     const hasPermission = permissions.some(permission => permission.route === state.url);
 
