@@ -118,6 +118,7 @@ export class CalendarPageComponent {
   }
 
   public openPeriodDeleteDialog(value: PeriodPartsFragment): void {
+    console.log(value);
     const $dialog = this._dialog.open(CalendarDeleteDialogComponent, {
       width: '32rem',
       data: value,

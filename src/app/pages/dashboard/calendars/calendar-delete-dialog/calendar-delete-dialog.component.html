@@ -1,1 +1,27 @@
-<p>calendar-delete-dialog works!</p>
+<h2 mat-dialog-title>¿Deseas eliminar este registro?</h2>
+<mat-dialog-content>
+  <div class="flex items-center gap-2 mt-4">
+    <div>
+      <p class="font-medium">Nombre:</p>
+      <p>
+        {{ data.name }}
+      </p>
+      <p class="font-medium">Vigencia:</p>
+      <p>{{ data.start }} - {{ data.end }}</p>
+      <p class="font-medium">Días:</p>
+      <ul class="list-disc pl-4">
+        @for (day of data.days.split(','); track day) {
+        <li>
+          <p>{{ day | dayOfWeek }}: {{ data.firstHour }} - {{ data.lastHour }}</p>
+        </li>
+        }
+      </ul>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancel</button>
+  <button mat-button cdkFocusInitial (click)="delete()" [disabled]="loading()">
+    {{ loading() ? "Eliminando..." : "Eliminar" }}
+  </button>
+</mat-dialog-actions>

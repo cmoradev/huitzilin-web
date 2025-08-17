@@ -1,6 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { Cycle } from '../../../../graphql/generated';
 import { CyclePartsFragment, DeleteOneCycleGQL } from '@graphql';
 import {
   MAT_DIALOG_DATA,
