@@ -33,6 +33,7 @@ import { PaymentMethod } from '@graphql';
 import { paymentNames } from '@utils/contains';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-incomes',
@@ -63,6 +64,7 @@ export class IncomesComponent implements AfterViewInit, OnInit {
   @ViewChild('methodsChart')
   public methodsChartElement!: ElementRef<HTMLDivElement>;
 
+  private readonly _snackbar = inject(MatSnackBar);
   public loading = signal<boolean>(false);
   public total = signal<number>(0);
   public incomeMethods = signal<ReportsGrouped[]>([]);
@@ -105,10 +107,22 @@ export class IncomesComponent implements AfterViewInit, OnInit {
     )
       .pipe(startWith(null))
       .subscribe({
-        next: () => {
-          this.refresh();
-        },
+        next: () => this.refresh(),
       });
+  }
+
+  public download() {
+    if (
+      !!this.startDateControl?.value &&
+      this.endDateControl.value &&
+      this.branchControl.value
+    ) {
+      const start = startOfDay(this.startDateControl.value).toISOString();
+      const end = endOfDay(this.endDateControl.value).toISOString();
+      const branchId = this.branchControl.value;
+
+      this.reportsService.incomesDownload(start, end, branchId);
+    }
   }
 
   public refresh() {
@@ -128,7 +142,10 @@ export class IncomesComponent implements AfterViewInit, OnInit {
           this.dataSource.data = response.data;
           this.incomeMethods.set(response.groupedByMethod);
           this.summaryDataSource.data = response.groupedByMethod.map(
-            (data) => ({ ...data, name: paymentNames[data.id.toUpperCase() as PaymentMethod] })
+            (data) => ({
+              ...data,
+              name: paymentNames[data.id.toUpperCase() as PaymentMethod],
+            })
           );
           this.total.set(response.total);
           this.loading.set(false);

@@ -39,6 +39,15 @@
 
       <button
         mat-icon-button
+        matTooltip="Descargar"
+        [disabled]="!dataSource.data.length"
+        (click)="download()"
+      >
+        <mat-icon svgIcon="download" />
+      </button>
+
+      <button
+        mat-icon-button
         matTooltip="Refrescar"
         (click)="refresh()"
         [ngClass]="{ 'animate-spin': loading() }"

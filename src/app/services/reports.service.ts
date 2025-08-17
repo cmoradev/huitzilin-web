@@ -11,6 +11,35 @@ export class ReportsService {
 
   private readonly http = inject(HttpClient);
 
+  public incomesDownload(start: string, end: string, branchId: string) {
+    const searchParams = new URLSearchParams({ start, end, branchId });
+
+    const url = `${this.apiUri}/incomes-download?${searchParams.toString()}`;
+
+    this.http
+      .get(url, {
+        responseType: 'blob',
+        observe: 'response',
+      })
+      .subscribe({
+        next: (response) => {
+          if (response.body) {
+            const blob = new Blob([response.body], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'reporte-ingresos.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }
+        },
+        error: (error) => {
+          console.error('Error al descargar el reporte:', error);
+        },
+      });
+  }
+
   public incomes(
     start: string,
     end: string,
