@@ -18,10 +18,12 @@
         <mat-chip-option
           [value]="schedule"
           [selected]="isScheduleSelected(index, schedule.id)"
+          [matTooltip]="schedule.discipline.name"
+          class="truncate line-clamp-1"
         >
-          <span class="text-xs">
+          <p class="text-xs">
             ({{ schedule.enrollments.totalCount }}) - {{ schedule.discipline.name }}
-          </span>
+          </p>
         </mat-chip-option>
         }
       </mat-chip-listbox>

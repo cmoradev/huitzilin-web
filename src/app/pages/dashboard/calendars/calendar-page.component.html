@@ -69,9 +69,12 @@
                 @for (event of events; track event.id) {
                 <mat-chip
                   (click)="openFormScheduleDialog($event, event)"
-                  class="w-full"
+                  class="truncate line-clamp-1"
+                  [matTooltip]="event.discipline.name"
                 >
-                  {{ event.discipline.name }}
+                  <p class="text-xs">
+                    {{ event.discipline.name }}
+                  </p>
                 </mat-chip>
                 }
               </div>

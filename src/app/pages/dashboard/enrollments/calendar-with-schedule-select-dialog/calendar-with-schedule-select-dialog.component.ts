@@ -6,6 +6,7 @@ import {
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CalendarComponent } from '@components/calendar/calendar.component';
 import {
   GetSchedulesPageGQL,
@@ -30,6 +31,7 @@ type Params = {
     MatButtonModule,
     MatChipsModule,
     CalendarComponent,
+    MatTooltipModule,
   ],
   templateUrl: './calendar-with-schedule-select-dialog.component.html',
   styles: ``,

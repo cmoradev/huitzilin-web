@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { CalendarComponent } from '@components/calendar/calendar.component';
 import {
   EnrollmentPartsFragment,
@@ -18,6 +19,7 @@ import { map } from 'rxjs';
     MatButtonModule,
     CalendarComponent,
     MatChipsModule,
+    MatTooltipModule,
   ],
   templateUrl: './enrollment-calendar.component.html',
   styles: ``,
