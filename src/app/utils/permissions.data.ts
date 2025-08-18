@@ -19,176 +19,112 @@ import {
   USERS_ROUTE,
 } from '@routes';
 
-export const permissions = [
+const rootPermissions = [
   {
-    username: 'calebmoradev',
-    routes: [
-      {
-        route: PANEL_CONTROL_ROUTE,
-        permissions: PANEL_CONTROL_ROUTE.permissions,
-      },
-      {
-        route: STUDENTS_ROUTE,
-        permissions: STUDENTS_ROUTE.permissions,
-      },
-      {
-        route: ENROLLMENTS_ROUTE,
-        permissions: ENROLLMENTS_ROUTE.permissions,
-      },
-      {
-        route: PAYMENTS_ROUTE,
-        permissions: PAYMENTS_ROUTE.permissions,
-      },
-      {
-        route: REPORTS_ROUTE,
-        permissions: REPORTS_ROUTE.permissions,
-      },
-      {
-        route: REPORTS_INCOMES_ROUTE,
-        permissions: REPORTS_INCOMES_ROUTE.permissions,
-      },
-      {
-        route: REPORTS_DEBITS_ROUTE,
-        permissions: REPORTS_DEBITS_ROUTE.permissions,
-      },
-      {
-        route: REPORTS_STATEMENT_ACCOUNT_ROUTE,
-        permissions: REPORTS_STATEMENT_ACCOUNT_ROUTE.permissions,
-      },
-      {
-        route: LEVELS_ROUTE,
-        permissions: LEVELS_ROUTE.permissions,
-      },
-      {
-        route: DISCIPLINES_ROUTE,
-        permissions: DISCIPLINES_ROUTE.permissions,
-      },
-      {
-        route: CALENDARS_ROUTE,
-        permissions: CALENDARS_ROUTE.permissions,
-      },
-      {
-        route: PRICES_ROUTE,
-        permissions: PRICES_ROUTE.permissions,
-      },
-      {
-        route: DISCOUNTS_ROUTE,
-        permissions: DISCOUNTS_ROUTE.permissions,
-      },
-      {
-        route: BRANCHES_ROUTE,
-        permissions: BRANCHES_ROUTE.permissions,
-      },
-      {
-        route: CYCLES_ROUTE,
-        permissions: CYCLES_ROUTE.permissions,
-      },
-      {
-        route: CLIP_ACCOUNTS_ROUTE,
-        permissions: CLIP_ACCOUNTS_ROUTE.permissions,
-      },
-      {
-        route: USERS_ROUTE,
-        permissions: USERS_ROUTE.permissions,
-      },
-      {
-        route: POLICIES_ROUTE,
-        permissions: POLICIES_ROUTE.permissions,
-      },
-    ],
+    route: PANEL_CONTROL_ROUTE.route,
+    permissions: new Set(PANEL_CONTROL_ROUTE.permissions),
   },
   {
-    username: 'direcciongeneral',
-    routes: [
-      {
-        route: PANEL_CONTROL_ROUTE,
-        permissions: PANEL_CONTROL_ROUTE.permissions,
-      },
-      {
-        route: STUDENTS_ROUTE,
-        permissions: STUDENTS_ROUTE.permissions,
-      },
-      {
-        route: ENROLLMENTS_ROUTE,
-        permissions: ENROLLMENTS_ROUTE.permissions,
-      },
-      {
-        route: PAYMENTS_ROUTE,
-        permissions: PAYMENTS_ROUTE.permissions,
-      },
-      {
-        route: REPORTS_ROUTE,
-        permissions: REPORTS_ROUTE.permissions,
-      },
-      {
-        route: REPORTS_INCOMES_ROUTE,
-        permissions: REPORTS_INCOMES_ROUTE.permissions,
-      },
-      {
-        route: REPORTS_DEBITS_ROUTE,
-        permissions: REPORTS_DEBITS_ROUTE.permissions,
-      },
-      {
-        route: REPORTS_STATEMENT_ACCOUNT_ROUTE,
-        permissions: REPORTS_STATEMENT_ACCOUNT_ROUTE.permissions,
-      },
-      {
-        route: LEVELS_ROUTE,
-        permissions: LEVELS_ROUTE.permissions,
-      },
-      {
-        route: DISCIPLINES_ROUTE,
-        permissions: DISCIPLINES_ROUTE.permissions,
-      },
-      {
-        route: CALENDARS_ROUTE,
-        permissions: CALENDARS_ROUTE.permissions,
-      },
-      {
-        route: PRICES_ROUTE,
-        permissions: PRICES_ROUTE.permissions,
-      },
-      {
-        route: DISCOUNTS_ROUTE,
-        permissions: DISCOUNTS_ROUTE.permissions,
-      },
-      {
-        route: BRANCHES_ROUTE,
-        permissions: BRANCHES_ROUTE.permissions,
-      },
-      {
-        route: CYCLES_ROUTE,
-        permissions: CYCLES_ROUTE.permissions,
-      },
-      {
-        route: CLIP_ACCOUNTS_ROUTE,
-        permissions: CLIP_ACCOUNTS_ROUTE.permissions,
-      },
-      {
-        route: USERS_ROUTE,
-        permissions: USERS_ROUTE.permissions,
-      },
-      {
-        route: POLICIES_ROUTE,
-        permissions: POLICIES_ROUTE.permissions,
-      },
-    ],
+    route: STUDENTS_ROUTE.route,
+    permissions: new Set(STUDENTS_ROUTE.permissions),
   },
   {
-    username: 'emartinez',
-    routes: [
-      {
-        route: PANEL_CONTROL_ROUTE,
-        permissions: PANEL_CONTROL_ROUTE.permissions,
-      },
-      {
-        route: STUDENTS_ROUTE,
-        permissions: STUDENTS_ROUTE.permissions,
-      },
-      {
-        route: ENROLLMENTS_ROUTE,
-        permissions: ENROLLMENTS_ROUTE.permissions,
-      },
-    ],
+    route: ENROLLMENTS_ROUTE.route,
+    permissions: new Set(ENROLLMENTS_ROUTE.permissions),
+  },
+  {
+    route: PAYMENTS_ROUTE.route,
+    permissions: new Set(PAYMENTS_ROUTE.permissions),
+  },
+  {
+    route: REPORTS_ROUTE.route,
+    permissions: new Set(REPORTS_ROUTE.permissions),
+  },
+  {
+    route: REPORTS_INCOMES_ROUTE.route,
+    permissions: new Set(REPORTS_INCOMES_ROUTE.permissions),
+  },
+  {
+    route: REPORTS_DEBITS_ROUTE.route,
+    permissions: new Set(REPORTS_DEBITS_ROUTE.permissions),
+  },
+  {
+    route: REPORTS_STATEMENT_ACCOUNT_ROUTE.route,
+    permissions: new Set(REPORTS_STATEMENT_ACCOUNT_ROUTE.permissions),
+  },
+  {
+    route: LEVELS_ROUTE.route,
+    permissions: new Set(LEVELS_ROUTE.permissions),
+  },
+  {
+    route: DISCIPLINES_ROUTE.route,
+    permissions: new Set(DISCIPLINES_ROUTE.permissions),
+  },
+  {
+    route: CALENDARS_ROUTE.route,
+    permissions: new Set(CALENDARS_ROUTE.permissions),
+  },
+  {
+    route: PRICES_ROUTE.route,
+    permissions: new Set(PRICES_ROUTE.permissions),
+  },
+  {
+    route: DISCOUNTS_ROUTE.route,
+    permissions: new Set(DISCOUNTS_ROUTE.permissions),
+  },
+  {
+    route: BRANCHES_ROUTE.route,
+    permissions: new Set(BRANCHES_ROUTE.permissions),
+  },
+  {
+    route: CYCLES_ROUTE.route,
+    permissions: new Set(CYCLES_ROUTE.permissions),
+  },
+  {
+    route: CLIP_ACCOUNTS_ROUTE.route,
+    permissions: new Set(CLIP_ACCOUNTS_ROUTE.permissions),
+  },
+  {
+    route: USERS_ROUTE.route,
+    permissions: new Set(USERS_ROUTE.permissions),
+  },
+  {
+    route: POLICIES_ROUTE.route,
+    permissions: new Set(POLICIES_ROUTE.permissions),
   },
 ];
+
+export const permissionMap = new Map<string, typeof rootPermissions>();
+
+permissionMap.set('calebmoradev', rootPermissions);
+permissionMap.set('direcciongeneral', rootPermissions);
+permissionMap.set('emartinez', [
+  {
+    route: PANEL_CONTROL_ROUTE.route,
+    permissions: new Set(PANEL_CONTROL_ROUTE.permissions),
+  },
+  {
+    route: STUDENTS_ROUTE.route,
+    permissions: new Set(STUDENTS_ROUTE.permissions),
+  },
+  {
+    route: ENROLLMENTS_ROUTE.route,
+    permissions: new Set(ENROLLMENTS_ROUTE.permissions),
+  },
+  {
+    route: LEVELS_ROUTE.route,
+    permissions: new Set(LEVELS_ROUTE.permissions),
+  },
+  {
+    route: DISCIPLINES_ROUTE.route,
+    permissions: new Set(DISCIPLINES_ROUTE.permissions),
+  },
+  {
+    route: CALENDARS_ROUTE.route,
+    permissions: new Set(CALENDARS_ROUTE.permissions),
+  },
+  {
+    route: PRICES_ROUTE.route,
+    permissions: new Set(PRICES_ROUTE.permissions),
+  },
+]);
