@@ -64,7 +64,6 @@ export class IncomesComponent implements AfterViewInit, OnInit {
   @ViewChild('methodsChart')
   public methodsChartElement!: ElementRef<HTMLDivElement>;
 
-  private readonly _snackbar = inject(MatSnackBar);
   public loading = signal<boolean>(false);
   public total = signal<number>(0);
   public incomeMethods = signal<ReportsGrouped[]>([]);

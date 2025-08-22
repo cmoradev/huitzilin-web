@@ -12,9 +12,9 @@ export const Reports = [
   },
   {
     id: 2,
-    title: 'Adeudos',
+    title: 'Conceptos',
     description:
-      'Análisis detallado de todos los adeudos generados en el período seleccionado',
+      'Análisis detallado de todos los conceptos generados en el período seleccionado',
     icon: 'credit-card',
     color: 'text-blue-800!',
     bgColor: 'bg-blue-100',

@@ -24,7 +24,9 @@ export class ReportsService {
       .subscribe({
         next: (response) => {
           if (response.body) {
-            const blob = new Blob([response.body], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const blob = new Blob([response.body], {
+              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -46,6 +48,16 @@ export class ReportsService {
     branchId: string
   ): Observable<ReportsResponse> {
     return this.http.get<ReportsResponse>(`${this.apiUri}/incomes`, {
+      params: { start, end, branchId },
+    });
+  }
+
+  public debits(
+    start: string,
+    end: string,
+    branchId: string
+  ): Observable<ReportsResponse> {
+    return this.http.get<ReportsResponse>(`${this.apiUri}/debits`, {
       params: { start, end, branchId },
     });
   }
