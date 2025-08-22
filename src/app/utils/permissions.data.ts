@@ -98,6 +98,7 @@ export const permissionMap = new Map<string, typeof rootPermissions>();
 
 permissionMap.set('calebmoradev', rootPermissions);
 permissionMap.set('direcciongeneral', rootPermissions);
+permissionMap.set('igonzález', rootPermissions);
 permissionMap.set('emartinez', [
   {
     route: PANEL_CONTROL_ROUTE.route,
