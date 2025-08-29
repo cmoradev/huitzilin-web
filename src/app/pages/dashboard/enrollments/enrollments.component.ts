@@ -36,6 +36,7 @@ import { EnrollmentFormDialogComponent } from './enrollment-form-dialog/enrollme
 import { EnrollmentItemComponent } from './enrollment-item/enrollment-item.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EnrollmentCalendarComponent } from './enrollment-calendar/enrollment-calendar.component';
+import { LightOnPricesComponent } from './light-on-prices/light-on-prices.component';
 
 @Component({
   selector: 'app-enrollments',
@@ -136,6 +137,21 @@ export class EnrollmentsComponent implements OnInit {
     $dialog.afterClosed().subscribe({
       next: (enrollment) => {
         if (enrollment) this.refreshEnrollments();
+      },
+    });
+  }
+
+  public openLightOnCatalogDialog(
+    value: DebitPartsFragment | undefined = undefined
+  ): void {
+    const $dialog = this._dialog.open(LightOnPricesComponent, {
+      width: '48rem',
+      data: value,
+    });
+
+    $dialog.afterClosed().subscribe({
+      next: (debit) => {
+        if (debit) this.refreshDebits();
       },
     });
   }

@@ -10,6 +10,30 @@ export enum TaxEnum {
 }
 
 /**
+ * Calcula la base y el impuesto a partir del total (con impuestos) y el porcentaje de impuestos.
+ * @param total Importe total con impuestos incluidos
+ * @param taxRate Porcentaje de impuestos (por ejemplo, 16 para 16%)
+ * @returns Un objeto con base (sin impuestos), impuestos y total
+ */
+export function calculateBaseAndTaxFromTotal(
+  total: number,
+  taxRate: number = TaxEnum.Sixteen
+) {
+  const totalDecimal = new Decimal(total);
+  const rateDecimal = new Decimal(taxRate).dividedBy(100);
+  const divisor = new Decimal(1).plus(rateDecimal);
+
+  const amountDecimal = totalDecimal.dividedBy(divisor);
+  const taxes = totalDecimal.minus(amountDecimal);
+
+  return {
+    amount: Number(amountDecimal.toFixed(6)),
+    taxes: Number(taxes.toFixed(6)),
+    total: Number(totalDecimal.toFixed(6)),
+  };
+}
+
+/**
  * Calcula el total y los impuestos a partir del importe base y el porcentaje de impuestos.
  * @param importe Importe base sin impuestos
  * @param taxRate Porcentaje de impuestos (por ejemplo, 16 para 16%)

@@ -78,6 +78,12 @@
 </mat-card>
 
 <mat-menu #menu="matMenu">
+  @if (branch()?.id === '9b5509f2-fcad-47d3-9bd4-49a79184f01d') {
+    <button mat-menu-item (click)="openLightOnCatalogDialog()">
+      <mat-icon svgIcon="plus" />
+      <span>Precios LiGht On</span>
+    </button>
+  }
   <button mat-menu-item (click)="openDebitCatalogDialog()">
     <mat-icon svgIcon="plus" />
     <span>Usar catálogo</span>
