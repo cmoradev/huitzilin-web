@@ -6,7 +6,16 @@
       <mat-select formControlName="discount" multiLineOption>
         @for (discount of discounts(); track discount.id) {
         <mat-option [value]="discount">
-          {{ discount.name }}
+          <h4 mat-line>{{ discount.name }}</h4>
+          @if (discount.type === 'FIXED') {
+          <p mat-line class="text-sm text-gray-500">
+            ({{ discount.value | currency }})
+          </p>
+          } @else if (discount.type === 'PERCENTAGE') {
+            <p mat-line class="text-sm text-gray-500">
+            ({{ discount.value }}%)
+          </p>
+          }
         </mat-option>
         }
       </mat-select>

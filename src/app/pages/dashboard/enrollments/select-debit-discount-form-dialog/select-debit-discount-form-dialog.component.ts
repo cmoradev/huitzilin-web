@@ -11,6 +11,7 @@ import {
 import { FormToolsService, GlobalStateService } from '@services';
 import { map } from 'rxjs';
 import { MatSelectModule } from '@angular/material/select';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-select-debit-discount-form-dialog',
@@ -20,6 +21,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
+    CurrencyPipe
   ],
   templateUrl: './select-debit-discount-form-dialog.component.html',
   styles: ``,
