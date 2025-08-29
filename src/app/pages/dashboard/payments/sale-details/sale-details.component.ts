@@ -101,6 +101,7 @@ export class SaleDetailsComponent {
               quantity: concept.quantity,
               unitPrice: concept.unitPrice,
               withTax: concept.withTax,
+              branchID: concept.branchID,
               discounts: concept.discounts.map((discount) => ({
                 id: discount.id,
               })),
@@ -108,13 +109,11 @@ export class SaleDetailsComponent {
           );
 
           const studentIDs = this._pos.studentIDs;
-          const branchID = this._pos.branchID;
 
-          if (branchID !== null && !!studentIDs.length && !!concepts.length) {
+          if (!!studentIDs.length && !!concepts.length) {
             this._createIncomes
               .mutate({
                 input: {
-                  branchID,
                   studentIDs,
                   payments,
                   concepts,

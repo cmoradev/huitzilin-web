@@ -13,7 +13,6 @@ import {
 } from '@graphql';
 import { FolioPipe } from '@pipes';
 import { PosService } from '@services';
-import { Package } from '../../../../graphql/generated';
 
 @Component({
   selector: 'app-clip-charge-dialog',
@@ -36,10 +35,10 @@ export class ClipChargeDialogComponent {
 
   public loading = signal<boolean>(false);
   public created = signal<boolean>(false);
-  public income = signal<IncomeWithLinksFragment | null>(null);
+  public incomes = signal<IncomeWithLinksFragment[] | null>(null);
 
   public closeDialog() {
-    this._dialogRef.close(this.income());
+    this._dialogRef.close(this.incomes());
   }
 
   public shareLinkWhatsApp(link: Partial<ClipLink>) {
@@ -63,21 +62,20 @@ export class ClipChargeDialogComponent {
       quantity: concept.quantity,
       unitPrice: concept.unitPrice,
       withTax: concept.withTax,
+      branchID: concept.branchID,
       discounts: concept.discounts.map((discount) => ({
         id: discount.id,
       })),
     }));
 
     const studentIDs = Array.from(new Set(this.pos.studentIDs));
-    const branchID = this.pos.branchID;
 
-    if (!!studentIDs.length && !!branchID) {
+    if (!!studentIDs.length) {
       this._createLinkIncomes
         .mutate({
           input: {
             concepts,
             studentIDs,
-            branchID,
           },
         })
         .subscribe({
@@ -85,7 +83,7 @@ export class ClipChargeDialogComponent {
             this.loading.set(false);
             if (data?.createLinkIncomes) {
               this.created.set(true);
-              this.income.set(data.createLinkIncomes);
+              this.incomes.set(data.createLinkIncomes);
             }
           },
           error: (error) => {

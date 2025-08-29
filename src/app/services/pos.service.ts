@@ -23,7 +23,7 @@ export type AddConceptParams = {
 };
 
 // Tipo que representa un concepto en el punto de venta
-export type Concept = Omit<AddConceptParams, 'branchID' | 'studentID'> & {
+export type Concept = Omit<AddConceptParams, 'studentID'> & {
   amount: number;
   discount: number;
   subtotal: number;
@@ -39,7 +39,6 @@ export class PosService {
   private readonly _snackBar = inject(MatSnackBar);
 
   // Señales reactivas para el estado interno
-  private readonly _branchID = signal<string | null>(null);
   private readonly _studentIDs = signal<string[]>([]);
   private readonly _concepts = signal<Concept[]>([]);
 
@@ -92,7 +91,6 @@ export class PosService {
     // Efecto: Limpia branch y estudiantes si no hay conceptos
     effect(() => {
       if (!this._concepts().length) {
-        this.branchID = null;
         this.studentIDs = [];
       }
     });
@@ -102,12 +100,7 @@ export class PosService {
   set studentIDs(value: string[]) {
     this._studentIDs.set(value);
   }
-  set branchID(value: string | null) {
-    this._branchID.set(value);
-  }
-  get branchID() {
-    return this._branchID();
-  }
+
   get studentIDs() {
     return Array.from(new Set(this._studentIDs()));
   }
@@ -149,7 +142,7 @@ export class PosService {
     const canAdd = this._canAddDebit(value);
 
     if (canAdd) {
-      const { description, withTax, discounts, debitId, dueDate } = value;
+      const { description, withTax, discounts, debitId, dueDate, branchID } = value;
       // Calcula montos y descuentos
       const { unitPrice, quantity, amount } = calculateAmount(
         value.unitPrice,
@@ -180,10 +173,10 @@ export class PosService {
           discounts,
           debitId,
           dueDate,
+          branchID
         },
       ]);
 
-      this.branchID = value.branchID;
       this.addStudent(value.studentID);
 
       return true;
@@ -208,20 +201,6 @@ export class PosService {
 
   // Valida si se puede agregar un adeudo (misma sucursal y tipo de impuesto)
   private _canAddDebit(value: AddConceptParams): boolean {
-    const isEqualBranchOrEmpty =
-      this.branchID === null || this.branchID === value.branchID;
-
-    if (!isEqualBranchOrEmpty) {
-      this._snackBar.open(
-        'No se puede mezclar adeudos de diferentes sucursales',
-        'Cerrar',
-        {
-          duration: 3000,
-          panelClass: ['error-snackbar'],
-        }
-      );
-    }
-
     // Revisa si el nuevo adeudo tiene diferencia de impuestos
     const diferenceTaxes = this.concepts.some(
       (debit) => debit.withTax !== value.withTax
@@ -238,7 +217,7 @@ export class PosService {
       );
     }
 
-    return !diferenceTaxes && isEqualBranchOrEmpty;
+    return !diferenceTaxes;
   }
 
   // Limpia todos los conceptos y resetea impuestos y total

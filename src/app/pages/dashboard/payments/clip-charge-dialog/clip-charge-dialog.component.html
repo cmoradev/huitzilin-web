@@ -15,18 +15,18 @@
       negocio.
     </p>
 
-    @if(income()) {
+    @for (income of incomes(); track income.id) {
     <p class="font-bold">Enlaces</p>
 
-    @for (link of income()!.clipLinks; track link.link) {
+    @for (link of income!.clipLinks; track link.link) {
     <div class="item">
       <div>
         <p>
-          <span class="font-medium">Folio:</span> V{{ income()!.folio | folio }}
+          <span class="font-medium">Folio:</span> V{{ income!.folio | folio }}
         </p>
         <p>
           <span class="font-bold">Monto:</span>
-          {{ income()!.pendingPayment | currency : "MXN" }}
+          {{ income!.pendingPayment | currency : "MXN" }}
         </p>
       </div>
       <span class="flex-1"></span>
