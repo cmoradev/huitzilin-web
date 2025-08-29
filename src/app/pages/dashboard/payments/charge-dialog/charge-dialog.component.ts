@@ -8,10 +8,7 @@ import {
 } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { FormToolsService } from '@services';
-import {
-  CreatePayment,
-  PaymentMethod,
-} from '@graphql';
+import { CreatePayment, PaymentMethod } from '@graphql';
 
 import { CurrencyPipe } from '@angular/common';
 import { ChargeFormComponent } from '../charge-form/charge-form.component';
@@ -60,16 +57,6 @@ export class ChargeDialogComponent implements OnInit {
         this.createPaymentForm(PaymentMethod.Card),
         this.createPaymentForm(PaymentMethod.Cash),
       ]),
-    },
-    {
-      validators: [
-        (form: FormGroup) => {
-          if (this.remainingAmount() < 0) {
-            return { totalExceeded: true };
-          }
-          return null;
-        },
-      ],
     }
   );
 
@@ -86,7 +73,14 @@ export class ChargeDialogComponent implements OnInit {
           return acc.add(current.amount);
         }, new Decimal(0));
 
-        this.remainingAmount.set(this.total - recived.toNumber());
+        const totalDecimal = new Decimal(this.total);
+        const remainingAmount = totalDecimal.sub(recived);
+
+        if (!remainingAmount.greaterThan(-0.01)) {
+          this.paymentsForm.setErrors({ totalExceeded: true });
+        }
+
+        this.remainingAmount.set(remainingAmount.toNumber());
       },
     });
   }
