@@ -1,11 +1,12 @@
 import { CurrencyPipe, NgClass } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
   computed,
   inject,
   input,
-  OnInit,
   output,
+  signal,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -17,6 +18,8 @@ import { isAfter } from 'date-fns';
 import { PosService } from '../../../../services/pos.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CompletePaymentDialogComponent } from '../complete-payment-dialog/complete-payment-dialog.component';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { skip } from 'rxjs';
 
 @Component({
   selector: 'app-concept-option',
@@ -32,7 +35,7 @@ import { CompletePaymentDialogComponent } from '../complete-payment-dialog/compl
   templateUrl: './concept-option.component.html',
   styleUrls: ['./concept-option.component.scss'],
 })
-export class ConceptOptionComponent implements OnInit {
+export class ConceptOptionComponent implements AfterViewInit {
   private readonly pos = inject(PosService);
 
   private readonly _dialog = inject(MatDialog);
@@ -63,7 +66,8 @@ export class ConceptOptionComponent implements OnInit {
     return 'Desconocido';
   });
 
-  public optionControl = new FormControl<boolean>(false);
+  public marked = signal<boolean>(false);
+  private readonly _marked$ = toObservable(this.marked);
 
   public stateTag = computed(() => {
     const dueDate = new Date(this.debit().dueDate);
@@ -82,71 +86,58 @@ export class ConceptOptionComponent implements OnInit {
     return 'Desconocido';
   });
 
-  ngOnInit(): void {
-    this.optionControl.setValue(this.pos.checkIsSelected(this.debit()));
-
-    this.optionControl.valueChanges.subscribe({
-      next: (value) => this.toggleDebit(!!value),
+  ngAfterViewInit(): void {
+    this._marked$.pipe(skip(1)).subscribe({
+      next: (value) => this.toggleDebit(value),
     });
   }
 
   public select(event: MouseEvent): void {
     event.stopPropagation();
 
-    this.optionControl.setValue(!this.optionControl.value);
+    this.marked.update((prev) => !prev);
   }
 
   public toggleDebit(active: boolean): void {
     if (active) {
       if (this.debit().state === DebitState.PartiallyPaid) {
-        const $dialog = this._dialog.open(CompletePaymentDialogComponent, {
-          width: '32rem',
-          data: {
-            debit: this.debit(),
-            branchID: this.branchID(),
-            studentID: this.studentID(),
-          },
-        });
-
-        $dialog.afterClosed().subscribe({
-          next: (added) => {
-            if (added) {
-              this.refresh.emit();
-            }
-
-            this.optionControl.setValue(false);
-          },
-        });
+        this.addPaymentOnIncome();
       } else {
-        const {
-          id,
-          description,
-          unitPrice,
-          quantity,
-          discounts,
-          withTax,
-          dueDate,
-        } = this.debit();
-
-        const branchID = this.branchID();
-        const studentID = this.studentID();
-
         const added = this.pos.addConcept({
-          debitId: id,
-          description,
-          unitPrice,
-          quantity,
-          discounts,
-          withTax,
-          dueDate,
-          branchID,
-          studentID,
+          debitId: this.debit().id,
+          description: this.debit().description,
+          unitPrice: this.debit().unitPrice,
+          quantity: this.debit().quantity,
+          discounts: this.debit().discounts,
+          withTax: this.debit().withTax,
+          dueDate: this.debit().dueDate,
+          branchID: this.branchID(),
+          studentID: this.studentID(),
         });
 
-        if (!added) this.optionControl.setValue(false);
+        if (!added) this.marked.set(false);
       }
     } else {
       this.pos.removeDebit(this.debit());
     }
+  }
+
+  private addPaymentOnIncome() {
+    const $dialog = this._dialog.open(CompletePaymentDialogComponent, {
+      width: '32rem',
+      data: {
+        debit: this.debit(),
+        branchID: this.branchID(),
+        studentID: this.studentID(),
+      },
+    });
+
+    $dialog.afterClosed().subscribe({
+      next: (added) => {
+        if (added) this.refresh.emit();
+
+        this.marked.set(false);
+      },
+    });
   }
 }

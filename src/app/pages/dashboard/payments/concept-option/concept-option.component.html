@@ -1,15 +1,15 @@
-<div
-  class="item"
-  matRipple
-  (click)="select($event)"
-  [class.active]="optionControl.value"
->
-  <mat-checkbox [formControl]="optionControl"></mat-checkbox>
+<div class="item" matRipple (click)="select($event)" [class.active]="marked()">
+  @if (marked()) {
+  <mat-icon svgIcon="checkbox-marked-outline" class="!text-primary mr-2" />
+  } @else {
+  <mat-icon svgIcon="checkbox-blank-outline" class="!text-gray-500 mr-2" />
+  }
 
   <div>
-    <p class="font-medium">{{ debit().description }}</p>
+    <p class="font-medium text-sm">{{ debit().description }}</p>
     <p class="text-xs text-gray-500">
-      <span matTooltip="Fecha limite de pago">{{ debit().dueDate }}</span>,
+      <span matTooltip="Fecha limite de pago">{{ debit().dueDate }}</span
+      >,
       <span matTooltip="Cantidad a pagar ">{{
         debit().total | currency : "MXN"
       }}</span>
