@@ -30,7 +30,7 @@ import {
   UpdateOneDebitGQL,
 } from '@graphql';
 import { FormToolsService, GlobalStateService } from '@services';
-import { debitStates, frequencies } from '@utils/contains';
+import { debitStates, DELINQUENCY_VALUE, frequencies } from '@utils/contains';
 import { map, merge, startWith } from 'rxjs';
 import {
   addMonths,
@@ -122,6 +122,10 @@ export class DebitFormDialogComponent {
     }),
     amount: this.formTools.builder.control<number>(0, {
       validators: [Validators.required, Validators.min(1)],
+      nonNullable: true,
+    }),
+    delinquency: this.formTools.builder.control<number>(DELINQUENCY_VALUE, {
+      validators: [Validators.required, Validators.min(0)],
       nonNullable: true,
     }),
     withTax: this.formTools.builder.control<boolean>(true, {
@@ -288,6 +292,7 @@ export class DebitFormDialogComponent {
               state: debit.state,
               withTax: debit.withTax,
               frequency: debit.frequency,
+              delinquency: debit.delinquency,
               paymentDate: null,
               studentId: this._globalStateService.student!.id,
               branchId: this._globalStateService.branch!.id,

@@ -63,6 +63,7 @@ export class ClipChargeDialogComponent {
       unitPrice: concept.unitPrice,
       withTax: concept.withTax,
       branchID: concept.branchID,
+      application: concept.application,
       discounts: concept.discounts.map((discount) => ({
         id: discount.id,
       })),

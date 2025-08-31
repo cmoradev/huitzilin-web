@@ -126,6 +126,7 @@ export class ConceptOptionComponent implements OnInit {
           discounts,
           withTax,
           dueDate,
+          delinquency
         } = this.debit();
 
         const branchID = this.branchID();
@@ -141,6 +142,7 @@ export class ConceptOptionComponent implements OnInit {
           dueDate,
           branchID,
           studentID,
+          delinquency
         });
 
         if (!added) this.optionControl.setValue(false);

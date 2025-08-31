@@ -11,6 +11,7 @@ fragment DebitParts on Debit {
   withTax
   state
   frequency
+  delinquency,
   dueDate
   paymentDate
   discounts {

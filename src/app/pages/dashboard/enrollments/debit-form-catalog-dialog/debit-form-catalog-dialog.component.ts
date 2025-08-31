@@ -35,6 +35,7 @@ import {
 import Decimal from 'decimal.js';
 import { map } from 'rxjs';
 import { DebitWithDiscountFormComponent } from '../debit-with-discount-form/debit-with-discount-form.component';
+import { DELINQUENCY_VALUE } from '@utils/contains';
 
 const defaultDueDate = `${format(
   addMonths(new Date(), 1),
@@ -99,7 +100,7 @@ export class DebitFormCatalogDialogComponent implements OnInit {
   public addDebit(
     initialValues: Omit<
       CreateDebit,
-      'enrollmentId' | 'studentId' | 'branchId' | 'paymentDate' | 'discount'
+      'enrollmentId' | 'studentId' | 'branchId' | 'paymentDate' | 'discount' | 'delinquency'
     >
   ): void {
     const {
@@ -132,6 +133,10 @@ export class DebitFormCatalogDialogComponent implements OnInit {
       }),
       amount: this._formTools.builder.control<number>(amount, {
         validators: [Validators.required, Validators.min(1)],
+        nonNullable: true,
+      }),
+      delinquency: this._formTools.builder.control<number>(DELINQUENCY_VALUE, {
+        validators: [Validators.required, Validators.min(0)],
         nonNullable: true,
       }),
       discount: this._formTools.builder.control<number>(0, {
@@ -181,6 +186,7 @@ export class DebitFormCatalogDialogComponent implements OnInit {
               state: debit.state,
               withTax: debit.withTax,
               frequency: debit.frequency,
+              delinquency: debit.delinquency,
               paymentDate: null,
               studentId: this._globalStateService.student!.id,
               branchId: this._globalStateService.branch!.id,
