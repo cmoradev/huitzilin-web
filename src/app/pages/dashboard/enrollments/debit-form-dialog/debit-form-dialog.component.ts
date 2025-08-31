@@ -325,6 +325,7 @@ export class DebitFormDialogComponent {
   public selectDebitDiscount() {
     const dialog$ = this._dialog.open(SelectDebitDiscountFormDialogComponent, {
       width: '32rem',
+      disableClose: true,
     });
 
     dialog$.afterClosed().subscribe({

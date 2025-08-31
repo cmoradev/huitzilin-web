@@ -106,6 +106,7 @@ export class ConceptOptionComponent implements OnInit {
             branchID: this.branchID(),
             studentID: this.studentID(),
           },
+          disableClose: true,
         });
 
         $dialog.afterClosed().subscribe({

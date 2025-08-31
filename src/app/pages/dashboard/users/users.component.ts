@@ -101,6 +101,7 @@ export class UsersComponent implements AfterViewInit {
     this.dialog.open(UserPoliciesDialogComponent, {
       width: '32rem',
       data: user,
+      disableClose: true,
     });
   }
 
@@ -108,6 +109,7 @@ export class UsersComponent implements AfterViewInit {
     const $dialog = this.dialog.open(UserFormDialogComponent, {
       width: '32rem',
       data: user,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -123,6 +125,7 @@ export class UsersComponent implements AfterViewInit {
     const $dialog = this.dialog.open(UserDeleteDialogComponent, {
       width: '32rem',
       data: user,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({

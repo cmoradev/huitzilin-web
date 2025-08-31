@@ -203,6 +203,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
           width: '56rem',
           maxWidth: '95vw',
           data: { period, level, selected: this.schedules() },
+          disableClose: true,
         }
       );
 

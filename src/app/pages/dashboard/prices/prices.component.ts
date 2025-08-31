@@ -99,6 +99,7 @@ export class PricesComponent implements OnInit {
     const $dialog = this._dialog.open(ActivityFormDialogComponent, {
       width: '32rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -112,6 +113,7 @@ export class PricesComponent implements OnInit {
     const $dialog = this._dialog.open(ActivityDeleteDialogComponent, {
       width: '32rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -127,6 +129,7 @@ export class PricesComponent implements OnInit {
     const $dialog = this._dialog.open(FeeFormDialogComponent, {
       width: '32rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -140,6 +143,7 @@ export class PricesComponent implements OnInit {
     const $dialog = this._dialog.open(FeeDeleteDialogComponent, {
       width: '32rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({

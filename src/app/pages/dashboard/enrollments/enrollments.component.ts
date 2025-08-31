@@ -106,9 +106,10 @@ export class EnrollmentsComponent implements OnInit {
 
   public openEnrollmentCalendarDialog(value: EnrollmentPartsFragment): void {
     this._dialog.open(EnrollmentCalendarComponent, {
-      width: '56rem',
+      width: '80rem',
       maxWidth: '95vw',
       data: value,
+      disableClose: true,
     });
   }
 
@@ -119,6 +120,7 @@ export class EnrollmentsComponent implements OnInit {
       width: '32rem',
       maxWidth: '95vw',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -132,6 +134,7 @@ export class EnrollmentsComponent implements OnInit {
     const $dialog = this._dialog.open(EnrollmentDeleteDialogComponent, {
       width: '32rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -147,6 +150,7 @@ export class EnrollmentsComponent implements OnInit {
     const $dialog = this._dialog.open(LightOnPricesComponent, {
       width: '48rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -162,6 +166,7 @@ export class EnrollmentsComponent implements OnInit {
     const $dialog = this._dialog.open(DebitFormCatalogDialogComponent, {
       width: '48rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -177,6 +182,7 @@ export class EnrollmentsComponent implements OnInit {
     const $dialog = this._dialog.open(DebitFormDialogComponent, {
       width: '38rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -190,6 +196,7 @@ export class EnrollmentsComponent implements OnInit {
     const $dialog = this._dialog.open(DebitDeleteDialogComponent, {
       width: '32rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({

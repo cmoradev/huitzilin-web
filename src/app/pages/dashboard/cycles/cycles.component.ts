@@ -76,6 +76,7 @@ export class CyclesComponent {
     const $dialog = this.dialog.open(CycleFormDialogComponent, {
       width: '32rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -89,6 +90,7 @@ export class CyclesComponent {
     const $dialog = this.dialog.open(CycleDeleteDialogComponent, {
       data: value,
       width: '32rem',
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({

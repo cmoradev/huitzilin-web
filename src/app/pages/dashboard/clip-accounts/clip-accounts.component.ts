@@ -65,6 +65,7 @@ export class ClipAccountsComponent {
     const $dialog = this.dialog.open(ClipAccountFormDialogComponent, {
       width: '32rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -78,6 +79,7 @@ export class ClipAccountsComponent {
     const $dialog = this.dialog.open(ClipAccountDeleteDialogComponent, {
       data: value,
       width: '32rem',
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({

@@ -69,6 +69,7 @@ export class SaleDetailsComponent {
   public openClipChargeDialog() {
     const dislog$ = this._dialog.open(ClipChargeDialogComponent, {
       width: '32rem',
+      disableClose: true,
     });
 
     dislog$.afterClosed().subscribe({
@@ -89,6 +90,7 @@ export class SaleDetailsComponent {
     >(ChargeDialogComponent, {
       width: '32rem',
       data: this.total(),
+      disableClose: true,
     });
 
     $dislog.afterClosed().subscribe({

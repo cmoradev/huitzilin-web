@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>Adjunta documentos del estudiante</h2>
 <mat-dialog-content>
-  <div class="grid grid-cols-3 gap-4">
+  <div class="grid grid-cols-4 gap-4">
     @for (file of studentDocuments(); track file.value) {
     <mat-card>
       <mat-card-header>
@@ -26,3 +26,6 @@
     }
   </div>
 </mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

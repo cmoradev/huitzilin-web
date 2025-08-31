@@ -83,6 +83,7 @@ export class LevelsComponent {
     const $dialog = this.dialog.open(LevelFormDialogComponent, {
       width: '32rem',
       data: level,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -96,6 +97,7 @@ export class LevelsComponent {
     const $dialog = this.dialog.open(LevelDeleteDialogComponent, {
       data: level,
       width: '32rem',
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
