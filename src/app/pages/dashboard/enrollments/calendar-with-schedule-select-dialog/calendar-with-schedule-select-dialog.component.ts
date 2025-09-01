@@ -33,7 +33,7 @@ type Params = {
     MatChipsModule,
     CalendarComponent,
     MatTooltipModule,
-    MatProgressBarModule
+    MatProgressBarModule,
   ],
   templateUrl: './calendar-with-schedule-select-dialog.component.html',
   styles: ``,
@@ -54,7 +54,6 @@ export class CalendarWithScheduleSelectDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this._fetchAllSchedules();
-    this._setSchedules();
   }
 
   public isScheduleSelected(index: string, scheduleId: string): boolean {
@@ -69,22 +68,23 @@ export class CalendarWithScheduleSelectDialogComponent implements OnInit {
     this._selected.set(index, event.value);
   }
 
-  public submit() {
-    const selections = Array.from(this._selected.values());
-    const schedulesIDs = new Set(selections.map(schedule => schedule.id));
-    const schedulesFiltered = this.schedules().filter(schedule => schedulesIDs.has(schedule.id));
-    this._dialogRef.close(schedulesFiltered);
-  }
-
   private _setSchedules() {
     if (this.params.selected) {
       this.params.selected.forEach((schedule) => {
         const day = schedule.day;
         const hour = schedule.start.slice(0, 5);
-
         this._selected.set(`${day}-${hour}`, schedule);
       });
     }
+  }
+
+  public submit() {
+    const selections = Array.from(this._selected.values());
+    const schedulesIDs = new Set(selections.map((schedule) => schedule.id));
+    const schedulesFiltered = this.schedules().filter((schedule) =>
+      schedulesIDs.has(schedule.id)
+    );
+    this._dialogRef.close(schedulesFiltered);
   }
 
   private _fetchAllSchedules(accumulared: SchedulePartsFragment[] = []): void {
@@ -123,6 +123,7 @@ export class CalendarWithScheduleSelectDialogComponent implements OnInit {
           if (allItems.length >= totalCount) {
             this.schedules.set(allItems);
             this.loading.set(false);
+            this._setSchedules();
             return; // No more fees to fetch
           }
 
