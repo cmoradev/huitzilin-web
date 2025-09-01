@@ -6,6 +6,7 @@ import {
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { CalendarComponent } from '@components/calendar/calendar.component';
 import {
@@ -16,7 +17,7 @@ import {
   SchedulePartsFragment,
 } from '@graphql';
 import { GlobalStateService } from '@services';
-import { concatMapTo, map } from 'rxjs';
+import { map } from 'rxjs';
 
 type Params = {
   period?: PeriodPartsFragment;
@@ -32,6 +33,7 @@ type Params = {
     MatChipsModule,
     CalendarComponent,
     MatTooltipModule,
+    MatProgressBarModule
   ],
   templateUrl: './calendar-with-schedule-select-dialog.component.html',
   styles: ``,
@@ -68,7 +70,10 @@ export class CalendarWithScheduleSelectDialogComponent implements OnInit {
   }
 
   public submit() {
-    this._dialogRef.close(Array.from(this._selected.values()));
+    const selections = Array.from(this._selected.values());
+    const schedulesIDs = new Set(selections.map(schedule => schedule.id));
+    const schedulesFiltered = this.schedules().filter(schedule => schedulesIDs.has(schedule.id));
+    this._dialogRef.close(schedulesFiltered);
   }
 
   private _setSchedules() {

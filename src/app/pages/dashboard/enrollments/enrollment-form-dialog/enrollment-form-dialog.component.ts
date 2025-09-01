@@ -209,7 +209,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
 
       $dialog.afterClosed().subscribe({
         next: (schedules) => {
-          this.schedules.set(Array.from(schedules));
+          this.schedules.set(schedules);
           this._updateCountSchedules();
         },
       });
