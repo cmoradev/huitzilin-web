@@ -92,7 +92,7 @@ export class PoliciesComponent {
     user: PolicyPartsFragment | undefined = undefined
   ): void {
     const $dialog = this.dialog.open(PolicyFormDialogComponent, {
-      width: '56rem',
+      width: '32rem',
       data: user,
       disableClose: true,
     });
