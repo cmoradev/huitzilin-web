@@ -30,6 +30,7 @@ import Decimal from 'decimal.js';
 import { filter, map } from 'rxjs';
 import { DebitWithDiscountFormComponent } from '../debit-with-discount-form/debit-with-discount-form.component';
 import { calculateBaseAndTaxFromTotal, calculateSubtotalAndDiscount } from '@calculations';
+import { DELINQUENCY_VALUE } from '@utils/contains';
 
 @Component({
   selector: 'app-light-on-prices',
@@ -69,7 +70,7 @@ export class LightOnPricesComponent {
   public addDebit(
     initialValues: Omit<
       CreateDebit,
-      'enrollmentId' | 'studentId' | 'branchId' | 'paymentDate' | 'discount'
+      'enrollmentId' | 'studentId' | 'branchId' | 'paymentDate' | 'discount' | 'delinquency'
     >
   ): void {
     const {
@@ -211,6 +212,7 @@ export class LightOnPricesComponent {
               paymentDate: null,
               studentId: this._globalStateService.student!.id,
               branchId: this._globalStateService.branch!.id,
+              delinquency: DELINQUENCY_VALUE,
               discounts: debit.discounts.map((discount: any) => ({
                 id: discount.id,
               })),

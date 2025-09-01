@@ -68,6 +68,7 @@ export class DiscountsComponent {
     const $dialog = this.dialog.open(DiscountFormDialogComponent, {
       width: '32rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -81,6 +82,7 @@ export class DiscountsComponent {
     const $dialog = this.dialog.open(DiscountDeleteDialogComponent, {
       data: value,
       width: '32rem',
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({

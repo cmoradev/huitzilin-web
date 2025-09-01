@@ -72,8 +72,9 @@ export class StudentsComponent {
 
   public openDoucumentsDialog(value: StudentPartsFragment): void {
     this.dialog.open(StudentDocumentsDialogComponent, {
-      width: '52rem',
+      width: '64rem',
       data: value,
+      disableClose: true,
     });
   }
 
@@ -83,6 +84,7 @@ export class StudentsComponent {
     const $dialog = this.dialog.open(StudentFormDialogComponent, {
       width: '32rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -96,6 +98,7 @@ export class StudentsComponent {
     const $dialog = this.dialog.open(StudentDeleteDialogComponent, {
       data: value,
       width: '32rem',
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({

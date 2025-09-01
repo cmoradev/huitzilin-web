@@ -105,6 +105,7 @@ export class CalendarPageComponent {
     const $dialog = this._dialog.open(CalendarFormDialogComponent, {
       width: '32rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -118,10 +119,10 @@ export class CalendarPageComponent {
   }
 
   public openPeriodDeleteDialog(value: PeriodPartsFragment): void {
-    console.log(value);
     const $dialog = this._dialog.open(CalendarDeleteDialogComponent, {
       width: '32rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -144,6 +145,7 @@ export class CalendarPageComponent {
     const $dialog = this._dialog.open(ScheduleFormDialogComponent, {
       width: '32rem',
       data: schedule,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -166,6 +168,7 @@ export class CalendarPageComponent {
         start: new Date(`${defaultDate}T${schedule.start}`).toISOString(),
         end: new Date(`${defaultDate}T${schedule.end}`).toISOString(),
       },
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({

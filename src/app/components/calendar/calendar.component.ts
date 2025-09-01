@@ -47,7 +47,7 @@ export class CalendarComponent implements OnChanges {
 
   public filteredSchedules(day: string, hour: Date): SchedulePartsFragment[] {
     const schedules = this.schedules().sort((a, b) => {
-      return a.discipline.name.localeCompare(b.discipline.name);
+      return a.discipline?.name.localeCompare(b.discipline?.name ?? '') || 0;
     });
 
     return schedules.filter((schedule) => {

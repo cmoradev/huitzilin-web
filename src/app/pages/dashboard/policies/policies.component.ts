@@ -94,6 +94,7 @@ export class PoliciesComponent {
     const $dialog = this.dialog.open(PolicyFormDialogComponent, {
       width: '56rem',
       data: user,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -109,6 +110,7 @@ export class PoliciesComponent {
     const $dialog = this.dialog.open(PolicyDeleteDialogComponent, {
       width: '32rem',
       data: user,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({

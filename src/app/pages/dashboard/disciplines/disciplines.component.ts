@@ -71,6 +71,7 @@ export class DisciplinesComponent {
     const $dialog = this.dialog.open(DisciplineFormDialogComponent, {
       width: '32rem',
       data: value,
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({
@@ -84,6 +85,7 @@ export class DisciplinesComponent {
     const $dialog = this.dialog.open(DisciplineDeleteDialogComponent, {
       data: value,
       width: '32rem',
+      disableClose: true,
     });
 
     $dialog.afterClosed().subscribe({

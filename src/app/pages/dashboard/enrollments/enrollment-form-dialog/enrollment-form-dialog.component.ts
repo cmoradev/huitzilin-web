@@ -200,15 +200,16 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
       const $dialog = this._dialog.open(
         CalendarWithScheduleSelectDialogComponent,
         {
-          width: '56rem',
+          width: '80rem',
           maxWidth: '95vw',
           data: { period, level, selected: this.schedules() },
+          disableClose: true,
         }
       );
 
       $dialog.afterClosed().subscribe({
         next: (schedules) => {
-          this.schedules.set(Array.from(schedules));
+          this.schedules.set(schedules);
           this._updateCountSchedules();
         },
       });
@@ -216,8 +217,9 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   }
 
   private _updateCountSchedules() {
+    console.log( this.schedules())
     const disciplineIds = this.schedules().map(
-      (schedule) => schedule.discipline.id
+      (schedule) => schedule.discipline?.id ?? ''
     );
     const disciplines = new Set<string>(disciplineIds);
 

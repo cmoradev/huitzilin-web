@@ -60,9 +60,10 @@ export class EnrollmentWithDebitsComponent implements OnInit {
     evet.stopPropagation();
 
     this._dialog.open(EnrollmentCalendarComponent, {
-      width: '56rem',
+      width: '80rem',
       maxWidth: '95vw',
       data: this.enrollment(),
+      disableClose: true,
     });
   }
 

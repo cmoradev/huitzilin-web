@@ -2,12 +2,19 @@ import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {
   calculateAmount,
+  calculateBaseAndTaxFromTotal,
   calculateSubtotalAndDiscount,
   calculateTotalFromBaseAndTax,
   TaxEnum,
 } from '@calculations';
-import { DebitPartsFragment, DiscountPartsFragment } from '@graphql';
+import {
+  ConceptApplication,
+  CreateConcept,
+  DebitPartsFragment,
+  DiscountPartsFragment,
+} from '@graphql';
 import Decimal from 'decimal.js';
+import { differenceInDays } from 'date-fns';
 
 // Tipo que representa los parámetros para agregar un concepto
 export type AddConceptParams = {
@@ -17,8 +24,9 @@ export type AddConceptParams = {
   withTax: boolean;
   unitPrice: number;
   quantity: number;
+  delinquency: number;
   debitId: string | null;
-  dueDate: string | null;
+  dueDate: string;
   discounts: Array<Omit<DiscountPartsFragment, '__typename'>>;
 };
 
@@ -29,6 +37,7 @@ export type Concept = Omit<AddConceptParams, 'studentID'> & {
   subtotal: number;
   taxes: number;
   total: number;
+  application: ConceptApplication;
 };
 
 @Injectable({
@@ -142,40 +151,9 @@ export class PosService {
     const canAdd = this._canAddDebit(value);
 
     if (canAdd) {
-      const { description, withTax, discounts, debitId, dueDate, branchID } = value;
-      // Calcula montos y descuentos
-      const { unitPrice, quantity, amount } = calculateAmount(
-        value.unitPrice,
-        value.quantity
-      );
-      const { discount, subtotal } = calculateSubtotalAndDiscount(
-        amount,
-        value.discounts
-      );
-      const { taxes, total } = calculateTotalFromBaseAndTax(
-        subtotal,
-        value.withTax ? TaxEnum.Sixteen : TaxEnum.Zero
-      );
+      const newConcepts = this._buildConcepts(value);
 
-      // Agrega el concepto
-      this._concepts.update((previous) => [
-        ...previous,
-        {
-          description,
-          unitPrice,
-          quantity,
-          amount,
-          discount,
-          subtotal,
-          taxes,
-          total,
-          withTax,
-          discounts,
-          debitId,
-          dueDate,
-          branchID
-        },
-      ]);
+      this._concepts.update((previous) => [...previous, ...newConcepts]);
 
       this.addStudent(value.studentID);
 
@@ -185,17 +163,106 @@ export class PosService {
     return false;
   }
 
+  public _buildConcepts(value: AddConceptParams): Concept[] {
+    const {
+      description,
+      withTax,
+      discounts,
+      debitId,
+      dueDate,
+      branchID,
+      delinquency,
+    } = value;
+
+    // Calcula montos y descuentos
+    const { unitPrice, quantity, amount } = calculateAmount(
+      value.unitPrice,
+      value.quantity
+    );
+
+    const { discount, subtotal } = calculateSubtotalAndDiscount(
+      amount,
+      value.discounts
+    );
+
+    const { taxes, total } = calculateTotalFromBaseAndTax(
+      subtotal,
+      value.withTax ? TaxEnum.Sixteen : TaxEnum.Zero
+    );
+
+    const concepts: Concept[] = [
+      {
+        description,
+        unitPrice,
+        quantity,
+        amount,
+        discount,
+        subtotal,
+        taxes,
+        total,
+        withTax,
+        discounts,
+        debitId,
+        dueDate,
+        branchID,
+        delinquency,
+        application: ConceptApplication.DebtPayment,
+      },
+    ];
+
+    const today = new Date();
+    const due = new Date(dueDate);
+    const daysBetween = differenceInDays(today, due);
+
+    if (daysBetween > 0) {
+      const {
+        unitPrice: delinquencyUnitPrice,
+        quantity: delinquencyQuantity,
+        amount: delinquencyAmount,
+      } = calculateAmount(
+        calculateBaseAndTaxFromTotal(
+          delinquency,
+          withTax ? TaxEnum.Sixteen : TaxEnum.Zero
+        ).amount,
+        daysBetween
+      );
+
+      const { discount: delinquencyDiscount, subtotal: delinquencySubtotal } =
+        calculateSubtotalAndDiscount(delinquencyAmount, []);
+
+      const { taxes: delinquencyTaxes, total: delinquencyTotal } =
+        calculateTotalFromBaseAndTax(
+          delinquencySubtotal,
+          withTax ? TaxEnum.Sixteen : TaxEnum.Zero
+        );
+
+      concepts.push({
+        description: 'Cargo por morosidad (' + daysBetween + ' días)',
+        unitPrice: delinquencyUnitPrice,
+        quantity: delinquencyQuantity,
+        amount: delinquencyAmount,
+        discount: delinquencyDiscount,
+        subtotal: delinquencySubtotal,
+        taxes: delinquencyTaxes,
+        total: delinquencyTotal,
+        withTax,
+        debitId,
+        branchID,
+        discounts: [],
+        delinquency: 0,
+        dueDate: today.toISOString(),
+        application: ConceptApplication.DelinquencyCharge,
+      });
+    }
+
+    return concepts;
+  }
+
   // Elimina un adeudo de los conceptos
   public removeDebit(value: DebitPartsFragment) {
     this._concepts.update((previous) => {
       const concepts = [...previous];
-      const index = concepts.findIndex(
-        (concept) => concept.debitId === value.id
-      );
-      if (index !== -1) {
-        concepts.splice(index, 1);
-      }
-      return concepts;
+      return concepts.filter((concept) => concept.debitId !== value.id);
     });
   }
 

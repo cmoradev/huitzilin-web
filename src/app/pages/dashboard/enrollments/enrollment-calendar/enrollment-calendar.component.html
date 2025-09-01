@@ -1,7 +1,7 @@
 <h2 mat-dialog-title>Calendario de actividades</h2>
 
 <mat-dialog-content>
-  @if (!!params.period.id) {
+  @if (!!params.period?.id) {
   <app-calendar
     [id]="params.period!.id"
     [days]="params!.period!.days"
@@ -24,3 +24,6 @@
   </app-calendar>
   }
 </mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

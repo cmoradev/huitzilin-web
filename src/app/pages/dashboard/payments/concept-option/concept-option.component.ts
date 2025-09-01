@@ -111,6 +111,7 @@ export class ConceptOptionComponent implements AfterViewInit {
           discounts: this.debit().discounts,
           withTax: this.debit().withTax,
           dueDate: this.debit().dueDate,
+          delinquency: this.debit().delinquency,
           branchID: this.branchID(),
           studentID: this.studentID(),
         });

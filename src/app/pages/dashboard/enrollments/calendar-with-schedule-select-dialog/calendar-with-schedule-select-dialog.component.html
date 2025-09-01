@@ -1,6 +1,8 @@
 <h2 mat-dialog-title>Calendario de actividades</h2>
 <mat-dialog-content>
-  @if (!!params.period?.id) {
+  @if (loading()) {
+  <mat-progress-bar mode="query"></mat-progress-bar>
+  } @if (!!params.period?.id) {
   <app-calendar
     [id]="params!.period!.id"
     [days]="params!.period!.days"
@@ -22,7 +24,8 @@
           class="truncate line-clamp-1"
         >
           <p class="text-xs">
-            ({{ schedule.enrollments.totalCount }}) - {{ schedule.discipline.name }}
+            ({{ schedule.enrollments.totalCount }}) -
+            {{ schedule.discipline.name }}
           </p>
         </mat-chip-option>
         }

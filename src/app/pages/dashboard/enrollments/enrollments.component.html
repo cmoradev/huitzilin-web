@@ -34,7 +34,7 @@
           class="relative flex-1 mt-2"
           (cdkDropListDropped)="dropEnrollment($event)"
         >
-          @for (enrollment of enrollments(); track $index) {
+          @for (enrollment of enrollments(); track enrollment.id) {
           <app-enrollment-item
             [node]="enrollment"
             (update)="openEnrollmentFormDialog($event)"

@@ -7,6 +7,8 @@ import {
   PaymentMethod,
 } from '@graphql';
 
+export const DELINQUENCY_VALUE = 30;
+
 export const discountTypes = [
   {
     label: 'Porcentaje',

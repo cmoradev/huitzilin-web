@@ -76,6 +76,7 @@ export class CompletePaymentDialogComponent implements OnInit {
       >(ChargeDialogComponent, {
         width: '32rem',
         data: this.accountsReceivable()!.pendingPayment,
+        disableClose: true,
       });
 
       $dislog.afterClosed().subscribe({
