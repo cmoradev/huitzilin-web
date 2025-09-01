@@ -45,9 +45,8 @@ export class ActionFormComponent implements OnInit {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    actions: this.formTools.builder.control<string[]>([], {
+    actions: this.formTools.builder.array<string>([], {
       validators: [Validators.required],
-      nonNullable: true,
     }),
     resources: this.formTools.builder.control<string[]>([], {
       validators: [Validators.required],
@@ -88,26 +87,27 @@ export class ActionFormComponent implements OnInit {
   public saveData() {
     if (this.formGroup.valid) {
       const values = this.formGroup.getRawValue();
+      console.log(values);
 
-      if (this.isGlobalRoute) {
-        this.save.emit([
-          {
-            id: values.id,
-            actions: values.actions,
-            resources: '*',
-            route: values.route,
-          },
-        ]);
-      } else {
-        this.save.emit(
-          values.resources.map((resource) => ({
-            id: values.id,
-            actions: values.actions,
-            resources: resource,
-            route: values.route,
-          }))
-        );
-      }
+      // if (this.isGlobalRoute) {
+      //   this.save.emit([
+      //     {
+      //       id: values.id,
+      //       actions: values.actions,
+      //       resources: '*',
+      //       route: values.route,
+      //     },
+      //   ]);
+      // } else {
+      //   this.save.emit(
+      //     values.resources.map((resource) => ({
+      //       id: values.id,
+      //       actions: values.actions,
+      //       resources: resource,
+      //       route: values.route,
+      //     }))
+      //   );
+      // }
     }
   }
 

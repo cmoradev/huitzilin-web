@@ -35,11 +35,11 @@
     </mat-form-field>
 
     @if (withRoute) {
-    <div >
+    <div formArrayName="actions">
       <h5 class="font-medium">Acciones permitidas</h5>
 
       @for (permission of permissions; track permission.permission) {
-      <mat-checkbox [formControlName]="permission.permission">
+      <mat-checkbox [formControlName]="permission.permission" [value]="permission.permission">
         {{ permission.name }}
       </mat-checkbox>
       }
