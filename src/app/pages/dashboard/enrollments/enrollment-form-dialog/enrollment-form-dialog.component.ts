@@ -217,6 +217,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   }
 
   private _updateCountSchedules() {
+    console.log( this.schedules())
     const disciplineIds = this.schedules().map(
       (schedule) => schedule.discipline?.id ?? ''
     );

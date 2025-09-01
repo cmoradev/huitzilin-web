@@ -18,6 +18,7 @@ import {
 } from '@graphql';
 import { GlobalStateService } from '@services';
 import { map } from 'rxjs';
+import { addHours, parse, format, isBefore } from 'date-fns';
 
 type Params = {
   period?: PeriodPartsFragment;
@@ -66,6 +67,21 @@ export class CalendarWithScheduleSelectDialogComponent implements OnInit {
 
   public onDaySelection(index: string, event: MatChipListboxChange) {
     this._selected.set(index, event.value);
+
+    if (event.value) {
+      // Usando date-fns para obtener las horas intermedias entre start y end (sin incluirlos)
+
+      const start = parse(event.value.start, 'HH:mm:ss', new Date());
+      const end = parse(event.value.end, 'HH:mm:ss', new Date());
+      let current = start;
+
+      while (isBefore(current, end)) {
+        const [day] = index.split('-');
+        this._selected.set(`${day}-${format(current, 'HH:mm')}`, event.value);
+        current = addHours(current, 1);
+      }
+
+    }
   }
 
   private _setSchedules() {
