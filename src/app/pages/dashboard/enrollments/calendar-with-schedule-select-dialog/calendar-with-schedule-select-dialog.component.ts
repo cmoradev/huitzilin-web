@@ -80,7 +80,9 @@ export class CalendarWithScheduleSelectDialogComponent implements OnInit {
 
   public submit() {
     const selections = Array.from(this._selected.values());
-    const schedulesIDs = new Set(selections.map((schedule) => schedule.id));
+    const schedulesIDs = new Set(
+      selections.filter((schedule) => !!schedule).map((schedule) => schedule.id)
+    );
     const schedulesFiltered = this.schedules().filter((schedule) =>
       schedulesIDs.has(schedule.id)
     );
