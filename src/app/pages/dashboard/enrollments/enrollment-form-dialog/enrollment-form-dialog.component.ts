@@ -200,7 +200,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
       const $dialog = this._dialog.open(
         CalendarWithScheduleSelectDialogComponent,
         {
-          width: '56rem',
+          width: '80rem',
           maxWidth: '95vw',
           data: { period, level, selected: this.schedules() },
           disableClose: true,
