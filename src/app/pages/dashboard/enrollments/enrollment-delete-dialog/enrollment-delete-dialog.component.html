@@ -2,9 +2,9 @@
 <mat-dialog-content>
   <div class="flex items-center gap-2 mt-4">
     <div>
-      <p>{{ data.student.fullname }}</p>
+      <p>{{ data.student?.fullname }}</p>
 
-      <p><span class="font-medium">Cyclo: </span> {{ data.cycle.name }}</p>
+      <p><span class="font-medium">Cyclo: </span> {{ data.cycle?.name }}</p>
       <p><span class="font-medium">Detalles: </span> {{ data.details }}</p>
       <p>
         <span class="font-medium">State: </span>

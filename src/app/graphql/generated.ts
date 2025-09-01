@@ -1170,10 +1170,10 @@ export enum DocumentSortFields {
 
 export type Enrollment = {
   __typename?: 'Enrollment';
-  branch: Branch;
+  branch?: Maybe<Branch>;
   branchId: Scalars['ID']['output'];
   createdAt: Scalars['DateTime']['output'];
-  cycle: Cycle;
+  cycle?: Maybe<Cycle>;
   cycleId: Scalars['ID']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   details: Scalars['String']['output'];
@@ -1181,16 +1181,16 @@ export type Enrollment = {
   end: Scalars['String']['output'];
   hours: Scalars['Float']['output'];
   id: Scalars['ID']['output'];
-  level: Level;
+  level?: Maybe<Level>;
   levelId: Scalars['ID']['output'];
   order: Scalars['Float']['output'];
-  package: Package;
-  packageId: Package;
-  period: Period;
+  package?: Maybe<Package>;
+  packageId?: Maybe<Package>;
+  period?: Maybe<Period>;
   schedules: Array<Schedule>;
   start: Scalars['String']['output'];
   state: EnrollmentState;
-  student: Student;
+  student?: Maybe<Student>;
   studentId: Scalars['ID']['output'];
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
@@ -2932,18 +2932,18 @@ export type RemoveStudentsFromDocumentInput = {
 
 export type Schedule = {
   __typename?: 'Schedule';
-  branch: Branch;
+  branch?: Maybe<Branch>;
   branchId: Scalars['ID']['output'];
   createdAt: Scalars['DateTime']['output'];
   day: Scalars['Int']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
-  discipline: Discipline;
+  discipline?: Maybe<Discipline>;
   disciplineId: Scalars['ID']['output'];
   end: Scalars['String']['output'];
   enrollments: ScheduleEnrollmentsConnection;
   id: Scalars['ID']['output'];
   levels: Array<Level>;
-  period: Period;
+  period?: Maybe<Period>;
   periodId: Scalars['ID']['output'];
   start: Scalars['String']['output'];
   updatedAt: Scalars['DateTime']['output'];
@@ -3937,14 +3937,14 @@ export type DeleteOneDiscountMutationVariables = Exact<{
 
 export type DeleteOneDiscountMutation = { __typename?: 'Mutation', deleteOneDiscount: { __typename?: 'DiscountDeleteResponse', id?: string | null } };
 
-export type EnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } };
+export type EnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package?: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number } | null, cycle?: { __typename?: 'Cycle', id: string, name: string } | null, student?: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string } | null, period?: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string } | null, level?: { __typename?: 'Level', id: string, name: string, abbreviation: string } | null };
 
 export type CreateOneEnrollmentMutationVariables = Exact<{
   enrollment: CreateEnrollment;
 }>;
 
 
-export type CreateOneEnrollmentMutation = { __typename?: 'Mutation', createOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } } };
+export type CreateOneEnrollmentMutation = { __typename?: 'Mutation', createOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package?: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number } | null, cycle?: { __typename?: 'Cycle', id: string, name: string } | null, student?: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string } | null, period?: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string } | null, level?: { __typename?: 'Level', id: string, name: string, abbreviation: string } | null } };
 
 export type GetEnrollmentsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -3953,7 +3953,7 @@ export type GetEnrollmentsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } }> } };
+export type GetEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package?: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number } | null, cycle?: { __typename?: 'Cycle', id: string, name: string } | null, student?: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string } | null, period?: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string } | null, level?: { __typename?: 'Level', id: string, name: string, abbreviation: string } | null }> } };
 
 export type UpdateOneEnrollmentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3961,7 +3961,7 @@ export type UpdateOneEnrollmentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneEnrollmentMutation = { __typename?: 'Mutation', updateOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number }, cycle: { __typename?: 'Cycle', id: string, name: string }, student: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } } };
+export type UpdateOneEnrollmentMutation = { __typename?: 'Mutation', updateOneEnrollment: { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, package?: { __typename?: 'Package', id: string, name: string, kind: PackageKind, quantity: number } | null, cycle?: { __typename?: 'Cycle', id: string, name: string } | null, student?: { __typename?: 'Student', id: string, picture: string, fullname: string, code: string } | null, period?: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string } | null, level?: { __typename?: 'Level', id: string, name: string, abbreviation: string } | null } };
 
 export type DeleteOneEnrollmentMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3977,7 +3977,7 @@ export type SetOrderEnrollmentsMutationVariables = Exact<{
 
 export type SetOrderEnrollmentsMutation = { __typename?: 'Mutation', setOrderEnrollments: { __typename?: 'UpdateCount', updatedCount?: number | null } };
 
-export type CurrentEnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, studentId: string, branch: { __typename?: 'Branch', id: string, name: string, picture: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } };
+export type CurrentEnrollmentPartsFragment = { __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, studentId: string, branchId: string, branch?: { __typename?: 'Branch', id: string, name: string, picture: string } | null, period?: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string } | null, level?: { __typename?: 'Level', id: string, name: string, abbreviation: string } | null };
 
 export type GetCurrentEnrollmentsPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -3986,7 +3986,7 @@ export type GetCurrentEnrollmentsPageQueryVariables = Exact<{
 }>;
 
 
-export type GetCurrentEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, studentId: string, branch: { __typename?: 'Branch', id: string, name: string, picture: string }, period: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string }, level: { __typename?: 'Level', id: string, name: string, abbreviation: string } }> } };
+export type GetCurrentEnrollmentsPageQuery = { __typename?: 'Query', enrollments: { __typename?: 'EnrollmentConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Enrollment', id: string, details: string, state: EnrollmentState, hours: number, diciplines: number, studentId: string, branchId: string, branch?: { __typename?: 'Branch', id: string, name: string, picture: string } | null, period?: { __typename?: 'Period', id: string, name: string, start: string, end: string, firstHour: string, lastHour: string, days: string } | null, level?: { __typename?: 'Level', id: string, name: string, abbreviation: string } | null }> } };
 
 export type FeePartsFragment = { __typename?: 'Fee', id: string, name: string, price: number, amount: number, frequency: Frequency, withTax: boolean, autoLoad: boolean };
 
@@ -4206,14 +4206,14 @@ export type DeleteOnePolicyMutationVariables = Exact<{
 
 export type DeleteOnePolicyMutation = { __typename?: 'Mutation', deleteOnePolicy: { __typename?: 'PolicyDeleteResponse', id?: string | null } };
 
-export type SchedulePartsFragment = { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number }, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } };
+export type SchedulePartsFragment = { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline?: { __typename?: 'Discipline', id: string, name: string, minHours: number } | null, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } };
 
 export type CreateOneScheduleMutationVariables = Exact<{
   schedule: CreateSchedule;
 }>;
 
 
-export type CreateOneScheduleMutation = { __typename?: 'Mutation', createOneSchedule: { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number }, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } } };
+export type CreateOneScheduleMutation = { __typename?: 'Mutation', createOneSchedule: { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline?: { __typename?: 'Discipline', id: string, name: string, minHours: number } | null, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } } };
 
 export type GetSchedulesPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -4222,7 +4222,7 @@ export type GetSchedulesPageQueryVariables = Exact<{
 }>;
 
 
-export type GetSchedulesPageQuery = { __typename?: 'Query', schedules: { __typename?: 'ScheduleConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number }, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } }> } };
+export type GetSchedulesPageQuery = { __typename?: 'Query', schedules: { __typename?: 'ScheduleConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline?: { __typename?: 'Discipline', id: string, name: string, minHours: number } | null, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } }> } };
 
 export type UpdateOneScheduleMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4230,7 +4230,7 @@ export type UpdateOneScheduleMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneScheduleMutation = { __typename?: 'Mutation', updateOneSchedule: { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline: { __typename?: 'Discipline', id: string, name: string, minHours: number }, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } } };
+export type UpdateOneScheduleMutation = { __typename?: 'Mutation', updateOneSchedule: { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline?: { __typename?: 'Discipline', id: string, name: string, minHours: number } | null, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } } };
 
 export type DeleteOneScheduleMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4504,6 +4504,7 @@ export const CurrentEnrollmentPartsFragmentDoc = gql`
   hours
   diciplines
   studentId
+  branchId
   branch {
     id
     name

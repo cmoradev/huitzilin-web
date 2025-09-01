@@ -1,12 +1,14 @@
 <div class="item" (click)="toggleExpanded()">
-  <app-avatar
-    [imageSource]="enrollment().branch.picture"
-    [matTooltip]="enrollment().branch.name"
-  ></app-avatar>
+  @if (!!enrollment().branch?.picture && !!enrollment().branch?.name) {
+    <app-avatar
+      [imageSource]="enrollment().branch!.picture"
+      [matTooltip]="enrollment().branch!.name"
+    />
+  }
   <div>
     <p class="font-medium">{{ enrollment().details }}</p>
     <p class="text-xs text-gray-500">
-      {{ enrollment().level.name }}
+      {{ enrollment().level?.name }}
     </p>
   </div>
 
@@ -26,7 +28,7 @@
   @for (debit of debits(); track debit.id) {
   <app-concept-option
     [debit]="debit"
-    [branchID]="enrollment().branch.id"
+    [branchID]="enrollment().branchId"
     [studentID]="enrollment().studentId"
     (refresh)="refreshDebits()"
   />
