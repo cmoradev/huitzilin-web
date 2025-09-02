@@ -1,6 +1,7 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import {
   FormArray,
+  FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
@@ -27,9 +28,12 @@ import {
   startOfMonth,
 } from 'date-fns';
 import Decimal from 'decimal.js';
-import { filter, map } from 'rxjs';
+import { debounceTime, filter, map, startWith } from 'rxjs';
 import { DebitWithDiscountFormComponent } from '../debit-with-discount-form/debit-with-discount-form.component';
-import { calculateBaseAndTaxFromTotal, calculateSubtotalAndDiscount } from '@calculations';
+import {
+  calculateBaseAndTaxFromTotal,
+  calculateSubtotalAndDiscount,
+} from '@calculations';
 import { DELINQUENCY_VALUE } from '@utils/contains';
 
 @Component({
@@ -47,17 +51,34 @@ import { DELINQUENCY_VALUE } from '@utils/contains';
   templateUrl: './light-on-prices.component.html',
   styles: ``,
 })
-export class LightOnPricesComponent {
+export class LightOnPricesComponent implements OnInit {
   private readonly _formTools = inject(FormToolsService);
-  private readonly _globalStateService = inject(GlobalStateService);
+  private readonly _globalState = inject(GlobalStateService);
   private readonly _createManyDebits = inject(CreateManyDebitsGQL);
   private readonly _dialogRef = inject(MatDialogRef<LightOnPricesComponent>);
 
+  public hoursControl = new FormControl<number>(
+    this._globalState.enrollment!.hours || 0
+  );
   public loading = signal<boolean>(false);
 
   public formGroup = this._formTools.builder.group({
     debits: this._formTools.builder.array([]),
   });
+
+  ngOnInit(): void {
+    this.hoursControl.valueChanges
+      .pipe(
+        startWith(this._globalState.enrollment!.hours || 0),
+        filter((value) => typeof value === 'number'),
+        debounceTime(300)
+      )
+      .subscribe({
+        next: (value) => {
+          this.setPlan(value);
+        },
+      });
+  }
 
   public get debits(): FormArray<FormGroup> {
     return this.formGroup.get('debits') as FormArray<FormGroup>;
@@ -70,7 +91,12 @@ export class LightOnPricesComponent {
   public addDebit(
     initialValues: Omit<
       CreateDebit,
-      'enrollmentId' | 'studentId' | 'branchId' | 'paymentDate' | 'discount' | 'delinquency'
+      | 'enrollmentId'
+      | 'studentId'
+      | 'branchId'
+      | 'paymentDate'
+      | 'discount'
+      | 'delinquency'
     >
   ): void {
     const {
@@ -130,42 +156,41 @@ export class LightOnPricesComponent {
     this.debits.push(debitFormGroup);
   }
 
-  public setPlan(value: string): void {
-    const hours = parseInt(`${value ?? 0}`);
-
-    let packagePrice = 0;
-    let remainingHours = hours;
-
-    // Buscar el paquete más grande que no exceda las horas solicitadas
-    const packageData = PRICE_LIST.slice()
-      .reverse()
-      .find((p) => p.hours <= hours);
-
-    if (packageData) {
-      packagePrice = packageData.price;
-      remainingHours = hours - packageData.hours;
-    }
-
-    // Calcular el precio de las horas restantes
-    const extraPrice = remainingHours * HOUR_PRICE;
-
-    // Precio total
-    const totalPrice = packagePrice + extraPrice;
-    const {amount} = calculateBaseAndTaxFromTotal(totalPrice);
-
-    this.debits.clear();
+  public setPlan(hours: number): void {
     if (
-      !!this._globalStateService!.enrollment!.period?.start &&
-      !!this._globalStateService!.enrollment!.period?.end
+      !!this._globalState!.enrollment!.period?.start &&
+      !!this._globalState!.enrollment!.period?.end
     ) {
+      let packagePrice = 0;
+      let remainingHours = hours;
+
+      // Buscar el paquete más grande que no exceda las horas solicitadas
+      const packageData = PRICE_LIST.slice()
+        .reverse()
+        .find((p) => p.hours <= hours);
+
+      if (packageData) {
+        packagePrice = packageData.price;
+        remainingHours = hours - packageData.hours;
+      }
+
+      // Calcular el precio de las horas restantes
+      const extraPrice = remainingHours * HOUR_PRICE;
+
+      // Precio total
+      const totalPrice = packagePrice + extraPrice;
+      const { amount } = calculateBaseAndTaxFromTotal(totalPrice);
+
       const startPeriod = startOfMonth(
-        `${this._globalStateService!.enrollment!.period!.start}T12:00:00`
+        `${this._globalState!.enrollment!.period!.start}T12:00:00`
       );
       const endPeriod = endOfMonth(
-        `${this._globalStateService!.enrollment!.period!.end}T12:00:00`
+        `${this._globalState!.enrollment!.period!.end}T12:00:00`
       );
 
       let currentDate = startPeriod;
+
+      this.debits.clear();
 
       while (isBefore(currentDate, endPeriod)) {
         currentDate = setDate(currentDate, 5);
@@ -194,9 +219,9 @@ export class LightOnPricesComponent {
       this.loading.set(true);
 
       if (
-        !!this._globalStateService.enrollment?.id &&
-        !!this._globalStateService.student?.id &&
-        !!this._globalStateService.branch?.id
+        !!this._globalState.enrollment?.id &&
+        !!this._globalState.student?.id &&
+        !!this._globalState.branch?.id
       ) {
         this._createManyDebits
           .mutate({
@@ -210,13 +235,13 @@ export class LightOnPricesComponent {
               withTax: debit.withTax,
               frequency: debit.frequency,
               paymentDate: null,
-              studentId: this._globalStateService.student!.id,
-              branchId: this._globalStateService.branch!.id,
+              studentId: this._globalState.student!.id,
+              branchId: this._globalState.branch!.id,
               delinquency: DELINQUENCY_VALUE,
               discounts: debit.discounts.map((discount: any) => ({
                 id: discount.id,
               })),
-              enrollmentId: this._globalStateService.enrollment!.id,
+              enrollmentId: this._globalState.enrollment!.id,
             })),
           })
           .pipe(map((resp) => resp.data?.createManyDebits))

@@ -130,7 +130,7 @@ export class CalendarWithScheduleSelectDialogComponent implements OnInit {
 
       const fetch$ = this._gettSchedulesPage.watch(variables, {
         fetchPolicy: 'cache-and-network', // Usa cache primero, solo pide a la API si no hay datos en cache
-        nextFetchPolicy: 'cache-and-network', // Mantiene la política de cache en siguientes peticiones
+        nextFetchPolicy: 'cache-first', // Mantiene la política de cache en siguientes peticiones
         notifyOnNetworkStatusChange: false, // No notifica cambios de red para evitar refetch innecesario
       }).valueChanges;
 

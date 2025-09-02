@@ -2,6 +2,7 @@ import { Component, inject, OnInit, output } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
@@ -14,6 +15,7 @@ import { concatMap, groupBy, mergeMap, of, toArray, zip } from 'rxjs';
 @Component({
   selector: 'app-action-form',
   imports: [
+    MatDialogModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatCheckboxModule,
@@ -21,6 +23,7 @@ import { concatMap, groupBy, mergeMap, of, toArray, zip } from 'rxjs';
     MatSelectModule,
     MatIconModule,
     MatButtonModule,
+    MatCheckboxModule,
   ],
   templateUrl: './action-form.component.html',
   styles: ``,
@@ -42,9 +45,8 @@ export class ActionFormComponent implements OnInit {
       validators: [Validators.required],
       nonNullable: true,
     }),
-    actions: this.formTools.builder.control<string[]>([], {
+    actions: this.formTools.builder.array<string>([], {
       validators: [Validators.required],
-      nonNullable: true,
     }),
     resources: this.formTools.builder.control<string[]>([], {
       validators: [Validators.required],
@@ -85,26 +87,27 @@ export class ActionFormComponent implements OnInit {
   public saveData() {
     if (this.formGroup.valid) {
       const values = this.formGroup.getRawValue();
+      console.log(values);
 
-      if (this.isGlobalRoute) {
-        this.save.emit([
-          {
-            id: values.id,
-            actions: values.actions,
-            resources: '*',
-            route: values.route,
-          },
-        ]);
-      } else {
-        this.save.emit(
-          values.resources.map((resource) => ({
-            id: values.id,
-            actions: values.actions,
-            resources: resource,
-            route: values.route,
-          }))
-        );
-      }
+      // if (this.isGlobalRoute) {
+      //   this.save.emit([
+      //     {
+      //       id: values.id,
+      //       actions: values.actions,
+      //       resources: '*',
+      //       route: values.route,
+      //     },
+      //   ]);
+      // } else {
+      //   this.save.emit(
+      //     values.resources.map((resource) => ({
+      //       id: values.id,
+      //       actions: values.actions,
+      //       resources: resource,
+      //       route: values.route,
+      //     }))
+      //   );
+      // }
     }
   }
 

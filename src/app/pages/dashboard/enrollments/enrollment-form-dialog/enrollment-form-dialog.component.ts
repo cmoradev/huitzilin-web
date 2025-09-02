@@ -85,7 +85,8 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
   private readonly _globalStateService = inject(GlobalStateService);
   private readonly _createOneEnrollment = inject(CreateOneEnrollmentGQL);
   private readonly _updateOneEnrollment = inject(UpdateOneEnrollmentGQL);
-  private readonly _gettSchedulesPage = inject(GetSchedulesPageGQL);
+  private readonly _getSchedulesPage = inject(GetSchedulesPageGQL);
+  public schedulesLoading = signal(false);
 
   public levelTools = inject(LevelToolsService);
   public packageTools = inject(PackageToolsService);
@@ -196,7 +197,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
     const period = this.formGroup.get('period')?.value;
     const level = this.formGroup.get('level')?.value;
 
-    if (!!period?.id && !!level?.id) {
+    if (!!period?.id && !!level?.id && !this.schedulesLoading()) {
       const $dialog = this._dialog.open(
         CalendarWithScheduleSelectDialogComponent,
         {
@@ -209,21 +210,22 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
 
       $dialog.afterClosed().subscribe({
         next: (schedules) => {
-          this.schedules.set(schedules);
-          this._updateCountSchedules();
+          if (Array.isArray(schedules)) {
+            this.schedules.set(schedules);
+            this._updateCountSchedules(schedules ?? []);
+          }
         },
       });
     }
   }
 
-  private _updateCountSchedules() {
-    console.log( this.schedules())
-    const disciplineIds = this.schedules().map(
+  private _updateCountSchedules(schedules: SchedulePartsFragment[]) {
+    const disciplineIds = schedules.map(
       (schedule) => schedule.discipline?.id ?? ''
     );
     const disciplines = new Set<string>(disciplineIds);
 
-    const hours = this.schedules().reduce((acc, schedule) => {
+    const hours = schedules.reduce((acc, schedule) => {
       const start = new Date(`${defaultDate}T${schedule.start}`);
       const end = new Date(`${defaultDate}T${schedule.end}`);
 
@@ -277,6 +279,7 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
 
   private _fetchAllSchedules(accumulared: SchedulePartsFragment[] = []): void {
     if (!!this.data?.id) {
+      this.schedulesLoading.set(true);
       const limit = 50;
       const offset = accumulared.length;
 
@@ -286,9 +289,9 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
         offset,
       };
 
-      const fetch$ = this._gettSchedulesPage.watch(variables, {
+      const fetch$ = this._getSchedulesPage.watch(variables, {
         fetchPolicy: 'cache-and-network', // Usa cache primero, solo pide a la API si no hay datos en cache
-        nextFetchPolicy: 'cache-and-network', // Mantiene la política de cache en siguientes peticiones
+        nextFetchPolicy: 'cache-first', // Mantiene la política de cache en siguientes peticiones
         notifyOnNetworkStatusChange: false, // No notifica cambios de red para evitar refetch innecesario
       }).valueChanges;
 
@@ -297,8 +300,8 @@ export class EnrollmentFormDialogComponent implements AfterViewInit {
           const allItems = accumulared.concat(nodes);
           if (allItems.length >= totalCount) {
             this.schedules.set(allItems);
-            this.loading.set(false);
-            this._updateCountSchedules();
+            this.schedulesLoading.set(false);
+            this._updateCountSchedules(allItems);
             return; // No more fees to fetch
           }
           this._fetchAllSchedules(allItems);

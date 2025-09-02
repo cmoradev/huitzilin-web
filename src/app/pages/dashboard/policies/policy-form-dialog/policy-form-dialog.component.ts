@@ -1,13 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
-import {
-  FormArray,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import {
   MAT_DIALOG_DATA,
+  MatDialog,
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
@@ -24,7 +20,6 @@ import { FormToolsService } from '@services';
 import { ActionFormComponent } from '../action-form/action-form.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { JsonPipe } from '@angular/common';
 import { MatChipsModule } from '@angular/material/chips';
 
 @Component({
@@ -36,11 +31,9 @@ import { MatChipsModule } from '@angular/material/chips';
     MatButtonModule,
     MatExpansionModule,
     ReactiveFormsModule,
-    ActionFormComponent,
     MatTooltipModule,
     MatIconModule,
     MatChipsModule,
-
   ],
   templateUrl: './policy-form-dialog.component.html',
   styles: ``,
@@ -50,6 +43,7 @@ export class PolicyFormDialogComponent {
   public loading = signal<boolean>(false);
   public data = inject<PolicyPartsFragment | null>(MAT_DIALOG_DATA);
 
+  private readonly _dialog = inject(MatDialog);
   private readonly _dialogRef = inject(MatDialogRef<PolicyFormDialogComponent>);
   private readonly createOnePolicyGQL = inject(CreateOnePolicyGQL);
   private readonly updateOnePolicyGQL = inject(UpdateOnePolicyGQL);
@@ -113,9 +107,10 @@ export class PolicyFormDialogComponent {
     }
   }
 
-  public addActionForm(initialValues: CreateAction): void {
-    const { actions, resources, route, id = null } = initialValues;
-
-    const resourcesValue = resources.split(',');
+  public openActionForm(): void {
+    const dialog$ = this._dialog.open(ActionFormComponent, {
+      width: '32rem',
+      disableClose: true,
+    });
   }
 }

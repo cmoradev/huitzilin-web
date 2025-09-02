@@ -8,14 +8,15 @@ export const permissionGuard: CanActivateChildFn = (route, state) => {
   const globalState = inject(GlobalStateService);
 
   const username = globalState.session?.username;
+  console.log(username);
 
-  if (username && permissionMap.has(username)) {
-    const permissions = permissionMap.get(username) || [];
+  // if (username && permissionMap.has(username)) {
+  //   const permissions = permissionMap.get(username) || [];
         
-    const hasPermission = permissions.some(permission => permission.route === state.url);
+  //   const hasPermission = permissions.some(permission => permission.route === state.url);
 
-    return hasPermission;
-  }
+  //   return hasPermission;
+  // }
 
-  return false;
+  return true;
 };
