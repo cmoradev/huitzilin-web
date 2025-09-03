@@ -114,6 +114,10 @@ permissionMap.set('emartinez', [
     permissions: new Set(ENROLLMENTS_ROUTE.permissions),
   },
   {
+    route: PAYMENTS_ROUTE.route,
+    permissions: new Set(PAYMENTS_ROUTE.permissions),
+  },
+  {
     route: LEVELS_ROUTE.route,
     permissions: new Set(LEVELS_ROUTE.permissions),
   },
