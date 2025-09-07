@@ -19,8 +19,11 @@ import { differenceInDays } from 'date-fns';
 // Tipo que representa los parámetros para agregar un concepto
 export type AddConceptParams = {
   description: string;
-  branchID: string;
   studentID: string;
+  branchID: string;
+  branchName: string;
+  enrollmentID: string;
+  enrollmentDetails: string
   withTax: boolean;
   unitPrice: number;
   quantity: number;
@@ -165,13 +168,16 @@ export class PosService {
 
   public _buildConcepts(value: AddConceptParams): Concept[] {
     const {
+      debitId,
       description,
       withTax,
       discounts,
-      debitId,
       dueDate,
-      branchID,
       delinquency,
+      branchID,
+      branchName,
+      enrollmentID,
+      enrollmentDetails,
     } = value;
 
     // Calcula montos y descuentos
@@ -192,6 +198,7 @@ export class PosService {
 
     const concepts: Concept[] = [
       {
+        debitId,
         description,
         unitPrice,
         quantity,
@@ -202,10 +209,12 @@ export class PosService {
         total,
         withTax,
         discounts,
-        debitId,
         dueDate,
-        branchID,
         delinquency,
+        branchID,
+        branchName,
+        enrollmentID,
+        enrollmentDetails,
         application: ConceptApplication.DebtPayment,
       },
     ];
@@ -214,7 +223,7 @@ export class PosService {
     const due = new Date(dueDate);
     const daysBetween = differenceInDays(today, due);
 
-    if (daysBetween > 0) {
+    if (daysBetween > 0 && delinquency > 0) {
       const {
         unitPrice: delinquencyUnitPrice,
         quantity: delinquencyQuantity,
@@ -248,6 +257,9 @@ export class PosService {
         withTax,
         debitId,
         branchID,
+        branchName,
+        enrollmentID,
+        enrollmentDetails,
         discounts: [],
         delinquency: 0,
         dueDate: today.toISOString(),

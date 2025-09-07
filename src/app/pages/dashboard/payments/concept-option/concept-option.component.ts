@@ -8,18 +8,18 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRippleModule } from '@angular/material/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { DebitPartsFragment, DebitState } from '@graphql';
+import { CurrentEnrollmentPartsFragment, DebitPartsFragment, DebitState, EnrollmentPartsFragment } from '@graphql';
 import { isAfter } from 'date-fns';
-import { PosService } from '../../../../services/pos.service';
-import { MatDialog } from '@angular/material/dialog';
-import { CompletePaymentDialogComponent } from '../complete-payment-dialog/complete-payment-dialog.component';
-import { toObservable } from '@angular/core/rxjs-interop';
 import { skip } from 'rxjs';
+import { PosService } from '../../../../services/pos.service';
+import { CompletePaymentDialogComponent } from '../complete-payment-dialog/complete-payment-dialog.component';
 
 @Component({
   selector: 'app-concept-option',
@@ -41,8 +41,7 @@ export class ConceptOptionComponent implements AfterViewInit {
   private readonly _dialog = inject(MatDialog);
 
   public debit = input.required<DebitPartsFragment>();
-  public branchID = input.required<string>();
-  public studentID = input.required<string>();
+  public enrollment = input.required<CurrentEnrollmentPartsFragment>();
   public refresh = output<void>();
 
   public isDebit = computed(() => this.debit().state === DebitState.Debt);
@@ -87,6 +86,8 @@ export class ConceptOptionComponent implements AfterViewInit {
   });
 
   ngAfterViewInit(): void {
+    this._markAsOverdue();
+
     this._marked$.pipe(skip(1)).subscribe({
       next: (value) => this.toggleDebit(value),
     });
@@ -112,8 +113,11 @@ export class ConceptOptionComponent implements AfterViewInit {
           withTax: this.debit().withTax,
           dueDate: this.debit().dueDate,
           delinquency: this.debit().delinquency,
-          branchID: this.branchID(),
-          studentID: this.studentID(),
+          studentID: this.enrollment().studentId,
+          enrollmentID: this.enrollment().id,
+          enrollmentDetails: this.enrollment().details,
+          branchID: this.enrollment().branchId,
+          branchName: this.enrollment().branch!.name,
         });
 
         if (!added) this.marked.set(false);
@@ -128,8 +132,8 @@ export class ConceptOptionComponent implements AfterViewInit {
       width: '32rem',
       data: {
         debit: this.debit(),
-        branchID: this.branchID(),
-        studentID: this.studentID(),
+        branchID: this.enrollment().branchId,
+        studentID: this.enrollment().studentId,
       },
     });
 
@@ -140,5 +144,14 @@ export class ConceptOptionComponent implements AfterViewInit {
         this.marked.set(false);
       },
     });
+  }
+
+  private _markAsOverdue() {
+    const today = new Date();
+    const dueDate = new Date(this.debit().dueDate);
+
+    if (isAfter(today, dueDate)) {
+      this.marked.set(true);
+    }
   }
 }

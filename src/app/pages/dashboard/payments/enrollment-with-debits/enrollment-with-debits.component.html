@@ -28,8 +28,7 @@
   @for (debit of debits(); track debit.id) {
   <app-concept-option
     [debit]="debit"
-    [branchID]="enrollment().branchId"
-    [studentID]="enrollment().studentId"
+    [enrollment]="enrollment()"
     (refresh)="refreshDebits()"
   />
   }
