@@ -1,11 +1,4 @@
-import {
-  Component,
-  effect,
-  inject,
-  input,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -14,15 +7,15 @@ import {
   CurrentEnrollmentPartsFragment,
   DebitPartsFragment,
   DebitState,
-  EnrollmentPartsFragment,
   GetDebitsPageGQL,
   GetDebitsPageQueryVariables,
 } from '@graphql';
 import { EnrollmentCalendarComponent } from '../../enrollments/enrollment-calendar/enrollment-calendar.component';
 import { map } from 'rxjs';
 import { ConceptOptionComponent } from '../concept-option/concept-option.component';
-import { PosService } from '@services';
 import { AvatarComponent } from '@components/avatar/avatar.component';
+import { PosService } from '@services';
+import { lastDayOfMonth, isBefore } from 'date-fns';
 
 @Component({
   selector: 'app-enrollment-with-debits',
@@ -41,6 +34,7 @@ export class EnrollmentWithDebitsComponent implements OnInit {
   private readonly _getDebitsPage = inject(GetDebitsPageGQL);
 
   public enrollment = input.required<CurrentEnrollmentPartsFragment>();
+  public pos = inject(PosService);
 
   public expanded = signal<boolean>(true);
   public loading = signal<boolean>(false);
@@ -51,8 +45,7 @@ export class EnrollmentWithDebitsComponent implements OnInit {
   }
 
   public refreshDebits(): void {
-    this.loading.set(true);
-    this.debits.set([]);
+    this._resetState();
     this._fetchAllDebits();
   }
 
@@ -110,5 +103,10 @@ export class EnrollmentWithDebitsComponent implements OnInit {
         },
       });
     }
+  }
+
+  private _resetState(): void {
+    this.loading.set(false);
+    this.debits.set([]);
   }
 }
