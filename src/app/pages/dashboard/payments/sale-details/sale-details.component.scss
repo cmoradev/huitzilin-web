@@ -1,24 +1,16 @@
-table {
-  width: 100%;
-}
+.item {
+  gap: 0.25rem;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 1rem;
+  background-color: var(--mat-sys-surface-container-low);
+  cursor: pointer !important;
 
-tr.details-row {
-  height: 0;
-}
+  &:hover {
+    background-color: var(--mat-sys-surface-container);
+  }
 
-.element-row td {
-  border-bottom-width: 0px;
-}
-
-.expandable {
-  overflow: hidden;
-  transition: max-height 225ms cubic-bezier(0.4, 0.0, 0.2, 1);
-}
-
-.expandable.collapsed {
-  max-height: 0;
-}
-
-.expandable.expanded {
-  max-height: 1000px;
+  &.active {
+    background-color: var(--mat-sys-primary-fixed);
+  }
 }

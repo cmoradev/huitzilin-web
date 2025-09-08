@@ -1,78 +1,39 @@
 <div class="h-[calc(100vh-14rem-1px)] flex flex-col">
   <ng-scrollbar class="relative flex-1 mt-2">
-    <table mat-table [dataSource]="dataSource" multiTemplateDataRows>
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef>Concepto</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.description }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="amount">
-        <th mat-header-cell *matHeaderCellDef>Importe</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.amount | currency : "MXN" }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="discount">
-        <th mat-header-cell *matHeaderCellDef>Descuento</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.discount | currency : "MXN" }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="subtotal">
-        <th mat-header-cell *matHeaderCellDef>Subtotal</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.subtotal | currency : "MXN" }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="taxes">
-        <th mat-header-cell *matHeaderCellDef>IVA</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.taxes | currency : "MXN" }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="total">
-        <th mat-header-cell *matHeaderCellDef>Total</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.total | currency : "MXN" }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="expandedDetail">
-        <td
-          mat-cell
-          *matCellDef="let element"
-          [attr.colspan]="displayedColumns.length"
-        >
-          <div
-            class="expandable"
-            [ngClass]="{
-              collapsed: !isExpanded(element),
-              expanded: isExpanded(element)
-            }"
-          ></div>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-
-      <!-- Para ver los detalles ejecuta (click)="toggle(row)" -->
-      <tr
-        mat-row
-        *matRowDef="let row; columns: displayedColumns"
-        class="element-row"
-      ></tr>
-
-      <tr
-        mat-row
-        *matRowDef="let row; columns: ['expandedDetail']"
-        class="details-row"
-      ></tr>
+    <table class="w-full text-sm">
+      <thead>
+        <tr>
+          <th class="text-left px-3 py-2 font-medium col-span-2">Concepto</th>
+          <th class="text-left px-3 py-2 font-medium">Importe</th>
+          <th class="text-left px-3 py-2 font-medium">Descuento</th>
+          <th class="text-left px-3 py-2 font-medium">Subtotal</th>
+          <th class="text-left px-3 py-2 font-medium">IVA</th>
+          <th class="text-right px-3 py-2 font-medium">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (group of conceptGroups(); track group.enrollmentID) {
+        <tr>
+          <td colspan="6" class="px-2 py-2 border-t-2 border-neutral-400">
+            <h3 class="font-medium">{{ group.branchName }}</h3>
+            <p class="text-sm">
+              {{ group.enrollmentDetails }}
+            </p>
+          </td>
+        </tr>
+        @for (concept of group.concepts; track concept.debitId) {
+        <tr>
+          <td class="pl-8 pr-3 py-2 col-span-2">{{ concept.description }}</td>
+          <td class="px-3 py-2">{{ concept.amount | currency : "MXN" }}</td>
+          <td class="px-3 py-2">{{ concept.discount | currency : "MXN" }}</td>
+          <td class="px-3 py-2">{{ concept.subtotal | currency : "MXN" }}</td>
+          <td class="px-3 py-2">{{ concept.taxes | currency : "MXN" }}</td>
+          <td class="px-3 py-2 text-right font-semibold">
+            {{ concept.total | currency : "MXN" }}
+          </td>
+        </tr>
+        } }
+      </tbody>
     </table>
   </ng-scrollbar>
 

@@ -1,4 +1,4 @@
-import { CurrencyPipe, NgClass } from '@angular/common';
+import { CurrencyPipe, } from '@angular/common';
 import {
   Component,
   computed,
@@ -9,7 +9,8 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   CreateConcept,
   CreateIncomesGQL,
@@ -20,17 +21,15 @@ import { Concept, PosService } from '@services';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { ChargeDialogComponent } from '../charge-dialog/charge-dialog.component';
 import { ClipChargeDialogComponent } from '../clip-charge-dialog/clip-charge-dialog.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-sale-details',
   imports: [
-    MatTableModule,
     MatButtonModule,
     NgScrollbar,
     CurrencyPipe,
-    NgClass,
-  ],
+    MatTooltipModule
+],
   templateUrl: './sale-details.component.html',
   styleUrls: ['./sale-details.component.scss'],
 })
@@ -41,16 +40,7 @@ export class SaleDetailsComponent {
   private readonly _createIncomes = inject(CreateIncomesGQL);
 
   public refresh = output<void>();
-
-  public displayedColumns = [
-    'description',
-    'amount',
-    'discount',
-    'subtotal',
-    'taxes',
-    'total',
-  ];
-  public dataSource = new MatTableDataSource<Concept>([]);
+  public conceptGroups = signal<EnrollmentGroup[]>([]);
   public expandedElement: DebitPartsFragment | null = null;
 
   public amount = computed(() => this._pos.amount);
@@ -62,7 +52,7 @@ export class SaleDetailsComponent {
 
   constructor() {
     effect(() => {
-      this.dataSource.data = this._pos.concepts;
+      this.conceptGroups.set(this._groupByEnrollment(this._pos.concepts));
     });
   }
 
@@ -157,4 +147,34 @@ export class SaleDetailsComponent {
   public toggle(element: DebitPartsFragment) {
     this.expandedElement = this.isExpanded(element) ? null : element;
   }
+
+  private readonly _groupByEnrollment = (concepts: Concept[]) => {
+    const groups = concepts.reduce((acc, current) => {
+      if (!acc.has(current.enrollmentID)) {
+        const grouped = {
+          enrollmentID: current.enrollmentID,
+          enrollmentDetails: current.enrollmentDetails,
+          branchID: current.branchID,
+          branchName: current.branchName,
+          concepts: [],
+        };
+
+        acc.set(current.enrollmentID, grouped);
+      }
+
+      acc.get(current.enrollmentID)?.concepts.push(current);
+
+      return acc;
+    }, new Map<string, EnrollmentGroup>());
+
+    return Array.from(groups.values());
+  };
 }
+
+type EnrollmentGroup = {
+  enrollmentID: string;
+  enrollmentDetails: string;
+  branchID: string;
+  branchName: string;
+  concepts: Concept[];
+};
