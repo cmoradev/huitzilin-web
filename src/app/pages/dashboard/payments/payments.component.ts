@@ -39,9 +39,12 @@ export class PaymentsComponent implements OnInit {
 
   ngOnInit(): void {
     this._pos.clearConcepts();
-
+    
     merge(this._globalState.student$, this._globalState.cycle$).subscribe({
-      next: () => this._fetchAllEnrollments(),
+      next: () => {
+        this._pos.clearConcepts();
+        this._fetchAllEnrollments();
+      },
     });
   }
 
