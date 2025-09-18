@@ -89,7 +89,7 @@ export class SaleDetailsComponent {
           const concepts: CreateConcept[] = this._pos.concepts.map(
             (concept) => ({
               description: concept.description,
-              debitId: concept.debitId,
+              debitId: concept.debitID,
               quantity: concept.quantity,
               unitPrice: concept.unitPrice,
               withTax: concept.withTax,

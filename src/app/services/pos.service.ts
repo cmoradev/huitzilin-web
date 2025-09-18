@@ -9,7 +9,6 @@ import {
 } from '@calculations';
 import {
   ConceptApplication,
-  CreateConcept,
   DebitPartsFragment,
   DiscountPartsFragment,
 } from '@graphql';
@@ -19,16 +18,16 @@ import { differenceInDays } from 'date-fns';
 // Tipo que representa los parámetros para agregar un concepto
 export type AddConceptParams = {
   description: string;
-  studentID: string;
+  debitID: string | null;
   branchID: string;
-  branchName: string;
+  studentID: string;
   enrollmentID: string;
-  enrollmentDetails: string
+  branchName: string;
+  enrollmentDetails: string;
   withTax: boolean;
   unitPrice: number;
   quantity: number;
   delinquency: number;
-  debitId: string | null;
   dueDate: string;
   discounts: Array<Omit<DiscountPartsFragment, '__typename'>>;
 };
@@ -139,7 +138,7 @@ export class PosService {
 
   // Verifica si un adeudo está seleccionado
   public checkIsSelected(value: DebitPartsFragment): boolean {
-    return this.concepts.some((concept) => concept.debitId === value.id);
+    return this.concepts.some((concept) => concept.debitID === value.id);
   }
 
   // Agrega un estudiante al listado, evitando duplicados
@@ -168,7 +167,7 @@ export class PosService {
 
   public _buildConcepts(value: AddConceptParams): Concept[] {
     const {
-      debitId,
+      debitID,
       description,
       withTax,
       discounts,
@@ -198,7 +197,7 @@ export class PosService {
 
     const concepts: Concept[] = [
       {
-        debitId,
+        debitID,
         description,
         unitPrice,
         quantity,
@@ -255,7 +254,7 @@ export class PosService {
         taxes: delinquencyTaxes,
         total: delinquencyTotal,
         withTax,
-        debitId,
+        debitID,
         branchID,
         branchName,
         enrollmentID,
@@ -274,7 +273,7 @@ export class PosService {
   public removeDebit(value: DebitPartsFragment) {
     this._concepts.update((previous) => {
       const concepts = [...previous];
-      return concepts.filter((concept) => concept.debitId !== value.id);
+      return concepts.filter((concept) => concept.debitID !== value.id);
     });
   }
 

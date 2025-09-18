@@ -105,7 +105,7 @@ export class ConceptOptionComponent implements AfterViewInit {
         this.addPaymentOnIncome();
       } else {
         const added = this.pos.addConcept({
-          debitId: this.debit().id,
+          debitID: this.debit().id,
           description: this.debit().description,
           unitPrice: this.debit().unitPrice,
           quantity: this.debit().quantity,
