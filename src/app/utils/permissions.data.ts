@@ -16,6 +16,7 @@ import {
   REPORTS_ROUTE,
   REPORTS_STATEMENT_ACCOUNT_ROUTE,
   STUDENTS_ROUTE,
+  TEACHERS_ROUTE,
   USERS_ROUTE,
 } from '@routes';
 
@@ -55,6 +56,10 @@ const rootPermissions = [
   {
     route: LEVELS_ROUTE.route,
     permissions: new Set(LEVELS_ROUTE.permissions),
+  },
+  {
+    route: TEACHERS_ROUTE.route,
+    permissions: new Set(TEACHERS_ROUTE.permissions),
   },
   {
     route: DISCIPLINES_ROUTE.route,

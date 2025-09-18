@@ -145,6 +145,22 @@ export const DISCIPLINES_ROUTE: RouteItem = {
   ],
 };
 
+// Disciplinas
+export const TEACHERS_ROUTE: RouteItem = {
+  displayName: 'Docentes',
+  showInSidebar: true,
+  iconName: 'human-male-board',
+  route: '/teachers',
+  section: NavigationEnum.ADMINISTRATION,
+  isGlobal: false,
+  permissions: [
+    'create:teachers',
+    'read:teachers',
+    'update:teachers',
+    'delete:teachers',
+  ],
+};
+
 // Calendario
 export const CALENDARS_ROUTE: RouteItem = {
   displayName: 'Calendario',
@@ -294,6 +310,7 @@ export const navItems: RouteItem[] = [
   REPORTS_STATEMENT_ACCOUNT_ROUTE,
   LEVELS_ROUTE,
   DISCIPLINES_ROUTE,
+  TEACHERS_ROUTE,
   CALENDARS_ROUTE,
   PRICES_ROUTE,
   DISCOUNTS_ROUTE,

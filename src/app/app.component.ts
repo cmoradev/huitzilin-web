@@ -17,7 +17,6 @@ Decimal.set({
   rounding: Decimal.ROUND_HALF_UP,
 });
 
-
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],

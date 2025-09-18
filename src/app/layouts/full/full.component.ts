@@ -17,7 +17,7 @@ import { NavItemComponent } from './sidebar/nav-item/nav-item.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { GlobalStateSettingsComponent } from './global-state-settings/global-state-settings.component';
 import { NavItem, navItems } from '@routes';
-import { AuthService, GlobalStateService } from '@services';
+import { GlobalStateService } from '@services';
 import { permissionMap } from '@utils/permissions.data';
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';

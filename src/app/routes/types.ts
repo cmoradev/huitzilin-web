@@ -19,6 +19,7 @@ export type Entity =
   | 'disciplines'
   | 'levels'
   | 'students'
+  | 'teachers'
   | 'debits'
   | 'incomes'
   | 'enrollments'
