@@ -44,6 +44,11 @@ export class ConceptOptionComponent implements AfterViewInit {
   public enrollment = input.required<CurrentEnrollmentPartsFragment>();
   public refresh = output<void>();
 
+  public pendingPayment  = computed(() => {
+    const [concept] = this.debit().concepts;
+
+    return concept?.pendingPayment ?? this.debit().total;
+  });
   public isDebit = computed(() => this.debit().state === DebitState.Debt);
   public isDebitPartiallyPaid = computed(
     () => this.debit().state === DebitState.PartiallyPaid

@@ -15,7 +15,6 @@ import { map } from 'rxjs';
 import { ConceptOptionComponent } from '../concept-option/concept-option.component';
 import { AvatarComponent } from '@components/avatar/avatar.component';
 import { PosService } from '@services';
-import { lastDayOfMonth, isBefore } from 'date-fns';
 
 @Component({
   selector: 'app-enrollment-with-debits',

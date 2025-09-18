@@ -5,15 +5,17 @@
   <mat-icon svgIcon="checkbox-blank-outline" class="!text-gray-500 mr-2" />
   }
 
-  <div>
+  <div class="w-full">
     <p class="font-medium text-sm">{{ debit().description }}</p>
-    <p class="text-xs text-gray-500">
-      <span matTooltip="Fecha limite de pago">{{ debit().dueDate }}</span
-      >,
-      <span matTooltip="Cantidad a pagar ">{{
-        debit().total | currency : "MXN"
-      }}</span>
-    </p>
+    <div class="flex justify-between">
+      <p class="text-xs text-gray-500" matTooltip="Fecha limite de pago">
+        {{ debit().dueDate }}
+      </p>
+
+      <p class="text-xs text-gray-700" matTooltip="Cantidad a pagar">
+        {{ pendingPayment() | currency : "MXN" }}
+      </p>
+    </div>
   </div>
 
   <span class="flex-1"></span>
