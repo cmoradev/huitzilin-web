@@ -34,6 +34,7 @@ import { paymentNames } from '@utils/contains';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-incomes',
@@ -55,7 +56,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MethodPipe,
     DatePipe,
     CurrencyPipe,
-  ],
+    RouterLink
+],
   templateUrl: './incomes.component.html',
   styles: ``,
 })
