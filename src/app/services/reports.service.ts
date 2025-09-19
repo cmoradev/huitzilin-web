@@ -52,6 +52,19 @@ export class ReportsService {
     });
   }
 
+  public incomesBYDiscipline(
+    start: string,
+    end: string,
+    branchId: string
+  ): Observable<ReportsResponse> {
+    return this.http.get<ReportsResponse>(
+      `${this.apiUri}/incomes-by-disciplines`,
+      {
+        params: { start, end, branchId },
+      }
+    );
+  }
+
   public debits(
     start: string,
     end: string,

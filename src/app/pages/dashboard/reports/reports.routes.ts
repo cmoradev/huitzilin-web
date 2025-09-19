@@ -12,15 +12,10 @@ export const ReportsRoutes: Routes = [
       import('./incomes/incomes.component').then((m) => m.IncomesComponent),
   },
   {
-    path: 'debits',
+    path: 'incomes-by-discipline',
     loadComponent: () =>
-      import('./debits/debits.component').then((m) => m.DebitsComponent),
-  },
-  {
-    path: 'statement-account',
-    loadComponent: () =>
-      import('./statement-account/statement-account.component').then(
-        (m) => m.StatementAccountComponent
+      import('./incomes-by-discipline/incomes-by-discipline.component').then(
+        (m) => m.IncomesByDisciplineComponent
       ),
   },
 ];

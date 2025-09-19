@@ -17,25 +17,22 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { PaymentMethod } from '@graphql';
+import { RouterLink } from '@angular/router';
 import { FolioPipe, MethodPipe } from '@pipes';
 import {
   BranchToolsService,
   GlobalStateService,
-  ReportsData,
-  ReportsGrouped,
   ReportsService,
 } from '@services';
-import { paymentNames } from '@utils/contains';
 import { endOfDay, startOfDay } from 'date-fns';
 import { init } from 'echarts';
 import { merge, startWith } from 'rxjs';
 
 @Component({
-  selector: 'app-debits',
+  selector: 'app-incomes-by-discipline',
   imports: [
     NgClass,
     MatTableModule,
@@ -50,22 +47,23 @@ import { merge, startWith } from 'rxjs';
     MatTooltipModule,
     MatSelectModule,
     MatTabsModule,
-    FolioPipe,
-    MethodPipe,
-    DatePipe,
+    // FolioPipe,
+    // MethodPipe,
+    // DatePipe,
     CurrencyPipe,
+    RouterLink,
   ],
-  templateUrl: './debits.component.html',
+  templateUrl: './incomes-by-discipline.component.html',
   styles: ``,
 })
-export class DebitsComponent implements AfterViewInit, OnInit {
+export class IncomesByDisciplineComponent implements AfterViewInit, OnInit {
   @ViewChild('paginator') public paginator!: MatPaginator;
   @ViewChild('methodsChart')
   public methodsChartElement!: ElementRef<HTMLDivElement>;
 
   public loading = signal<boolean>(false);
   public total = signal<number>(0);
-  public incomeMethods = signal<ReportsGrouped[]>([]);
+  // public incomeMethods = signal<ReportsGrouped[]>([]);
   public displayedColumns: string[] = [
     'branchName',
     'studentNames',
@@ -77,8 +75,8 @@ export class DebitsComponent implements AfterViewInit, OnInit {
   ];
   public summaryDisplayedColumns: string[] = ['name', 'value'];
 
-  public dataSource = new MatTableDataSource<ReportsData>([]);
-  public summaryDataSource = new MatTableDataSource<ReportsGrouped>([]);
+  // public dataSource = new MatTableDataSource<ReportsData>([]);
+  // public summaryDataSource = new MatTableDataSource<ReportsGrouped>([]);
 
   private readonly reportsService = inject(ReportsService);
   private readonly _globalStateService = inject(GlobalStateService);
@@ -96,7 +94,7 @@ export class DebitsComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+    // this.dataSource.paginator = this.paginator;
 
     merge(
       this.startDateControl.valueChanges,
@@ -135,11 +133,11 @@ export class DebitsComponent implements AfterViewInit, OnInit {
       const end = endOfDay(this.endDateControl.value).toISOString();
       const branchId = this.branchControl.value;
 
-      this.reportsService.debits(start, end, branchId).subscribe({
+      this.reportsService.incomesBYDiscipline(start, end, branchId).subscribe({
         next: (response) => {
           console.log(response);
-          // this.dataSource.data = response.data;
           // this.incomeMethods.set(response.groupedByMethod);
+          // this.dataSource.data = response.data;
           // this.summaryDataSource.data = response.groupedByMethod.map(
           //   (data) => ({
           //     ...data,
@@ -162,47 +160,47 @@ export class DebitsComponent implements AfterViewInit, OnInit {
     if (this.methodsChartElement.nativeElement) {
       const methodsChart = init(this.methodsChartElement.nativeElement);
 
-      const methodsData = this.incomeMethods().map((grouped) => ({
-        value: grouped.count,
-        name: paymentNames[grouped.id.toUpperCase() as PaymentMethod],
-      }));
+      // const methodsData = this.incomeMethods().map((grouped) => ({
+      //   value: grouped.count,
+      //   name: paymentNames[grouped.id.toUpperCase() as PaymentMethod],
+      // }));
 
-      methodsChart.setOption({
-        tooltip: {
-          trigger: 'item',
-        },
-        legend: {
-          top: '5%',
-          left: 'center',
-        },
-        series: [
-          {
-            name: 'Ingresos por método',
-            type: 'pie',
-            radius: ['40%', '70%'],
-            avoidLabelOverlap: false,
-            padAngle: 3,
-            itemStyle: {
-              borderRadius: 8,
-            },
-            label: {
-              show: false,
-              position: 'center',
-            },
-            emphasis: {
-              label: {
-                show: true,
-                fontSize: 24,
-                fontWeight: 'bold',
-              },
-            },
-            labelLine: {
-              show: false,
-            },
-            data: methodsData,
-          },
-        ],
-      });
+      // methodsChart.setOption({
+      //   tooltip: {
+      //     trigger: 'item',
+      //   },
+      //   legend: {
+      //     top: '5%',
+      //     left: 'center',
+      //   },
+      //   series: [
+      //     {
+      //       name: 'Ingresos por método',
+      //       type: 'pie',
+      //       radius: ['40%', '70%'],
+      //       avoidLabelOverlap: false,
+      //       padAngle: 3,
+      //       itemStyle: {
+      //         borderRadius: 8,
+      //       },
+      //       label: {
+      //         show: false,
+      //         position: 'center',
+      //       },
+      //       emphasis: {
+      //         label: {
+      //           show: true,
+      //           fontSize: 24,
+      //           fontWeight: 'bold',
+      //         },
+      //       },
+      //       labelLine: {
+      //         show: false,
+      //       },
+      //       data: methodsData,
+      //     },
+      //   ],
+      // });
     }
   }
 }

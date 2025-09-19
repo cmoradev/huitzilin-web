@@ -1,6 +1,13 @@
 <mat-card>
   <mat-card-header>
-    <mat-card-title>Reporte de conceptos</mat-card-title>
+    <mat-card-title>
+      <div class="flex items-center gap-2">
+        <button mat-icon-button matTooltip="Regresar" routerLink="/reports">
+          <mat-icon svgIcon="chevron-left" />
+        </button>
+        Reporte de ingresos
+      </div>
+    </mat-card-title>
   </mat-card-header>
   <mat-card-content class="min-h-[calc(100vh-10rem)]">
     <div class="flex gap-2 mt-2 items-center">
@@ -37,14 +44,14 @@
 
       <span class="flex-1"></span>
 
-      <button
+      <!-- <button
         mat-icon-button
         matTooltip="Descargar"
         [disabled]="!dataSource.data.length"
         (click)="download()"
       >
         <mat-icon svgIcon="download" />
-      </button>
+      </button> -->
 
       <button
         mat-icon-button
@@ -68,7 +75,7 @@
             <div #methodsChart class="w-96 h-96 mx-auto"></div>
           </div>
           <div>
-            <mat-table [dataSource]="summaryDataSource">
+            <!-- <mat-table [dataSource]="summaryDataSource">
               <ng-container matColumnDef="name">
                 <mat-header-cell *matHeaderCellDef>Método</mat-header-cell>
                 <mat-cell *matCellDef="let element">
@@ -90,7 +97,7 @@
               <mat-row
                 *matRowDef="let row; columns: summaryDisplayedColumns"
               ></mat-row>
-            </mat-table>
+            </mat-table> -->
           </div>
         </div>
       </mat-tab>
@@ -100,7 +107,7 @@
           Datos
         </ng-template>
 
-        <mat-table [dataSource]="dataSource">
+        <!-- <mat-table [dataSource]="dataSource">
           <ng-container matColumnDef="branchName">
             <mat-header-cell *matHeaderCellDef>Negocio</mat-header-cell>
             <mat-cell *matCellDef="let element">
@@ -155,7 +162,7 @@
           <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
 
           <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
-        </mat-table>
+        </mat-table> -->
 
         <mat-paginator
           #paginator
