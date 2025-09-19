@@ -653,6 +653,7 @@ export type CreateSchedule = {
   levels?: InputMaybe<Array<NestedId>>;
   periodId: Scalars['ID']['input'];
   start: Scalars['String']['input'];
+  teacherId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type CreateStudent = {
@@ -1291,6 +1292,7 @@ export type EnrollmentFilterScheduleFilter = {
   id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<EnrollmentFilterScheduleFilter>>;
   periodId?: InputMaybe<IdFilterComparison>;
+  teacherId?: InputMaybe<IdFilterComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -3040,6 +3042,8 @@ export type Schedule = {
   period?: Maybe<Period>;
   periodId: Scalars['ID']['output'];
   start: Scalars['String']['output'];
+  teacher?: Maybe<Teacher>;
+  teacherId?: Maybe<Scalars['ID']['output']>;
   updatedAt: Scalars['DateTime']['output'];
   version: Scalars['Int']['output'];
 };
@@ -3078,6 +3082,7 @@ export type ScheduleDeleteResponse = {
   id?: Maybe<Scalars['ID']['output']>;
   periodId?: Maybe<Scalars['ID']['output']>;
   start?: Maybe<Scalars['String']['output']>;
+  teacherId?: Maybe<Scalars['ID']['output']>;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   version?: Maybe<Scalars['Int']['output']>;
 };
@@ -3103,6 +3108,7 @@ export type ScheduleFilter = {
   levels?: InputMaybe<ScheduleFilterLevelFilter>;
   or?: InputMaybe<Array<ScheduleFilter>>;
   periodId?: InputMaybe<IdFilterComparison>;
+  teacherId?: InputMaybe<IdFilterComparison>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -3149,6 +3155,7 @@ export enum ScheduleSortFields {
   DisciplineId = 'disciplineId',
   Id = 'id',
   PeriodId = 'periodId',
+  TeacherId = 'teacherId',
   UpdatedAt = 'updatedAt'
 }
 
@@ -3727,6 +3734,7 @@ export type UpdateSchedule = {
   levels?: InputMaybe<Array<NestedId>>;
   periodId?: InputMaybe<Scalars['ID']['input']>;
   start?: InputMaybe<Scalars['String']['input']>;
+  teacherId?: InputMaybe<Scalars['ID']['input']>;
 };
 
 export type UpdateStudent = {
