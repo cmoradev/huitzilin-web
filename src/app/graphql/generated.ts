@@ -79,6 +79,13 @@ export type AddBranchsToStudentInput = {
   relationIds: Array<Scalars['ID']['input']>;
 };
 
+export type AddBranchsToTeacherInput = {
+  /** The id of the record. */
+  id: Scalars['ID']['input'];
+  /** The ids of the relations. */
+  relationIds: Array<Scalars['ID']['input']>;
+};
+
 export type AddPayment = {
   incomeID: Scalars['ID']['input'];
   payments?: InputMaybe<Array<CreatePayment>>;
@@ -660,6 +667,7 @@ export type CreateStudent = {
 };
 
 export type CreateTeacher = {
+  branchs?: InputMaybe<Array<NestedId>>;
   firstname: Scalars['String']['input'];
   lastname: Scalars['String']['input'];
   picture: Scalars['String']['input'];
@@ -1651,6 +1659,7 @@ export enum LevelSortFields {
 export type Mutation = {
   __typename?: 'Mutation';
   addBranchsToStudent: Student;
+  addBranchsToTeacher: Teacher;
   addPaymentToIncome: Income;
   addStudentsToDocument: Document;
   createIncomes: Array<Income>;
@@ -1695,6 +1704,7 @@ export type Mutation = {
   deleteOneTutor: TutorDeleteResponse;
   deleteOneUser: UserDeleteResponse;
   removeBranchsFromStudent: Student;
+  removeBranchsFromTeacher: Teacher;
   removeStudentsFromDocument: Document;
   restoreManyActions: UpdateManyResponse;
   restoreManyBranchs: UpdateManyResponse;
@@ -1737,6 +1747,7 @@ export type Mutation = {
   restoreOneTeacher: Teacher;
   restoreOneTutor: Tutor;
   setBranchsOnStudent: Student;
+  setBranchsOnTeacher: Teacher;
   setOrderEnrollments: UpdateCount;
   setOrderLevels: UpdateCount;
   setOrderPackages: UpdateCount;
@@ -1768,6 +1779,11 @@ export type Mutation = {
 
 export type MutationAddBranchsToStudentArgs = {
   input: AddBranchsToStudentInput;
+};
+
+
+export type MutationAddBranchsToTeacherArgs = {
+  input: AddBranchsToTeacherInput;
 };
 
 
@@ -1991,6 +2007,11 @@ export type MutationRemoveBranchsFromStudentArgs = {
 };
 
 
+export type MutationRemoveBranchsFromTeacherArgs = {
+  input: RemoveBranchsFromTeacherInput;
+};
+
+
 export type MutationRemoveStudentsFromDocumentArgs = {
   input: RemoveStudentsFromDocumentInput;
 };
@@ -2198,6 +2219,11 @@ export type MutationRestoreOneTutorArgs = {
 
 export type MutationSetBranchsOnStudentArgs = {
   input: SetBranchsOnStudentInput;
+};
+
+
+export type MutationSetBranchsOnTeacherArgs = {
+  input: SetBranchsOnTeacherInput;
 };
 
 
@@ -2984,6 +3010,13 @@ export type RemoveBranchsFromStudentInput = {
   relationIds: Array<Scalars['ID']['input']>;
 };
 
+export type RemoveBranchsFromTeacherInput = {
+  /** The id of the record. */
+  id: Scalars['ID']['input'];
+  /** The ids of the relations. */
+  relationIds: Array<Scalars['ID']['input']>;
+};
+
 export type RemoveStudentsFromDocumentInput = {
   /** The id of the record. */
   id: Scalars['ID']['input'];
@@ -3137,6 +3170,13 @@ export type SetBranchsOnStudentInput = {
   relationIds: Array<Scalars['ID']['input']>;
 };
 
+export type SetBranchsOnTeacherInput = {
+  /** The id of the record. */
+  id: Scalars['ID']['input'];
+  /** The ids of the relations. */
+  relationIds: Array<Scalars['ID']['input']>;
+};
+
 export type SetOrderInput = {
   id: Scalars['ID']['input'];
   order: Scalars['Float']['input'];
@@ -3284,6 +3324,7 @@ export enum StudentSortFields {
 
 export type Teacher = {
   __typename?: 'Teacher';
+  branchs: Array<Branch>;
   createdAt: Scalars['DateTime']['output'];
   deletedAt?: Maybe<Scalars['DateTime']['output']>;
   firstname: Scalars['String']['output'];
@@ -3294,6 +3335,12 @@ export type Teacher = {
   updatedAt: Scalars['DateTime']['output'];
   userId?: Maybe<Scalars['String']['output']>;
   version: Scalars['Int']['output'];
+};
+
+
+export type TeacherBranchsArgs = {
+  filter?: BranchFilter;
+  sorting?: Array<BranchSort>;
 };
 
 export type TeacherConnection = {
@@ -3322,10 +3369,20 @@ export type TeacherDeleteResponse = {
 
 export type TeacherFilter = {
   and?: InputMaybe<Array<TeacherFilter>>;
+  branchs?: InputMaybe<TeacherFilterBranchFilter>;
   createdAt?: InputMaybe<DateFieldComparison>;
   fullname?: InputMaybe<StringFieldComparison>;
   id?: InputMaybe<IdFilterComparison>;
   or?: InputMaybe<Array<TeacherFilter>>;
+  updatedAt?: InputMaybe<DateFieldComparison>;
+};
+
+export type TeacherFilterBranchFilter = {
+  and?: InputMaybe<Array<TeacherFilterBranchFilter>>;
+  createdAt?: InputMaybe<DateFieldComparison>;
+  id?: InputMaybe<IdFilterComparison>;
+  name?: InputMaybe<StringFieldComparison>;
+  or?: InputMaybe<Array<TeacherFilterBranchFilter>>;
   updatedAt?: InputMaybe<DateFieldComparison>;
 };
 
@@ -3684,6 +3741,7 @@ export type UpdateStudent = {
 };
 
 export type UpdateTeacher = {
+  branchs?: InputMaybe<Array<NestedId>>;
   firstname?: InputMaybe<Scalars['String']['input']>;
   lastname?: InputMaybe<Scalars['String']['input']>;
   picture?: InputMaybe<Scalars['String']['input']>;
@@ -4383,6 +4441,48 @@ export type DeleteOneDocumentMutationVariables = Exact<{
 
 export type DeleteOneDocumentMutation = { __typename?: 'Mutation', deleteOneDocument: { __typename?: 'DocumentDeleteResponse', id?: string | null } };
 
+export type TeacherPartsFragment = { __typename?: 'Teacher', id: string, picture: string, fullname: string, firstname: string, lastname: string, branchs: Array<{ __typename?: 'Branch', id: string, name: string }> };
+
+export type CreateOneTeacherMutationVariables = Exact<{
+  teacher: CreateTeacher;
+}>;
+
+
+export type CreateOneTeacherMutation = { __typename?: 'Mutation', createOneTeacher: { __typename?: 'Teacher', id: string, picture: string, fullname: string, firstname: string, lastname: string, branchs: Array<{ __typename?: 'Branch', id: string, name: string }> } };
+
+export type GetTeachersPageQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<TeacherFilter>;
+}>;
+
+
+export type GetTeachersPageQuery = { __typename?: 'Query', teachers: { __typename?: 'TeacherConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Teacher', id: string, picture: string, fullname: string, firstname: string, lastname: string, branchs: Array<{ __typename?: 'Branch', id: string, name: string }> }> } };
+
+export type FetchTeacherQueryVariables = Exact<{
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  filter?: InputMaybe<TeacherFilter>;
+}>;
+
+
+export type FetchTeacherQuery = { __typename?: 'Query', teachers: { __typename?: 'TeacherConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Teacher', id: string, picture: string, fullname: string, firstname: string, lastname: string, branchs: Array<{ __typename?: 'Branch', id: string, name: string }> }> } };
+
+export type UpdateOneTeacherMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  update: UpdateTeacher;
+}>;
+
+
+export type UpdateOneTeacherMutation = { __typename?: 'Mutation', updateOneTeacher: { __typename?: 'Teacher', id: string, picture: string, fullname: string, firstname: string, lastname: string, branchs: Array<{ __typename?: 'Branch', id: string, name: string }> } };
+
+export type DeleteOneTeacherMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOneTeacherMutation = { __typename?: 'Mutation', deleteOneTeacher: { __typename?: 'TeacherDeleteResponse', id?: string | null } };
+
 export type UserPartsFragment = { __typename?: 'User', id: string, username: string, email: string, branchId: string, cycleId: string };
 
 export type GetUsersPageQueryVariables = Exact<{
@@ -4738,6 +4838,19 @@ export const DocumentPartsFragmentDoc = gql`
   name
   key
   url
+}
+    `;
+export const TeacherPartsFragmentDoc = gql`
+    fragment TeacherParts on Teacher {
+  id
+  picture
+  fullname
+  firstname
+  lastname
+  branchs {
+    id
+    name
+  }
 }
     `;
 export const UserPartsFragmentDoc = gql`
@@ -6224,6 +6337,110 @@ export const DeleteOneDocumentDocument = gql`
   })
   export class DeleteOneDocumentGQL extends Apollo.Mutation<DeleteOneDocumentMutation, DeleteOneDocumentMutationVariables> {
     document = DeleteOneDocumentDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const CreateOneTeacherDocument = gql`
+    mutation createOneTeacher($teacher: CreateTeacher!) {
+  createOneTeacher(input: {teacher: $teacher}) {
+    ...TeacherParts
+  }
+}
+    ${TeacherPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class CreateOneTeacherGQL extends Apollo.Mutation<CreateOneTeacherMutation, CreateOneTeacherMutationVariables> {
+    document = CreateOneTeacherDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const GetTeachersPageDocument = gql`
+    query getTeachersPage($offset: Int = 0, $limit: Int = 10, $filter: TeacherFilter = {}) {
+  teachers(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...TeacherParts
+    }
+  }
+}
+    ${TeacherPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class GetTeachersPageGQL extends Apollo.Query<GetTeachersPageQuery, GetTeachersPageQueryVariables> {
+    document = GetTeachersPageDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const FetchTeacherDocument = gql`
+    query fetchTeacher($offset: Int = 0, $limit: Int = 10, $filter: TeacherFilter = {}) {
+  teachers(paging: {limit: $limit, offset: $offset}, filter: $filter) {
+    totalCount
+    pageInfo {
+      hasNextPage
+      hasPreviousPage
+    }
+    nodes {
+      ...TeacherParts
+    }
+  }
+}
+    ${TeacherPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class FetchTeacherGQL extends Apollo.Query<FetchTeacherQuery, FetchTeacherQueryVariables> {
+    document = FetchTeacherDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const UpdateOneTeacherDocument = gql`
+    mutation updateOneTeacher($id: ID!, $update: UpdateTeacher!) {
+  updateOneTeacher(input: {id: $id, update: $update}) {
+    ...TeacherParts
+  }
+}
+    ${TeacherPartsFragmentDoc}`;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class UpdateOneTeacherGQL extends Apollo.Mutation<UpdateOneTeacherMutation, UpdateOneTeacherMutationVariables> {
+    document = UpdateOneTeacherDocument;
+    
+    constructor(apollo: Apollo.Apollo) {
+      super(apollo);
+    }
+  }
+export const DeleteOneTeacherDocument = gql`
+    mutation deleteOneTeacher($id: ID!) {
+  deleteOneTeacher(input: {id: $id}) {
+    id
+  }
+}
+    `;
+
+  @Injectable({
+    providedIn: 'root'
+  })
+  export class DeleteOneTeacherGQL extends Apollo.Mutation<DeleteOneTeacherMutation, DeleteOneTeacherMutationVariables> {
+    document = DeleteOneTeacherDocument;
     
     constructor(apollo: Apollo.Apollo) {
       super(apollo);

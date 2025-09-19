@@ -1,0 +1,74 @@
+fragment TeacherParts on Teacher {
+  id,
+  picture,
+  fullname,
+  firstname,
+  lastname,
+  branchs {
+    id,
+    name
+  }
+}
+
+mutation createOneTeacher ($teacher: CreateTeacher!) {
+  createOneTeacher (
+    input: {
+      teacher: $teacher
+    }
+  ) {
+    ...TeacherParts
+  }
+}
+
+query getTeachersPage ($offset: Int = 0, $limit: Int = 10, $filter: TeacherFilter = {})  {
+  teachers (
+    paging: { limit: $limit, offset: $offset },
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...TeacherParts
+    }
+  }
+}
+
+query fetchTeacher ($offset: Int = 0, $limit: Int = 10, $filter: TeacherFilter = {})  {
+  teachers (
+    paging: { limit: $limit, offset: $offset },
+    filter: $filter
+  ) {
+    totalCount
+    pageInfo {
+      hasNextPage,
+      hasPreviousPage
+    },
+    nodes {
+			...TeacherParts
+    }
+  }
+}
+
+mutation updateOneTeacher ($id: ID!, $update: UpdateTeacher!) {
+  updateOneTeacher (
+    input: {
+      id: $id,
+      update: $update
+    }
+  ) {
+    ...TeacherParts
+  }
+}
+
+mutation deleteOneTeacher ($id: ID!) {
+	deleteOneTeacher (
+    input: {
+      id: $id
+    }
+  ) {
+    id
+  }
+}

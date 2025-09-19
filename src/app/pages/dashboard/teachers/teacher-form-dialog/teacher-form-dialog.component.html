@@ -1,0 +1,49 @@
+<h2 mat-dialog-title>{{ !!data?.id ? "Actualizar" : "Crear" }} docente</h2>
+<mat-dialog-content>
+  <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
+    <div class="flex flex-col gap-3">
+      <app-image-picker formControlName="picture"></app-image-picker>
+
+      <div class="grid grid-cols-2 gap-3">
+        <mat-form-field>
+          <mat-label>Nombre</mat-label>
+          <input matInput placeholder="Ej: Juan" formControlName="firstname" />
+          <mat-hint>Ingrese el nombre</mat-hint>
+          <mat-error>
+            {{ formTools.checkForErrorsIn(formGroup.get("firstname")) }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Apellido</mat-label>
+          <input matInput placeholder="Ej: Pérez" formControlName="lastname" />
+          <mat-hint>Ingrese el apellido</mat-hint>
+          <mat-error>
+            {{ formTools.checkForErrorsIn(formGroup.get("lastname")) }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field class="w-full">
+        <mat-label>Sucursal</mat-label>
+        <mat-select formControlName="branchIds" multiple>
+          @for (branch of branchTools.options(); track $index) {
+          <mat-option [value]="branch.id">
+            <div class="flex items-center gap-2">
+              <img [alt]="branch.name" class="h-6 w-6" [src]="branch.picture" />
+              <span> {{ branch.name }} </span>
+            </div>
+          </mat-option>
+          }
+        </mat-select>
+        <mat-hint> Seleccione las sucursales </mat-hint>
+      </mat-form-field>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close [disabled]="loading()">Cancelar</button>
+  <button mat-button cdkFocusInitial form="dataForm" [disabled]="loading()">
+    {{ loading() ? "Guardando..." : "Guardar" }}
+  </button>
+</mat-dialog-actions>

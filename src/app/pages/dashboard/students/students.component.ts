@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, inject, signal, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, signal, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatIconButton } from '@angular/material/button';
 import {
@@ -44,7 +44,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   templateUrl: './students.component.html',
   styles: ``,
 })
-export class StudentsComponent {
+export class StudentsComponent implements AfterViewInit {
   @ViewChild('paginator') public paginator!: MatPaginator;
   public searchControl = new FormControl('');
 

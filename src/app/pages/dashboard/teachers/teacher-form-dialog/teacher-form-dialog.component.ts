@@ -1,37 +1,25 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCheckbox } from '@angular/material/checkbox';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import {
-  MAT_DIALOG_DATA,
-  MatDialogModule,
-  MatDialogRef,
-} from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { ImagePickerComponent } from '@components/image-picker/image-picker.component';
-import {
-  CreateOneStudentGQL,
-  StudentPartsFragment,
-  UpdateOneStudentGQL,
-} from '@graphql';
-import {
-  BranchToolsService,
-  FormToolsService,
-  StorageService,
-} from '@services';
-import { of, startWith, switchMap } from 'rxjs';
+import { CreateOneTeacherGQL, TeacherPartsFragment, UpdateOneTeacherGQL } from '@graphql';
+import { BranchToolsService, FormToolsService, StorageService } from '@services';
+import { of, switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-student-form-dialog',
+  selector: 'app-teacher-form-dialog',
   imports: [
     MatDialogModule,
     MatButtonModule,
     MatSelectModule,
-    MatCheckbox,
+    MatCheckboxModule,
     ImagePickerComponent,
     MatAutocompleteModule,
     MatInputModule,
@@ -39,22 +27,22 @@ import { of, startWith, switchMap } from 'rxjs';
     MatDatepickerModule,
     ReactiveFormsModule,
   ],
-  templateUrl: './student-form-dialog.component.html',
+  templateUrl: './teacher-form-dialog.component.html',
   styles: ``,
 })
-export class StudentFormDialogComponent implements OnInit {
+export class TeacherFormDialogComponent {
   public readonly formTools = inject(FormToolsService);
 
-  public loading = signal(false);
-  public data: StudentPartsFragment | null = inject(MAT_DIALOG_DATA);
+  public loading = signal<boolean>(false);
+  public data: TeacherPartsFragment | null = inject(MAT_DIALOG_DATA);
   public readonly _storage = inject(StorageService);
 
   public branchTools = inject(BranchToolsService);
-  private readonly _createOneStudent = inject(CreateOneStudentGQL);
-  private readonly _updateOneStudent = inject(UpdateOneStudentGQL);
+  private readonly _createOneTeacher = inject(CreateOneTeacherGQL);
+  private readonly _updateOneTeacher = inject(UpdateOneTeacherGQL);
 
   private readonly _dialogRef = inject(
-    MatDialogRef<StudentFormDialogComponent>
+    MatDialogRef<TeacherFormDialogComponent>
   );
 
   private previusPicture = '';
@@ -71,21 +59,6 @@ export class StudentFormDialogComponent implements OnInit {
       validators: [Validators.required, Validators.maxLength(32)],
       nonNullable: true,
     }),
-    dni: this.formTools.builder.control<string>('', {
-      validators: [Validators.required, Validators.maxLength(32)],
-      asyncValidators: [this.formTools.isDniStudentValid],
-      nonNullable: true,
-    }),
-    dateBirth: this.formTools.builder.control<string>(
-      new Date(2010, 1, 1, 0).toDateString(),
-      {
-        validators: [Validators.required],
-        nonNullable: true,
-      }
-    ),
-    active: this.formTools.builder.control<boolean>(true, {
-      nonNullable: true,
-    }),
     branchIds: this.formTools.builder.control<string[]>([], {
       nonNullable: true,
     }),
@@ -97,28 +70,9 @@ export class StudentFormDialogComponent implements OnInit {
         picture: this.data.picture,
         firstname: this.data.firstname,
         lastname: this.data.lastname,
-        dateBirth: this.data.dateBirth,
-        dni: this.data.dni,
-        active: this.data.active,
         branchIds: this.data.branchs.map((branch) => branch.id),
       });
       this.previusPicture = this.data.picture;
-
-      this.formGroup
-        .get('dni')
-        ?.valueChanges.pipe(startWith(this.data.dni))
-        .subscribe((value) => {
-          const dniControl = this.formGroup.get('dni');
-          if (value === this.data?.dni) {
-            dniControl?.clearAsyncValidators();
-          } else {
-            dniControl?.setAsyncValidators([this.formTools.isDniStudentValid]);
-          }
-          dniControl?.updateValueAndValidity({
-            onlySelf: true,
-            emitEvent: false,
-          });
-        });
     }
   }
 
@@ -167,15 +121,12 @@ export class StudentFormDialogComponent implements OnInit {
 
     return uploadPicture$.pipe(
       switchMap((picture) =>
-        this._updateOneStudent.mutate({
+        this._updateOneTeacher.mutate({
           id: this.data!.id,
           update: {
             picture,
             firstname: values.firstname,
             lastname: values.lastname,
-            dateBirth: values.dateBirth,
-            dni: values.dni,
-            active: values.active,
             branchs: values.branchIds.map((branchId) => ({
               id: branchId,
             })),
@@ -194,14 +145,11 @@ export class StudentFormDialogComponent implements OnInit {
 
     return uploadPicture$.pipe(
       switchMap((picture) =>
-        this._createOneStudent.mutate({
-          student: {
+        this._createOneTeacher.mutate({
+          teacher: {
             picture,
             firstname: values.firstname,
             lastname: values.lastname,
-            dateBirth: values.dateBirth,
-            dni: values.dni,
-            active: values.active,
             branchs: values.branchIds.map((branchId) => ({
               id: branchId,
             })),
@@ -216,8 +164,5 @@ type FormValues = {
   picture: File | string;
   firstname: string;
   lastname: string;
-  dni: string;
-  dateBirth: string;
-  active: boolean;
   branchIds: string[];
 };
