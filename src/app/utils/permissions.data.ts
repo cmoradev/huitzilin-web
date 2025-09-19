@@ -138,4 +138,8 @@ permissionMap.set('emartinez', [
     route: PRICES_ROUTE.route,
     permissions: new Set(PRICES_ROUTE.permissions),
   },
+  {
+    route: TEACHERS_ROUTE.route,
+    permissions: new Set(TEACHERS_ROUTE.permissions),
+  },
 ]);
