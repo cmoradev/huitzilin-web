@@ -2,7 +2,44 @@
 <mat-dialog-content>
   <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
     <div class="flex flex-col gap-3">
-      <mat-form-field class="w-full">
+      <mat-form-field>
+        <mat-label>Docente</mat-label>
+        <input
+          type="text"
+          placeholder="Ej. Eduardo Morales"
+          matInput
+          formControlName="teacher"
+          [matAutocomplete]="autoTeachers"
+        />
+        <mat-hint>Seleccione una disciplina </mat-hint>
+        <mat-error>
+          {{ formTools.checkForErrorsIn(formGroup.get("teacher")) }}
+        </mat-error>
+        @if (formGroup.get("teacher")?.value) {
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="formGroup.get('teacher')?.setValue(null)"
+        >
+          <mat-icon svgIcon="close" />
+        </button>
+        }
+        <mat-autocomplete
+          #autoTeachers="matAutocomplete"
+          [displayWith]="teacherTools.displayFn"
+        >
+          @for (teacher of teacherTools.options(); track teacher.id) {
+          <mat-option [value]="teacher">
+            <div class="flex items-center gap-2">
+              <img [alt]="teacher.fullname" class="h-6 w-6" [src]="teacher.picture" />
+              <span> {{ teacher.fullname }} </span>
+            </div>
+          </mat-option>
+          }
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <mat-form-field>
         <mat-label>Disciplina</mat-label>
         <input
           type="text"
@@ -107,10 +144,13 @@
   </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <div class="flex w-full" [ngClass]="{
+  <div
+    class="flex w-full"
+    [ngClass]="{
     'justify-between': !!data?.id,
     'justify-end': !data?.id,
-  }">
+  }"
+  >
     @if (!!data?.id) {
     <button
       mat-button

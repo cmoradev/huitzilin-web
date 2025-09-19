@@ -4333,14 +4333,14 @@ export type DeleteOnePolicyMutationVariables = Exact<{
 
 export type DeleteOnePolicyMutation = { __typename?: 'Mutation', deleteOnePolicy: { __typename?: 'PolicyDeleteResponse', id?: string | null } };
 
-export type SchedulePartsFragment = { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline?: { __typename?: 'Discipline', id: string, name: string, minHours: number } | null, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } };
+export type SchedulePartsFragment = { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, teacher?: { __typename?: 'Teacher', id: string, fullname: string, picture: string } | null, discipline?: { __typename?: 'Discipline', id: string, name: string, minHours: number } | null, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } };
 
 export type CreateOneScheduleMutationVariables = Exact<{
   schedule: CreateSchedule;
 }>;
 
 
-export type CreateOneScheduleMutation = { __typename?: 'Mutation', createOneSchedule: { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline?: { __typename?: 'Discipline', id: string, name: string, minHours: number } | null, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } } };
+export type CreateOneScheduleMutation = { __typename?: 'Mutation', createOneSchedule: { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, teacher?: { __typename?: 'Teacher', id: string, fullname: string, picture: string } | null, discipline?: { __typename?: 'Discipline', id: string, name: string, minHours: number } | null, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } } };
 
 export type GetSchedulesPageQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -4349,7 +4349,7 @@ export type GetSchedulesPageQueryVariables = Exact<{
 }>;
 
 
-export type GetSchedulesPageQuery = { __typename?: 'Query', schedules: { __typename?: 'ScheduleConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline?: { __typename?: 'Discipline', id: string, name: string, minHours: number } | null, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } }> } };
+export type GetSchedulesPageQuery = { __typename?: 'Query', schedules: { __typename?: 'ScheduleConnection', totalCount: number, pageInfo: { __typename?: 'OffsetPageInfo', hasNextPage?: boolean | null, hasPreviousPage?: boolean | null }, nodes: Array<{ __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, teacher?: { __typename?: 'Teacher', id: string, fullname: string, picture: string } | null, discipline?: { __typename?: 'Discipline', id: string, name: string, minHours: number } | null, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } }> } };
 
 export type UpdateOneScheduleMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4357,7 +4357,7 @@ export type UpdateOneScheduleMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOneScheduleMutation = { __typename?: 'Mutation', updateOneSchedule: { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, discipline?: { __typename?: 'Discipline', id: string, name: string, minHours: number } | null, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } } };
+export type UpdateOneScheduleMutation = { __typename?: 'Mutation', updateOneSchedule: { __typename?: 'Schedule', id: string, day: number, start: string, end: string, levels: Array<{ __typename?: 'Level', id: string, abbreviation: string }>, teacher?: { __typename?: 'Teacher', id: string, fullname: string, picture: string } | null, discipline?: { __typename?: 'Discipline', id: string, name: string, minHours: number } | null, enrollments: { __typename?: 'ScheduleEnrollmentsConnection', totalCount: number } } };
 
 export type DeleteOneScheduleMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4813,6 +4813,11 @@ export const SchedulePartsFragmentDoc = gql`
   levels {
     id
     abbreviation
+  }
+  teacher {
+    id
+    fullname
+    picture
   }
   discipline {
     id

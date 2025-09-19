@@ -18,9 +18,8 @@ import {
   CreateOneScheduleGQL,
   DeleteOneScheduleGQL,
   DisciplinePartsFragment,
-  GetDisciplinesPageGQL,
-  GetDisciplinesPageQueryVariables,
   SchedulePartsFragment,
+  TeacherPartsFragment,
   UpdateOneScheduleGQL,
 } from '@graphql';
 import {
@@ -28,6 +27,7 @@ import {
   FormToolsService,
   GlobalStateService,
   LevelToolsService,
+  TeacherToolsService,
 } from '@services';
 import { daysOfWeek } from '@utils/contains';
 import { isUUID } from '@utils/helpers';
@@ -45,7 +45,7 @@ import { filter, map } from 'rxjs';
     MatTimepickerModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
-    NgClass
+    NgClass,
   ],
   templateUrl: './schedule-form-dialog.component.html',
   styles: ``,
@@ -71,6 +71,7 @@ export class ScheduleFormDialogComponent {
 
   public levelTools = inject(LevelToolsService);
   public disciplineTools = inject(DisciplineToolsService);
+  public teacherTools = inject(TeacherToolsService);
 
   public formGroup = this.formTools.builder.group({
     day: this.formTools.builder.control<string>('', {
@@ -89,6 +90,10 @@ export class ScheduleFormDialogComponent {
       validators: [],
       nonNullable: true,
     }),
+    teacher: this.formTools.builder.control<TeacherPartsFragment | null>(null, {
+      validators: [Validators.required],
+      nonNullable: true,
+    }),
     discipline: this.formTools.builder.control<DisciplinePartsFragment | null>(
       null,
       {
@@ -101,6 +106,7 @@ export class ScheduleFormDialogComponent {
   ngOnInit(): void {
     this.levelTools.fetchAll();
     this.disciplineTools.fetchAll();
+    this.teacherTools.fetchAll();
 
     if (!!this.data?.day)
       this.formGroup.patchValue({ day: this.data.day.toFixed() });
@@ -112,6 +118,7 @@ export class ScheduleFormDialogComponent {
     if (!!this.data?.id) {
       this.formGroup.patchValue({
         discipline: this.data.discipline as any,
+        teacher: this.data.teacher as any,
         levels: this.data.levels.map((level) => level.id),
       });
     }
@@ -208,6 +215,7 @@ export class ScheduleFormDialogComponent {
           end: values.end.toTimeString().slice(0, 5),
           levels: values.levels!.map((id) => ({ id })),
           disciplineId: values.discipline!.id,
+          teacherId: values.teacher!.id,
         },
       })
       .pipe(map((value) => value.data?.updateOneSchedule));
@@ -221,6 +229,7 @@ export class ScheduleFormDialogComponent {
           start: values.start.toTimeString().slice(0, 5),
           end: values.end.toTimeString().slice(0, 5),
           disciplineId: values.discipline!.id,
+          teacherId: values.teacher!.id,
           periodId: this._globalStateService.period!.id,
           branchId: this._globalStateService.branch!.id,
           levels: values.levels!.map((id) => ({ id })),
@@ -235,5 +244,6 @@ type FormValues = {
   start: Date;
   end: Date;
   discipline: DisciplinePartsFragment | null;
+  teacher: TeacherPartsFragment | null;
   levels: string[];
 };
