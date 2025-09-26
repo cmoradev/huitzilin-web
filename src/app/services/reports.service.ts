@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '@environment';
+import { IncomeState } from '@graphql';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -52,12 +53,43 @@ export class ReportsService {
     });
   }
 
+  public incomesBYDisciplineDownload(start: string, end: string, branchId: string) {
+    const searchParams = new URLSearchParams({ start, end, branchId });
+
+    const url = `${this.apiUri}/incomes-by-disciplines-download?${searchParams.toString()}`;
+
+    this.http
+      .get(url, {
+        responseType: 'blob',
+        observe: 'response',
+      })
+      .subscribe({
+        next: (response) => {
+          if (response.body) {
+            const blob = new Blob([response.body], {
+              type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'reporte-ingresos-por-disciplinas.xlsx';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          }
+        },
+        error: (error) => {
+          console.error('Error al descargar el reporte:', error);
+        },
+      });
+  }
+
   public incomesBYDiscipline(
     start: string,
     end: string,
     branchId: string
-  ): Observable<ReportsResponse> {
-    return this.http.get<ReportsResponse>(
+  ): Observable<DisciplineReportResponse> {
+    return this.http.get<DisciplineReportResponse>(
       `${this.apiUri}/incomes-by-disciplines`,
       {
         params: { start, end, branchId },
@@ -116,3 +148,57 @@ export interface ReportsResponse {
   total: number;
   data: ReportsData[];
 }
+
+export interface DisciplineReportResponse {
+  total: string;
+  receivedPerOtherItems: string;
+  receivedPerMonthlyItems: string;
+  monthlyDetailsItems: Array<MonthlyByDisciplineData>;
+  otherItems: Array<ConceptWithIncomeData>;
+  groupedByDiscipline: Array<ReportsGrouped>;
+}
+
+export type ConceptWithIncomeData = {
+  incomeId: string;
+  incomeFolio: number;
+  incomeState: IncomeState;
+  incomeDate: string;
+  branchId: string;
+  branchName: string;
+  received: number;
+  students: Array<ReportsStudent>;
+  conceptId: string;
+  conceptDescription: string;
+  conceptTotal: string;
+  conceptPendingPayment: string;
+  conceptReceived: string;
+  debitId: string;
+  enrollmentId: string;
+  enrollmentDetails: string;
+};
+
+export type MonthlyByDisciplineData = {
+  receivedPerHour: string;
+  receivedPerDiscipline: string;
+  incomeId: string;
+  incomeFolio: number;
+  incomeState: IncomeState;
+  incomeDate: string;
+  branchId: string;
+  branchName: string;
+  received: number;
+  students: Array<ReportsStudent>;
+  enrollmentId: string;
+  enrollmentHours: number;
+  studentId: string;
+  studentFullname: string;
+  disciplineId: string;
+  disciplineName: string;
+  disciplineTotalHours: number;
+  conceptId: string;
+  conceptDescription: string;
+  conceptTotal: string;
+  conceptPendingPayment: string;
+  conceptReceived: string;
+  debitId: string;
+};

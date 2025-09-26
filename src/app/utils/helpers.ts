@@ -1,3 +1,5 @@
+import { colors } from "./contains";
+
 /**
  * Verifica si una cadena de texto tiene el formato de un UUID válido (versión 1 a 5).
  *
@@ -21,4 +23,8 @@ export function groupBy<T, K>(list: T[], getKey: (item: T) => K): Map<K, T[]> {
     }
     return map;
   }, new Map<K, T[]>());
+}
+
+export const getRandomColor = () => {
+  return colors[Math.floor(Math.random() * colors.length)];
 }

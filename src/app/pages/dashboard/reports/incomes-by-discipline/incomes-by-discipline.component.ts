@@ -17,16 +17,20 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
-import { FolioPipe, MethodPipe } from '@pipes';
+import { FolioPipe } from '@pipes';
 import {
   BranchToolsService,
+  ConceptWithIncomeData,
   GlobalStateService,
+  MonthlyByDisciplineData,
+  ReportsGrouped,
   ReportsService,
 } from '@services';
+import { getRandomColor } from '@utils/helpers';
 import { endOfDay, startOfDay } from 'date-fns';
 import { init } from 'echarts';
 import { merge, startWith } from 'rxjs';
@@ -47,36 +51,34 @@ import { merge, startWith } from 'rxjs';
     MatTooltipModule,
     MatSelectModule,
     MatTabsModule,
-    // FolioPipe,
-    // MethodPipe,
-    // DatePipe,
     CurrencyPipe,
+    FolioPipe,
     RouterLink,
   ],
   templateUrl: './incomes-by-discipline.component.html',
   styles: ``,
 })
 export class IncomesByDisciplineComponent implements AfterViewInit, OnInit {
-  @ViewChild('paginator') public paginator!: MatPaginator;
+  @ViewChild('monthlyPaginator') public monthlyPaginator!: MatPaginator;
+  @ViewChild('otherPaginator') public otherPaginator!: MatPaginator;
   @ViewChild('methodsChart')
   public methodsChartElement!: ElementRef<HTMLDivElement>;
 
   public loading = signal<boolean>(false);
   public total = signal<number>(0);
-  // public incomeMethods = signal<ReportsGrouped[]>([]);
+  public summaryData = signal<ReportsGrouped[]>([]);
   public displayedColumns: string[] = [
-    'branchName',
-    'studentNames',
-    'incomeFolio',
-    'paymentFolio',
-    'paymentMethod',
-    'paymentDate',
-    'paymentAmount',
+    'student',
+    'folio',
+    'details1',
+    'details2',
+    'total',
   ];
   public summaryDisplayedColumns: string[] = ['name', 'value'];
-
-  // public dataSource = new MatTableDataSource<ReportsData>([]);
-  // public summaryDataSource = new MatTableDataSource<ReportsGrouped>([]);
+  public otherDataSource = new MatTableDataSource<ConceptWithIncomeData>([]);
+  public monthlyDataSource = new MatTableDataSource<MonthlyByDisciplineData>(
+    []
+  );
 
   private readonly reportsService = inject(ReportsService);
   private readonly _globalStateService = inject(GlobalStateService);
@@ -94,7 +96,8 @@ export class IncomesByDisciplineComponent implements AfterViewInit, OnInit {
   }
 
   ngAfterViewInit(): void {
-    // this.dataSource.paginator = this.paginator;
+    this.otherDataSource.paginator = this.otherPaginator;
+    this.monthlyDataSource.paginator = this.monthlyPaginator;
 
     merge(
       this.startDateControl.valueChanges,
@@ -117,7 +120,7 @@ export class IncomesByDisciplineComponent implements AfterViewInit, OnInit {
       const end = endOfDay(this.endDateControl.value).toISOString();
       const branchId = this.branchControl.value;
 
-      this.reportsService.incomesDownload(start, end, branchId);
+      this.reportsService.incomesBYDisciplineDownload(start, end, branchId);
     }
   }
 
@@ -135,18 +138,13 @@ export class IncomesByDisciplineComponent implements AfterViewInit, OnInit {
 
       this.reportsService.incomesBYDiscipline(start, end, branchId).subscribe({
         next: (response) => {
-          console.log(response);
-          // this.incomeMethods.set(response.groupedByMethod);
-          // this.dataSource.data = response.data;
-          // this.summaryDataSource.data = response.groupedByMethod.map(
-          //   (data) => ({
-          //     ...data,
-          //     name: paymentNames[data.id.toUpperCase() as PaymentMethod],
-          //   })
-          // );
-          // this.total.set(response.total);
-          // this.loading.set(false);
-          // this.drawCharts();
+          this.summaryData.set(response.groupedByDiscipline);
+          this.otherDataSource.data = response.otherItems;
+          this.monthlyDataSource.data = response.monthlyDetailsItems;
+          this.total.set(parseFloat(response.total));
+          this.loading.set(false);
+
+          this.drawCharts();
         },
         error: (error) => {
           console.error('Error fetching incomes:', error);
@@ -160,47 +158,44 @@ export class IncomesByDisciplineComponent implements AfterViewInit, OnInit {
     if (this.methodsChartElement.nativeElement) {
       const methodsChart = init(this.methodsChartElement.nativeElement);
 
-      // const methodsData = this.incomeMethods().map((grouped) => ({
-      //   value: grouped.count,
-      //   name: paymentNames[grouped.id.toUpperCase() as PaymentMethod],
-      // }));
+      // Ordena los datos de forma descendente por el valor
+      const sortedData = this.summaryData()
+        .sort((a, b) => parseFloat(b.count) - parseFloat(a.count))
+        .map((item) => [item.name, parseFloat(item.count)]);
 
-      // methodsChart.setOption({
-      //   tooltip: {
-      //     trigger: 'item',
-      //   },
-      //   legend: {
-      //     top: '5%',
-      //     left: 'center',
-      //   },
-      //   series: [
-      //     {
-      //       name: 'Ingresos por método',
-      //       type: 'pie',
-      //       radius: ['40%', '70%'],
-      //       avoidLabelOverlap: false,
-      //       padAngle: 3,
-      //       itemStyle: {
-      //         borderRadius: 8,
-      //       },
-      //       label: {
-      //         show: false,
-      //         position: 'center',
-      //       },
-      //       emphasis: {
-      //         label: {
-      //           show: true,
-      //           fontSize: 24,
-      //           fontWeight: 'bold',
-      //         },
-      //       },
-      //       labelLine: {
-      //         show: false,
-      //       },
-      //       data: methodsData,
-      //     },
-      //   ],
-      // });
+      methodsChart.setOption({
+        dataset: {
+          source: [['name', 'value'], ...sortedData],
+        },
+        xAxis: { name: 'amount' },
+        yAxis: { type: 'category', inverse: true },
+        grid: { containLabel: true },
+        series: [
+          {
+            type: 'bar',
+            encode: {
+              x: 'value',
+              y: 'name',
+            },
+            itemStyle: {
+              color: function (params: any) {
+                return getRandomColor();
+              },
+            },
+            label: {
+              show: true,
+              position: 'right',
+              formatter: (params: any) => {
+                return new Intl.NumberFormat('es-MX', {
+                  style: 'currency',
+                  currency: 'MXN',
+                  minimumFractionDigits: 2,
+                }).format(params.value[1]);
+              },
+            },
+          },
+        ],
+      });
     }
   }
 }
