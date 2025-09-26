@@ -23,7 +23,22 @@
         </tr>
         @for (concept of group.concepts; track concept.debitID) {
         <tr>
-          <td class="pl-8 pr-3 py-2 col-span-2">{{ concept.description }}</td>
+          <td class="px-3 py-2 col-span-2">
+            <div class="flex items-center gap-2">
+              <mat-icon svgIcon="circle-medium" class="!text-primary" />
+              <div>
+                <p>{{ concept.description }}</p>
+                @if (concept.application === 'DELINQUENCY_CHARGE') {
+                <span
+                  class="text-xs text-red-800 cursor-pointer"
+                  (click)="removeConcept(concept)"
+                >
+                  Eliminar concepto
+                </span>
+                }
+              </div>
+            </div>
+          </td>
           <td class="px-3 py-2">{{ concept.amount | currency : "MXN" }}</td>
           <td class="px-3 py-2">{{ concept.discount | currency : "MXN" }}</td>
           <td class="px-3 py-2">{{ concept.subtotal | currency : "MXN" }}</td>

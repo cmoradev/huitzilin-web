@@ -21,6 +21,7 @@ import { Concept, PosService } from '@services';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { ChargeDialogComponent } from '../charge-dialog/charge-dialog.component';
 import { ClipChargeDialogComponent } from '../clip-charge-dialog/clip-charge-dialog.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-sale-details',
@@ -28,7 +29,8 @@ import { ClipChargeDialogComponent } from '../clip-charge-dialog/clip-charge-dia
     MatButtonModule,
     NgScrollbar,
     CurrencyPipe,
-    MatTooltipModule
+    MatTooltipModule,
+    MatIconModule,
 ],
   templateUrl: './sale-details.component.html',
   styleUrls: ['./sale-details.component.scss'],
@@ -54,6 +56,10 @@ export class SaleDetailsComponent {
     effect(() => {
       this.conceptGroups.set(this._groupByEnrollment(this._pos.concepts));
     });
+  }
+
+  public removeConcept(concept: Concept) {
+    this._pos.removeConcept(concept);
   }
 
   public openClipChargeDialog() {

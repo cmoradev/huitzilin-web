@@ -269,6 +269,13 @@ export class PosService {
     return concepts;
   }
 
+  public removeConcept(concept: Concept) {
+    this._concepts.update((previous) => {
+      const concepts = [...previous];
+      return concepts.filter((c) => c !== concept);
+    });
+  } 
+
   // Elimina un adeudo de los conceptos
   public removeDebit(value: DebitPartsFragment) {
     this._concepts.update((previous) => {
