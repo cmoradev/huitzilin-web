@@ -36,33 +36,6 @@
         </mat-autocomplete>
       </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Periodo</mat-label>
-        <mat-select
-          formControlName="period"
-          [compareWith]="periodTools.compareFn"
-        >
-          @for (period of periodTools.options(); track $index) {
-          <mat-option [value]="period">
-            {{ period.name }}
-          </mat-option>
-          }
-        </mat-select>
-        <mat-hint> Seleccione un periodo </mat-hint>
-        <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("period")) }}
-        </mat-error>
-      </mat-form-field>
-
-      <div class="flex items-center gap-2">
-        <mat-chip> {{ hoursCount() }} horas </mat-chip>
-        <mat-chip> {{ disciplineCount() }} disciplinas </mat-chip>
-
-        <button mat-icon-button (click)="openCalendar()" type="button" matTooltip="Calendario">
-          <mat-icon svgIcon="calendar" />
-        </button>
-      </div>
-
       <mat-form-field class="w-full">
         <mat-label>Seleccionar lista de precios</mat-label>
         <input

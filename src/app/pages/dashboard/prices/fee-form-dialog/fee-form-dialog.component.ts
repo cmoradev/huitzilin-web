@@ -58,9 +58,6 @@ export class FeeFormDialogComponent implements OnInit {
       nonNullable: true,
       validators: [Validators.required],
     }),
-    withTax: this.formTools.builder.control(this._globalState.activity?.withTax ?? true, {
-      nonNullable: true,
-    }),
     autoLoad: this.formTools.builder.control(false, {
       nonNullable: true,
     })
@@ -78,7 +75,6 @@ export class FeeFormDialogComponent implements OnInit {
         name: this.data.name,
         amount: this.data.amount,
         frequency: this.data.frequency,
-        withTax: this.data.withTax,
         autoLoad: this.data.autoLoad,
       });
     }
@@ -140,6 +136,7 @@ export class FeeFormDialogComponent implements OnInit {
       .mutate({
         fee: {
           ...values,
+          withTax: false,
           packageId: this._globalStateService.activity!.id,
         },
       })
@@ -168,6 +165,5 @@ type FormValues = {
   name: string;
   amount: number;
   frequency: Frequency;
-  withTax: boolean;
   autoLoad: boolean;
 };

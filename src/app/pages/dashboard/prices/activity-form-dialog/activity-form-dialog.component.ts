@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 import {
   MAT_DIALOG_DATA,
   MatDialogModule,
@@ -9,7 +8,6 @@ import {
 } from '@angular/material/dialog';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import {
   PackagePartsFragment,
   CreateOnePackageGQL,
@@ -17,8 +15,7 @@ import {
   PackageKind,
 } from '@graphql';
 import { FormToolsService, GlobalStateService } from '@services';
-import { packageKinds } from '@utils/contains';
-import { map, startWith } from 'rxjs';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-activity-form-dialog',
@@ -27,9 +24,7 @@ import { map, startWith } from 'rxjs';
     MatButtonModule,
     MatFormField,
     MatFormFieldModule,
-    MatCheckboxModule,
     MatInputModule,
-    MatSelectModule,
     ReactiveFormsModule,
   ],
   templateUrl: './activity-form-dialog.component.html',
@@ -46,21 +41,7 @@ export class ActivityFormDialogComponent implements OnInit {
       validators: [Validators.required,Validators.minLength(3),Validators.maxLength(32)],
       nonNullable: true,
     }),
-    quantity: this.formTools.builder.control(0, {
-      validators: [Validators.required, Validators.min(0)],
-      nonNullable: true,
-    }),
-    kind: this.formTools.builder.control(PackageKind.Hours, {
-      validators: [Validators.required],
-      nonNullable: true,
-    }),
-    withTax: this.formTools.builder.control(true, {
-      validators: [],
-      nonNullable: true,
-    }),
   });
-
-  public kinds = packageKinds;
 
   private readonly _globalStateService = inject(GlobalStateService);
   private readonly _createOnePackage = inject(CreateOnePackageGQL);
@@ -74,9 +55,6 @@ export class ActivityFormDialogComponent implements OnInit {
     if (!!this.data?.id) {
       this.formGroup.patchValue({
         name: this.data.name,
-        quantity: this.data.quantity,
-        kind: this.data.kind,
-        withTax: this.data.withTax,
       });
     }
   }
@@ -119,7 +97,7 @@ export class ActivityFormDialogComponent implements OnInit {
     return this._updateOnePackage
       .mutate({
         id: this.data!.id,
-        update: { ...values } as any,
+        update: { ...this._withDefaults(values) } as any,
       })
       .pipe(map((value) => value.data?.updateOnePackage));
   }
@@ -128,18 +106,24 @@ export class ActivityFormDialogComponent implements OnInit {
     return this._createOnePackage
       .mutate({
         package: {
-          ...values,
+          ...this._withDefaults(values),
           branchId: this._globalStateService.branch!.id,
           order: 1,
         },
       })
       .pipe(map((value) => value.data?.createOnePackage));
   }
+
+  private _withDefaults(values: FormValues) {
+    return {
+      name: values.name,
+      withTax: false,
+      kind: PackageKind.Unlimited,
+      quantity: 0,
+    };
+  }
 }
 
 type FormValues = {
   name: string;
-  kind: PackageKind;
-  quantity: number;
-  withTax: boolean;
 };

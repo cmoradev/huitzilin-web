@@ -4,10 +4,6 @@
 <mat-dialog-content>
   <form id="dataForm" [formGroup]="formGroup" (ngSubmit)="submit()">
     <div class="flex flex-col gap-3">
-      <mat-checkbox formControlName="withTax">
-        ¿Agregar IVA al precio base?
-      </mat-checkbox>
-
       <mat-form-field>
         <mat-label>Nombre del paquete</mat-label>
         <input
@@ -18,35 +14,6 @@
         <mat-hint>Ingrese el nombre del paquete</mat-hint>
         <mat-error>
           {{ formTools.checkForErrorsIn(formGroup.get("name")) }}
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Tipo de paquete</mat-label>
-        <mat-select formControlName="kind">
-          @for (kind of kinds; track $index) {
-          <mat-option [value]="kind.value">{{ kind.label }}</mat-option>
-          }
-        </mat-select>
-        <mat-hint
-          >Seleccione un tipo de paquete</mat-hint
-        >
-        <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("kind")) }}
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field>
-        <mat-label>Cantidad de disciplinas/horas</mat-label>
-        <input
-          type="number"
-          matInput
-          placeholder="Ej. Yoga, Crossfit"
-          formControlName="quantity"
-        />
-        <mat-hint>Ingrese la cantidad de disciplinas/horas</mat-hint>
-        <mat-error>
-          {{ formTools.checkForErrorsIn(formGroup.get("quantity")) }}
         </mat-error>
       </mat-form-field>
     </div>
