@@ -57,18 +57,18 @@ export const rootPermissions = [
     route: LEVELS_ROUTE.route,
     permissions: new Set(LEVELS_ROUTE.permissions),
   },
-  {
-    route: TEACHERS_ROUTE.route,
-    permissions: new Set(TEACHERS_ROUTE.permissions),
-  },
-  {
-    route: DISCIPLINES_ROUTE.route,
-    permissions: new Set(DISCIPLINES_ROUTE.permissions),
-  },
-  {
-    route: CALENDARS_ROUTE.route,
-    permissions: new Set(CALENDARS_ROUTE.permissions),
-  },
+  // {
+  //   route: TEACHERS_ROUTE.route,
+  //   permissions: new Set(TEACHERS_ROUTE.permissions),
+  // },
+  // {
+  //   route: DISCIPLINES_ROUTE.route,
+  //   permissions: new Set(DISCIPLINES_ROUTE.permissions),
+  // },
+  // {
+  //   route: CALENDARS_ROUTE.route,
+  //   permissions: new Set(CALENDARS_ROUTE.permissions),
+  // },
   {
     route: PRICES_ROUTE.route,
     permissions: new Set(PRICES_ROUTE.permissions),
@@ -85,18 +85,18 @@ export const rootPermissions = [
     route: CYCLES_ROUTE.route,
     permissions: new Set(CYCLES_ROUTE.permissions),
   },
-  {
-    route: CLIP_ACCOUNTS_ROUTE.route,
-    permissions: new Set(CLIP_ACCOUNTS_ROUTE.permissions),
-  },
+  // {
+  //   route: CLIP_ACCOUNTS_ROUTE.route,
+  //   permissions: new Set(CLIP_ACCOUNTS_ROUTE.permissions),
+  // },
   {
     route: USERS_ROUTE.route,
     permissions: new Set(USERS_ROUTE.permissions),
   },
-  {
-    route: POLICIES_ROUTE.route,
-    permissions: new Set(POLICIES_ROUTE.permissions),
-  },
+  // {
+  //   route: POLICIES_ROUTE.route,
+  //   permissions: new Set(POLICIES_ROUTE.permissions),
+  // },
 ];
 
 export const permissionMap = new Map<string, typeof rootPermissions>();
