@@ -10,15 +10,4 @@ export const Reports = [
     route: 'incomes',
     category: 'Financiero',
   },
-  {
-    id: 2,
-    title: 'Ingresos por Disciplinas',
-    description:
-      'Reporte detallado de los ingresos obtenidos, agrupados por cada disciplina en el período seleccionado',
-    icon: 'volleyball',
-    color: 'text-blue-800!',
-    bgColor: 'bg-blue-100',
-    route: 'incomes-by-discipline',
-    category: 'Financiero',
-  },
 ];
