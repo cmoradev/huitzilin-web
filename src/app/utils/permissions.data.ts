@@ -20,7 +20,7 @@ import {
   USERS_ROUTE,
 } from '@routes';
 
-const rootPermissions = [
+export const rootPermissions = [
   {
     route: PANEL_CONTROL_ROUTE.route,
     permissions: new Set(PANEL_CONTROL_ROUTE.permissions),

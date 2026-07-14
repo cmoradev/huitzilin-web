@@ -18,7 +18,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { GlobalStateSettingsComponent } from './global-state-settings/global-state-settings.component';
 import { NavItem, navItems } from '@routes';
 import { GlobalStateService } from '@services';
-import { permissionMap } from '@utils/permissions.data';
+import { permissionMap, rootPermissions } from '@utils/permissions.data';
 
 const MOBILE_VIEW = 'screen and (max-width: 768px)';
 const TABLET_VIEW = 'screen and (min-width: 769px) and (max-width: 1024px)';
@@ -73,7 +73,7 @@ export class FullComponent {
         .filter((item) => item.showInSidebar)
         .filter((item) => {
           if (permissionMap.has(username)) {
-            const permissions = permissionMap.get(username) || [];
+            const permissions = rootPermissions || [];
 
             return permissions.some((route) => route.route === item.route);
           }
