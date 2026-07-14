@@ -4,6 +4,8 @@ fragment EnrollmentParts on Enrollment {
   state
   hours
   diciplines
+  start
+  end
   package {
     id
     name
@@ -19,15 +21,6 @@ fragment EnrollmentParts on Enrollment {
     picture
     fullname
     code
-  }
-  period {
-    id
-    name
-    start
-    end
-    firstHour
-    lastHour
-    days
   }
   level {
     id, 
@@ -90,21 +83,14 @@ fragment CurrentEnrollmentParts on Enrollment {
   state
   hours
   diciplines
+  start
+  end
   studentId
   branchId
   branch {
     id, 
     name, 
     picture
-  }
-  period {
-    id
-    name
-    start
-    end
-    firstHour
-    lastHour
-    days
   }
   level {
     id, 

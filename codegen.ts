@@ -4,7 +4,7 @@ import { environment } from './src/environments/environment.development';
 const { graphqlUri } = environment;
 
 const config: CodegenConfig = {
-  schema: graphqlUri,
+  schema: 'http://localhost:4000/graphql',
   documents: './src/app/graphql/*.graphql',
   generates: {
     './src/app/graphql/generated.ts': {

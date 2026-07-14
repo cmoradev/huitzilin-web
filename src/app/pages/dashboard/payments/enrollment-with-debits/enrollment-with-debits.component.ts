@@ -10,7 +10,6 @@ import {
   GetDebitsPageGQL,
   GetDebitsPageQueryVariables,
 } from '@graphql';
-import { EnrollmentCalendarComponent } from '../../enrollments/enrollment-calendar/enrollment-calendar.component';
 import { map } from 'rxjs';
 import { ConceptOptionComponent } from '../concept-option/concept-option.component';
 import { AvatarComponent } from '@components/avatar/avatar.component';
@@ -46,17 +45,6 @@ export class EnrollmentWithDebitsComponent implements OnInit {
   public refreshDebits(): void {
     this._resetState();
     this._fetchAllDebits();
-  }
-
-  public openEnrollmentCalendarDialog(evet: MouseEvent): void {
-    evet.stopPropagation();
-
-    this._dialog.open(EnrollmentCalendarComponent, {
-      width: '80rem',
-      maxWidth: '95vw',
-      data: this.enrollment(),
-      disableClose: true,
-    });
   }
 
   public toggleExpanded(): void {

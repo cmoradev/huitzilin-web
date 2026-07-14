@@ -83,6 +83,7 @@ export class DebitFormCatalogDialogComponent implements OnInit {
     this._fetchAllFees();
 
     this.formGroup.get('fee')!.valueChanges.subscribe((value) => {
+      console.log('Selected fee:', value);
       if (value) {
         this.generateDebits(value);
       }
@@ -209,18 +210,18 @@ export class DebitFormCatalogDialogComponent implements OnInit {
 
   private generateDebits(value: FeePartsFragment) {
     this.formGroup.get('fee')!.setValue(null);
-
+    console.log(this._globalStateService!.enrollment, value)
     switch (value.frequency) {
       case Frequency.Monthly:
         if (
-          !!this._globalStateService!.enrollment!.period?.start &&
-          !!this._globalStateService!.enrollment!.period?.end
+          !!this._globalStateService!.enrollment!.start &&
+          !!this._globalStateService!.enrollment!.end
         ) {
           const startPeriod = startOfMonth(
-            `${this._globalStateService!.enrollment!.period!.start}T12:00:00`
+            `${this._globalStateService!.enrollment!.start}T12:00:00`
           );
           const endPeriod = endOfMonth(
-            `${this._globalStateService!.enrollment!.period!.end}T12:00:00`
+            `${this._globalStateService!.enrollment!.end}T12:00:00`
           );
 
           let currentDate = startPeriod;

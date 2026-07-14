@@ -158,8 +158,8 @@ export class LightOnPricesComponent implements OnInit {
 
   public setPlan(hours: number): void {
     if (
-      !!this._globalState!.enrollment!.period?.start &&
-      !!this._globalState!.enrollment!.period?.end
+      !!this._globalState!.enrollment?.start &&
+      !!this._globalState!.enrollment?.end
     ) {
       let packagePrice = 0;
       let remainingHours = hours;
@@ -182,10 +182,10 @@ export class LightOnPricesComponent implements OnInit {
       const { amount } = calculateBaseAndTaxFromTotal(totalPrice);
 
       const startPeriod = startOfMonth(
-        `${this._globalState!.enrollment!.period!.start}T12:00:00`
+        `${this._globalState!.enrollment!.start}T12:00:00`
       );
       const endPeriod = endOfMonth(
-        `${this._globalState!.enrollment!.period!.end}T12:00:00`
+        `${this._globalState!.enrollment!.end}T12:00:00`
       );
 
       let currentDate = startPeriod;

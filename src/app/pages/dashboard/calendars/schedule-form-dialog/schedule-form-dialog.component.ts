@@ -119,7 +119,7 @@ export class ScheduleFormDialogComponent {
       this.formGroup.patchValue({
         discipline: this.data.discipline as any,
         teacher: this.data.teacher as any,
-        levels: this.data.levels.map((level) => level.id),
+        levels: this.data.levels!.map((level) => level.id),
       });
     }
 
